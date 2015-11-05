@@ -1,5 +1,9 @@
 {
     "name": "loopeer/quickcms",
+    "require": {
+        "zizaco/entrust": "dev-laravel-5",
+        "kbwebs/multiauth": "~1.0"
+    },
     "autoload": {
         "psr-4": {
             "Loopeer/QuickCms\\": "src/"
