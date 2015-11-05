@@ -1,3 +1,7 @@
 composer.phar
 composer.lock
 vendor
+/bootstrap/compiled.php
+.env.*.php
+.env.php
+.env
