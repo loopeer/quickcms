@@ -1,0 +1,8 @@
+{
+    "name": "loopeer/quickcms",
+    "autoload": {
+        "psr-4": {
+            "Loopeer/QuickCms\\": "src/"
+        }
+    }
+}
