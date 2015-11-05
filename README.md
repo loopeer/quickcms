@@ -30,6 +30,11 @@ init migrate and db seed command
 php artisan quickcms:install
 ```
 # Step5
+publish js css image to your project/public dir
+```
+php artisan vendor:publish --tag=public --force
+```
+# Step6
 test url
 ```
 localhost:8000/admin
