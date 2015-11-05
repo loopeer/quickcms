@@ -1,6 +1,7 @@
 {
     "name": "loopeer/quickcms",
     "require": {
+        "php": ">=5.5.9",
         "zizaco/entrust": "dev-laravel-5",
         "kbwebs/multiauth": "~1.0"
     },
@@ -8,5 +9,6 @@
         "psr-4": {
             "Loopeer/QuickCms\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "stable"
 }
