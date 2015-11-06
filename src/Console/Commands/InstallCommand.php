@@ -35,7 +35,7 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $this->call('migrate', array('--env' => $this->option('env'), '--path' => 'loopeer/quickcms/database/migrations/' ));
+        //$this->call('migrate', array('--env' => $this->option('env'), '--path' => 'loopeer/quickcms/database/migrations/' ));
         $this->call('db:seed', array('--class' => 'Loopeer\QuickCms\Seeds\InitBackendSeeder'));
     }
 }

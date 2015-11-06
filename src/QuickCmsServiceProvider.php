@@ -27,6 +27,10 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/../public/backend' => public_path('loopeer/quickcms'),
 		], 'public');
+
+		$this->publishes([
+			__DIR__.'/../database/migrations' => database_path('migrations'),
+		], 'migrations');
 	}
 
 	/**
