@@ -49,7 +49,7 @@ php artisan vendor:publish --tag=public --force
 ```
 publish migrate
 ```
-php artisan vendor:public --tag=migrations
+php artisan vendor:publish --tag=migrations
 ```
 # Step5
 init migrate and db seed command
