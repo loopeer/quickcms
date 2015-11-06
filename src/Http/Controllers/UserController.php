@@ -24,6 +24,7 @@ class UserController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:system');
         $this->middleware('auth.permission:admin.users');
+        parent::__construct();
     }
 
     public function search() {

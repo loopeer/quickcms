@@ -25,6 +25,7 @@ class PermissionController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:system');
         $this->middleware('auth.permission:admin.permissions');
+        parent::__construct();
     }
 
     public function search() {
@@ -44,7 +45,6 @@ class PermissionController extends BaseController {
             ->paginate($length);
 
         $ret = self::queryPage($show_column, $permissions);
-        //Log::info($ret);
         return Response::json($ret);
     }
 

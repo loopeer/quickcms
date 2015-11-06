@@ -27,6 +27,7 @@ class RoleController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:system');
         $this->middleware('auth.permission:admin.roles');
+        parent::__construct();
     }
 
     public function search(){
@@ -37,7 +38,6 @@ class RoleController extends BaseController {
     public function index() {
         $message = Session::get('message');
         $role_list = Role::get();
-        Log::info($role_list);
         return view('backend::roles.index', compact('message', 'role_list'));
     }
 

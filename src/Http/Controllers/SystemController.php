@@ -24,6 +24,7 @@ class SystemController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:maintenance');
         $this->middleware('auth.permission:admin.system');
+        parent::__construct();
     }
 
     public function index() {

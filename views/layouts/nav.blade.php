@@ -6,9 +6,9 @@
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
                         <img src="{{ asset('loopeer/quickcms/img/avatars/sunny.png') }}" alt="me" class="online" />
 						<span>
-                            {{--@if(isset(Auth::admin()->get()->id))--}}
-							{{--{{Auth::admin()->get()->name}}--}}
-                            {{--@endif--}}
+                            @if(isset(Auth::admin()->get()->id))
+							{{Auth::admin()->get()->name}}
+                            @endif
 						</span>
                         <i class="fa fa-angle-down"></i>
                     </a>

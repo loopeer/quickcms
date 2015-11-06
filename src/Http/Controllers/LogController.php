@@ -21,6 +21,7 @@ class LogController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:maintenance');
         $this->middleware('auth.permission:admin.logs');
+        parent::__construct();
     }
 
     public function search() {

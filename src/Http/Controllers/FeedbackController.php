@@ -21,6 +21,7 @@ class FeedbackController extends BaseController {
     public function __construct(){
         $this->middleware('auth.permission:maintenance');
         $this->middleware('auth.permission:admin.feedbacks');
+        parent::__construct();
     }
 
     public function search() {

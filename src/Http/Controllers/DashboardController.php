@@ -10,12 +10,11 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Loopeer\QuickCms\Http\Controllers\BaseController;
-
 class DashboardController extends BaseController {
 
     public function __construct(){
         $this->middleware('auth.permission:admin.dashboard');
+        parent::__construct();
     }
 
     /**

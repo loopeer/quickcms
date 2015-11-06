@@ -7,7 +7,9 @@
     </span>
     <!-- breadcrumb -->
     <ol class="breadcrumb">
-        <li>数据面板</li><li>Dashboard</li>
+        <li>管理面板</li>
+        <li><a href="{{ session('ribbon')->parent->route }}">{{ session('ribbon')->parent->display_name }}</a></li>
+        <li><a href="{{ session('ribbon')->route }}">{{ session('ribbon')->display_name }}</a></li>
     </ol>
     <!-- end breadcrumb -->
 </div>

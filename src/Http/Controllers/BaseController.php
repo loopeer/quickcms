@@ -12,15 +12,13 @@ namespace Loopeer\QuickCms\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Loopeer\QuickCms\Models\Permission;
-use Loopeer\QuickCms\Models\System;
 use Carbon\Carbon;
 use Input;
 use Illuminate\Pagination\Paginator;
-use Log;
 use Cache;
 use Auth;
-use Loopeer\QuickCms\Models\User;
 use Request;
+use Route;
 
 /**
  * 后台Controller基类
@@ -30,20 +28,13 @@ use Request;
 class BaseController extends Controller
 {
 
-    private $menu;
-
     public function __construct()
     {
-//        $route_url = $this->getRouter()->cu;
-//        $permission = Permission::select('name','display_name')->where('name', $route_url)->first();
-//        if(!empty($permission)) {
-//            Log::info($permission->display_name);
-//        }
-//        if (!Cache::has('websiteTitle')) {
-//             Cache::rememberForever('websiteTitle', function() {
-//                return System::find(1)['title'];
-//            });
-//        }
+        $route_url = '/' . Route::getCurrentRoute()->getPath();
+        $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
+            ->where('route', $route_url)
+            ->first();
+        session(['ribbon' => $permission]);
     }
 
     /**
@@ -63,7 +54,6 @@ class BaseController extends Controller
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
             ->orderByRaw($order_sql)
             ->paginate($length);
-        Log::info($paginate);
         $ret = self::getPageDate($show_column, $paginate);
         return $ret;
     }
