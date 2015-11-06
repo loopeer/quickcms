@@ -42,6 +42,12 @@ update config/auth.php
         ]
     ],
 ```
+update app/Http/Kernel.php,add protected $routeMiddleware []
+```
+'auth.admin' =>  \Loopeer\QuickCms\Http\Middleware\AdminMiddleware::class,
+'auth.login' =>  \Loopeer\QuickCms\Http\Middleware\AdminAuthenticate::class,
+'auth.permission' => \Loopeer\QuickCms\Http\Middleware\PermissionMiddleware::class,
+```
 # Step4
 publish js css image to your project/public dir
 ```
