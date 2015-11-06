@@ -10,8 +10,10 @@ fix composer update error,add composer.json
 "minimum-stability": "dev",
 "prefer-stable" : true
 ```
+then run `composer update`
 # Step2
-update vendor/zizaco/entrust/config/config.php
+use `php artisan vendor:publish` and a `entrust.php` file will be created in app/config directory.
+then update config/entrust.php
 ```
 'role' => 'Loopeer\QuickCms\Models\Role',
 'permission' => 'Loopeer\QuickCms\Models\Permission',

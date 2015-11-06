@@ -16,7 +16,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Input;
 use Validator;
 use Session;
-use App\Http\Controllers\Backend\IndexController;
+use Loopeer\QuickCms\Http\Controllers\IndexController;
 
 class AdminMiddleware{
     /**
