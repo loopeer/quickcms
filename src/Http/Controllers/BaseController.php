@@ -119,4 +119,18 @@ class BaseController extends Controller
         );
         return $ret;
     }
+
+    /**
+     * 设置自定义sql语句中得表名前缀
+     * @param $column
+     * @param array $searches
+     * @return mixed
+     */
+    public function setTablePrefix($column, $searches = array()) {
+        $prefix = config('database.connections.mysql.prefix');
+        foreach($searches as $search) {
+            $column = str_replace($search, $prefix . $search, $column);
+        }
+        return $column;
+    }
 }

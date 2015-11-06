@@ -31,10 +31,10 @@ class PermissionController extends BaseController {
         $search = Input::get('search')['value'];
         $order = Input::get('order')['0'];
         $length = Input::get('length');
-        $select_column = ['ss_menus.id','ss_menus.name','ss_menus.display_name','ss_menus.route','ss_parents.display_name','ss_menus.sort','ss_menus.icon','ss_menus.description'];
+        $select_column = ['menus.id','menus.name','menus.display_name','menus.route','ss_parents.display_name','menus.sort','menus.icon','menus.description'];
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = implode(',', $select_column);
+        $str_column = self::setTablePrefix(implode(',', $select_column), ['menus']);
         self::setCurrentPage();
         $permissions = DB::table('permissions as menus')->leftJoin('permissions as parents','parents.id','=','menus.parent_id')
         ->select('menus.id as menu_id','menus.name as menu_name','menus.display_name as menu_display_name','menus.route as menu_route',

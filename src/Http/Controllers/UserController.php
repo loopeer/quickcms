@@ -30,15 +30,16 @@ class UserController extends BaseController {
         $search = Input::get('search')['value'];
         $order = Input::get('order')['0'];
         $length = Input::get('length');
-        $select_column = ["COALESCE(ss_role.display_name,'')",'ss_user.id','ss_user.name','ss_user.email','ss_user.created_at','ss_user.last_login','ss_user.status'];
+        $select_column = ["COALESCE(roles.display_name,'')",'users.id','users.name','users.email','users.created_at','users.last_login','users.status'];
         $show_column = ['user_id','user_name','email','role_name','user_created_at','last_login','status'];
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = implode(',', $select_column);
+        $str_column = self::setTablePrefix(implode(',', $select_column), ['users','roles']);
         self::setCurrentPage();
-        $users = DB::table('users as user')->leftJoin('role_user as ru','user.id','=','ru.user_id')
-            ->leftJoin('roles as role','role.id','=','ru.role_id')
-            ->select('user.id as user_id','user.name as user_name','user.email as email','user.created_at as user_created_at',
-                'user.last_login as last_login','user.status as status','role.display_name as role_name')
+        $users = DB::table('users')
+            ->select('users.id as user_id','users.name as user_name','users.email as email','users.created_at as user_created_at',
+                'users.last_login as last_login','users.status as status','roles.display_name as role_name')
+            ->leftJoin('role_user','users.id','=','role_user.user_id')
+            ->leftJoin('roles','roles.id','=','role_user.role_id')
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
             ->orderByRaw($order_sql)
             ->paginate($length);
