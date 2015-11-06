@@ -12,13 +12,10 @@ update entrust config.php
 'permission' => 'Loopeer\QuickCms\Models\Permission',
 ```
 # Step3
-remove config/app.php
+update config/app.php
 ```
-Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
-Illuminate\Auth\AuthServiceProvider::class,
-```
-add config/app.php
-```
+//Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+//Illuminate\Auth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 Zizaco\Entrust\EntrustServiceProvider::class,
