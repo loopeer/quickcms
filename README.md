@@ -5,8 +5,13 @@ laravel 5.1 quick cms
 ```
 composer require loopeer/quickcms
 ```
+fix composer update error,add composer.json
+```
+"minimum-stability": "dev",
+"prefer-stable" : true
+```
 # Step2
-update entrust config.php
+update vendor/zizaco/entrust/config/config.php
 ```
 'role' => 'Loopeer\QuickCms\Models\Role',
 'permission' => 'Loopeer\QuickCms\Models\Permission',
