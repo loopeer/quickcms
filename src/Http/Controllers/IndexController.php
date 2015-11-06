@@ -12,6 +12,7 @@ namespace Loopeer\QuickCms\Http\Controllers;
 
 use Loopeer\QuickCms\Models\Permission;
 use Loopeer\QuickCms\Models\User;
+use Loopeer\QuickCms\Models\ActionLog;
 use View;
 use Input;
 use Log;
@@ -25,7 +26,7 @@ use Illuminate\Http\Request;
 class IndexController extends BaseController {
 
     public function index() {
-        return $this->getIndex();
+        return view('backend::index');
     }
 
     public function getLogin(){
@@ -33,7 +34,7 @@ class IndexController extends BaseController {
         return view('backend::login',compact('message'));
     }
 
-    public function postLogin(){
+    public function postLogin(Request $request){
         $email = Input::get('email');
         $remember = Input::get('remember',0);
         $user = User::where('email',$email)->first();
@@ -41,6 +42,11 @@ class IndexController extends BaseController {
         $user->last_login = date('Y-m-d H:i:s');
         $user->save();
         $this->getMenus($user);
+        ActionLog::create(array(
+            'user_id' => $user->id,
+            'content' => config('quickcms.action_log.login'),
+            'client_ip' => $request->ip()
+        ));
         return $this->getIndex();
     }
 
@@ -62,7 +68,7 @@ class IndexController extends BaseController {
                 }
             }
         }
-        return redirect('/admin/dashboard');
+        return redirect('/admin/index');
     }
 
     public function getMenus($user){

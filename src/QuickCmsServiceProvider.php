@@ -31,6 +31,10 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/../database/migrations' => database_path('migrations'),
 		], 'migrations');
+		// Publish config files
+		$this->publishes([
+			__DIR__.'/../config/config.php' => config_path('quickcms.php'),
+		]);
 	}
 
 	/**

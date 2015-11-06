@@ -32,7 +32,7 @@ class PermissionController extends BaseController {
         $search = Input::get('search')['value'];
         $order = Input::get('order')['0'];
         $length = Input::get('length');
-        $select_column = ['menus.id','menus.name','menus.display_name','menus.route','ss_parents.display_name','menus.sort','menus.icon','menus.description'];
+        $select_column = ['menus.id','menus.name','menus.display_name','menus.route','parents.display_name','menus.sort','menus.icon','menus.description'];
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
         $str_column = self::setTablePrefix(implode(',', $select_column), ['menus']);
