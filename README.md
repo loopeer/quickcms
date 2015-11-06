@@ -24,15 +24,36 @@ Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 Zizaco\Entrust\EntrustServiceProvider::class,
 Loopeer\QuickCms\QuickCmsServiceProvider::class,
 ```
+update config/auth.php
+```
+//'driver' => 'eloquent',
+//'model' => App\User::class,
+//'table' => 'users',
+'multi-auth' => [
+        'admin' => [
+            'driver' => 'eloquent',
+            'model'  => Loopeer\QuickCms\Models\User::class,
+        ],
+        'user' => [
+            'driver' => 'eloquent',
+            'model'  => Loopeer\QuickCms\Models\Account::class
+        ]
+    ],
+```
 # Step4
-init migrate and db seed command
-```
-php artisan quickcms:install
-```
-# Step5
 publish js css image to your project/public dir
 ```
 php artisan vendor:publish --tag=public --force
+```
+publish migrate
+```
+php artisan vendor:public --tag=migrations
+```
+# Step5
+init migrate and db seed command
+```
+php artisan migrate
+php artisan quickcms:install
 ```
 # Step6
 test url
