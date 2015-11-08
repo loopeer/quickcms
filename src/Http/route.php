@@ -20,6 +20,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('/', 'IndexController@index');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
+   Route::get('index/getLoginLog', 'IndexController@getLoginLog');
 
    Route::resource('dashboard', 'DashboardController',array('except' => 'show'));
 

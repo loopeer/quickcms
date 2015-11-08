@@ -26,7 +26,10 @@ use Illuminate\Http\Request;
 class IndexController extends BaseController {
 
     public function index() {
-        return view('backend::index');
+        $user = Auth::admin()->get();
+        $user_action_log = ActionLog::where('user_id',$user->id)->orderBy('created_at','desc')->first();
+        $count_user = User::count();
+        return view('backend::index',compact('user','user_action_log','count_user'));
     }
 
     public function getLogin(){
@@ -52,7 +55,7 @@ class IndexController extends BaseController {
 
     public function logout(){
         Auth::admin()->logout();
-       // Session::forget('menu');
+        // Session::forget('menu');
         $message = array('result' => true,'content' => '退出成功');
         return redirect('/admin/login')->with('message',$message);
     }
@@ -89,5 +92,24 @@ class IndexController extends BaseController {
             }
         }
         Session::put('menu', json_decode($menus, true));
+    }
+
+    public function getLoginLog(){
+        $search = Input::get('search')['value'];
+        $order = Input::get('order')['0'];
+        $length = Input::get('length');
+        $select_column = ['action_logs.id','users.email','action_logs.client_ip','action_logs.created_at'];
+        $show_column = ['id','email','client_ip','created_at'];
+        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
+        $str_column = self::setTablePrefix(implode(',', $select_column), ['users','roles']);
+        self::setCurrentPage();
+        $users = ActionLog::where('content',config('quickcms.action_log.login'))->orderBy('created_at','desc')
+            ->select('users.email as email','action_logs.id','action_logs.client_ip','action_logs.created_at')
+            ->leftJoin('users','users.id','=','action_logs.user_id')
+            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+            ->orderByRaw($order_sql)
+            ->paginate($length);
+        $ret = self::queryPage($show_column, $users);
+        return Response::json($ret);
     }
 }
