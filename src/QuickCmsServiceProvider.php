@@ -23,6 +23,10 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		});
 
 		$this->loadViewsFrom(__DIR__.'/../views', 'backend');
+		// Publish config files
+		$this->publishes([
+			__DIR__.'/../config/config.php' => config_path('quickcms.php'),
+		],'quickcms');
 
 		$this->publishes([
 			__DIR__.'/../public/backend' => public_path('loopeer/quickcms'),
@@ -31,10 +35,6 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/../database/migrations' => database_path('migrations'),
 		], 'migrations');
-		// Publish config files
-		$this->publishes([
-			__DIR__.'/../config/config.php' => config_path('quickcms.php'),
-		]);
 	}
 
 	/**

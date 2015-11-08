@@ -12,6 +12,14 @@ fix composer update error,add composer.json
 ```
 then run `composer update`
 # Step2
+update `config/app.php` add
+```
+Zizaco\Entrust\EntrustServiceProvider::class,
+```
+in the `providers` array add
+```
+'Entrust' => Zizaco\Entrust\EntrustFacade::class,
+```
 use `php artisan vendor:publish` and a `entrust.php` file will be created in app/config directory.
 then update config/entrust.php
 ```
@@ -25,7 +33,6 @@ update config/app.php
 //Illuminate\Auth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
-Zizaco\Entrust\EntrustServiceProvider::class,
 Loopeer\QuickCms\QuickCmsServiceProvider::class,
 ```
 update config/auth.php
@@ -51,6 +58,10 @@ update app/Http/Kernel.php,add protected $routeMiddleware []
 'auth.permission' => \Loopeer\QuickCms\Http\Middleware\PermissionMiddleware::class,
 ```
 # Step4
+publish quickcms config file to config/quickcms.php
+```
+php artisan vendor:publish --tag=quickcms
+```
 publish js css image to your project/public dir
 ```
 php artisan vendor:publish --tag=public --force
