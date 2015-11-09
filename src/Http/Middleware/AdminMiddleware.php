@@ -54,6 +54,11 @@ class AdminMiddleware{
             $index = new IndexController($request);
             $index->getMenus($user);
         }
+        if (!Cache::has('websiteTitle')) {
+            Cache::rememberForever('websiteTitle', function() {
+                return System::find(1)['title'];
+            });
+        }
         return $next($request);
     }
 }
