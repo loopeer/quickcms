@@ -35,7 +35,7 @@ class PermissionController extends BaseController {
         $select_column = ['menus.id','menus.name','menus.display_name','menus.route','parents.display_name','menus.sort','menus.icon','menus.description'];
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = self::setTablePrefix(implode(',', $select_column), ['menus']);
+        $str_column = self::setTablePrefix(implode(',', $select_column), ['menus','parents']);
         self::setCurrentPage();
         $permissions = DB::table('permissions as menus')->leftJoin('permissions as parents','parents.id','=','menus.parent_id')
         ->select('menus.id as menu_id','menus.name as menu_name','menus.display_name as menu_display_name','menus.route as menu_route',

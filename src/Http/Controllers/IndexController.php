@@ -101,7 +101,7 @@ class IndexController extends BaseController {
         $select_column = ['action_logs.id','users.email','action_logs.client_ip','action_logs.created_at'];
         $show_column = ['id','email','client_ip','created_at'];
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = self::setTablePrefix(implode(',', $select_column), ['users','roles']);
+        $str_column = self::setTablePrefix(implode(',', $select_column), ['users','action_logs']);
         self::setCurrentPage();
         $users = ActionLog::where('content',config('quickcms.action_log.login'))->orderBy('created_at','desc')
             ->select('users.email as email','action_logs.id','action_logs.client_ip','action_logs.created_at')
