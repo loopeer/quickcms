@@ -69,7 +69,7 @@
                             <strong>姓名：</strong>{{$user->name}}
                             <br>
                             <br>
-                            <strong>用户角色：</strong><span class="label label-primary">{{$user->roles->first()->name}}</span>
+                            <strong>用户角色：</strong><span class="label label-primary">{{$user->roles->first()->display_name}}</span>
                             <br>
                             <br>
                             <strong>登陆IP：</strong>{{$user_action_log->client_ip}}
