@@ -75,10 +75,10 @@
                             <strong>登陆IP：</strong>{{$user_action_log->client_ip}}
                             <br>
                             <br>
-                            <strong>登陆时间：</strong>{{$user_action_log->created_at}}
+                            <strong>最近登陆时间：</strong>{{$user->last_login}}
                             <br>
                             <br>
-                            <strong>最后更新时间：</strong>{{$user_action_log->updated_at}}
+                            <strong>最后更新时间：</strong>{{$user->updated_at}}
                             <br>
                         </address>
                     </div>
