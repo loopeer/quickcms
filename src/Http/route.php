@@ -22,22 +22,24 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('index', 'IndexController@index');
    Route::get('index/getLoginLog', 'IndexController@getLoginLog');
 
-   Route::resource('dashboard', 'DashboardController',array('except' => 'show'));
+//   Route::resource('dashboard', 'DashboardController',array('except' => 'show'));
 
    Route::get('users/search', 'UserController@search');
-   Route::resource('users', 'UserController');
+   Route::resource('users', 'UserController', array('except'=>'show'));
+   Route::get('users/edit/{id}', 'UserController@edit');
    Route::get('users/changeStatus/{id}', 'UserController@changeStatus');
    Route::get('users/role/{id}', 'UserController@getRole');
    Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
+   Route::get('users/checkEmail', 'UserController@checkEmail');
 
    Route::resource('roles', 'RoleController', array('except'=>'show'));
    Route::get('roles/search', 'RoleController@search');
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
 
-   Route::resource('logs', 'LogsController', array('except'=>'show'));
-   Route::get('logs/delete/{log_id}', array('as'=>'admin.logs.delete', 'uses'=>'LogsController@delete'));
-   Route::get('logs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogsController@emptyLogs'));
+//   Route::resource('logs', 'LogsController', array('except'=>'show'));
+//   Route::get('logs/delete/{log_id}', array('as'=>'admin.logs.delete', 'uses'=>'LogsController@delete'));
+//   Route::get('logs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogsController@emptyLogs'));
 
    Route::resource('permissions', 'PermissionController', array('except'=>'show'));
    Route::get('permissions/search', 'PermissionController@search');

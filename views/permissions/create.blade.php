@@ -1,10 +1,10 @@
 @extends('backend::layouts.master')
 @section('content')
-    @include('backend::layouts.message')
     <div id="content">
         <section id="widget-grid" class="">
             <div class="row">
                 <article class="col-sm-12 col-md-12 col-lg-6">
+                    @include('backend::layouts.message')
                     <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>

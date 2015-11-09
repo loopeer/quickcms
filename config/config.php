@@ -13,4 +13,7 @@ return [
     'action_log' => array(
         'login' => '登陆系统'
     ),
+
+    //加密字符串
+    'admin_pwd_salt' => '',
 ];

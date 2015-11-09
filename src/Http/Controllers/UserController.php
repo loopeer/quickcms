@@ -18,6 +18,7 @@ use Session;
 use Loopeer\QuickCms\Models\User;
 use Response;
 use DB;
+use Redirect;
 
 class UserController extends BaseController {
 
@@ -56,27 +57,49 @@ class UserController extends BaseController {
 
     public function create() {
         $roles = Role::all();
-        return view('backend::users.create',compact('roles'));
+        $action = route('admin.users.store');
+        $user = new User();
+        $message = Session::get('message');
+        return view('backend::users.create',compact('roles','action','user','message'));
     }
 
     public function store() {
         $inputs = Input::all();
-        $password = sha1($inputs['password'].config('api.admin_pwd_salt'));
-        $role_id = Input::get('role_id');
-        $user = new User();
-        $user->email = $inputs['email'];
-        $user->password = $password;
-        $user->name = $inputs['name'];
-        $user->save();
-        $user->attachRole($role_id);
-        $result = empty($user) ? false : true;
-        $message = array('result' => $result, 'content' => $result ? '添加用户成功' : '添加用户失败');
+        if (!isset($inputs['user_id'])) {
+            //创建
+            $isset = User::where('email',$inputs['email'])->first();
+            if(is_null($isset)){
+                $user = new User();
+                $user->email = $inputs['email'];
+                $user->password = sha1($inputs['password'].config('quickcms.admin_pwd_salt'));
+                $user->name = $inputs['name'];
+                $result = $user->save();
+                $user->attachRole(Input::get('role_id'));
+                $message = array('result' => $result, 'content' => $result ? '添加用户成功' : '添加用户失败');
+            }else{
+                $message = array('result' => false,'content' => '创建用户失败,此用户名已存在,请重新填写信息');
+                return Redirect::back()->with('message', $message);
+            }
+
+        } else {
+            //编辑
+            $user = User::find($inputs['user_id']);
+            if ($inputs['password'] != '') {
+                $user->password = sha1($inputs['password'].config('quickcms.admin_pwd_salt'));
+            }
+            $user->name = $inputs['name'];
+            $result = $user->save();
+            $message = array('result' => $result, 'content' => $result ? '编辑用户成功' : '编辑用户失败');
+        }
         return redirect('admin/users')->with('message', $message);
     }
 
-
-    public function edit() {
-        return view('backend::users.create');
+    public function edit($id) {
+        $roles = Role::all();
+        $action = route('admin.users.store',array('user_id' => $id));
+        $user = User::find($id);
+        $message = Session::get('message');
+        return view('backend::users.create', compact('roles','action','user','message'));
     }
 
     public function destroy($id) {
@@ -115,6 +138,16 @@ class UserController extends BaseController {
         $user->attachRole($role_id);
         $res = array('result' => true,'content' => '分配用户角色成功');
         return $res;
+    }
+
+    public function checkEmail() {
+        $email = Input::get('email');
+        $isset = User::where('email', '=', $email)->first();
+        if (is_null($isset)) {
+            return 'true';
+        } else {
+            return 'false';
+        }
     }
 
 }

@@ -45,7 +45,7 @@ class AdminAuthenticate{
     {
         $email = Input::get('email');
         $password = Input::get('password');
-        $password = sha1($password.config('api.admin_pwd_salt'));
+        $password = sha1($password.config('quickcms.admin_pwd_salt'));
         $admin = User::where('email',$email)->where('password',$password)->first();
         if(is_null($admin)){
             $message = array('result' => false,'content' => '邮箱或密码错误');

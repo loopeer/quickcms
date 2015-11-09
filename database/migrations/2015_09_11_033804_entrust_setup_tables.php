@@ -18,7 +18,7 @@ class EntrustSetupTables extends Migration
             $table->string('password', 100);
             $table->string('remember_token');
             $table->tinyInteger('status')->default(1);
-            $table->timestamp('last_login');
+            $table->timestamp('last_login')->nullable();;
             $table->timestamps();
         });
         // Create table for storing roles
