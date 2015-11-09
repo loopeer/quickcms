@@ -19,6 +19,7 @@ use Cache;
 use Auth;
 use Request;
 use Route;
+use Session;
 
 /**
  * 后台Controller基类
@@ -31,10 +32,12 @@ class BaseController extends Controller
     public function __construct()
     {
         $route_url = '/' . Route::getCurrentRoute()->getPath();
-        $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
-            ->where('route', $route_url)
-            ->first();
-        session(['ribbon' => $permission]);
+        if(!Session::has($route_url)){
+            $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
+                ->where('route', $route_url)
+                ->first();
+            session([$route_url => $permission]);
+        }
     }
 
     /**

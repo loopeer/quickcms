@@ -8,8 +8,12 @@
     <!-- breadcrumb -->
     <ol class="breadcrumb">
         <li>管理面板</li>
-        <li><a href="{{ session('ribbon')->parent->route }}">{{ session('ribbon')->parent->display_name }}</a></li>
-        <li><a href="{{ session('ribbon')->route }}">{{ session('ribbon')->display_name }}</a></li>
+        @if(isset(session('/' . Route::getCurrentRoute()->getPath())->parent))
+            <li><a href="{{ session('/' . Route::getCurrentRoute()->getPath())->parent->route }}">{{ session('/' . Route::getCurrentRoute()->getPath())->parent->display_name }}</a></li>
+        @endif
+        @if(isset(session('/' . Route::getCurrentRoute()->getPath())->id))
+            <li><a href="{{ session('/' . Route::getCurrentRoute()->getPath())->route }}">{{ session('/' . Route::getCurrentRoute()->getPath())->display_name }}</a></li>
+        @endif
     </ol>
     <!-- end breadcrumb -->
 </div>

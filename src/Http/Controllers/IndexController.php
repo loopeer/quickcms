@@ -27,7 +27,7 @@ class IndexController extends BaseController {
 
     public function index() {
         $user = Auth::admin()->get();
-        $user_action_log = ActionLog::where('user_id',$user->id)->orderBy('created_at','desc')->first();
+        $user_action_log = ActionLog::where('user_id',$user->id)->orderBy('id','desc')->first();
         $count_user = User::count();
         return view('backend::index',compact('user','user_action_log','count_user'));
     }
@@ -55,7 +55,7 @@ class IndexController extends BaseController {
 
     public function logout(){
         Auth::admin()->logout();
-        // Session::forget('menu');
+        Session::flush();
         $message = array('result' => true,'content' => '退出成功');
         return redirect('/admin/login')->with('message',$message);
     }
