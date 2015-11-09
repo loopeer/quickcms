@@ -17,6 +17,8 @@ use Input;
 use Validator;
 use Session;
 use Loopeer\QuickCms\Http\Controllers\IndexController;
+use Cache;
+use Loopeer\QuickCms\Models\System;
 
 class AdminMiddleware{
     /**
