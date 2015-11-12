@@ -24,6 +24,11 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
 //   Route::resource('dashboard', 'DashboardController',array('except' => 'show'));
 
+   // 图片上传
+   Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
+   Route::get('blueimp/{id}', array('as'=>'admin.blueimp.delete', 'uses'=>'BlueimpController@destroy'));
+   Route::get('blueimp', array('as'=>'admin.blueimp.index', 'uses'=>'BlueimpController@getImage'));
+
    Route::get('users/search', 'UserController@search');
    Route::resource('users', 'UserController', array('except'=>'show'));
    Route::get('users/edit/{id}', 'UserController@edit');

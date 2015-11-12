@@ -3,7 +3,8 @@
     "require": {
         "php": ">=5.5.9",
         "zizaco/entrust": "dev-laravel-5",
-        "kbwebs/multiauth": "~1.0"
+        "kbwebs/multiauth": "~1.0",
+        "qiniu/qiniu": "dev-master"
     },
     "autoload": {
         "psr-4": {

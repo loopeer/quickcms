@@ -16,4 +16,10 @@ return [
 
     //加密字符串
     'admin_pwd_salt' => '',
+
+    // qiniu config
+    'qiniu_access_key' => '',
+    'qiniu_secret_key' => '',
+    'qiniu_bucket' => '',
+    'qiniu_url' => '',
 ];
