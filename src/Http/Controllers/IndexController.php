@@ -27,9 +27,8 @@ class IndexController extends BaseController {
 
     public function index() {
         $user = Auth::admin()->get();
-        $user_action_log = ActionLog::where('user_id',$user->id)->orderBy('id','desc')->first();
         $count_user = User::count();
-        return view('backend::index',compact('user','user_action_log','count_user'));
+        return view('backend::index',compact('user', 'count_user'));
     }
 
     public function getLogin(){
