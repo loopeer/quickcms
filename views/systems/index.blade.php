@@ -94,7 +94,7 @@
                                 $('#message').html('<article class="col-sm-12" id="tips"><div class="alert alert-success fade in"><button class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-times"></i> <strong>成功</strong> 文件不合法 </div> </article>');break;
                             case '1':
                                 $('#message').html('<article class="col-sm-12" id="tips"><div class="alert alert-success fade in"><button class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-times"></i> <strong>成功</strong> Logo修改成功 </div> </article>');
-                                document.getElementById('logo-img').src = '{{asset('/backend/img/')}}/logo.png?n='+ Math.random();
+                                document.getElementById('logo-img').src = '{{asset('/loopeer/quickcms/img/')}}/logo.png?n='+ Math.random();
                             break;
                             case '2': $('#message').html('<article class="col-sm-12" id="tips"><div class="alert alert-danger fade in"><button class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-times"></i> <strong>失败</strong> 图片格式不正确 </div> </article>');break;
                         }
