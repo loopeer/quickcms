@@ -25,6 +25,11 @@ use Illuminate\Http\Request;
 
 class IndexController extends BaseController {
 
+    public function __construct(){
+        $this->middleware('auth.permission:admin.index',['only' => ['index','getLoginLog']]);
+        parent::__construct();
+    }
+
     public function index() {
         $user = Auth::admin()->get();
         $count_user = User::count();
@@ -59,7 +64,7 @@ class IndexController extends BaseController {
         return redirect('/admin/login')->with('message',$message);
     }
 
-    private function getIndex(){
+    public function getIndex(){
         $user = Auth::admin()->get();
         $permissions = Permission::whereNotNull('route')->where('route','!=','')->orderBy('level')->where('route','!=','#')->orderBy('sort');
         $permission_routes = $permissions->lists('route','name');
