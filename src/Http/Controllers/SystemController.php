@@ -66,7 +66,7 @@ class SystemController extends BaseController {
                     echo 2;//格式不正确
                     exit;
                 }
-                Input::file('logo')->move(base_path().'/public/backend/img', 'logo.png');
+                Input::file('logo')->move(base_path().'/public/loopeer/quickcms/img', 'logo.png');
                 echo 1;
             } else {
                 echo 0;//文件不合法
