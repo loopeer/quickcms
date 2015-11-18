@@ -29,25 +29,16 @@ class UserController extends BaseController {
     }
 
     public function search() {
-        $search = Input::get('search')['value'];
-        $order = Input::get('order')['0'];
-        $length = Input::get('length');
         $select_column = ["COALESCE(roles.display_name,'')",'users.id','users.name','users.email','users.created_at','users.last_login','users.status'];
         $show_column = ['user_id','user_name','email','role_name','user_created_at','last_login','status'];
-        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = self::setTablePrefix(implode(',', $select_column), ['users','roles']);
-        self::setCurrentPage();
+        $tables = ['users','roles'];
         $users = DB::table('users')
             ->select('users.id as user_id','users.name as user_name','users.email as email','users.created_at as user_created_at',
                 'users.last_login as last_login','users.status as status','roles.display_name as role_name')
             ->leftJoin('role_user','users.id','=','role_user.user_id')
-            ->leftJoin('roles','roles.id','=','role_user.role_id')
-            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-            ->orderByRaw($order_sql)
-            ->paginate($length);
-
-        $ret = self::queryPage($show_column, $users);
-        return Response::json($ret);
+            ->leftJoin('roles','roles.id','=','role_user.role_id');
+        $ret = self::getMultiTableData($users, $select_column, $show_column, $tables);
+        return $ret;
     }
 
     public function index() {

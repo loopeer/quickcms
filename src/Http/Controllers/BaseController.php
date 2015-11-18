@@ -20,6 +20,7 @@ use Auth;
 use Request;
 use Route;
 use Session;
+use Response;
 
 /**
  * 后台Controller基类
@@ -125,5 +126,27 @@ class BaseController extends Controller
             $column = str_replace($search, $prefix . $search, $column);
         }
         return $column;
+    }
+
+    /**
+     * 获取多表查询数据
+     * @param $obj
+     * @param $select_column
+     * @param $show_column
+     * @param $tables
+     * @return mixed
+     */
+    public function getMultiTableData($obj, $select_column, $show_column, $tables){
+        $search = Input::get('search')['value'];
+        $order = Input::get('order')['0'];
+        $length = Input::get('length');
+        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
+        $str_column = self::setTablePrefix(implode(',', $select_column), $tables);
+        self::setCurrentPage();
+        $obj = $obj->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+            ->orderByRaw($order_sql)
+            ->paginate($length);
+        $ret = self::queryPage($show_column, $obj);
+        return Response::json($ret);
     }
 }

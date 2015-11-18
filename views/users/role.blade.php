@@ -13,7 +13,6 @@
         </section>
     </fieldset>
 </form>
-<script src="{{ asset('backend/js/plugin/select2/select2.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         pageSetUp();

@@ -29,23 +29,14 @@ class PermissionController extends BaseController {
     }
 
     public function search() {
-        $search = Input::get('search')['value'];
-        $order = Input::get('order')['0'];
-        $length = Input::get('length');
         $select_column = ['menus.id','menus.name','menus.display_name','menus.route','parents.display_name','menus.sort','menus.icon','menus.description'];
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
-        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = self::setTablePrefix(implode(',', $select_column), ['menus','parents']);
-        self::setCurrentPage();
+        $tables = ['menus', 'parents'];
         $permissions = DB::table('permissions as menus')->leftJoin('permissions as parents','parents.id','=','menus.parent_id')
-        ->select('menus.id as menu_id','menus.name as menu_name','menus.display_name as menu_display_name','menus.route as menu_route',
-            'parents.display_name as parent_display_name','menus.sort as menu_sort','menus.icon as menu_icon','menus.description as menu_description')
-            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-            ->orderByRaw($order_sql)
-            ->paginate($length);
-
-        $ret = self::queryPage($show_column, $permissions);
-        return Response::json($ret);
+            ->select('menus.id as menu_id','menus.name as menu_name','menus.display_name as menu_display_name','menus.route as menu_route',
+                'parents.display_name as parent_display_name','menus.sort as menu_sort','menus.icon as menu_icon','menus.description as menu_description');
+        $ret = self::getMultiTableData($permissions, $select_column, $show_column, $tables);
+        return $ret;
     }
 
     public function index() {
