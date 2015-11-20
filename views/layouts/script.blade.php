@@ -23,7 +23,7 @@
             var route = $('#current_route').val()+'/';
             $("nav a").each(function () {
                 if(route.indexOf($(this).attr('href')+'/') != -1) {
-                    $(this).parent().attr('class', 'active');
+                    $(this).parent().attr('class', 'node-selected');
                     $(this).parent().parent().attr('style', 'display: block;');
                     $(this).parent().parent().parent().attr('class', 'active open');
                 }
