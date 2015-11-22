@@ -17,6 +17,10 @@ Route::get('admin/login', 'IndexController@getLogin');
 Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
+   if(env('APP_ENV') == 'local'){
+      Route::resource('build', 'AutoBuildController', array('except'=>'show'));
+      Route::get('getColumns', 'AutoBuildController@getColumns');
+   }
    Route::get('/', 'IndexController@getIndex');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
