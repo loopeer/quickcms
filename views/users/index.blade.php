@@ -93,6 +93,7 @@
                                 json.data[i][3] = '<span class="label label-primary">'+json.data[i][3]+'</span>';
                             }
                         }
+                        alert(json.data);
                         return json.data;
                     }
                 }

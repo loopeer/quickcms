@@ -13,8 +13,8 @@ class SystemsSetupTables extends Migration
     public function up()
     {
         //系统日志
-        Schema::create('action_logs', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('action_logs', function ($table) {
+            $table->bigIncrements('id');
             $table->bigInteger('user_id');
             $table->string('content');
             $table->string('client_ip',20);
