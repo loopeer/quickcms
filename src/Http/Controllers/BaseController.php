@@ -49,6 +49,7 @@ class BaseController extends Controller
      */
     public function simplePage($show_column, $model) {
         $search = Input::get('search')['value'];
+        $search = addslashes($search);
         $order = Input::get('order')['0'];
         $length = Input::get('length');
         self::setCurrentPage($length);
@@ -138,6 +139,7 @@ class BaseController extends Controller
      */
     public function getMultiTableData($obj, $select_column, $show_column, $tables){
         $search = Input::get('search')['value'];
+        $search = addslashes($search);
         $order = Input::get('order')['0'];
         $length = Input::get('length');
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
