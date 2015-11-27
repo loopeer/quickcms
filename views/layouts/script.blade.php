@@ -23,11 +23,13 @@
             var route = $('#current_route').val()+'/';
             $("nav a").each(function () {
                 if(route.indexOf($(this).attr('href')+'/') != -1) {
-                    $(this).parent().attr('class', 'node-selected');
+                    $(this).parent().attr('class', 'active');
                     $(this).parent().parent().attr('style', 'display: block;');
-                    $(this).parent().parent().parent().attr('class', 'active open');
+                    if($(this).parent().parent().parent()[0].tagName != 'NAV') {
+                        $(this).parent().parent().parent().attr('class', 'open active');
+                        $(this).parent().parent().parent().find('em').attr('class', 'fa fa-minus-square-o');
+                    }
                 }
-
             });
         });
     });

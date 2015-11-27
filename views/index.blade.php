@@ -1,52 +1,32 @@
 @extends('backend::layouts.master')
 @section('content')
-
     <div class="jarviswidget well jarviswidget-color-darken" id="wid-id-0" data-widget-sortable="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
-        <!-- widget options:
-        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-        data-widget-colorbutton="false"
-        data-widget-editbutton="false"
-        data-widget-togglebutton="false"
-        data-widget-deletebutton="false"
-        data-widget-fullscreenbutton="false"
-        data-widget-custombutton="false"
-        data-widget-collapsed="true"
-        data-widget-sortable="false"
-
-        -->
-        <header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> </div>
+        <header role="heading">
+            <div class="jarviswidget-ctrls" role="menu">
+                <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a>
+                <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a>
+            </div>
             <span class="widget-icon"> <i class="fa fa-barcode"></i> </span>
             <h2>Item #44761 </h2>
-
-            <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
-
-        <!-- widget div-->
+            <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+        </header>
         <div role="content">
-
-            <!-- widget edit box -->
             <div class="jarviswidget-editbox">
-                <!-- This area used as dropdown edit box -->
-
             </div>
-            <!-- end widget edit box -->
-
-            <!-- widget content -->
             <div class="widget-body no-padding">
-
                 <div class="padding-10">
                     <br>
-                    <div class="pull-left">
+                    <div class="pull-left" style="width: 50%">
                         <h4 class="semi-bold">系统信息</h4>
                         <address>
                             <br>
-                            <strong>服务器信息：</strong>{{php_uname('s').' '.php_uname('r').' '.php_uname('v')}}
+                            <strong>服务器信息：</strong><span>{{ php_uname('s').' '.php_uname('r').' '.php_uname('v') }}</span>
                             <br>
                             <br>
-                            <strong>主机名：</strong>{{php_uname('n')}}
+                            <strong>主机名：</strong>{{ php_uname('n') }}
                             <br>
                             <br>
-                            <strong>PHP版本：</strong>{{PHP_VERSION}}
+                            <strong>PHP版本：</strong>{{ PHP_VERSION }}
                             <br>
                             <br>
                             <strong>服务器IP：</strong>{{ GetHostByName($_SERVER['SERVER_NAME'])}}
@@ -55,7 +35,7 @@
                             <strong>服务器域名：</strong>{{ $_SERVER["HTTP_HOST"]}}
                             <br>
                             <br>
-                            <strong>系统用户数：</strong>{{$count_user}}
+                            <strong>系统用户数：</strong>{{ $count_user }}
                             <br>
                         </address>
                     </div>
@@ -63,34 +43,29 @@
                         <h4 class="semi-bold">当前登陆用户信息</h4>
                         <address>
                             <br>
-                            <strong>登陆邮箱：</strong>{{$user->email}}
+                            <strong>登陆邮箱：</strong>{{ $user->email }}
                             <br>
                             <br>
-                            <strong>姓名：</strong>{{$user->name}}
+                            <strong>姓名：</strong>{{ $user->name }}
                             <br>
                             <br>
-                            <strong>用户角色：</strong><span class="label label-primary">{{$user->roles->first()->display_name}}</span>
+                            <strong>用户角色：</strong><span class="label label-primary">{{ $user->roles->first()->display_name }}</span>
                             <br>
                             <br>
-                            <strong>登陆IP：</strong>{{Request::getClientIp()}}
+                            <strong>登陆IP：</strong>{{ Request::getClientIp() }}
                             <br>
                             <br>
-                            <strong>最近登陆时间：</strong>{{$user->last_login}}
+                            <strong>最近登陆时间：</strong>{{ $user->last_login }}
                             <br>
                             <br>
-                            <strong>最后更新时间：</strong>{{$user->updated_at}}
+                            <strong>最后更新时间：</strong>{{ $user->updated_at }}
                             <br>
                         </address>
                     </div>
                     <br>
                     <br>
-
                 </div>
-                <!-- end widget content -->
-
             </div>
-            <!-- end widget div -->
-
         </div>
     </div>
     <div id="content">
