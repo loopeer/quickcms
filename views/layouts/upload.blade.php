@@ -18,35 +18,34 @@
         $('#image').fileupload({
             url: "{{{ route('admin.blueimp.upload', array('file_name'=>'image')) }}}",
             add: function (e, data) {
-                if($("#image .table tr").length > 1){
-                    $("#image_error").text("只允许上传一张图片");
+                if($("#image .table tr").length >= max_image_count){
+                    $("#image_error").text("只允许上传" + max_image_count + "张图片");
                 }else{
                     $.blueimp.fileupload.prototype.options.add.call(this, e, data);
                 }
             }
         });
         $('#image .files').on('click', '.gallery', function (event) { if (blueimp.Gallery($('#image .gallery'), { index: this })) { event.preventDefault(); } });
-        // 加载image
-        @if (isset($advert->image) && count($advert->image)>0)
-        @foreach($advert->image as $image)
-        $('#image').addClass('fileupload-processing');
-        $.ajax({
-            url: "{{{ route('admin.blueimp.index', array('url' => $image)) }}}",
-            dataType: 'json',
-            context: $('#image')[0]
-        }).always(function () {
-            $(this).removeClass('fileupload-processing');
-        }).done(function (result) {
-            $(this).fileupload('option', 'done').call(this, null, {result: result});
+        var image = images.split(',');
+        for(var i = 0; i < image.length; i ++) {
+            $('#image').addClass('fileupload-processing');
+            $.ajax({
+                url: '/admin/blueimp',
+                data: {"url" : image[i]},
+                dataType: 'json',
+                context: $('#image')[0]
+            }).always(function () {
+                $(this).removeClass('fileupload-processing');
+            }).done(function (result) {
+                $(this).fileupload('option', 'done').call(this, null, {result: result});
+            });
+        }
+        $('#submit_btn').on('click',function(){
+            if($("#image .table tr.success").length != min_image_count){
+                alert("请上传" + min_image_count + "张图片");
+                return false;
+            }
         });
-        @endforeach
-        @endif
-             $('#submit_btn').on('click',function(){
-                    if($("#image .table tr.success").length != 1){
-                        alert("请上传一张广告图");
-                        return false;
-                    }
-                });
     });
 </script>
 <!-- The blueimp Gallery widget -->
