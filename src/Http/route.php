@@ -9,8 +9,11 @@
  * Time: 下午6:01
  */
 
-Route::get('test', function() {
-   echo 'hello world';
+Event::listen('illuminate.query', function($query, $params, $time, $conn) {
+   if(config('quickcms.sql_log_switch')) {
+      $logger = \Loopeer\QuickCms\Services\Utils\LogUtil::getLogger('sql', 'sql');
+      $logger->addInfo('sql = ' . $query . '   params = ' . implode(',', $params) . '  time = ' . $time . '   conn = ' . $conn);
+   }
 });
 
 Route::get('admin/login', 'IndexController@getLogin');
@@ -25,8 +28,6 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
    Route::get('index/getLoginLog', 'IndexController@getLoginLog');
-
-//   Route::resource('dashboard', 'DashboardController',array('except' => 'show'));
 
    // 图片上传
    Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
@@ -45,10 +46,6 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('roles/search', 'RoleController@search');
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
-
-//   Route::resource('logs', 'LogsController', array('except'=>'show'));
-//   Route::get('logs/delete/{log_id}', array('as'=>'admin.logs.delete', 'uses'=>'LogsController@delete'));
-//   Route::get('logs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogsController@emptyLogs'));
 
    Route::resource('permissions', 'PermissionController', array('except'=>'show'));
    Route::get('permissions/search', 'PermissionController@search');

@@ -17,6 +17,7 @@ return [
     //加密字符串
     'admin_pwd_salt' => '',
     'api_sign_validate' => false,
+    'sql_log_switch' => true,
 
     // qiniu config
     'qiniu_access_key' => '',
