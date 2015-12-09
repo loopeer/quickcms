@@ -45,9 +45,10 @@ class BaseController extends Controller
      * 分页查询封装函数
      * @param array $show_column ['id','name','email']
      * @param object $model new Model
+     * @param string $append_column
      * @return array
      */
-    public function simplePage($show_column, $model) {
+    public function simplePage($show_column, $model, $append_column = null) {
         $search = Input::get('search')['value'];
         $search = addslashes($search);
         $order = Input::get('order')['0'];
@@ -59,6 +60,9 @@ class BaseController extends Controller
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
             ->orderByRaw($order_sql)
             ->paginate($length);
+        if(isset($append_column)) {
+            $show_column[$append_column] = $append_column;
+        }
         $ret = self::getPageDate($show_column, $paginate);
         return $ret;
     }
