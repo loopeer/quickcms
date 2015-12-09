@@ -17,10 +17,10 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Eloquent  implements AuthenticatableContract, CanResetPasswordContract/* or ConfideUser 'wink' */
+class User extends Eloquent  implements AuthenticatableContract, CanResetPasswordContract
 {
-    //use HasRole; // Add this trait to your user model
     use Authenticatable, CanResetPassword, EntrustUserTrait;
+
     protected $fillable = ['name', 'email','password','remember_token','status','last_login'];
 
 }

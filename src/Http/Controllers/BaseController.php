@@ -48,7 +48,7 @@ class BaseController extends Controller
      * @param string $append_column
      * @return array
      */
-    public function simplePage($show_column, $model, $append_column = null) {
+    public function simplePage($show_column, $model, $append_column = NULL) {
         $search = Input::get('search')['value'];
         $search = addslashes($search);
         $order = Input::get('order')['0'];

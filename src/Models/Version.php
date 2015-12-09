@@ -2,9 +2,9 @@
 
 namespace Loopeer\QuickCms\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Loopeer\QuickCms\Models\Backend\BaseModel;
 
-class Version extends Model
+class Version extends BaseModel
 {
     //
 }

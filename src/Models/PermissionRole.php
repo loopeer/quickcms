@@ -1,9 +1,9 @@
 <?php
 
 namespace Loopeer\QuickCms\Models;
-use Illuminate\Database\Eloquent\Model;
+use Loopeer\QuickCms\Models\Backend\BaseModel;
 
-class PermissionRole extends Model
+class PermissionRole extends BaseModel
 {
     protected $table = 'permission_role';
 }

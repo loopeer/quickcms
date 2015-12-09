@@ -2,9 +2,9 @@
 
 namespace Loopeer\QuickCms\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Loopeer\QuickCms\Models\Backend\BaseModel;
 
-class Feedback extends Model
+class Feedback extends BaseModel
 {
     //
 }
