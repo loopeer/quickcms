@@ -19,6 +19,7 @@ class SystemsSetupTables extends Migration
             $table->string('content');
             $table->string('client_ip',20);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // # feedbacks [意见反馈]
@@ -57,6 +58,7 @@ class SystemsSetupTables extends Migration
             $table->increments('id');
             $table->string('title', 50); //网站标题
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

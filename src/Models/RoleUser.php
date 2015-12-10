@@ -2,7 +2,9 @@
 
 namespace Loopeer\QuickCms\Models;
 
-class RoleUser extends BaseModel
+use Illuminate\Database\Eloquent\Model;
+
+class RoleUser extends Model
 {
     protected $table = 'role_user';
 }
