@@ -4,9 +4,12 @@ namespace Loopeer\QuickCms\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BaseModel extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $hidden = array('created_at', 'updated_at', 'deleted_at');
     protected $guarded = array('created_at', 'updated_at', 'deleted_at');
 
