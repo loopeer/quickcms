@@ -1,6 +1,6 @@
 <?php
 
-namespace Loopeer\QuickCms\Models\Backend;
+namespace Loopeer\QuickCms\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
