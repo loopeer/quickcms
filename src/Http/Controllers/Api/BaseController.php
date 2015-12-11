@@ -44,7 +44,7 @@ class BaseController extends ApiBaseController {
 	 * @param $sort
 	 * @return mixed
 	 */
-	protected function addSelectDistance($pagination, $table, $orderColumn = 'publish_time', $sort = 'desc') {
+	protected function addSelectDistance($pagination, $table) {
 		$R=6370996.81;
 		$longitude = Input::get('longitude',null);
 		$latitude = Input::get('latitude',null);
@@ -60,6 +60,6 @@ class BaseController extends ApiBaseController {
 				. $R . 'as distance'));
 			$pagination = $pagination->orderBy('distance', 'asc');
 		}
-		return $pagination->orderBy($orderColumn, $sort);
+		return $pagination;
 	}
 }
