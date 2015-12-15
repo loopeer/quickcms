@@ -7,11 +7,8 @@
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     @include('backend::layouts.link')
-    <style>
-        #content{ margin-bottom: 100px;}
-    </style>
 </head>
-<body class="">
+<body class="{{ config('quickcms.admin_body_layout') }}">
 @include('backend::layouts.header')
 @include('backend::layouts.nav')
 <div id="main" role="main">

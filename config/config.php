@@ -64,4 +64,7 @@ return [
     //account_status
     'user_status_usable'=>0,  //正常可用
     'user_status_disabled'=>1,  //暂时被禁
+
+    // admin layout
+    'admin_body_layout' => 'menu-on-top',
 ];
