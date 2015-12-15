@@ -16,6 +16,8 @@ Route::get('test', function() {
 Route::get('admin/login', 'IndexController@getLogin');
 Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
+Route::get('/logs', array('middleware' => 'auth.admin', 'uses'=>'\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'));
+
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
       Route::resource('build', 'AutoBuildController', array('except'=>'show'));

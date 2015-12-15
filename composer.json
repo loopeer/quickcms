@@ -4,7 +4,8 @@
         "php": ">=5.5.9",
         "zizaco/entrust": "dev-laravel-5",
         "kbwebs/multiauth": "~1.0",
-        "qiniu/qiniu": "dev-master"
+        "qiniu/qiniu": "dev-master",
+        "rap2hpoutre/laravel-log-viewer": "0.2.*"
     },
     "autoload": {
         "psr-4": {
