@@ -43,6 +43,7 @@
     $(document).ready(function() {
         var table = $('#dt_basic').DataTable({
             "processing": false,
+            "bStateSave": true,
             "serverSide": true,
             "columnDefs": [ {
                 "targets": -1,
