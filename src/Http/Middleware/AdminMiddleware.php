@@ -18,6 +18,7 @@ use Validator;
 use Session;
 use Loopeer\QuickCms\Http\Controllers\IndexController;
 use Cache;
+use Redirect;
 use Loopeer\QuickCms\Models\System;
 
 class AdminMiddleware{
@@ -49,6 +50,12 @@ class AdminMiddleware{
     {
         if (!Auth::admin()->check()) {
             return redirect('/admin/login');
+        }
+        if ($_SERVER['PATH_INFO'] == '/logs') {
+            \Log::info(Auth::admin()->get()->can('admin.logs'));
+            if (!Auth::admin()->get()->can('admin.logs')) {
+                return Redirect::to('/admin/index')->with('message', array('result'=>false, 'content'=>'您没有权限'));
+            }
         }
         $menus = Session::get('menu',null);
         if(is_null($menus)){

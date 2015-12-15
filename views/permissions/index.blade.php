@@ -49,6 +49,7 @@
             table = $('#dt_basic').DataTable({
                 "processing": false,
                 "serverSide": true,
+                "bStateSave": true,
                 "columnDefs": [ {
                     "targets": -1,
                     "data": null,
