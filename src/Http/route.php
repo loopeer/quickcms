@@ -26,10 +26,14 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
       Route::resource('build', 'AutoBuildController', array('except'=>'show'));
       Route::get('getColumns', 'AutoBuildController@getColumns');
    }
+
    Route::get('/', 'IndexController@getIndex');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
    Route::get('index/getLoginLog', 'IndexController@getLoginLog');
+
+   Route::resource('generals', 'GeneralController@index');
+   Route::get('generals/search', 'GeneralController@search');
 
    // 图片上传
    Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
@@ -67,7 +71,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('versions', 'VersionController', array('except'=>'show'));
    Route::get('versions/search', 'VersionController@search');
 
-   Route::resource('systems', 'SystemController', array('except'=>'show'));
+   Route::resource('systems', 'GeneralController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
    Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
 });

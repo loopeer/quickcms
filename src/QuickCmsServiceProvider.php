@@ -26,7 +26,11 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		// Publish config files
 		$this->publishes([
 			__DIR__.'/../config/config.php' => config_path('quickcms.php'),
-		],'quickcms');
+		], 'quickcms');
+
+		$this->publishes([
+			__DIR__.'/../config/general.php' => config_path('general.php'),
+		], 'general');
 
 		$this->publishes([
 			__DIR__.'/../public/backend' => public_path('loopeer/quickcms'),
