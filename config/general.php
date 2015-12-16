@@ -9,6 +9,7 @@
  * Time: 下午6:20
  */
 return [
+    'versions_model' => 'Version',
     'versions_index_column' => array(
         'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status',
     ),
@@ -16,6 +17,7 @@ return [
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '选项',
     ),
 
+    'feedbacks_model' => 'Feedback',
     'feedbacks_index_column' => array(
         'id', 'account_id', 'content', 'contact', 'version_code', 'version', 'device_id', 'channel_id',
     ),

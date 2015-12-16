@@ -68,7 +68,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('feedbacks', 'FeedbackController', array('except'=>'show'));
    Route::get('feedbacks/search', array('as'=>'admin.feedbacks.search', 'uses'=>'FeedbackController@search'));
 
-   Route::resource('versions', 'GeneralController', array('except'=>'show'));
+   Route::resource('versions', 'VersionController', array('except'=>'show'));
    Route::get('versions/search', 'VersionController@search');
 
    Route::resource('systems', 'GeneralController', array('except'=>'show'));
