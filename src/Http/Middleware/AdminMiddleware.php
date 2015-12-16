@@ -52,7 +52,6 @@ class AdminMiddleware{
             return redirect('/admin/login');
         }
         if (substr($_SERVER['REQUEST_URI'], 0 , 5) == '/logs') {
-            \Log::info(Auth::admin()->get()->can('admin.logs'));
             if (!Auth::admin()->get()->can('admin.logs')) {
                 return Redirect::to('/admin/index')->with('message', array('result'=>false, 'content'=>'您没有权限'));
             }
