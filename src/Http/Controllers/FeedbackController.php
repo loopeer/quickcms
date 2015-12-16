@@ -31,13 +31,11 @@ class FeedbackController extends BaseController {
                 'account_id',
                 'content',
                 'contact',
-                'version_code',
                 'version',
+                'version_code',
                 'device_id',
                 'channel_id',
                 'created_at',
-                'updated_at',
-                'deleted_at'
             ],
             new Feedback()
         );

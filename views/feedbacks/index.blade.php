@@ -19,12 +19,14 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>用户ID</th>
                                 <th>反馈内容</th>
+                                <th>联系方式</th>
                                 <th>版本名称</th>
                                 <th>版本号</th>
                                 <th>设备唯一ID</th>
                                 <th>渠道编号</th>
-                                <th>联系方式</th>
+                                <th>反馈时间</th>
                                 <th>选项</th>
                             </tr>
                             </thead>
