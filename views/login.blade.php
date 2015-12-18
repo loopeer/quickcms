@@ -26,7 +26,7 @@
             padding-top: 0;
         }
         #content{
-            margin-top: 200px;
+            margin-top: 150px;
         }
         .smart-form footer,.smart-form fieldset,.client-form header {
             background: rgba(248,248,248,.5);
