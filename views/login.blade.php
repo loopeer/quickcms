@@ -41,7 +41,7 @@
 {{--</header>--}}
 <div id="wrap">
     <div id="main" role="main">
-        <div id="background-full-screen" style="background-image: url('{{asset('loopeer/quickcms/img/background.jpg')}}');"></div>
+        <div id="background-full-screen" style="background-image: url('{{asset('loopeer/quickcms/backend/img/background.jpg')}}');"></div>
         <div id="content" class="container">
             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
