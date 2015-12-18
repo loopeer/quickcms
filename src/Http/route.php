@@ -71,7 +71,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('versions', 'VersionController', array('except'=>'show'));
    Route::get('versions/search', 'VersionController@search');
 
-   Route::resource('systems', 'GeneralController', array('except'=>'show'));
+   Route::resource('systems', 'SystemController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
    Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
 });
