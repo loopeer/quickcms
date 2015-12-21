@@ -22,7 +22,7 @@
                                         <section>
                                             <label class="label">{{ $column_name }}</label>
                                             <label class="input">
-                                                @if (array_key_exists($edit_column[$key], $edit_column_detail))
+                                                @if (isset($edit_column_detail[$edit_column[$key]]['type']))
                                                     @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
                                                     <input type="text" class="date-format" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
@@ -67,26 +67,32 @@
                     @foreach($edit_column as $key=>$column)
                         @if (isset($edit_column_detail[$column]))
                         '{{$column}}' : {
+                            @if (isset($edit_column_detail[$column]['validator']))
                             @foreach($edit_column_detail[$column]['validator'] as $k=>$v)
                             '{{$k}}' : function () {
                                 return '{{$v}}' ? true : false;
-                            }
+                            },
                             @endforeach
+                            @endif
                         },
                         @endif
                     @endforeach
                 },
 
                 // Messages for form validation
-//                messages : {
-//                    name : {
-//                        required : '必须填写角色名称'
-//                    },display_name : {
-//                        required : '必须填写显示名称'
-//                    },route : {
-//                        required : '必须填写路由'
-//                    }
-//                },
+                messages : {
+                    @foreach($edit_column as $key=>$column)
+                        @if (isset($edit_column_detail[$column]))
+                          '{{$column}}' : {
+                        @if (isset($edit_column_detail[$column]['message']))
+                            @foreach($edit_column_detail[$column]['message'] as $k=>$v)
+                            '{{$k}}' : '{{$v}}',
+                            @endforeach
+                        @endif
+                        },
+                        @endif
+                    @endforeach
+                },
 
                 // Do not change code below
                 errorPlacement : function(error, element) {
