@@ -65,11 +65,11 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('logs/search', 'LogController@search');
    Route::get('logs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
 
-   Route::resource('feedbacks', 'FeedbackController', array('except'=>'show'));
-   Route::get('feedbacks/search', array('as'=>'admin.feedbacks.search', 'uses'=>'FeedbackController@search'));
+   Route::resource('feedbacks', 'GeneralController', array('except'=>'show'));
+   Route::get('feedbacks/search', 'GeneralController@search');
 
-   Route::resource('versions', 'VersionController', array('except'=>'show'));
-   Route::get('versions/search', 'VersionController@search');
+   Route::resource('versions', 'GeneralController', array('except'=>'show'));
+   Route::get('versions/search', 'GeneralController@search');
 
    Route::resource('systems', 'SystemController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));

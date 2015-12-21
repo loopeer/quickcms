@@ -32,7 +32,7 @@ class GeneralController extends BaseController
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
-        \Log::info($this->route_name);
+//        \Log::info($this->route_name);
         $this->column = config('general.' . $this->route_name . '_index_column');
         $this->column_name = config('general.' . $this->route_name . '_index_column_name');
         $this->model_class = config('general.' . $this->route_name . '_model_class');
