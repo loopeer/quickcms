@@ -41,8 +41,8 @@ return [
 
     'versions_edit_column_detail' => array(
         'published_at'=>array(
-            //type 暂时只支持 date
-            'type'=>'date',
+            //type 暂时只支持 date/time/date-time
+            'type'=>'date-time',
             //验证暂时只支持 true 或 false
             'validator'=>array('required'=>true)
         ),

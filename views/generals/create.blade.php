@@ -8,7 +8,7 @@
                     <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                            <h2>新增角色</h2>
+                            <h2>新增{{$model_name}}</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -22,9 +22,11 @@
                                         <section>
                                             <label class="label">{{ $column_name }}</label>
                                             <label class="input">
-                                                @if (array_key_exists($edit_column[$key], $edit_column_type))
-                                                    @if ($edit_column_type[$edit_column[$key]]['type'] == 'date')
+                                                @if (array_key_exists($edit_column[$key], $edit_column_detail))
+                                                    @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
                                                     <input type="text" class="date-format" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
+                                                    <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
                                                     @else
                                                     <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif
@@ -53,6 +55,9 @@
     </div>
 @endsection
 @section('script')
+    <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
+
     <script>
         $(document).ready(function() {
             var $registerForm = $("#smart-form-register").validate({
@@ -60,9 +65,9 @@
 
                 rules : {
                     @foreach($edit_column as $key=>$column)
-                        @if (isset($edit_column_type[$column]))
+                        @if (isset($edit_column_detail[$column]))
                         '{{$column}}' : {
-                            @foreach($edit_column_type[$column]['validator'] as $k=>$v)
+                            @foreach($edit_column_detail[$column]['validator'] as $k=>$v)
                             '{{$k}}' : function () {
                                 return '{{$v}}' ? true : false;
                             }
@@ -99,6 +104,11 @@
                 yearRange: '-0:+40',
                 monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
                 dayNamesMin: ['日', '一', '二', '三', '四', '五', '六']
+            });
+
+            $('.time').clockpicker({
+                placement: 'top',
+                donetext: '确定'
             });
         });
     </script>

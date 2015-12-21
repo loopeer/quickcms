@@ -73,10 +73,11 @@ class GeneralController extends BaseController
     public function create() {
         $model_data = $this->getModel();
         $route_name = $this->route_name;
+        $model_name = $this->model_name;
         $edit_column = config('general.'.$route_name.'_edit_column');
         $edit_column_name = config('general.'.$route_name.'_edit_column_name');
-        $edit_column_type = config('general.'.$route_name.'_edit_column_detail');
-        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column', 'edit_column_name', 'edit_column_type'));
+        $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
+        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name'));
     }
 
     public function show() {
@@ -110,10 +111,11 @@ class GeneralController extends BaseController
         $model = $this->getModel();
         $model_data = $model::find($id);
         $route_name = $this->route_name;
+        $model_name = $this->model_name;
         $edit_column = config('general.'.$route_name.'_edit_column');
         $edit_column_name = config('general.'.$route_name.'_edit_column_name');
-        $edit_column_type = config('general.'.$route_name.'_edit_column_type');
-        return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column', 'edit_column_name', 'edit_column_type'));
+        $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
+        return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name'));
     }
 
     protected function getModel() {
