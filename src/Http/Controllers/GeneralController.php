@@ -28,14 +28,18 @@ class GeneralController extends BaseController
     public function __construct(Request $request) {
         $path = str_replace('admin/', '', $request->path());
         $path = str_replace('/create', '', $path);
+        $path = str_replace('/search', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
+        \Log::info('route_name = ' . $this->route_name);
         $this->model_class = config('general.' . $this->route_name . '_model_class');
         $this->model_name = config('general.' . $this->route_name . '_model_name');
     }
 
     public function search()
     {
-        $ret = self::simplePage(config('general.versions_index_column'), new $this->model_class());
+        \Log::info('model_class = ' . $this->model_class);
+        $model = $this->getModel();
+        $ret = self::simplePage(config('general.versions_index_column'), $model);
         return Response::json($ret);
     }
 
