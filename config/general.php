@@ -9,15 +9,23 @@
  * Time: 下午6:20
  */
 return [
-    'versions_model' => 'Version',
+    'versions_model_class' => 'Loopeer@QuickCms@Models@Version',
+    'versions_model_name' => '版本',
     'versions_index_column' => array(
         'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status',
     ),
     'versions_index_column_name' => array(
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '选项',
     ),
+    'versions_edit_column' => array(
+        'platform', 'version_code', 'version', 'url', 'message', 'description', 'status',
+    ),
+    'versions_edit_column_name' => array(
+        '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态',
+    ),
 
-    'feedbacks_model' => 'Feedback',
+    'feedbacks_model_class' => 'Loopeer@QuickCms@Models@Feedback',
+    'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
         'id', 'account_id', 'content', 'contact', 'version_code', 'version', 'device_id', 'channel_id',
     ),
