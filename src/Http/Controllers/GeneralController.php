@@ -24,25 +24,31 @@ class GeneralController extends BaseController
     protected $model_class;
     protected $model_name;
     protected $route_name;
+    protected $column_name;
+    protected $column;
 
     public function __construct(Request $request) {
         $path = str_replace('admin/', '', $request->path());
         $path = str_replace('/create', '', $path);
+        $path = str_replace('/search', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
+        \Log::info($this->route_name);
+        $this->column = config('general.' . $this->route_name . '_index_column');
+        $this->column_name = config('general.' . $this->route_name . '_index_column_name');
         $this->model_class = config('general.' . $this->route_name . '_model_class');
         $this->model_name = config('general.' . $this->route_name . '_model_name');
     }
 
     public function search()
     {
-        $ret = self::simplePage(config('general.versions_index_column'), new $this->model_class());
+        $ret = self::simplePage($this->column, $this->getModel());
         return Response::json($ret);
     }
 
     public function index()
     {
         $message = Session::get('message');
-        $column_name = config('general.' . $this->route_name . '_index_column_name');
+        $column_name = $this->column_name;
         $route_name = $this->route_name;
         $model_name = $this->model_name;
         $model_class = $this->model_class;
@@ -65,9 +71,9 @@ class GeneralController extends BaseController
      * @return mixed
      */
     public function create() {
-        $model = $this->getModel();
+        $model_data = $this->getModel();
         $route_name = $this->route_name;
-        return View::make('backend::generals.create', compact('model', 'route_name'));
+        return View::make('backend::generals.create', compact('model_data', 'route_name'));
     }
 
     public function show() {
@@ -81,7 +87,7 @@ class GeneralController extends BaseController
     public function store() {
         $data = Input::all();
         $model = $this->getModel();
-        if (isset($data['id'])) {
+        if ($data['id']) {
             $result = $model::find($data['id'])->update($data);
         } else {
             $result = $model::create($data);

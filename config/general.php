@@ -32,4 +32,10 @@ return [
     'feedbacks_index_column_name' => array(
         'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '选项',
     ),
+    'feedbacks_edit_column' => array(
+        'content', 'version_code', 'version', 'device_id', 'channel_id', 'contact'
+    ),
+    'feedbacks_edit_column_name' => array(
+        '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式'
+    ),
 ];

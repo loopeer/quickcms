@@ -18,11 +18,11 @@
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="id" value="{{ $model_data['id'] }}">
                                     <fieldset>
-                                        @foreach(config('general.versions_edit_column_name') as $key => $column_name)
+                                        @foreach(config('general.'.$route_name.'_edit_column_name') as $key => $column_name)
                                         <section>
                                             <label class="label">{{ $column_name }}</label>
                                             <label class="input">
-                                                <input type="text" name="{{ config('general.versions_edit_column')[$key] }}" value="{{ $model_data[config('general.versions_edit_column')[$key]] }}">
+                                                <input type="text" name="{{ config('general.'.$route_name.'_edit_column')[$key] }}" value="{{ $model_data[config('general.'.$route_name.'_edit_column')[$key]] }}">
                                             </label>
                                         </section>
                                         @endforeach
