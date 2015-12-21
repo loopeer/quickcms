@@ -18,11 +18,19 @@
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="id" value="{{ $model_data['id'] }}">
                                     <fieldset>
-                                        @foreach(config('general.'.$route_name.'_edit_column_name') as $key => $column_name)
+                                        @foreach($edit_column_name as $key => $column_name)
                                         <section>
                                             <label class="label">{{ $column_name }}</label>
                                             <label class="input">
-                                                <input type="text" name="{{ config('general.'.$route_name.'_edit_column')[$key] }}" value="{{ $model_data[config('general.'.$route_name.'_edit_column')[$key]] }}">
+                                                @if (array_key_exists($edit_column[$key], $edit_column_type))
+                                                    @if ($edit_column_type[$edit_column[$key]]['type'] == 'date')
+                                                    <input type="text" class="date-format" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                    @else
+                                                    <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                    @endif
+                                                @else
+                                                    <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                @endif
                                             </label>
                                         </section>
                                         @endforeach
@@ -46,20 +54,25 @@
 @endsection
 @section('script')
     <script>
-//        $(document).ready(function() {
-//            var $registerForm = $("#smart-form-register").validate({
-//                // Rules for form validation
-//                rules : {
-//                    name : {
-//                        required : true
-//                    },display_name : {
-//                        required : true
-//                    },route : {
-//                        required : true
-//                    }
-//                },
-//
-//                // Messages for form validation
+        $(document).ready(function() {
+            var $registerForm = $("#smart-form-register").validate({
+                // Rules for form validation
+
+                rules : {
+                    @foreach($edit_column as $key=>$column)
+                        @if (isset($edit_column_type[$column]))
+                        '{{$column}}' : {
+                            @foreach($edit_column_type[$column]['validator'] as $k=>$v)
+                            '{{$k}}' : function () {
+                                return '{{$v}}' ? true : false;
+                            }
+                            @endforeach
+                        },
+                        @endif
+                    @endforeach
+                },
+
+                // Messages for form validation
 //                messages : {
 //                    name : {
 //                        required : '必须填写角色名称'
@@ -69,12 +82,24 @@
 //                        required : '必须填写路由'
 //                    }
 //                },
-//
-//                // Do not change code below
-//                errorPlacement : function(error, element) {
-//                    error.insertAfter(element.parent());
-//                }
-//            });
-//        });
+
+                // Do not change code below
+                errorPlacement : function(error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+            $('.date-format').datepicker({
+                dateFormat:'yy-mm-dd',
+                changeMonth: true,
+                changeYear:true,
+                numberOfMonths: 1,
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                yearRange: '-0:+40',
+                monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                dayNamesMin: ['日', '一', '二', '三', '四', '五', '六']
+            });
+        });
     </script>
 @endsection
