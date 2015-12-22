@@ -110,9 +110,11 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
     }
 
     public function updateCache() {
-        $selector = Selector::get()->toArray();
+        $selector = Selector::all()->toArray();
         foreach ($selector as $k=>$v) {
-            $v['enum_value'] = json_decode($v['enum_value']);
+            if ($v['type'] == 1) {
+                $v['enum_value'] = json_decode($v['enum_value']);
+            }
             $data = self::parseSelector($v['type'], $v['enum_value']);
             if (Cache::has('selector_'.$v['enum_key'])) {
                 Cache::forget($v['enum_key']);
