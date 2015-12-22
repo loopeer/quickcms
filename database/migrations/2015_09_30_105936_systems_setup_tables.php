@@ -54,6 +54,7 @@ class SystemsSetupTables extends Migration
             $table->softDeletes();
         });
 
+        // 系统配置表
         Schema::create('systems', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 50); //网站标题
@@ -67,6 +68,16 @@ class SystemsSetupTables extends Migration
             $table->string('enum_key');
             $table->tinyInteger('type');
             $table->string('enum_value');
+        });
+
+        // 推送表
+        Schema::create('pushes', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('account_id');
+            $table->bigInteger('app_channel_id');
+            $table->bigInteger('app_user_id');
+            $table->string('platform', 10);
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -84,5 +95,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('versions');
         Schema::dropIfExists('systems');
         Schema::dropIfExists('selectors');
+        Schema::dropIfExists('pushes');
     }
 }

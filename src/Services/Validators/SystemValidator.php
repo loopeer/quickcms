@@ -21,7 +21,6 @@ class SystemValidator extends Validator {
     public static $registerPushRules = [
         'app_channel_id' => 'required',
         'app_user_id' => 'required',
-        'platform' => 'required',
     ];
 
     public static $labelRules = [
