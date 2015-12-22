@@ -23,10 +23,17 @@
                                             <label class="label">{{ $column_name }}</label>
                                             <label class="input">
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
-                                                    @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
+                                                    @if (explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'date')
                                                     <input type="text" class="date-format" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
+                                                    @elseif(explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'time')
                                                     <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
+                                                    @elseif(explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'selector')
+                                                        <select class="select2" name="" id="select2">
+                                                            {{ \Log::info((Cache::get('selector_'.explode(':',$edit_column_detail[$edit_column[$key]]['type'])[1]))) }}
+                                                            @foreach(json_decode(Cache::get('selector_'.explode(':',$edit_column_detail[$edit_column[$key]]['type'])[1])) as $k=>$v)
+                                                                <option value="{{$k}}">{{$v}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     @else
                                                     <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif
@@ -117,5 +124,24 @@
                 donetext: '确定'
             });
         });
+
+        function addOption(data) {
+            var select = $('#select2');
+            select.html('');
+            if (data.length > 0) {
+                var key = new Array();
+                for (var k in data[0]) {
+                    key.push(k);
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (i == 0) {
+                        select.append('<option value="'+ data[i][key[0]] +'">'+ data[i][key[1]] +'</option>')
+                    } else {
+                        select.append('<option value="'+ data[i][key[0]] +'">'+ data[i][key[1]] +'</option>')
+                    }
+                }
+                $('#select2-chosen-2').html(data[0][key[1]]);
+            }
+        }
     </script>
 @endsection

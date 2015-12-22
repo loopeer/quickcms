@@ -13,6 +13,8 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
    if(config('quickcms.sql_log_switch')) {
       $logger = \Loopeer\QuickCms\Services\Utils\LogUtil::getLogger('sql', 'sql');
       $logger->addInfo('sql = ' . $query . '   params = ' . implode(',', $params) . '  time = ' . $time . '   conn = ' . $conn);
+//      $data = compact('bindings', 'time', 'name');
+//      Log::info($query,$data);
    }
 });
 
@@ -74,4 +76,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('systems', 'SystemController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
    Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
+
+   Route::resource('selector', 'SelectorController', array('except'=>'show'));
+   Route::get('selector/search', 'SelectorController@search');
+   Route::get('selector/preview', 'SelectorController@preview');
+   Route::get('selector/checkKey', 'SelectorController@checkKey');
+   Route::get('selector/updateCache', 'SelectorController@updateCache');
 });

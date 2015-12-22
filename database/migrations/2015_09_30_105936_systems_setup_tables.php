@@ -60,6 +60,16 @@ class SystemsSetupTables extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('selectors', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('enum_key');
+            $table->tinyInteger('type');
+            $table->string('enum_value');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -73,5 +83,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('feedbacks');
         Schema::dropIfExists('versions');
         Schema::dropIfExists('systems');
+        Schema::dropIfExists('selectors');
     }
 }
