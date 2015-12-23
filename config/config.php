@@ -25,6 +25,12 @@ return [
     'qiniu_bucket' => '',
     'qiniu_url' => '',
 
+    // baidu push config
+    'baidu_push_android_api_key' => env('baidu_push_android_api_key'),
+    'baidu_push_android_secret_key' => env('baidu_push_android_secret_key'),
+    'baidu_push_ios_api_key' => env('baidu_push_ios_api_key'),
+    'baidu_push_ios_secret_key' => env('baidu_push_ios_secret_key'),
+
     'code_success' => 0,
     'message_success' => '请求成功',
     'message_update_success' => '修改成功',

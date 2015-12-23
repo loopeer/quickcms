@@ -12,9 +12,7 @@
 Event::listen('illuminate.query', function($query, $params, $time, $conn) {
    if(config('quickcms.sql_log_switch')) {
       $logger = \Loopeer\QuickCms\Services\Utils\LogUtil::getLogger('sql', 'sql');
-      $logger->addInfo('sql = ' . $query . '   params = ' . implode(',', $params) . '  time = ' . $time . '   conn = ' . $conn);
-//      $data = compact('bindings', 'time', 'name');
-//      Log::info($query,$data);
+      $logger->addInfo($query . '   params = ' . implode(',', $params) . '  time = ' . $time . '   conn = ' . $conn);
    }
 });
 
