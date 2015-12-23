@@ -16,8 +16,10 @@ use Loopeer\QuickCms\Services\Utils\LogUtil;
 
 class BPushService {
 
-    protected $apiKey;
-    protected $secretKey;
+    protected $androidApiKey;
+    protected $androidSecretKey;
+    protected $iosApiKey;
+    protected $iosSecretKey;
     protected $deployStatus;
 
     public function __construct() {
