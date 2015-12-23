@@ -30,6 +30,7 @@ return [
     'baidu_push_android_secret_key' => env('baidu_push_android_secret_key'),
     'baidu_push_ios_api_key' => env('baidu_push_ios_api_key'),
     'baidu_push_ios_secret_key' => env('baidu_push_ios_secret_key'),
+    'baidu_push_sdk_deploy_status' => env('baidu_push_sdk_deploy_status'),
 
     'code_success' => 0,
     'message_success' => '请求成功',
