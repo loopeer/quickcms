@@ -1,6 +1,7 @@
 # quickcms
 laravel 5.1 quick cms
-
+![](http://7xpf31.com1.z0.glb.clouddn.com/quickcms-index.png)
+![](http://7xpf31.com1.z0.glb.clouddn.com/quickcms-edit.png)
 # Step1
 ```
 composer require loopeer/quickcms
@@ -60,7 +61,7 @@ update app/Http/Kernel.php,add protected $routeMiddleware []
 # Step4
 publish quickcms config file to config/quickcms.php
 ```
-php artisan vendor:publish --tag=quickcms
+php artisan vendor:publish --tag=quickcms --force
 ```
 publish js css image to your project/public dir
 ```
@@ -82,5 +83,5 @@ test url
 localhost:8000/admin
 ```
 # Coding
-@wangkaibo
-@LilHorse
+![LilHorse](https://github.com/lilhorse)
+![wangkaibo](https://github.com/wangkaibo)
