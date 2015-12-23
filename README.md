@@ -83,5 +83,6 @@ test url
 localhost:8000/admin
 ```
 # Coding
-![LilHorse](https://github.com/lilhorse)
-![wangkaibo](https://github.com/wangkaibo)
+[LilHorse](https://github.com/lilhorse)
+
+[wangkaibo](https://github.com/wangkaibo)
