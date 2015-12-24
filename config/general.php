@@ -10,6 +10,7 @@
  */
 return [
     //版本管理
+    'versions_createable' => true,  //是否可创建
     'versions_model_class' => 'Loopeer@QuickCms@Models@Version',
     'versions_model_name' => '版本',
     'versions_index_column' => array(
@@ -34,7 +35,7 @@ return [
             'message'=>array('required'=>'必需填写时间发布时间')
         ),
         'platform'=>array(
-            'type'=>'selector:pat_way',
+            'type'=>'selector:platform',
             //验证暂时只支持 true 或 false
             'validator'=>array('required'=>true, 'number'=>true),
             'message'=>array('number'=>'必需为数字')
@@ -58,6 +59,7 @@ return [
     ),
 
     //意见反馈
+    'feedbacks_createable' => false,
     'feedbacks_model_class' => 'Loopeer@QuickCms@Models@Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
