@@ -48,6 +48,7 @@
             "processing": false,
             "serverSide": true,
             "bStateSave": true,
+            @if(!empty($actions))
             "columnDefs": [ {
                 "targets": -1,
                 "data": null,
@@ -55,16 +56,21 @@
                 '<div class="btn-group">'+
                 '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 <span class="caret"></span></button>'+
                 '<ul class="dropdown-menu">'+
+                @foreach($actions as $action)
                 '<li>'+
-                '<a href="javascript:void(0);" name="edit_btn">编辑</a>'+
+                '<a href="javascript:void(0);" name="' + '{{$action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                 '</li>'+
+                @if($action['has_divider'])
                 '<li class="divider btn_content"></li>'+
-                '<li>'+
-                '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
-                '</li>'+
+                @endif
+                @endforeach
+//                '<li>'+
+//                '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
+//                '</li>'+
                 '</ul>'+
                 '</div>'
             } ],
+            @endif
             "ajax": {
                 "url": "/admin/" + route_name + "/search"
             }

@@ -9,6 +9,7 @@
  * Time: 下午6:20
  */
 return [
+    //版本管理
     'versions_model_class' => 'Loopeer@QuickCms@Models@Version',
     'versions_model_name' => '版本',
     'versions_index_column' => array(
@@ -23,22 +24,6 @@ return [
     'versions_edit_column_name' => array(
         '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '发布时间','版本状态',
     ),
-
-    'feedbacks_model_class' => 'Loopeer@QuickCms@Models@Feedback',
-    'feedbacks_model_name' => '意见',
-    'feedbacks_index_column' => array(
-        'id', 'account_id', 'content', 'contact', 'version_code', 'version', 'device_id', 'channel_id',
-    ),
-    'feedbacks_index_column_name' => array(
-        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '选项',
-    ),
-    'feedbacks_edit_column' => array(
-        'content', 'version_code', 'version', 'device_id', 'channel_id', 'contact'
-    ),
-    'feedbacks_edit_column_name' => array(
-        '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式'
-    ),
-
     'versions_edit_column_detail' => array(
         'published_at'=>array(
             //type 暂时只支持 date/time/selector，selector 需要配置 key 值，例：'type'=>'selector:key'
@@ -70,5 +55,28 @@ return [
             '0'=>'测试版',
             '1'=>'正式版'
         )
-    )
+    ),
+
+    //意见反馈
+    'feedbacks_model_class' => 'Loopeer@QuickCms@Models@Feedback',
+    'feedbacks_model_name' => '意见',
+    'feedbacks_index_column' => array(
+        'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact',
+    ),
+    'feedbacks_index_column_name' => array(
+        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '选项',
+    ),
+    'feedbacks_edit_column' => array(
+        'content', 'version_code', 'version', 'device_id', 'channel_id', 'contact'
+    ),
+    'feedbacks_edit_column_name' => array(
+        '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式'
+    ),
+    'feedbacks_table_action' => array(
+        array(
+            'name' => 'delete_btn',
+            'display_name' => '删除',
+            'has_divider' => false
+        )
+    ),
 ];
