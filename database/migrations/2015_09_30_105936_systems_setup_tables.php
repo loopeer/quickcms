@@ -68,6 +68,8 @@ class SystemsSetupTables extends Migration
             $table->string('enum_key');
             $table->tinyInteger('type');
             $table->string('enum_value');
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         // 推送表

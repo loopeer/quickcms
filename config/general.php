@@ -53,6 +53,13 @@ return [
             //验证暂时只支持 true 或 false
             'validator'=>array('required'=>true, 'number'=>true),
             'message'=>array('number'=>'必需为数字')
+        ),
+        'message'=>array(
+            //type image 类型 image:[1,3]，或者 [1]
+            'type'=>'image:[1,3]',
+            //验证暂时只支持 true 或 false
+            'validator'=>array('required'=>true),
+            'message'=>array('required'=>'必需上传图片')
         )
     ),
 
