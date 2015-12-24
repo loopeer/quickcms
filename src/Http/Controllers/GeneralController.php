@@ -77,10 +77,20 @@ class GeneralController extends BaseController
         $model_data = $this->getModel();
         $route_name = $this->route_name;
         $model_name = $this->model_name;
+        $image_config = array();
         $edit_column = config('general.'.$route_name.'_edit_column');
         $edit_column_name = config('general.'.$route_name.'_edit_column_name');
         $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
-        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name'));
+        foreach ($edit_column_detail as $k=>$v) {
+            if (!isset($v['type'])) continue;
+            $type = explode(':', $v['type']);
+            if ($type[0] == 'image') {
+                $arr = array();
+                eval('$arr = '.$type[1].';');
+                $image_config[$k] = $arr;
+            }
+        }
+        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name', 'image_config'));
     }
 
     public function show() {
