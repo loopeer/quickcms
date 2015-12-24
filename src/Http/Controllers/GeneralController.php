@@ -27,6 +27,7 @@ class GeneralController extends BaseController
     protected $column_name;
     protected $column;
     protected $actions;
+    protected $createable;
 
     public function __construct(Request $request) {
         $path = str_replace('admin/', '', $request->path());
@@ -39,6 +40,7 @@ class GeneralController extends BaseController
         $this->model_class = config('general.' . $this->route_name . '_model_class');
         $this->model_name = config('general.' . $this->route_name . '_model_name');
         $this->actions = config('general.' . $this->route_name . '_table_action');
+        $this->createable = config('general.' . $this->route_name . '_createable');
     }
 
     public function search()
@@ -55,7 +57,8 @@ class GeneralController extends BaseController
         $model_name = $this->model_name;
         $model_class = $this->model_class;
         $actions = $this->actions;
-        return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name', 'model_class', 'actions'));
+        $createable = $this->createable;
+        return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name', 'model_class', 'actions', 'createable'));
     }
 
     /**
