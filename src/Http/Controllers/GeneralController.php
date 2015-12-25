@@ -80,20 +80,22 @@ class GeneralController extends BaseController
         $model_data = $this->getModel();
         $route_name = $this->route_name;
         $model_name = $this->model_name;
-        $image_config = array();
+        $image_config = false;
+        $images = array();
         $edit_column = config('general.'.$route_name.'_edit_column');
         $edit_column_name = config('general.'.$route_name.'_edit_column_name');
         $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
         foreach ($edit_column_detail as $k=>$v) {
             if (!isset($v['type'])) continue;
-            $type = explode(':', $v['type']);
-            if ($type[0] == 'image') {
-                $arr = array();
-                eval('$arr = '.$type[1].';');
-                $image_config[$k] = $arr;
+//            $type = $v['type'];
+            if ($v['type'] == 'image') {
+                $image_config = true;
+                $v['name'] = $k;
+                $images[] = $v;
             }
         }
-        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name', 'image_config'));
+        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column',
+            'edit_column_name', 'edit_column_detail','model_name', 'image_config', 'images'));
     }
 
     public function show() {
@@ -107,6 +109,11 @@ class GeneralController extends BaseController
     public function store() {
         $data = Input::all();
         $model = $this->getModel();
+        foreach($data as $key => $value) {
+            if(is_array($value)) {
+                $data[$key] = implode(',' , $value);
+            }
+        }
         if ($data['id']) {
             $result = $model::find($data['id'])->update($data);
         } else {
@@ -131,7 +138,17 @@ class GeneralController extends BaseController
         $edit_column = config('general.'.$route_name.'_edit_column');
         $edit_column_name = config('general.'.$route_name.'_edit_column_name');
         $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
-        return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column', 'edit_column_name', 'edit_column_detail','model_name'));
+        foreach ($edit_column_detail as $k=>$v) {
+            if (!isset($v['type'])) continue;
+//            $type = $v['type'];
+            if ($v['type'] == 'image') {
+                $image_config = true;
+                $v['name'] = $k;
+                $images[] = $v;
+            }
+        }
+        return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column',
+            'edit_column_name', 'edit_column_detail','model_name', 'image_config', 'images'));
     }
 
     protected function getModel() {

@@ -20,10 +20,23 @@ return [
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',
     ),
     'versions_edit_column' => array(
-        'platform', 'version_code', 'version', 'url', 'message', 'description', 'published_at', 'status',
+        'platform', 'version_code', 'version', 'url', 'image', 'description', 'published_at', 'status'
     ),
     'versions_edit_column_name' => array(
-        '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '发布时间','版本状态',
+        '发布平台', '版本号', '版本名称', '下载地址', '图片', '版本描述', '发布时间','版本状态',
+    ),
+
+    'versions_table_action' => array(
+        array(
+            'name' => 'edit_btn',
+            'display_name' => '编辑',
+            'has_divider' => true
+        ),
+        array(
+            'name' => 'delete_btn',
+            'display_name' => '删除',
+            'has_divider' => false
+        )
     ),
     'versions_edit_column_detail' => array(
         'published_at'=>array(
@@ -40,13 +53,15 @@ return [
             'validator'=>array('required'=>true, 'number'=>true),
             'message'=>array('number'=>'必需为数字')
         ),
-        'message'=>array(
+        'image' => array(
             //type image 类型 image:[1,3]，或者 [1]
-            'type'=>'image:[1,3]',
-            //验证暂时只支持 true 或 false
-            'validator'=>array('required'=>true),
-            'message'=>array('required'=>'必需上传图片')
-        )
+            'type' => 'image',
+            'min_count' => 1,
+            'max_count' => 3,
+            'min_error_msg' => '至少上传%s张图片',
+            'max_error_msg' => '最多只允许上传%s张图片',
+            'editable' => true
+        ),
     ),
 
     'versions_status_change'=>true,

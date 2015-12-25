@@ -55,24 +55,8 @@
                                                                     <option value="{{$k}}">{{$v}}</option>
                                                                 @endforeach
                                                             </select>
-                                                        @elseif(explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'image')
-                                                            <div id="image" class="span10" data-download-template-id="template-download-image">
-                                                                <div class="fileupload-buttonbar">
-                                                                <span class="btn btn-success fileinput-button">
-                                                                    <i class="icon-plus icon-white"></i>
-                                                                    <span>添加图片</span>
-                                                                    {{--                                                                    @if (isset($image_config[$edit_column[$key]][1]) || $image_config[$edit_column[$key]][0] > 1)--}}
-                                                                    {{--<input type="file" name="{{$edit_column[$key]}}[]">--}}
-                                                                    {{--@else--}}
-                                                                    <input type="file" name="{{$edit_column[$key]}}">
-                                                                    {{--@endif--}}
-                                                                </span>
-                                                                    <div class="fileupload-loading"></div>
-                                                                    <label class="error" id="image_error"></label>
-                                                                </div>
-                                                                <br>
-                                                                <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-                                                            </div>
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
+                                                            @include('backend::image.upload', ['image_name' => $edit_column[$key]])
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
@@ -84,7 +68,7 @@
                                         @endforeach
                                     </fieldset>
                                     <footer>
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" id="submit_btn" class="btn btn-primary">
                                             保存
                                         </button>
                                         <a href="{{ route('admin.' . $route_name . '.index') }}" class="btn btn-primary">
@@ -103,25 +87,16 @@
 @section('script')
     <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>
     <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
-    @if (count($image_config) > 0)
-        <link rel="stylesheet" type="text/css" href="{{{ asset('loopeer/quickcms/js/blueimp/css/jquery.fileupload-ui.css') }}}">
-        <link rel="stylesheet" type="text/css" href="{{{ asset('loopeer/quickcms/js/blueimp/css/blueimp-gallery.min.css') }}}">
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/tmpl.min.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/load-image.min.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/canvas-to-blob.min.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/bootstrap-image-gallery.min.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.iframe-transport.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.fileupload.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.fileupload-process.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.fileupload-image.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.fileupload-validate.js') }}"></script>
-        <script src="{{ asset('loopeer/quickcms/js/blueimp/jquery.fileupload-ui.js') }}"></script>
+    @if ($image_config)
+        @include('backend::image.script')
+        @foreach($images as $image)
+            @include('backend::image.action', ['image' => $image, 'image_data' => $model_data[$image['name']]])
+        @endforeach
     @endif
     <script>
         $(document).ready(function() {
-            var $registerForm = $("#smart-form-register").validate({
+            $("#smart-form-register").validate({
                 // Rules for form validation
-
                 rules : {
                     @foreach($edit_column as $key=>$column)
                         @if (isset($edit_column_detail[$column]))
@@ -182,4 +157,5 @@
             $(this).parent('tr').remove();
         });
     </script>
+    @include('backend::image.tmpl')
 @endsection
