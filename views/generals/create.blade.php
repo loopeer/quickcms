@@ -157,5 +157,4 @@
             $(this).parent('tr').remove();
         });
     </script>
-    @include('backend::image.tmpl')
 @endsection

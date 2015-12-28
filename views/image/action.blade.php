@@ -63,7 +63,7 @@ $('#submit_btn').on('click',function(){
     {% if (file.error) { %}<div><span class="label label-important">Error</span> {%=file.error%}</div>{% } %}
   </td>
   <td style="vertical-align:middle;text-align:left;">
-    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+    <button class="btn btn-danger delete">
       <i class="icon-trash icon-white"></i>
       <span>删除</span>
     </button>
