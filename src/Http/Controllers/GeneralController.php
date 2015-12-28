@@ -25,6 +25,7 @@ class GeneralController extends BaseController
     protected $model_name;
     protected $route_name;
     protected $column_name;
+    protected $column_rename;
     protected $column;
     protected $edit_column;
     protected $edit_column_name;
@@ -42,6 +43,7 @@ class GeneralController extends BaseController
         $general_name = $this->route_name;
         $this->column = config('general.' . $general_name . '_index_column');
         $this->column_name = config('general.' . $general_name . '_index_column_name');
+        $this->column_rename = config('general.' . $general_name . '_index_column_rename');
         $this->edit_column = config('general.'. $general_name . '_edit_column');
         $this->edit_column_name = config('general.' . $general_name . '_edit_column_name');
         $this->edit_column_detail = config('general.' . $general_name . '_edit_column_detail');
@@ -63,12 +65,15 @@ class GeneralController extends BaseController
     {
         $message = Session::get('message');
         $column_name = $this->column_name;
+        $column_rename = $this->column_rename;
         $route_name = $this->route_name;
         $model_name = $this->model_name;
         $actions = $this->actions;
         $createable = $this->createable;
+        $columns = $this->column;
+//        dd(array_flip($columns)['status']);
         return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name',
-            'actions', 'createable'));
+            'actions', 'createable', 'column_rename', 'columns'));
     }
 
     /**

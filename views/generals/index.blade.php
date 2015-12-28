@@ -74,34 +74,97 @@
             }
         });
 
+        table.on( 'draw.dt', function () {
+            var $data = table.data();
+            for (var i=0; i < $data.length; i++) {
+                @if(!empty($column_rename))
+                @foreach($column_rename as $column => $rename)
+                @foreach($rename as $key => $value)
+                if($data[i][parseInt('{{array_flip($columns)[$column]}}')] == parseInt('{{$key}}')) {
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{array_flip($columns)[$column]}}')).html('{!!$value!!}')
+                }
+                @endforeach
+                @endforeach
+                @endif
+                }
+        });
+
+        @if(!empty($actions))
+        @foreach($actions as $action)
+        @if($action['type'] == 'edit')
         $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
             var data = table.row($(this).parents('tr')).data();
             window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
         });
-
-        $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+        @endif
+        @if($action['type'] == 'confirm')
+        $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
             var data = table.row($(this).parents('tr')).data();
             var delete_token = $('#delete_token').val();
-            if(confirm('删除这条记录?')) {
+            var page_info = table.page.info();
+            var page = page_info.page;
+            var datatable = $('#dt_basic').dataTable();
+            if (page_info.end - page_info.start == 1) {
+                page -= 1;
+            }
+            if(confirm('{{$action['confirm_msg']}}')) {
                 $.ajax({
-                    type: "DELETE",
-                    data: { '_token' : delete_token},
-                    url: '/admin/' + route_name + '/' + data[0], //resource
+                    type: '{{$action['method']}}',
+                    @if($action['method'] == 'delete')
+                    data: { '_token' : delete_token },
+                    @endif
+                    url: '{{$action['url']}}' + '/' + data[0], //resource
                     success: function(result) {
-                        if (result > 0) {
-                            var table = $('#dt_basic').dataTable();
-                            var nRow = $($(this).data('id')).closest("tr").get(0);
-                            table.fnDeleteRow( nRow, null, true );
+                        if (result.result){
+                            datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'
                             +'<button class="close" data-dismiss="alert">×</button>'
                             +'<i class="fa-fw fa fa-check"></i>'
-                            +'<strong>成功</strong>' + ' 删除记录成功。'
+                            +'<strong>成功</strong>'+' '+'{{$action['success_msg']}}'+'。'
+                            +'</div>');
+                        }else{
+                            $(".tips").html('<div class="alert alert-danger fade in">'
+                            +'<button class="close" data-dismiss="alert">×</button>'
+                            +'<i class="fa-fw fa fa-warning"></i>'
+                            +'<strong>失败</strong>'+' '+'{{$action['failure_msg']}}'+'。'
                             +'</div>');
                         }
                     }
                 });
             }
         });
+        @endif
+        @endforeach
+        @endif
+
+//        $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
+//            var data = table.row($(this).parents('tr')).data();
+//            window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
+//        });
+//
+//        $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+//            var data = table.row($(this).parents('tr')).data();
+//            var delete_token = $('#delete_token').val();
+//            if(confirm('删除这条记录?')) {
+//                $.ajax({
+//                    type: "DELETE",
+//                    data: { '_token' : delete_token},
+//                    url: '/admin/' + route_name + '/' + data[0], //resource
+//                    success: function(result) {
+//                        if (result > 0) {
+//                            var table = $('#dt_basic').dataTable();
+//                            var nRow = $($(this).data('id')).closest("tr").get(0);
+//                            table.fnDeleteRow( nRow, null, true );
+//                            $(".tips").html('<div class="alert alert-success fade in">'
+//                            +'<button class="close" data-dismiss="alert">×</button>'
+//                            +'<i class="fa-fw fa fa-check"></i>'
+//                            +'<strong>成功</strong>' + ' 删除记录成功。'
+//                            +'</div>');
+//                        }
+//                    }
+//                });
+//            }
+//        });
     });
 </script>
 @endsection

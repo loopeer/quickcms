@@ -25,17 +25,30 @@ return [
     'versions_edit_column_name' => array(
         '发布平台', '版本号', '版本名称', '下载地址', '图片', '版本描述', '发布时间','版本状态',
     ),
+    'versions_index_column_rename' => array(
+        'status' => array(
+            0 => '<span class="label label-default">未上线</span>',
+            1 => '<span class="label label-success">已上线</span>'
+        )
+    ),
 
     'versions_table_action' => array(
         array(
+            'type' => 'edit',
             'name' => 'edit_btn',
             'display_name' => '编辑',
             'has_divider' => true
         ),
         array(
+            'type' => 'confirm',
             'name' => 'delete_btn',
             'display_name' => '删除',
-            'has_divider' => false
+            'has_divider' => false,
+            'method' => 'delete',
+            'url' => '/admin/versions',
+            'confirm_msg' => '确定要删除吗?',
+            'success_msg' => '删除成功',
+            'failure_msg' => '删除失败'
         )
     ),
     'versions_edit_column_detail' => array(
