@@ -91,7 +91,7 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
             foreach ($tmp_data as $k=>$data) {
                 $data = (array)$data;
                 $keys = array_keys($data);
-                $result[''.$data[$keys[0]]] = $data[$keys[1]];
+                $result['' . $data[$keys[0]]] = $data[$keys[1]];
             }
         } else {
             $result = $value;
@@ -103,10 +103,9 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
         $selector = Selector::where('enum_key', $enum_key)->first()->toArray();
         $selector['enum_value'] = json_decode($selector['enum_value']);
         $data = self::parseSelector($selector['type'], $selector['enum_value']);
-        if (Cache::has('selector_'.$enum_key)) {
-            Cache::forget('selector_'.$enum_key);
-        }
-        Cache::forever('selector_'.$enum_key, $data);
+        self::is_update($enum_key, $data);
+
+
     }
 
     public function updateCache() {
@@ -116,11 +115,15 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
                 $v['enum_value'] = json_decode($v['enum_value']);
             }
             $data = self::parseSelector($v['type'], $v['enum_value']);
-            if (Cache::has('selector_'.$v['enum_key'])) {
-                Cache::forget($v['enum_key']);
-            }
-            Cache::forever('selector_'.$v['enum_key'], $data);
+            self::is_update($v['enum_key'], $data);
         }
         return array('result' => true, 'content' => '操作成功');
+    }
+
+    private static function is_update($enum_key, $data) {
+        if (Cache::has('selector_'.$enum_key)) {
+            Cache::forget('selector_' . $enum_key);
+        }
+        Cache::forever('selector_' . $enum_key, $data);
     }
 }
