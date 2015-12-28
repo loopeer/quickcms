@@ -26,26 +26,34 @@ class GeneralController extends BaseController
     protected $route_name;
     protected $column_name;
     protected $column;
+    protected $edit_column;
+    protected $edit_column_name;
+    protected $edit_column_detail;
     protected $actions;
     protected $createable;
+    protected $model;
 
     public function __construct(Request $request) {
         $path = str_replace('admin/', '', $request->path());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
-//        \Log::info($this->route_name);
-        $this->column = config('general.' . $this->route_name . '_index_column');
-        $this->column_name = config('general.' . $this->route_name . '_index_column_name');
-        $this->model_class = config('general.' . $this->route_name . '_model_class');
-        $this->model_name = config('general.' . $this->route_name . '_model_name');
-        $this->actions = config('general.' . $this->route_name . '_table_action');
-        $this->createable = config('general.' . $this->route_name . '_createable');
+        $general_name = $this->route_name;
+        $this->column = config('general.' . $general_name . '_index_column');
+        $this->column_name = config('general.' . $general_name . '_index_column_name');
+        $this->edit_column = config('general.'. $general_name . '_edit_column');
+        $this->edit_column_name = config('general.' . $general_name . '_edit_column_name');
+        $this->edit_column_detail = config('general.' . $general_name . '_edit_column_detail');
+        $this->model_class = config('general.' . $general_name . '_model_class');
+        $this->model_name = config('general.' . $general_name . '_model_name');
+        $this->actions = config('general.' . $general_name . '_table_action');
+        $this->createable = config('general.' . $general_name . '_createable');
+        $this->model = new \ReflectionClass($this->model_class);
     }
 
     public function search()
     {
-        $ret = self::simplePage($this->column, $this->getModel());
+        $ret = self::simplePage($this->column, $this->model);
         return Response::json($ret);
     }
 
@@ -55,10 +63,10 @@ class GeneralController extends BaseController
         $column_name = $this->column_name;
         $route_name = $this->route_name;
         $model_name = $this->model_name;
-        $model_class = $this->model_class;
         $actions = $this->actions;
         $createable = $this->createable;
-        return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name', 'model_class', 'actions', 'createable'));
+        return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name',
+            'actions', 'createable'));
     }
 
     /**
@@ -67,7 +75,7 @@ class GeneralController extends BaseController
      * @return int
      */
     public function destroy($id) {
-        $model = $this->getModel();
+        $model = $this->model;
         $result = $model::destroy($id);
         return $result ? 1 : 0;
     }
@@ -77,17 +85,18 @@ class GeneralController extends BaseController
      * @return mixed
      */
     public function create() {
-        $model_data = $this->getModel();
+        $model_data = $this->model;
         $route_name = $this->route_name;
         $model_name = $this->model_name;
         $image_config = false;
         $images = array();
-        $edit_column = config('general.'.$route_name.'_edit_column');
-        $edit_column_name = config('general.'.$route_name.'_edit_column_name');
-        $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
+        $edit_column = $this->edit_column;
+        $edit_column_name = $this->edit_column_name;
+        $edit_column_detail = $this->edit_column_detail;
         foreach ($edit_column_detail as $k=>$v) {
-            if (!isset($v['type'])) continue;
-//            $type = $v['type'];
+            if (!isset($v['type'])) {
+                continue;
+            }
             if ($v['type'] == 'image') {
                 $image_config = true;
                 $v['name'] = $k;
@@ -108,7 +117,7 @@ class GeneralController extends BaseController
      */
     public function store() {
         $data = Input::all();
-        $model = $this->getModel();
+        $model = $this->model;
         foreach($data as $key => $value) {
             if(is_array($value)) {
                 $data[$key] = implode(',' , $value);
@@ -131,16 +140,17 @@ class GeneralController extends BaseController
      * @return mixed
      */
     public function edit($id) {
-        $model = $this->getModel();
+        $model = $this->model;
         $model_data = $model::find($id);
         $route_name = $this->route_name;
         $model_name = $this->model_name;
-        $edit_column = config('general.'.$route_name.'_edit_column');
-        $edit_column_name = config('general.'.$route_name.'_edit_column_name');
-        $edit_column_detail = config('general.'.$route_name.'_edit_column_detail');
+        $edit_column = $this->edit_column;
+        $edit_column_name = $this->edit_column_name;
+        $edit_column_detail = $this->edit_column_detail;
         foreach ($edit_column_detail as $k=>$v) {
-            if (!isset($v['type'])) continue;
-//            $type = $v['type'];
+            if (!isset($v['type'])) {
+                continue;
+            }
             if ($v['type'] == 'image') {
                 $image_config = true;
                 $v['name'] = $k;
@@ -149,12 +159,5 @@ class GeneralController extends BaseController
         }
         return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column',
             'edit_column_name', 'edit_column_detail','model_name', 'image_config', 'images'));
-    }
-
-    protected function getModel() {
-        $model_class = Input::get('model_class', $this->model_class);
-        $model_class = str_replace('@', '\\', $model_class);
-        $model = new $model_class();
-        return $model;
     }
 }

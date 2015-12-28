@@ -11,7 +11,7 @@
 return [
     //版本管理
     'versions_createable' => true,  //是否可创建
-    'versions_model_class' => 'Loopeer@QuickCms@Models@Version',
+    'versions_model_class' => 'Loopeer\QuickCms\Models\Version',
     'versions_model_name' => '版本',
     'versions_index_column' => array(
         'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status','published_at',
@@ -75,7 +75,7 @@ return [
 
     //意见反馈
     'feedbacks_createable' => false,
-    'feedbacks_model_class' => 'Loopeer@QuickCms@Models@Feedback',
+    'feedbacks_model_class' => 'Loopeer\QuickCms\Models\Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
         'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact',

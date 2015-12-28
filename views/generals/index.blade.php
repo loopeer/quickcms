@@ -45,7 +45,6 @@
 <script>
     $(document).ready(function() {
         var route_name = '{{ $route_name }}';
-        var model_class = '{{{ $model_class }}}';
         var table = $('#dt_basic').DataTable({
             "processing": false,
             "serverSide": true,
@@ -66,9 +65,6 @@
                 '<li class="divider btn_content"></li>'+
                 @endif
                 @endforeach
-//                '<li>'+
-//                '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
-//                '</li>'+
                 '</ul>'+
                 '</div>'
             } ],
@@ -80,7 +76,6 @@
 
         $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
             var data = table.row($(this).parents('tr')).data();
-            //var delete_token = $('#delete_token').val();
             window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
         });
 
@@ -90,7 +85,7 @@
             if(confirm('删除这条记录?')) {
                 $.ajax({
                     type: "DELETE",
-                    data: { '_token' : delete_token, "model_class" : model_class },
+                    data: { '_token' : delete_token},
                     url: '/admin/' + route_name + '/' + data[0], //resource
                     success: function(result) {
                         if (result > 0) {
