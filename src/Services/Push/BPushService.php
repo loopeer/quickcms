@@ -21,6 +21,8 @@ class BPushService {
     protected $iosApiKey;
     protected $iosSecretKey;
     protected $deployStatus;
+    protected $androidPush;
+    protected $iosPush;
 
     public function __construct() {
         $this->androidApiKey = config('quickcms.baidu_push_android_api_key');
@@ -28,6 +30,7 @@ class BPushService {
         $this->iosApiKey = config('quickcms.baidu_push_ios_api_key');
         $this->iosSecretKey = config('quickcms.baidu_push_ios_secret_key');
         $this->deployStatus = config('quickcms.baidu_push_sdk_deploy_status');
+        self::initBPush();
     }
 
     public function pushSingleMessage($account_id, $description, $customer_content = array()) {
@@ -36,11 +39,7 @@ class BPushService {
             return;
         }
         $platform = $push->platform;
-        if($platform == 'android') {
-            $bPush = self::getBPush('android');
-        } else {
-            $bPush = self::getBPush('ios');
-        }
+        $bPush = ($platform == 'android') ? $this->androidPush : $this->iosPush;
         $result = $bPush->pushSingleMessage($push->app_channel_id, $description, $customer_content);
         self::printResult($platform, $result);
     }
@@ -58,33 +57,25 @@ class BPushService {
             }
         }
         if(isset($androidChannelIds)) {
-            $androidPush = self::getBPush('android');
-            $result = $androidPush->pushBatchMessage($androidChannelIds, $description, $customerContent);
+            $result = $this->androidPush->pushBatchMessage($androidChannelIds, $description, $customerContent);
             self::printResult('android', $result);
         }
         if(isset($iosChannelIds)) {
-            $iosPush = self::getBPush('ios');
-            $result = $iosPush->pushBatchMessage($iosChannelIds, $description, $customerContent);
+            $result = $this->iosPush->pushBatchMessage($iosChannelIds, $description, $customerContent);
             self::printResult('ios', $result);
         }
     }
 
     public function pushAllMessage($description, $customer_content = array()) {
-        $androidPush = self::getBPush('android');
-        $iosPush = self::getBPush('ios');
-        $androidResult = $androidPush->pushAllMessage($description, $customer_content);
+        $androidResult = $this->androidPush->pushAllMessage($description, $customer_content);
         self::printResult('android', $androidResult);
-        $iosResult = $iosPush->pushAllMessage($description, $customer_content);
+        $iosResult = $this->iosPush->pushAllMessage($description, $customer_content);
         self::printResult('ios', $iosResult);
     }
 
-    private function getBPush($platform) {
-        if($platform == 'android') {
-            $bPush = new BPush($this->androidApiKey, $this->androidSecretKey);
-        } else {
-            $bPush = new BPush($this->iosApiKey, $this->iosSecretKey, 1, $this->deployStatus);
-        }
-        return $bPush;
+    private function initBPush() {
+        $this->androidPush = new BPush($this->androidApiKey, $this->androidSecretKey);
+        $this->iosPush = new BPush($this->iosApiKey, $this->iosSecretKey, 1, $this->deployStatus);
     }
 
     /**
