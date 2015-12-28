@@ -48,7 +48,8 @@ class GeneralController extends BaseController
         $this->model_name = config('general.' . $general_name . '_model_name');
         $this->actions = config('general.' . $general_name . '_table_action');
         $this->createable = config('general.' . $general_name . '_createable');
-        $this->model = new \ReflectionClass($this->model_class);
+        $reflectionClass = new \ReflectionClass($this->model_class);
+        $this->model = $reflectionClass->newInstance();
     }
 
     public function search()
