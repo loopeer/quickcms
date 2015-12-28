@@ -104,8 +104,6 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
         $selector['enum_value'] = json_decode($selector['enum_value']);
         $data = self::parseSelector($selector['type'], $selector['enum_value']);
         self::is_update($enum_key, $data);
-
-
     }
 
     public function updateCache() {
