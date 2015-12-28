@@ -11,7 +11,7 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Route;
 use Session;
 use Response;
 use Input;
@@ -33,10 +33,11 @@ class GeneralController extends BaseController
     protected $createable;
     protected $model;
 
-    public function __construct(Request $request) {
-        $path = str_replace('admin/', '', $request->path());
+    public function __construct() {
+        $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
+        $path = preg_replace('/\/{\w*}/', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
         $general_name = $this->route_name;
         $this->column = config('general.' . $general_name . '_index_column');
