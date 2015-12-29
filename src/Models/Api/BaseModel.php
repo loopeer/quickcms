@@ -51,12 +51,4 @@ class BaseModel extends Model
         return implode(',', $images);
     }
 
-    public function getSexAttribute(){
-        $sex = $this->attributes['sex'];
-        if(is_null($sex)){
-            return '';
-        }
-        return $sex;
-    }
-
 }

@@ -115,7 +115,7 @@
                     @endif
                     url: '{{$action['url']}}' + '/' + data[0], //resource
                     success: function(result) {
-                        if (result.result){
+                        if (result){
                             datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'
                             +'<button class="close" data-dismiss="alert">×</button>'
