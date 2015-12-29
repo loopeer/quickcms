@@ -101,7 +101,9 @@ class SelectorController extends BaseController {
 
     public static function updateSingleCache($enum_key) {
         $selector = Selector::where('enum_key', $enum_key)->first()->toArray();
-        $selector['enum_value'] = json_decode($selector['enum_value']);
+        if ($selector['type'] == 1) {
+            $selector['enum_value'] = json_decode($selector['enum_value']);
+        }
         $data = self::parseSelector($selector['type'], $selector['enum_value']);
         self::is_update($enum_key, $data);
     }
