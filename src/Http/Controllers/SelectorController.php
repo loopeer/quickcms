@@ -10,25 +10,25 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redirect;
+use Cache;
+use Redirect;
 use Session;
 use Input;
 use View;
-use Loopeer\QuickCms\Models\Selector;
 use Response;
 use DB;
+use Loopeer\QuickCms\Models\Selector;
 
-class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseController {
+class SelectorController extends BaseController {
 
 
     public function index() {
         $message = Session::get('message');
-        return View::make('backend::selectors.index',compact('message'));
+        return View::make('backend::selectors.index', compact('message'));
     }
 
     public function search() {
-        $ret = self::simplePage(['id','name','enum_key','enum_value'], new Selector());
+        $ret = self::simplePage(['id', 'name', 'enum_key', 'enum_value'], new Selector());
         return Response::json($ret);
     }
 
@@ -44,9 +44,9 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
 
     public function destroy($id) {
         if (Selector::destroy($id)) {
-            return array('result'=>true, 'content'=>'删除成功');
+            return array('result' => true, 'content' => '删除成功');
         } else {
-            return array('result'=> false, 'content'=>'删除失败');
+            return array('result' => false, 'content' => '删除失败');
         }
     }
 
@@ -66,9 +66,9 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
             $flag = Selector::create($data);
         }
         if ($flag) {
-            $message = array('result'=>true, 'content'=>'操作成功');
+            $message = array('result' => true, 'content' => '操作成功');
         } else {
-            $message = array('result'=>true, 'content'=>'操作失败');
+            $message = array('result' => true, 'content' => '操作失败');
         }
         $this->updateSingleCache($data['enum_key']);
         return Redirect::to('/admin/selector')->with('message', $message);
@@ -88,7 +88,7 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
         if ($type == 0) {
             $tmp_data = DB::select($value);
             $result = array();
-            foreach ($tmp_data as $k=>$data) {
+            foreach ($tmp_data as $k => $data) {
                 $data = (array)$data;
                 $keys = array_keys($data);
                 $result['' . $data[$keys[0]]] = $data[$keys[1]];
@@ -108,7 +108,7 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
 
     public function updateCache() {
         $selector = Selector::all()->toArray();
-        foreach ($selector as $k=>$v) {
+        foreach ($selector as $k => $v) {
             if ($v['type'] == 1) {
                 $v['enum_value'] = json_decode($v['enum_value']);
             }
@@ -119,7 +119,7 @@ class SelectorController extends \Loopeer\QuickCms\Http\Controllers\BaseControll
     }
 
     private static function is_update($enum_key, $data) {
-        if (Cache::has('selector_'.$enum_key)) {
+        if (Cache::has('selector_' . $enum_key)) {
             Cache::forget('selector_' . $enum_key);
         }
         Cache::forever('selector_' . $enum_key, $data);
