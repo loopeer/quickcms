@@ -40,17 +40,17 @@ class GeneralController extends BaseController
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
         $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
-        $general_name = $this->route_name;
-        $this->column = config('general.' . $general_name . '_index_column');
-        $this->column_name = config('general.' . $general_name . '_index_column_name');
-        $this->column_rename = config('general.' . $general_name . '_index_column_rename');
-        $this->edit_column = config('general.'. $general_name . '_edit_column');
-        $this->edit_column_name = config('general.' . $general_name . '_edit_column_name');
-        $this->edit_column_detail = config('general.' . $general_name . '_edit_column_detail');
-        $this->model_class = config('general.' . $general_name . '_model_class');
-        $this->model_name = config('general.' . $general_name . '_model_name');
-        $this->actions = config('general.' . $general_name . '_table_action');
-        $this->createable = config('general.' . $general_name . '_createable');
+        $general_name = 'general.' . $this->route_name;
+        $this->column = config($general_name . '_index_column');
+        $this->column_name = config($general_name . '_index_column_name');
+        $this->column_rename = config($general_name . '_index_column_rename');
+        $this->edit_column = config($general_name . '_edit_column');
+        $this->edit_column_name = config($general_name . '_edit_column_name');
+        $this->edit_column_detail = config($general_name . '_edit_column_detail');
+        $this->model_class = config($general_name . '_model_class');
+        $this->model_name = config($general_name . '_model_name');
+        $this->actions = config($general_name . '_table_action');
+        $this->createable = config($general_name . '_createable');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
     }
@@ -64,16 +64,17 @@ class GeneralController extends BaseController
     public function index()
     {
         $message = Session::get('message');
-        $column_name = $this->column_name;
-        $column_rename = $this->column_rename;
-        $route_name = $this->route_name;
-        $model_name = $this->model_name;
-        $actions = $this->actions;
-        $createable = $this->createable;
-        $columns = $this->column;
-//        dd(array_flip($columns)['status']);
-        return view('backend::generals.index', compact('message', 'column_name', 'route_name', 'model_name',
-            'actions', 'createable', 'column_rename', 'columns'));
+        $data = array(
+            'column_name' => $this->column_name,
+            'column_rename' => $this->column_rename,
+            'route_name' => $this->route_name,
+            'model_name' => $this->model_name,
+            'actions' => $this->actions,
+            'createable' => $this->createable,
+            'columns' => $this->column,
+            'message' => $message
+        );
+        return View::make('backend::generals.index', $data);
     }
 
     /**
@@ -93,25 +94,8 @@ class GeneralController extends BaseController
      */
     public function create() {
         $model_data = $this->model;
-        $route_name = $this->route_name;
-        $model_name = $this->model_name;
-        $image_config = false;
-        $images = array();
-        $edit_column = $this->edit_column;
-        $edit_column_name = $this->edit_column_name;
-        $edit_column_detail = $this->edit_column_detail;
-        foreach ($edit_column_detail as $k=>$v) {
-            if (!isset($v['type'])) {
-                continue;
-            }
-            if ($v['type'] == 'image') {
-                $image_config = true;
-                $v['name'] = $k;
-                $images[] = $v;
-            }
-        }
-        return View::make('backend::generals.create', compact('model_data', 'route_name', 'edit_column',
-            'edit_column_name', 'edit_column_detail','model_name', 'image_config', 'images'));
+        $data = self::getEditData($model_data);
+        return View::make('backend::generals.create', $data);
     }
 
     public function show() {
@@ -127,7 +111,7 @@ class GeneralController extends BaseController
         $model = $this->model;
         foreach($data as $key => $value) {
             if(is_array($value)) {
-                $data[$key] = implode(',' , $value);
+                $data[$key] = implode(',', $value);
             }
         }
         if ($data['id']) {
@@ -149,12 +133,14 @@ class GeneralController extends BaseController
     public function edit($id) {
         $model = $this->model;
         $model_data = $model::find($id);
-        $route_name = $this->route_name;
-        $model_name = $this->model_name;
-        $edit_column = $this->edit_column;
-        $edit_column_name = $this->edit_column_name;
-        $edit_column_detail = $this->edit_column_detail;
-        foreach ($edit_column_detail as $k=>$v) {
+        $data = self::getEditData($model_data);
+        return View::make('backend::generals.create', $data);
+    }
+
+    private function getEditData($model_data) {
+        $image_config = false;
+        $images = array();
+        foreach ($this->edit_column_detail as $k => $v) {
             if (!isset($v['type'])) {
                 continue;
             }
@@ -164,7 +150,16 @@ class GeneralController extends BaseController
                 $images[] = $v;
             }
         }
-        return View::make('backend::generals.create', compact('route_name', 'model_data', 'edit_column',
-            'edit_column_name', 'edit_column_detail','model_name', 'image_config', 'images'));
+        $data = array(
+            'route_name' => $this->route_name,
+            'model_name' => $this->model_name,
+            'edit_column' => $this->edit_column,
+            'edit_column_name' => $this->edit_column_name,
+            'edit_column_detail' => $this->edit_column_detail,
+            'model_data' => $model_data,
+            'image_config' => $image_config,
+            'images' => $images
+        );
+        return $data;
     }
 }
