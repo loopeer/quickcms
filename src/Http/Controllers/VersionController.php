@@ -133,4 +133,20 @@ class VersionController extends BaseController {
         $result = $version->save();
         return $result;
     }
+
+    public function changeStatus($id) {
+        $version = Version::find($id);
+        if($version->status == 0) {
+            $version->status = 1;
+        } elseif($version->status == 1) {
+            $version->status = 0;
+        }
+        if($version->save()) {
+            $ret = true;
+        } else {
+            $ret = false;
+        }
+
+        return $ret ? 1 : 0;
+    }
 }

@@ -27,19 +27,51 @@ return [
     ),
     'versions_index_column_rename' => array(
         'status' => array(
-            0 => '<span class="label label-default">未上线</span>',
-            1 => '<span class="label label-success">已上线</span>'
+            0 => array(
+                'value' => '<span class="label label-default">未上线</span>',
+                'action_name' => 'online_btn'
+            ),
+            1 => array(
+                'value' => '<span class="label label-success">已上线</span>',
+                'action_name' => 'offline_btn'
+            )
         )
     ),
 
     'versions_table_action' => array(
         array(
+            'default_show' => true,
             'type' => 'edit',
             'name' => 'edit_btn',
             'display_name' => '编辑',
             'has_divider' => true
         ),
         array(
+            'default_show' => false,
+            'type' => 'confirm',
+            'name' => 'online_btn',
+            'display_name' => '上线',
+            'has_divider' => true,
+            'method' => 'get',
+            'url' => '/admin/versions/changeStatus',
+            'confirm_msg' => '确定要上线吗?',
+            'success_msg' => '操作成功',
+            'failure_msg' => '操作失败'
+        ),
+        array(
+            'default_show' => false,
+            'type' => 'confirm',
+            'name' => 'offline_btn',
+            'display_name' => '下线',
+            'has_divider' => true,
+            'method' => 'get',
+            'url' => '/admin/versions/changeStatus',
+            'confirm_msg' => '确定要下线吗?',
+            'success_msg' => '操作成功',
+            'failure_msg' => '操作失败'
+        ),
+        array(
+            'default_show' => true,
             'type' => 'confirm',
             'name' => 'delete_btn',
             'display_name' => '删除',
@@ -104,9 +136,16 @@ return [
     ),
     'feedbacks_table_action' => array(
         array(
+            'default_show' => true,
+            'type' => 'confirm',
+            'method' => 'delete',
             'name' => 'delete_btn',
             'display_name' => '删除',
-            'has_divider' => false
+            'has_divider' => false,
+            'confirm_msg' => '确定要删除吗?',
+            'success_msg' => '删除成功',
+            'failure_msg' => '删除失败',
+            'url' => '/admin/feedbacks',
         )
     ),
 ];

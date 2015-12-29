@@ -70,6 +70,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::resource('versions', 'GeneralController', array('except'=>'show'));
    Route::get('versions/search', 'GeneralController@search');
+   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
 
    Route::resource('systems', 'SystemController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));

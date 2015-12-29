@@ -58,11 +58,16 @@
                 '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 <span class="caret"></span></button>'+
                 '<ul class="dropdown-menu">'+
                 @foreach($actions as $action)
-                '<li>'+
+                        @if(!$action['default_show'])
+                        '<style>'+
+                        '.{{$action['name']}} {display:none;}'+
+                        '</style>'+
+                        @endif
+                '<li class="' + '{{$action['name']}}' + '">'+
                 '<a href="javascript:void(0);" name="' + '{{$action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                 '</li>'+
                 @if($action['has_divider'])
-                '<li class="divider btn_content"></li>'+
+                '<li class="divider ' + '{{$action['name']}}' + '"></li>'+
                 @endif
                 @endforeach
                 '</ul>'+
@@ -81,7 +86,11 @@
                 @foreach($column_rename as $column => $rename)
                 @foreach($rename as $key => $value)
                 if($data[i][parseInt('{{array_flip($columns)[$column]}}')] == parseInt('{{$key}}')) {
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{array_flip($columns)[$column]}}')).html('{!!$value!!}')
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{array_flip($columns)[$column]}}')).html('{!!$value['value']!!}')
+                    @if(!empty($value['action_name']))
+                    {{--$('tr').eq(i+1).children('td').('.{{$value['action_name']}}').html('');--}}
+                    $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();
+                    @endif
                 }
                 @endforeach
                 @endforeach
