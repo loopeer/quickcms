@@ -35,11 +35,14 @@ class GeneralController extends BaseController
     protected $model;
 
     public function __construct() {
+        //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
         $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
-        $this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
+        //$this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
+        $this->route_name = preg_replace('/\/edit/', '', $path);
+        //\Log::info('route_name = ' . $this->route_name);
         $general_name = 'general.' . $this->route_name;
         $this->column = config($general_name . '_index_column');
         $this->column_name = config($general_name . '_index_column_name');
@@ -51,6 +54,7 @@ class GeneralController extends BaseController
         $this->model_name = config($general_name . '_model_name');
         $this->actions = config($general_name . '_table_action');
         $this->createable = config($general_name . '_createable');
+        //\Log::info('model_class = ' . $this->model_class);
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
     }
