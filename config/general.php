@@ -120,13 +120,14 @@ return [
 
     //意见反馈
     'feedbacks_createable' => false,
+    'feedbacks_sort' => ['created_at', 'desc'],
     'feedbacks_model_class' => 'Loopeer\QuickCms\Models\Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
-        'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact',
+        'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact', 'created_at'
     ),
     'feedbacks_index_column_name' => array(
-        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '选项',
+        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '反馈时间', '选项',
     ),
     'feedbacks_edit_column' => array(
         'content', 'version_code', 'version', 'device_id', 'channel_id', 'contact'

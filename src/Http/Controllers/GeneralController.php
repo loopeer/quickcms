@@ -33,6 +33,7 @@ class GeneralController extends BaseController
     protected $actions;
     protected $createable;
     protected $model;
+    protected $sort;
 
     public function __construct() {
         //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
@@ -54,6 +55,7 @@ class GeneralController extends BaseController
         $this->model_name = config($general_name . '_model_name');
         $this->actions = config($general_name . '_table_action');
         $this->createable = config($general_name . '_createable');
+        $this->sort = config($general_name . '_sort');
         //\Log::info('model_class = ' . $this->model_class);
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
@@ -61,7 +63,11 @@ class GeneralController extends BaseController
 
     public function search()
     {
-        $ret = self::simplePage($this->column, $this->model);
+        $model = $this->model;
+        if(isset($this->sort)) {
+           $model = $model->orderBy($this->sort[0], $this->sort[1]);
+        }
+        $ret = self::simplePage($this->column, $model);
         return Response::json($ret);
     }
 
