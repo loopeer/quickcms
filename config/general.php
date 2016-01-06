@@ -10,7 +10,7 @@
  */
 return [
     //版本管理
-    'versions_createable' => true,  //是否可创建
+    'versions_create_able' => true,  //是否可创建
     'versions_model_class' => 'Loopeer\QuickCms\Models\Version',
     'versions_model_name' => '版本',
     'versions_index_column' => array(
@@ -121,6 +121,7 @@ return [
     //意见反馈
     'feedbacks_createable' => false,
     'feedbacks_sort' => ['created_at', 'desc'],
+    'feedbacks_create_able' => false,
     'feedbacks_model_class' => 'Loopeer\QuickCms\Models\Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(

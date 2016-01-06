@@ -9,7 +9,7 @@
             </div>
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    @if($createable)
+                    @if($create_able)
                     <p><a href="/admin/{{ $route_name }}/create/" class="btn btn-primary">新增{{ $model_name }}</a></p>
                     @endif
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
@@ -24,7 +24,7 @@
                                 <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                     <tr>
-                                        @foreach($column_name as $name)
+                                        @foreach($index_column_name as $name)
                                         <th>{{ $name }}</th>
                                         @endforeach
                                     </tr>
@@ -82,11 +82,11 @@
         table.on( 'draw.dt', function () {
             var $data = table.data();
             for (var i=0; i < $data.length; i++) {
-                @if(!empty($column_rename))
-                @foreach($column_rename as $column => $rename)
+                @if(!empty($index_column_rename))
+                @foreach($index_column_rename as $column => $rename)
                 @foreach($rename as $key => $value)
-                if($data[i][parseInt('{{array_flip($columns)[$column]}}')] == parseInt('{{$key}}')) {
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{array_flip($columns)[$column]}}')).html('{!!$value['value']!!}')
+                if($data[i][parseInt('{{array_flip($index_column)[$column]}}')] == parseInt('{{$key}}')) {
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{array_flip($index_column)[$column]}}')).html('{!!$value["value"]!!}');
                     @if(!empty($value['action_name']))
                     {{--$('tr').eq(i+1).children('td').('.{{$value['action_name']}}').html('');--}}
                     $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();

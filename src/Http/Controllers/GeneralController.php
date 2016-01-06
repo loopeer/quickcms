@@ -24,30 +24,33 @@ class GeneralController extends BaseController
     protected $model_class;
     protected $model_name;
     protected $route_name;
-    protected $column_name;
-    protected $column_rename;
-    protected $column;
+    protected $index_column;
+    protected $index_column_name;
+    protected $index_column_rename;
+    protected $index_multi;
+    protected $index_multi_column;
+    protected $index_multi_join;
     protected $edit_column;
     protected $edit_column_name;
     protected $edit_column_detail;
     protected $actions;
-    protected $createable;
+    protected $create_able;
     protected $model;
     protected $sort;
 
     public function __construct() {
-        //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
+        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
         $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
         //$this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
         $this->route_name = preg_replace('/\/edit/', '', $path);
-        //\Log::info('route_name = ' . $this->route_name);
+        \Log::info('route_name = ' . $this->route_name);
         $general_name = 'general.' . $this->route_name;
-        $this->column = config($general_name . '_index_column');
-        $this->column_name = config($general_name . '_index_column_name');
-        $this->column_rename = config($general_name . '_index_column_rename');
+        $this->index_column = config($general_name . '_index_column');
+        $this->index_column_name = config($general_name . '_index_column_name');
+        $this->index_column_rename = config($general_name . '_index_column_rename');
         $this->edit_column = config($general_name . '_edit_column');
         $this->edit_column_name = config($general_name . '_edit_column_name');
         $this->edit_column_detail = config($general_name . '_edit_column_detail');
@@ -57,6 +60,11 @@ class GeneralController extends BaseController
         $this->createable = config($general_name . '_createable');
         $this->sort = config($general_name . '_sort');
         //\Log::info('model_class = ' . $this->model_class);
+        $this->create_able = config($general_name . '_create_able');
+        $this->index_multi = config($general_name . '_index_multi');
+        $this->index_multi_column = config($general_name . '_index_multi_column');
+        $this->index_multi_join = config($general_name . '_index_multi_join');
+        \Log::info('model_class = ' . $this->model_class);
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
     }
@@ -68,6 +76,21 @@ class GeneralController extends BaseController
            $model = $model->orderBy($this->sort[0], $this->sort[1]);
         }
         $ret = self::simplePage($this->column, $model);
+        if($this->index_multi) {
+            $search = Input::get('search')['value'];
+            $length = Input::get('length');
+            $str_column = implode(',', $this->index_multi_column);
+            self::setCurrentPage();
+            $model = $this->model;
+            $joins = $this->index_multi_join;
+            $paginate = $model->select($this->index_multi_column)
+                ->leftJoin($joins[0], $joins[1], $joins[2], $joins[3])
+                ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+                ->paginate($length);
+            $ret = self::queryPage($this->index_column, $paginate);
+        } else {
+            $ret = self::simplePage($this->index_column, $this->model);
+        }
         return Response::json($ret);
     }
 
@@ -75,13 +98,13 @@ class GeneralController extends BaseController
     {
         $message = Session::get('message');
         $data = array(
-            'column_name' => $this->column_name,
-            'column_rename' => $this->column_rename,
+            'index_column_name' => $this->index_column_name,
+            'index_column_rename' => $this->index_column_rename,
             'route_name' => $this->route_name,
             'model_name' => $this->model_name,
             'actions' => $this->actions,
-            'createable' => $this->createable,
-            'columns' => $this->column,
+            'create_able' => $this->create_able,
+            'index_column' => $this->index_column,
             'message' => $message
         );
         return View::make('backend::generals.index', $data);

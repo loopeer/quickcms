@@ -81,4 +81,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');
    Route::get('selector/updateCache', 'SelectorController@updateCache');
+
+   //general multi
+   Route::resource('actionLogs', 'GeneralController', array('except'=>'show'));
+   Route::get('actionLogs/search', 'GeneralController@search');
 });
