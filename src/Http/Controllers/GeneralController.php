@@ -78,7 +78,15 @@ class GeneralController extends BaseController
         if($this->index_multi) {
             $search = Input::get('search')['value'];
             $length = Input::get('length');
-            $str_column = implode(',', $this->index_multi_column);
+            $str_columns = array();
+            foreach($this->index_multi_column as $column) {
+                $pos = stripos($column, ' as ');
+                if($pos) {
+                    $column = substr($column, 0, $pos);
+                }
+                $str_columns[] = $column;
+            }
+            $str_column = implode(',', $str_columns);
             self::setCurrentPage();
             $joins = $this->index_multi_join;
             foreach($joins as $join) {
