@@ -143,37 +143,89 @@
             }
         });
         @endif
-        @endforeach
+        @if($action['type'] == 'dialog')
+        $('#content').after(
+        '<div class="modal fade" id="' + '{{$action['target']}}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content" style="width: 600px;">' +
+        '<div class="modal-header">' +
+        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+        '&times;' +
+        '</button>' +
+        '<h4 class="modal-title"></h4>' +
+        '</div>' +
+        '<div class="modal-body custom-scroll terms-body" style="min-height: 280px;">' +
+        '<div id="left">' +
+        '</div>' +
+        '</div>' +
+
+        '</div>' +
+        '</div>' +
+        '</div>'
+        );
+        $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
+            var data = table.row($(this).parents('tr')).data();
+            $('#{{$action['target']}} .modal-title').html('{{$action['dialog_title']}}');
+            $(this).attr("data-toggle", "modal");
+            $(this).attr("data-target", "#{{$action['target']}}");
+            $(this).attr("data-action","{{$action['url']}}"+data[0]);
+            $(this).attr("data-id",data[0]);
+        });
+        $('#' + '{{$action['target']}}').on('show.bs.modal', function(e) {
+            var action = $(e.relatedTarget).data('action');
+            //populate the div
+            loadURL(action, $('#' + '{{$action['target']}}' + ' .modal-content .modal-body #left'));
+        });
+
+        @if(!empty($action['form']))
+        $('#{{$action['target']}} .modal-body').after(
+                '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+                '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
+                '</div>'
+        );
+
+        $("#{{$action['form']['submit_id']}}").click(function(){
+            $("#{{$action['form']['submit_id']}}").text("正在保存...");
+            var $form = $('#{{$action['form']['form_id']}}');
+            var page_info = table.page.info();
+            var page = page_info.page;
+            var datatable = $('#dt_basic').dataTable();
+            $($form).submit(function(event) {
+                var form = $(this);
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize()
+                }).done(function(result) {
+                    alert(result);
+                    if(result) {
+                        datatable.fnPageChange(page);
+                        $(".tips").html('<div class="alert alert-success fade in">'
+                        +'<button class="close" data-dismiss="alert">×</button>'
+                        +'<i class="fa-fw fa fa-check"></i>'
+                        +'<strong>成功</strong>'+' '+'{{$action['form']['success_msg']}}'+'。'
+                        +'</div>');
+                    } else {
+                        $(".tips").html('<div class="alert alert-danger fade in">'
+                        +'<button class="close" data-dismiss="alert">×</button>'
+                        +'<i class="fa-fw fa fa-warning"></i>'
+                        +'<strong>失败</strong>' + ' ' + '{{$action['form']['failure_msg']}}' + '。'
+                        +'</div>');
+                    }
+                    $("#{{$action['form']['submit_id']}}").text("提交");
+                    $('#{{$action['target']}}').modal('hide');
+                    $form[0].reset();
+                });
+                event.preventDefault(); // Prevent the form from submitting via the browser.
+            });
+            $form.trigger('submit'); // trigger form submit
+        });
         @endif
 
-//        $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
-//            var data = table.row($(this).parents('tr')).data();
-//            window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
-//        });
-//
-//        $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
-//            var data = table.row($(this).parents('tr')).data();
-//            var delete_token = $('#delete_token').val();
-//            if(confirm('删除这条记录?')) {
-//                $.ajax({
-//                    type: "DELETE",
-//                    data: { '_token' : delete_token},
-//                    url: '/admin/' + route_name + '/' + data[0], //resource
-//                    success: function(result) {
-//                        if (result > 0) {
-//                            var table = $('#dt_basic').dataTable();
-//                            var nRow = $($(this).data('id')).closest("tr").get(0);
-//                            table.fnDeleteRow( nRow, null, true );
-//                            $(".tips").html('<div class="alert alert-success fade in">'
-//                            +'<button class="close" data-dismiss="alert">×</button>'
-//                            +'<i class="fa-fw fa fa-check"></i>'
-//                            +'<strong>成功</strong>' + ' 删除记录成功。'
-//                            +'</div>');
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        @endif
+        @endforeach
+        @endif
     });
 </script>
 @endsection

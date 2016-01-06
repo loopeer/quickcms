@@ -76,6 +76,32 @@ return [
         ),
         array(
             'default_show' => true,
+            'type' => 'dialog',
+            'name' => 'detail_btn',
+            'target' => 'detail_dialog',
+            'dialog_title' => '版本详情',
+            'display_name' => '详情',
+            'has_divider' => true,
+            'url' => '/admin/test/detail/'
+        ),
+        array(
+            'default_show' => true,
+            'type' => 'dialog',
+            'name' => 'form_btn',
+            'target' => 'form_dialog',
+            'dialog_title' => '版本编辑',
+            'display_name' => '表单',
+            'has_divider' => true,
+            'url' => '/admin/test/add/',
+            'form' => array(
+                'form_id' => 'version_form',
+                'submit_id' => 'add_version',
+                'success_msg' => '添加成功',
+                'failure_msg' => '添加失败'
+            ),
+        ),
+        array(
+            'default_show' => true,
             'type' => 'confirm',
             'name' => 'delete_btn',
             'display_name' => '删除',

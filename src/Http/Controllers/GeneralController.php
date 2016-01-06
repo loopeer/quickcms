@@ -117,8 +117,12 @@ class GeneralController extends BaseController
      */
     public function destroy($id) {
         $model = $this->model;
-        $result = $model::destroy($id);
-        return $result ? 1 : 0;
+        if($model::destroy($id)) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+        return Response::json($result);
     }
 
     /**

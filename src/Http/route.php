@@ -70,7 +70,14 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::resource('versions', 'VersionController', array('except'=>'show'));
    Route::get('versions/search', 'VersionController@search');
-   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
+
+   //test route
+//   Route::resource('versions', 'GeneralController', array('except'=>'show'));
+//   Route::get('versions/search', 'GeneralController@search');
+//   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
+//   Route::get('test/detail/{id}', 'TestController@detail');
+//   Route::get('test/add/{id}', 'TestController@add');
+//   Route::post('test/add', 'TestController@submitAdd');
 
    Route::resource('systems', 'SystemController', array('except'=>'show'));
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
