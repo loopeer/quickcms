@@ -13,6 +13,10 @@ return [
     'versions_create_able' => true,  //是否可创建
     'versions_model_class' => 'Loopeer\QuickCms\Models\Version',
     'versions_model_name' => '版本',
+    'versions_index_select_column' => array(
+        'versions.id', 'versions.platform', 'versions.version_code', 'versions.version', 'versions.url', 'versions.message',
+        'versions.description', 'versions.status','versions.published_at',
+    ),
     'versions_index_column' => array(
         'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status','published_at',
     ),
@@ -119,16 +123,14 @@ return [
     ),
 
     //意见反馈
-    'feedbacks_createable' => false,
-    'feedbacks_sort' => ['created_at', 'desc'],
     'feedbacks_create_able' => false,
     'feedbacks_model_class' => 'Loopeer\QuickCms\Models\Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
-        'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact', 'created_at'
+        'id', 'content', 'version', 'version_code', 'device_id', 'channel_id', 'contact',
     ),
     'feedbacks_index_column_name' => array(
-        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '反馈时间', '选项',
+        'ID', '反馈内容', '版本名称', '版本号', '设备唯一ID', '渠道编号', '联系方式', '选项',
     ),
     'feedbacks_edit_column' => array(
         'content', 'version_code', 'version', 'device_id', 'channel_id', 'contact'
@@ -149,5 +151,24 @@ return [
             'failure_msg' => '删除失败',
             'url' => '/admin/feedbacks',
         )
+    ),
+
+    //版本管理
+    'actionLogs_create_able' => false,  //是否可创建
+    'actionLogs_model_class' => 'Loopeer\QuickCms\Models\ActionLog',
+    'actionLogs_model_name' => '操作日志',
+    'actionLogs_index_multi' => true,
+    'actionLogs_index_multi_join' => array(
+        ['users', 'action_logs.user_id', '=', 'users.id'],
+        ['users as users2', 'action_logs.user_id', '=', 'users2.id'],
+    ),
+    'actionLogs_index_multi_column' => array(
+        'action_logs.id', 'users2.name', 'users.email', 'action_logs.client_ip', 'action_logs.created_at',
+    ),
+    'actionLogs_index_column' => array(
+        'id', 'name', 'email', 'client_ip', 'created_at',
+    ),
+    'actionLogs_index_column_name' => array(
+        'ID', '姓名', '邮箱', 'IP', '时间'
     ),
 ];
