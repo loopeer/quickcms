@@ -23,10 +23,13 @@ class LogUtil {
      * @param $dir
      * @return Logger
      */
-    public static function getLogger($name, $dir = null) {
+    public static function getLogger($name, $dir = null, $type = 'daily') {
         $logger = new Logger($name);
         $date = date('Ymd', time());
         $file_name = $name . '_' . $date . '.log';
+        if ($type == 'single') {
+            $file_name = $name.'.log';
+        }
         $path = storage_path() . '/logs/' . ($dir ? ($dir . '/') : '') . $file_name;
         $stream = new StreamHandler($path, Logger::INFO);
         $fire_php = new FirePHPHandler();
