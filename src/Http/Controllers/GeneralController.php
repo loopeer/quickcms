@@ -75,21 +75,21 @@ class GeneralController extends BaseController
         if(isset($this->sort)) {
            $model = $model->orderBy($this->sort[0], $this->sort[1]);
         }
-        $ret = self::simplePage($this->column, $model);
         if($this->index_multi) {
             $search = Input::get('search')['value'];
             $length = Input::get('length');
             $str_column = implode(',', $this->index_multi_column);
             self::setCurrentPage();
-            $model = $this->model;
             $joins = $this->index_multi_join;
+            foreach($joins as $join) {
+                $model = $model->leftJoin($join[0], $join[1], $join[2], $join[3]);
+            }
             $paginate = $model->select($this->index_multi_column)
-                ->leftJoin($joins[0], $joins[1], $joins[2], $joins[3])
                 ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
                 ->paginate($length);
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
-            $ret = self::simplePage($this->index_column, $this->model);
+            $ret = self::simplePage($this->index_column, $model);
         }
         return Response::json($ret);
     }
