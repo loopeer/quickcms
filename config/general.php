@@ -30,18 +30,39 @@ return [
         '发布平台', '版本号', '版本名称', '下载地址', '图片', '版本描述', '发布时间','版本状态',
     ),
     'versions_index_column_rename' => array(
+        // 字段名配置
         'status' => array(
-            0 => array(
-                'value' => '<span class="label label-default">未上线</span>',
-                'action_name' => 'online_btn'
+            //正常状态显示替换
+            'type'=>'normal',
+            'param'=>array(
+                //数据库值为键名，显示内容为键值
+                0 => array(
+                    'value' => '<span class="label label-default">未上线</span>',
+                    'action_name' => 'online_btn'
+                ),
+                1 => array(
+                    'value' => '<span class="label label-success">已上线</span>',
+                    'action_name' => 'offline_btn'
+                )
             ),
-            1 => array(
-                'value' => '<span class="label label-success">已上线</span>',
-                'action_name' => 'offline_btn'
+        ),
+        // 字段名配置
+        'version_code'=>array(
+            //点击数字出现模态框
+            'type' => 'dialog',
+            'param'=>array(
+                // a标签name名称
+                'name' => 'test_btn',
+                //模态框名称
+                'target' => 'test_dialog',
+                //模态框标题
+                'dialog_title' => 'Modal',
+                //模态框路由，结尾的'/'不能省略，url后会传递id值，路由需配置
+                'url' => '/admin/test/detail/'
             )
         )
     ),
-
+    // 下拉按钮配置
     'versions_table_action' => array(
         array(
             'default_show' => true,
