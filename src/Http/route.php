@@ -79,9 +79,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 //   Route::get('test/add/{id}', 'TestController@add');
 //   Route::post('test/add', 'TestController@submitAdd');
 
-   Route::resource('systems', 'SystemController', array('except'=>'show'));
+   Route::get('systems', 'SystemController@index');
+   Route::post('systems/store', 'SystemController@store');
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
-   Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
+   //Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
 
    Route::resource('selector', 'SelectorController', array('except'=>'show'));
    Route::get('selector/search', 'SelectorController@search');

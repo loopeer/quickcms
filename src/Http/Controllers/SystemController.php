@@ -21,6 +21,7 @@ use Storage;
 use Cache;
 
 class SystemController extends BaseController {
+
     public function __construct(){
         $this->middleware('auth.permission:maintenance');
         $this->middleware('auth.permission:admin.system');
@@ -28,18 +29,25 @@ class SystemController extends BaseController {
     }
 
     public function index() {
-        return View::make('backend::systems.index');
+        $system = System::findOrNew(1);
+        return View::make('backend::systems.index', compact('system'));
     }
 
-    public function title() {
+    public function store() {
         $title = Input::get('title');
+        $build = Input::get('build');
+        $app_review = Input::get('app_review');
+        $android_download = Input::get('android_download');
         if ($system = System::find(1)) {
-            $system->title = $title;
         } else {
             $system = new System();
-            $system->title = $title;
         }
+        $system->title = $title;
+        $system->build = $build;
+        $system->app_review = $app_review;
+        $system->android_download = $android_download;
         if ($system->save()) {
+            Cache::forever('system', $system);
             if (Cache::has('websiteTitle'))
                 Cache::forget('websiteTitle');
             echo 1;
@@ -47,6 +55,7 @@ class SystemController extends BaseController {
             echo 0;
         }
     }
+
     public function uploadLogo() {
 
         if (Request::hasFile('logo')) {

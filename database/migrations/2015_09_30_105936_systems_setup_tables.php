@@ -58,6 +58,9 @@ class SystemsSetupTables extends Migration
         Schema::create('systems', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 50); //网站标题
+            $table->string('build', 10); //版本号
+            $table->tinyInteger('app_review'); //app审核
+            $table->string('android_download', 255); //android下载地址
             $table->timestamps();
             $table->softDeletes();
         });

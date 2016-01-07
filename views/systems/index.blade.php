@@ -36,7 +36,7 @@
                                 <fieldset>
                                     <section>
                                         <label class="input">
-                                            <input type="text" id="title" value="{{Cache::get('websiteTitle')}}" placeholder="输入网站标题">
+                                            <input type="text" id="title" value="{{ $system->title }}" placeholder="输入网站标题">
                                             <b class="tooltip tooltip-bottom-right">显示在浏览器标签</b>
                                         </label>
                                     </section>
@@ -54,7 +54,33 @@
                                                  <div id="show_img"></div>
                                             </div>
                                     </section>
-                                    <input type="hidden" name="_token" id="sys-token" value="{{csrf_token()}}">
+                                    <section>
+                                        <label class="input">
+                                            <input type="text" id="build" value="{{ $system->build }}" placeholder="输入版本号">
+                                            <b class="tooltip tooltip-bottom-right">版本号</b>
+                                        </label>
+                                    </section>
+                                    <section>
+                                        <label class="input">
+                                            <label class="label">审核状态</label>
+                                            <select id="app_review" class="select2">
+                                                @if($system->app_review == 0)
+                                                <option selected value="0">未审核</option>
+                                                <option value="1">正在审核</option>
+                                                @else
+                                                    <option value="0">未审核</option>
+                                                    <option selected value="1">正在审核</option>
+                                                @endif
+                                            </select>
+                                        </label>
+                                    </section>
+                                    <section>
+                                        <label class="input">
+                                            <input type="text" id="android_download" value="{{ $system->android_download }}" placeholder="输入Android下载地址">
+                                            <b class="tooltip tooltip-bottom-right">Android下载地址</b>
+                                        </label>
+                                    </section>
+                                    <input type="hidden" name="_token" id="sys-token" value="{{ csrf_token() }}">
                                 </fieldset>
                                 <footer>
                                     <button type="button" id="submit-title" class="btn btn-primary">
@@ -105,11 +131,18 @@
 
         $('#submit-title').click(function() {
             var title = $('#title').val();
+            var build = $('#build').val();
+            var app_review = $('#app_review option:selected').val();
+            alert(app_review);
+            var android_download = $('#android_download').val();
             $.ajax({
-                url:'/admin/systems/title',
+                url:'/admin/systems/store',
                 data:{
                     'title':title,
-                    '_token':'{{csrf_token()}}'
+                    'build':build,
+                    'app_review':app_review,
+                    'android_download':android_download,
+                    '_token':'{{ csrf_token() }}'
                 },
                 type:'post',
                 success:function (data) {
