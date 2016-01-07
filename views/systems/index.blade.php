@@ -133,7 +133,6 @@
             var title = $('#title').val();
             var build = $('#build').val();
             var app_review = $('#app_review option:selected').val();
-            alert(app_review);
             var android_download = $('#android_download').val();
             $.ajax({
                 url:'/admin/systems/store',
@@ -147,8 +146,18 @@
                 type:'post',
                 success:function (data) {
                     if (data == 1) {
-                        $('#message').html('<article class="col-sm-12" id="tips"><div class="alert alert-success fade in"><button class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-check"></i> <strong>成功</strong> 修改成功，刷新页面后生效 </div> </article>');
+                        $('#message').html('<article class="col-sm-12" id="tips"><div class="alert alert-success fade in"><button class="close" data-dismiss="alert">×</button> <i class="fa-fw fa fa-check"></i> <strong>成功</strong> 修改成功 </div> </article>');
                     }
+                }
+            })
+        });
+
+        $('#update_btn').click(function() {
+            $.ajax({
+                url:'/admin/systems/updateCode',
+                type:'post',
+                success:function (data) {
+                    alert(data);
                 }
             })
         });

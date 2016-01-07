@@ -83,4 +83,10 @@ class SystemController extends BaseController {
         }
 
     }
+
+    public function updateCode() {
+        $base_path = base_path();
+        $res = shell_exec('cd ' . $base_path . ' && git pull && composer dump-autoload');
+        return $res;
+    }
 }

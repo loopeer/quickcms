@@ -81,6 +81,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::get('systems', 'SystemController@index');
    Route::post('systems/store', 'SystemController@store');
+   Route::post('systems/updateCode', 'SystemController@updateCode');
    Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
    //Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
 
