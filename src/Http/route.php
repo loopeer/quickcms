@@ -48,8 +48,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
    Route::get('users/checkEmail', 'UserController@checkEmail');
 
-   Route::resource('roles', 'RoleController', array('except'=>'show'));
-   Route::get('roles/search', 'RoleController@search');
+//   Route::resource('roles', 'RoleController', array('except'=>'show'));
+   Route::resource('roles', 'GeneralController', array('except'=>'show'));
+//   Route::get('roles/search', 'RoleController@search');
+   Route::get('roles/search', 'GeneralController@search');
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
 

@@ -209,7 +209,6 @@
                         url: form.attr('action'),
                         data: form.serialize()
                     }).done(function(result) {
-                        alert(result);
                         if(result) {
                             datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'

@@ -11,6 +11,10 @@
 return [
     //版本管理
     'versions_create_able' => true,  //是否可创建
+    // 必须配置 TODO
+    'versions_middleware'=>array(
+        'admin.versions'
+    ),
     'versions_model_class' => 'Loopeer\QuickCms\Models\Version',
     'versions_model_name' => '版本',
     'versions_index_select_column' => array(
@@ -66,6 +70,7 @@ return [
     'versions_table_action' => array(
         array(
             'default_show' => true,
+            // type: edit/confirm/dialog，其他都可自定义
             'type' => 'edit',
             'name' => 'edit_btn',
             'display_name' => '编辑',
