@@ -68,13 +68,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('feedbacks', 'GeneralController', array('except'=>'show'));
    Route::get('feedbacks/search', 'GeneralController@search');
 
-   Route::resource('versions', 'VersionController', array('except'=>'show'));
-   Route::get('versions/search', 'VersionController@search');
-
    //test route
-//   Route::resource('versions', 'GeneralController', array('except'=>'show'));
-//   Route::get('versions/search', 'GeneralController@search');
-//   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
+   Route::resource('versions', 'GeneralController', array('except'=>'show'));
+   Route::get('versions/search', 'GeneralController@search');
+   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
 //   Route::get('test/detail/{id}', 'TestController@detail');
 //   Route::get('test/add/{id}', 'TestController@add');
 //   Route::post('test/add', 'TestController@submitAdd');
