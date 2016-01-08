@@ -82,7 +82,7 @@
             table.on( 'draw.dt', function () {
                 var $data = table.data();
                 for (var i=0; i < $data.length; i++) {
-                    @if(!empty($index_column_rename))
+                    @if(is_array($index_column_rename))
                         @foreach($index_column_rename as $column => $rename)
                             {{$column_no = array_flip($index_column)[$column]}}
                             @if($rename['type'] == 'normal')
