@@ -66,6 +66,12 @@ class GeneralController extends BaseController
         \Log::info('model_class = ' . $this->model_class);
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
+
+        $middlewares = config($general_name . '_middleware', array());
+        foreach ($middlewares as $middleware) {
+            $this->middleware('auth.permission:'.$middleware);
+        }
+        parent::__construct();
     }
 
     public function search()

@@ -11,6 +11,9 @@
 return [
     //版本管理
     'versions_create_able' => true,  //是否可创建
+    'versions_middleware' => array(
+        'admin.versions'
+    ),
     'versions_model_class' => 'Loopeer\QuickCms\Models\Version',
     'versions_model_name' => '版本',
     'versions_index_select_column' => array(
@@ -171,6 +174,9 @@ return [
 
     //意见反馈
     'feedbacks_create_able' => false,
+    'feedbacks_middleware' => array(
+        'admin.feedbacks'
+    ),
     'feedbacks_model_class' => 'Loopeer\QuickCms\Models\Feedback',
     'feedbacks_model_name' => '意见',
     'feedbacks_index_column' => array(
