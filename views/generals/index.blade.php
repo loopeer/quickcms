@@ -88,20 +88,20 @@
                             @if($rename['type'] == 'normal')
                                 @foreach($rename['param'] as $key => $value)
                                     if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
-                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!!$value["value"]!!}');
-                        @if(!empty($value['action_name']))
-                        {{--$('tr').eq(i+1).children('td').('.{{$value['action_name']}}').html('');--}}
-                        $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();
-                        @endif
-                    }
-                            @endforeach
-                        @elseif($rename['type'] == 'dialog')
-                        var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!!$value["value"]!!}');
+                                        @if(!empty($value['action_name']))
+                                        {{--$('tr').eq(i+1).children('td').('.{{$value['action_name']}}').html('');--}}
+                                        $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();
+                                        @endif
+                                    }
+                                @endforeach
+                            @elseif($rename['type'] == 'dialog')
+                            var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
+                            $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                            @endif
+                        @endforeach
                     @endif
-                @endforeach
-            @endif
-            }
+                }
             });
             //
             @if(!empty($actions))
@@ -135,16 +135,16 @@
                                     if (result){
                                         datatable.fnPageChange(page);
                                         $(".tips").html('<div class="alert alert-success fade in">'
-                                                +'<button class="close" data-dismiss="alert">×</button>'
-                                                +'<i class="fa-fw fa fa-check"></i>'
-                                                +'<strong>成功</strong>'+' '+'{{$action['success_msg']}}'+'。'
-                                                +'</div>');
+                                            +'<button class="close" data-dismiss="alert">×</button>'
+                                            +'<i class="fa-fw fa fa-check"></i>'
+                                            +'<strong>成功</strong>'+' '+'{{$action['success_msg']}}'+'。'
+                                            +'</div>');
                                     }else{
                                         $(".tips").html('<div class="alert alert-danger fade in">'
-                                                +'<button class="close" data-dismiss="alert">×</button>'
-                                                +'<i class="fa-fw fa fa-warning"></i>'
-                                                +'<strong>失败</strong>'+' '+'{{$action['failure_msg']}}'+'。'
-                                                +'</div>');
+                                            +'<button class="close" data-dismiss="alert">×</button>'
+                                            +'<i class="fa-fw fa fa-warning"></i>'
+                                            +'<strong>失败</strong>'+' '+'{{$action['failure_msg']}}'+'。'
+                                            +'</div>');
                                     }
                                 }
                             });
@@ -154,23 +154,23 @@
             //
             @if($action['type'] == 'dialog')
             $('#content').after(
-                    '<div class="modal fade" id="' + '{{$action['target']}}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                    '<div class="modal-dialog">' +
-                    '<div class="modal-content" style="width: 600px;">' +
-                    '<div class="modal-header">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
-                    '&times;' +
-                    '</button>' +
-                    '<h4 class="modal-title"></h4>' +
-                    '</div>' +
-                    '<div class="modal-body custom-scroll terms-body" style="min-height: 280px;">' +
-                    '<div id="left">' +
-                    '</div>' +
-                    '</div>' +
+                '<div class="modal fade" id="' + '{{$action['target']}}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                '<div class="modal-dialog">' +
+                '<div class="modal-content" style="width: 600px;">' +
+                '<div class="modal-header">' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+                '&times;' +
+                '</button>' +
+                '<h4 class="modal-title"></h4>' +
+                '</div>' +
+                '<div class="modal-body custom-scroll terms-body" style="min-height: 280px;">' +
+                '<div id="left">' +
+                '</div>' +
+                '</div>' +
 
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
+                '</div>' +
+                '</div>' +
+                '</div>'
             );
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
@@ -190,10 +190,10 @@
 
             @if(!empty($action['form']))
             $('#{{$action['target']}} .modal-body').after(
-                    '<div class="modal-footer">' +
-                    '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
-                    '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
-                    '</div>'
+                '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+                '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
+                '</div>'
             );
 
             $("#{{$action['form']['submit_id']}}").click(function(){
@@ -213,16 +213,16 @@
                         if(result) {
                             datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-check"></i>'
-                                    +'<strong>成功</strong>'+' '+'{{$action['form']['success_msg']}}'+'。'
-                                    +'</div>');
+                                +'<button class="close" data-dismiss="alert">×</button>'
+                                +'<i class="fa-fw fa fa-check"></i>'
+                                +'<strong>成功</strong>'+' '+'{{$action['form']['success_msg']}}'+'。'
+                                +'</div>');
                         } else {
                             $(".tips").html('<div class="alert alert-danger fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-warning"></i>'
-                                    +'<strong>失败</strong>' + ' ' + '{{$action['form']['failure_msg']}}' + '。'
-                                    +'</div>');
+                                +'<button class="close" data-dismiss="alert">×</button>'
+                                +'<i class="fa-fw fa fa-warning"></i>'
+                                +'<strong>失败</strong>' + ' ' + '{{$action['form']['failure_msg']}}' + '。'
+                                +'</div>');
                         }
                         $("#{{$action['form']['submit_id']}}").text("提交");
                         $('#{{$action['target']}}').modal('hide');

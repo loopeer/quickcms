@@ -44,13 +44,12 @@ class GeneralController extends BaseController
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
-        //$this->route_name = preg_replace('/\/[0-9]+\/edit/', '', $path);
         $this->route_name = preg_replace('/\/edit/', '', $path);
         \Log::info('route_name = ' . $this->route_name);
         $general_name = 'general.' . $this->route_name;
         $this->index_column = config($general_name . '_index_column');
         $this->index_column_name = config($general_name . '_index_column_name');
-        $this->index_column_rename = config($general_name . '_index_column_rename');
+        $this->index_column_rename = config($general_name . '_index_column_rename', array());
         $this->edit_column = config($general_name . '_edit_column');
         $this->edit_column_name = config($general_name . '_edit_column_name');
         $this->edit_column_detail = config($general_name . '_edit_column_detail');
