@@ -40,10 +40,9 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('blueimp/{id}', array('as'=>'admin.blueimp.delete', 'uses'=>'BlueimpController@destroy'));
    Route::get('blueimp', array('as'=>'admin.blueimp.index', 'uses'=>'BlueimpController@getImage'));
 
-   Route::get('users/search', 'UserController@search');
-   Route::get('users/search', 'GeneralController@search');
    Route::resource('users', 'UserController', array('except'=>'show'));
-   Route::resource('users', 'GeneralController', array('except'=>'show'));
+   Route::get('users/search', 'GeneralController@search');
+   Route::get('users', 'GeneralController@index', array('except'=>'show'));
    Route::get('users/edit/{id}', 'UserController@edit');
    Route::get('users/changeStatus/{id}', 'UserController@changeStatus');
    Route::get('users/role/{id}', 'UserController@getRole');
