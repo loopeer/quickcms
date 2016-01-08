@@ -50,7 +50,7 @@
                                                         @elseif(explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'time')
                                                             <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
                                                         @elseif(explode(':',$edit_column_detail[$edit_column[$key]]['type'])[0] == 'selector')
-                                                            <select class="select2" name="" id="select2">
+                                                            <select class="select2" name="{{$edit_column[$key]}}" id="select2">
                                                                 @foreach(json_decode(Cache::get('selector_'.explode(':',$edit_column_detail[$edit_column[$key]]['type'])[1])) as $k=>$v)
                                                                     <option value="{{$k}}">{{$v}}</option>
                                                                 @endforeach

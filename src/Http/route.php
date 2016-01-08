@@ -56,7 +56,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('permissions', 'PermissionController', array('except'=>'show'));
    Route::get('permissions/search', 'PermissionController@search');
 
-   Route::resource('permissions', 'PermissionController');
+//   Route::resource('permissions', 'PermissionController');
+   Route::resource('permissions', 'GeneralController');
    Route::get('permissions/delete/{id}',array('as'=>'admin.permissions.delete','uses'=>'PermissionController@delete'));
    Route::post('permissions/update/{id}',array('as'=>'admin.permissions.update','uses'=>'PermissionController@update'));
 
@@ -68,10 +69,11 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('feedbacks', 'GeneralController', array('except'=>'show'));
    Route::get('feedbacks/search', 'GeneralController@search');
 
-   //test route
    Route::resource('versions', 'GeneralController', array('except'=>'show'));
    Route::get('versions/search', 'GeneralController@search');
    Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
+
+   //test route
 //   Route::get('test/detail/{id}', 'TestController@detail');
 //   Route::get('test/add/{id}', 'TestController@add');
 //   Route::post('test/add', 'TestController@submitAdd');
