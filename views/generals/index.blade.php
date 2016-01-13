@@ -117,10 +117,10 @@
                     });
             @endif
 
-            @if ($action['type'] == 'url_with_id')
+            @if ($action['type'] == 'redirect_with_id')
                  $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
                         var data = table.row($(this).parents('tr')).data();
-                        window.location = '{{$action['name']}}' + '/' + data[0];
+                        window.location = '{{$action['url']}}' + '/' + data[0];
                 });
             @endif
             @if($action['type'] == 'confirm')
