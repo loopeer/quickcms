@@ -96,8 +96,11 @@
                                     }
                                 @endforeach
                             @elseif($rename['type'] == 'dialog')
-                            var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
-                            $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                                var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
+                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                            @elseif($rename['type'] == 'html')
+                                var html =  sprintf('{!! $rename['template'] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
+                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                             @endif
                         @endforeach
                     @endif
@@ -277,5 +280,15 @@
         @endforeach
 
     });
+        function sprintf()
+        {
+            var arg = arguments,
+                    str = arg[0] || '',
+                    i, n;
+            for (i = 1, n = arg.length; i < n; i++) {
+                str = str.replace(/%s/, arg[i]);
+            }
+            return str;
+        }
     </script>
 @endsection
