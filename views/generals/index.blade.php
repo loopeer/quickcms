@@ -166,7 +166,7 @@
                 '</button>' +
                 '<h4 class="modal-title"></h4>' +
                 '</div>' +
-                '<div class="modal-body custom-scroll terms-body" style="min-height: 280px;">' +
+                '<div class="modal-body custom-scroll terms-body">' +
                 '<div id="left">' +
                 '</div>' +
                 '</div>' +
