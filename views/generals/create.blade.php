@@ -38,7 +38,9 @@
                                         }
                                     </style>
                                     {!! csrf_field() !!}
-                                    <input type="hidden" name="id" value="{{ $model_data['id'] }}">
+                                    @if ($model_data['id'])
+                                        <input type="hidden" name="id" value="{{ $model_data['id'] }}">
+                                    @endif
                                     <fieldset>
                                         @foreach($edit_column_name as $key => $column_name)
                                             <section>

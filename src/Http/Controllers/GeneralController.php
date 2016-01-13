@@ -158,13 +158,16 @@ class GeneralController extends BaseController
      */
     public function store() {
         $data = Input::all();
+        if (isset($data['_token'])) {
+            unset($data['_token']);
+        }
         $model = $this->model;
         foreach($data as $key => $value) {
             if(is_array($value)) {
                 $data[$key] = implode(',', $value);
             }
         }
-        if ($data['id']) {
+        if (isset($data['id'])) {
             $result = $model::find($data['id'])->update($data);
         } else {
             $result = $model::create($data);
