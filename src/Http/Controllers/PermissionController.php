@@ -55,6 +55,9 @@ class PermissionController extends BaseController {
     public function store() {
         $inputs = Input::all();
         $permission_id = Input::get('permission_id',null);
+        if ($inputs['parent_id'] == 13) {
+            $inputs['parent_id'] = 0;
+        }
         $inputs['level'] = $inputs['parent_id'] == 0 ? 1 : 2;
         if(is_null($permission_id)){
             //创建
