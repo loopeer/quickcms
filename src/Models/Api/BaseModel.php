@@ -2,17 +2,11 @@
 
 namespace Loopeer\QuickCms\Models\Api;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Loopeer\QuickCms\Models\HookModel;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 
-class BaseModel extends Model
+class BaseModel extends HookModel
 {
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
-    protected $hidden = array('created_at', 'updated_at', 'deleted_at');
-    protected $guarded = array('created_at', 'updated_at', 'deleted_at');
-
     protected $casts = [
         'id' => 'integer',
     ];

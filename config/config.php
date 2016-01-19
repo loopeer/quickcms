@@ -74,4 +74,24 @@ return [
 
     // admin layout
     'admin_body_layout' => 'menu-on-top',
+
+    // statistic
+    'statistic_key' => array('用户数', '产品数', '评论数', '问题数'),
+    // model_event_hook
+    'model_events' => array(
+        array(
+            'table' => 'versions',
+            'event' => 'created',
+            'statistic_key' => '版本数',
+            'sort' => 13,
+            'statistic_value' => 'version'
+        ),
+        array(
+            'table' => 'feedbacks',
+            'event' => 'created',
+            'statistic_key' => '反馈数',
+            'sort' => 14,
+            'statistic_value' => 1
+        ),
+    ),
 ];

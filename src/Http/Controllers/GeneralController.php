@@ -39,13 +39,13 @@ class GeneralController extends BaseController
     protected $sort;
 
     public function __construct() {
-        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
+        //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
         $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
         $this->route_name = preg_replace('/\/edit/', '', $path);
-        \Log::info('route_name = ' . $this->route_name);
+        //\Log::info('route_name = ' . $this->route_name);
         $general_name = 'general.' . $this->route_name;
         $this->index_column = config($general_name . '_index_column');
         $this->index_column_name = config($general_name . '_index_column_name');
@@ -63,7 +63,7 @@ class GeneralController extends BaseController
         $this->index_multi = config($general_name . '_index_multi');
         $this->index_multi_column = config($general_name . '_index_multi_column');
         $this->index_multi_join = config($general_name . '_index_multi_join');
-        \Log::info('model_class = ' . $this->model_class);
+        //\Log::info('model_class = ' . $this->model_class);
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
 

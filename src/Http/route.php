@@ -96,4 +96,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    //general multi
    Route::resource('actionLogs', 'GeneralController', array('except'=>'show'));
    Route::get('actionLogs/search', 'GeneralController@search');
+
+   Route::get('statistics/index', 'StatisticController@index');
+   Route::get('statistics/chartDays', 'StatisticController@chartDays');
+   Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
 });

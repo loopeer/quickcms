@@ -65,6 +65,7 @@ class SystemsSetupTables extends Migration
             $table->softDeletes();
         });
 
+        // 下拉枚举表
         Schema::create('selectors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -86,6 +87,17 @@ class SystemsSetupTables extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // 统计表
+        Schema::create('statistics', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->date('statistic_time');
+            $table->string('statistic_key', 50);
+            $table->bigInteger('statistic_value')->default(0);
+            $table->integer('sort')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -101,5 +113,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('systems');
         Schema::dropIfExists('selectors');
         Schema::dropIfExists('pushes');
+        Schema::dropIfExists('statistics');
     }
 }

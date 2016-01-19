@@ -2,17 +2,11 @@
 
 namespace Loopeer\QuickCms\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BaseModel extends Model
+class BaseModel extends HookModel
 {
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
-    protected $hidden = array('created_at', 'updated_at', 'deleted_at');
-    protected $guarded = array('created_at', 'updated_at', 'deleted_at');
-
     public function getCreatedAtAttribute() {
         $time = strtotime($this->attributes['created_at']);
         if (is_int($time)) {
