@@ -87,6 +87,14 @@ return [
             'statistic_value' => 'version'
         ),
         array(
+            'table' => 'versions',
+            'event' => 'updated',
+            'statistic_key' => '上线版本数',
+            'sort' => 13,
+            'statistic_value' => 1,
+            'where' => array('column' => 'status', 'value' => 1)
+        ),
+        array(
             'table' => 'feedbacks',
             'event' => 'created',
             'statistic_key' => '反馈数',
