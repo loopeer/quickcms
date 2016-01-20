@@ -37,7 +37,7 @@ class HookModel extends Model
         $model_events = config('quickcms.model_events');
         foreach($model_events as $model_event) {
             if($model->getTable() == $model_event['table'] && $model_event['event'] == $event
-                && ($event == 'updated' ? $model->$model_event['where']['column'] == $model_event['where']['value'] : true)) {
+                && (array_key_exists('where', $model_event) ? $model->$model_event['where']['column'] == $model_event['where']['value'] : true)) {
                 $statistic = Statistic::select('id', 'statistic_value')
                     ->where('statistic_key', $model_event['statistic_key'])
                     ->whereRaw("statistic_time=date_format(now(),'%Y-%m-%d')")
