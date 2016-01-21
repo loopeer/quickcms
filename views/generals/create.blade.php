@@ -41,6 +41,11 @@
                                     @if ($model_data['id'])
                                         <input type="hidden" name="id" value="{{ $model_data['id'] }}">
                                     @endif
+                                    @if(isset($edit_hidden))
+                                        @foreach($edit_hidden as $hidden)
+                                            <input type="hidden" name="{{ $hidden['name'] }}" value="{{ $hidden['value'] }}">
+                                        @endforeach
+                                    @endif
                                     <fieldset>
                                         @foreach($edit_column_name as $key => $column_name)
                                             <section>

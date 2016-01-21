@@ -26,6 +26,9 @@ return [
     'versions_index_column_name' => array(
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',
     ),
+    'versions_index_where' => array(
+        array('column' => 'id', 'operator' => '>', 'value' => 0)
+    ),
     'versions_edit_column' => array(
         'platform', 'version_code', 'version', 'url', 'description', 'published_at', 'status'
     ),

@@ -37,6 +37,8 @@ class GeneralController extends BaseController
     protected $create_able;
     protected $model;
     protected $sort;
+    protected $where;
+    protected $edit_hidden;
 
     public function __construct() {
         //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
@@ -58,6 +60,8 @@ class GeneralController extends BaseController
         $this->actions = config($general_name . '_table_action');
         $this->createable = config($general_name . '_createable');
         $this->sort = config($general_name . '_sort');
+        $this->where = config($general_name . '_index_where');
+        $this->edit_hidden = config($general_name . '_edit_hidden');
         //\Log::info('model_class = ' . $this->model_class);
         $this->create_able = config($general_name . '_create_able');
         $this->index_multi = config($general_name . '_index_multi');
@@ -77,6 +81,11 @@ class GeneralController extends BaseController
     public function search()
     {
         $model = $this->model;
+        if(isset($this->where)) {
+            foreach($this->where as $value) {
+                $model = $model->where($value['column'], $value['operator'], $value['value']);
+            }
+        }
         if(isset($this->sort)) {
            $model = $model->orderBy($this->sort[0], $this->sort[1]);
         }
@@ -209,6 +218,7 @@ class GeneralController extends BaseController
             'edit_column' => $this->edit_column,
             'edit_column_name' => $this->edit_column_name,
             'edit_column_detail' => $this->edit_column_detail,
+            'edit_hidden' => $this->edit_hidden,
             'model_data' => $model_data,
             'image_config' => $image_config,
             'images' => $images
