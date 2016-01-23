@@ -29,7 +29,7 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		], 'quickcms');
 
 		$this->publishes([
-			__DIR__.'/../config/general.php' => config_path('general.php'),
+			__DIR__.'/../config/generals' => config_path('generals'),
 		], 'general');
 
 		$this->publishes([

@@ -11,6 +11,7 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Route;
 use Session;
 use Response;
@@ -47,31 +48,27 @@ class GeneralController extends BaseController
         $path = str_replace('/search', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
         $this->route_name = preg_replace('/\/edit/', '', $path);
-        //\Log::info('route_name = ' . $this->route_name);
-        $general_name = 'general.' . $this->route_name;
-        $this->index_column = config($general_name . '_index_column');
-        $this->index_column_name = config($general_name . '_index_column_name');
-        $this->index_column_rename = config($general_name . '_index_column_rename', array());
-        $this->edit_column = config($general_name . '_edit_column');
-        $this->edit_column_name = config($general_name . '_edit_column_name');
-        $this->edit_column_detail = config($general_name . '_edit_column_detail');
-        $this->model_class = config($general_name . '_model_class');
-        $this->model_name = config($general_name . '_model_name');
-        $this->actions = config($general_name . '_table_action');
-        $this->createable = config($general_name . '_createable');
-        $this->sort = config($general_name . '_sort');
-        $this->where = config($general_name . '_index_where');
-        $this->edit_hidden = config($general_name . '_edit_hidden');
-        //\Log::info('model_class = ' . $this->model_class);
-        $this->create_able = config($general_name . '_create_able');
-        $this->index_multi = config($general_name . '_index_multi');
-        $this->index_multi_column = config($general_name . '_index_multi_column');
-        $this->index_multi_join = config($general_name . '_index_multi_join');
-        //\Log::info('model_class = ' . $this->model_class);
+        $general_name = 'generals.' . $this->route_name . '.';
+        $this->index_column = config($general_name . 'index_column');
+        $this->index_column_name = config($general_name . 'index_column_name');
+        $this->index_column_rename = config($general_name . 'index_column_rename', array());
+        $this->edit_column = config($general_name . 'edit_column');
+        $this->edit_column_name = config($general_name . 'edit_column_name');
+        $this->edit_column_detail = config($general_name . 'edit_column_detail');
+        $this->model_class = config($general_name . 'model_class');
+        $this->model_name = config($general_name . 'model_name');
+        $this->actions = config($general_name . 'table_action');
+        $this->createable = config($general_name . 'createable');
+        $this->sort = config($general_name . 'sort');
+        $this->where = config($general_name . 'index_where');
+        $this->edit_hidden = config($general_name . 'edit_hidden');
+        $this->create_able = config($general_name . 'create_able');
+        $this->index_multi = config($general_name . 'index_multi');
+        $this->index_multi_column = config($general_name . 'index_multi_column');
+        $this->index_multi_join = config($general_name . 'index_multi_join');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
-
-        $middlewares = config($general_name . '_middleware', array());
+        $middlewares = config($general_name . 'middleware', array());
         foreach ($middlewares as $middleware) {
             $this->middleware('auth.permission:'.$middleware);
         }
