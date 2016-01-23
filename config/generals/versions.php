@@ -16,12 +16,12 @@ return [
     ),
     'model_class' => 'Loopeer\QuickCms\Models\Version',
     'model_name' => '版本',
-    'index_select_column' => array(
-        'versions.id', 'versions.platform', 'versions.version_code', 'versions.version', 'versions.url', 'versions.message',
-        'versions.description', 'versions.status','versions.published_at',
-    ),
+//    'index_select_column' => array(
+//        'versions.id', 'versions.platform', 'versions.version_code', 'versions.version', 'versions.url', 'versions.message',
+//        'versions.description', 'versions.status','versions.published_at',
+//    ),
     'index_column' => array(
-        'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status','published_at',
+        'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status', 'published_at',
     ),
     'index_column_name' => array(
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',

@@ -11,7 +11,6 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use Route;
 use Session;
 use Response;
@@ -26,6 +25,7 @@ class GeneralController extends BaseController
     protected $model_name;
     protected $route_name;
     protected $index_column;
+    protected $index_column_format;
     protected $index_column_name;
     protected $index_column_rename;
     protected $index_multi;
@@ -50,6 +50,7 @@ class GeneralController extends BaseController
         $this->route_name = preg_replace('/\/edit/', '', $path);
         $general_name = 'generals.' . $this->route_name . '.';
         $this->index_column = config($general_name . 'index_column');
+        $this->index_column_format = config($general_name . 'index_column_format');
         $this->index_column_name = config($general_name . 'index_column_name');
         $this->index_column_rename = config($general_name . 'index_column_rename', array());
         $this->edit_column = config($general_name . 'edit_column');
@@ -58,7 +59,6 @@ class GeneralController extends BaseController
         $this->model_class = config($general_name . 'model_class');
         $this->model_name = config($general_name . 'model_name');
         $this->actions = config($general_name . 'table_action');
-        $this->createable = config($general_name . 'createable');
         $this->sort = config($general_name . 'sort');
         $this->where = config($general_name . 'index_where');
         $this->edit_hidden = config($general_name . 'edit_hidden');
@@ -68,9 +68,9 @@ class GeneralController extends BaseController
         $this->index_multi_join = config($general_name . 'index_multi_join');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
-        $middlewares = config($general_name . 'middleware', array());
-        foreach ($middlewares as $middleware) {
-            $this->middleware('auth.permission:'.$middleware);
+        $middleware = config($general_name . 'middleware', array());
+        foreach ($middleware as $value) {
+            $this->middleware('auth.permission:' . $value);
         }
         parent::__construct();
     }
@@ -109,6 +109,20 @@ class GeneralController extends BaseController
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
             $ret = self::simplePage($this->index_column, $model);
+        }
+        if($this->index_column_format) {
+            foreach($this->index_column_format as $format_key => $format_value) {
+                foreach($ret['data'] as $ret_key => $ret_value) {
+                    if($format_value['format'] == 'amount') {
+                        $ret['data'][$ret_key][$format_value['column']] /= 100;
+                        continue;
+                    }
+                    if($format_value['format'] == 'date') {
+                        $ret['data'][$ret_key][$format_value['column']] = date('Y-m-d H:i', time($ret_value[$format_value['column']]));
+                        continue;
+                    }
+                }
+            }
         }
         return Response::json($ret);
     }

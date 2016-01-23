@@ -63,7 +63,7 @@
                     '.{{$action['name']}} {display:none;}'+
                     '</style>'+
                     @endif
-            '<li class="' + '{{$action['name']}}' + '">'+
+                    '<li class="' + '{{$action['name']}}' + '">'+
                     '<a href="javascript:void(0);" name="' + '{{$action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                     '</li>'+
                     @if($action['has_divider'])
@@ -99,7 +99,7 @@
                                 var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                             @elseif($rename['type'] == 'html')
-                                var html =  sprintf('{!! $rename['template'] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
+                                var html = sprintf('{!! $rename["template"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                             @endif
                         @endforeach
@@ -184,7 +184,7 @@
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
                 var data = table.row($(this).parents('tr')).data();
-                $('#{{$action['target']}} .modal-title').html('{{$action['dialog_title']}}');
+                $("#" + '{{$action['target']}}' + '.modal-title').html('{{$action['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#{{$action['target']}}");
                 $(this).attr("data-action","{{$action['url']}}"+data[0]);
@@ -198,16 +198,16 @@
             });
 
             @if(!empty($action['form']))
-            $('#{{$action['target']}} .modal-body').after(
+            $("#" + '{{$action['target']}}' + ".modal-body").after(
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
                 '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
                 '</div>'
             );
 
-            $("#{{$action['form']['submit_id']}}").click(function(){
-                $("#{{$action['form']['submit_id']}}").text("正在保存...");
-                var $form = $('#{{$action['form']['form_id']}}');
+            $('#' + '{{$action['form']['submit_id']}}').click(function(){
+                $('#' + '{{$action['form']['submit_id']}}').text("正在保存...");
+                var $form = $("#" + '{{$action['form']['form_id']}}');
                 var page_info = table.page.info();
                 var page = page_info.page;
                 var datatable = $('#dt_basic').dataTable();
@@ -232,8 +232,8 @@
                                 +'<strong>失败</strong>' + ' ' + '{{$action['form']['failure_msg']}}' + '。'
                                 +'</div>');
                         }
-                        $("#{{$action['form']['submit_id']}}").text("提交");
-                        $('#{{$action['target']}}').modal('hide');
+                        $('#' + '{{$action['form']['submit_id']}}').text("提交");
+                        $('#' + '{{$action['target']}}').modal('hide');
                         $form[0].reset();
                     });
                     event.preventDefault(); // Prevent the form from submitting via the browser.
@@ -270,7 +270,7 @@
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{$rename['param']['name']}}' + ']', function () {
                 var data = table.row($(this).parents('tr')).data();
-                $('#{{$rename['param']['target']}} .modal-title').html('{{$rename['param']['dialog_title']}}');
+                $("#" + '{{$rename['param']['target']}}' + "modal-title").html('{{$rename['param']['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#{{$rename['param']['target']}}");
                 $(this).attr("data-action","{{$rename['param']['url']}}"+data[0]);
