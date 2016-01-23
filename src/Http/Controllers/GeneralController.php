@@ -113,12 +113,12 @@ class GeneralController extends BaseController
         if($this->index_column_format) {
             foreach($this->index_column_format as $format_key => $format_value) {
                 foreach($ret['data'] as $ret_key => $ret_value) {
-                    if($format_value['format'] == 'amount') {
+                    if($format_value['type'] == 'amount') {
                         $ret['data'][$ret_key][$format_value['column']] /= 100;
                         continue;
                     }
-                    if($format_value['format'] == 'date') {
-                        $ret['data'][$ret_key][$format_value['column']] = date('Y-m-d H:i', time($ret_value[$format_value['column']]));
+                    if($format_value['type'] == 'date') {
+                        $ret['data'][$ret_key][$format_value['column']] = date($format_value['format'], time($ret_value[$format_value['column']]));
                         continue;
                     }
                 }
