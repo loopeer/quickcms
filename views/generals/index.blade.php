@@ -101,6 +101,9 @@
                             @elseif($rename['type'] == 'html')
                                 var html = sprintf('{!! $rename["template"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                            @elseif($rename['type'] == 'href')
+                                var html = '<a href="' + $data[i][parseInt('{{$column_no}}')] + '" target="_blank" title="' + $data[i][parseInt('{{$column_no}}')] + '">点击查看</a>';
+                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                             @endif
                         @endforeach
                     @endif
@@ -198,7 +201,7 @@
             });
 
             @if(!empty($action['form']))
-            $("#" + '{{$action['target']}}' + ".modal-body").after(
+            $('#' + '{{$action['target']}}' + " .modal-body").after(
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
                 '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
