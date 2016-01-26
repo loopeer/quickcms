@@ -48,14 +48,15 @@
                     "columnDefs": [ {
                         "targets": -1,
                         "data": null,
-                        "defaultContent": '<button name="delete_feedback" class="btn btn-primary">删除</button>'
+                        "defaultContent": '<button name="delete_document" class="btn btn-primary">删除</button>&nbsp;&nbsp;' +
+                                    '<button name="edit_document" class="btn btn-primary">编辑</button>'
                     } ],
                     "ajax": {
                         "url": "/admin/document/search"
                     }
                 });
 
-                $('#dt_basic tbody').on('click', 'button[name=delete_feedback]', function () {
+                $('#dt_basic tbody').on('click', 'button[name=delete_document]', function () {
                     var data = table.row($(this).parents('tr')).data();
                     var delete_token = $('#delete_token').val();
                     var page_info = table.page.info();
@@ -78,6 +79,11 @@
                             }
                         });
                     }
+                });
+
+                $('#dt_basic tbody').on('click', 'button[name=edit_document]', function () {
+                    var data = table.row($(this).parents('tr')).data();
+                    window.location = "/admin/document/" + data[0] + "/edit"
                 });
             });
         </script>
