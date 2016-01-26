@@ -6,7 +6,7 @@
         "kbwebs/multiauth": "~1.0",
         "qiniu/qiniu": "dev-master",
         "loopeer/loopeer-log-viewer": "dev-master",
-        "loopeer/lib": "dev-master"
+        "loopeer/lib": "dev-master",
         "loopeer/laravel-ueditor": "dev-master"
     },
     "autoload": {
