@@ -26,6 +26,15 @@ return [
     'index_column_name' => array(
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',
     ),
+    'index_where' => array(
+        array('column' => 'news_type', 'operator' => '=', 'value' => 2),
+        array('column' => 'news_type', 'operator' => 'whereIn', 'value' => [1,2]),
+        array('column' => 'news_type', 'operator' => 'whereNotIn', 'value' => [1,2]),
+        array('column' => 'news_type', 'operator' => 'whereBetween', 'value' => [1,2]),
+        array('column' => 'news_type', 'operator' => 'whereNotBetween', 'value' => [1,2]),
+        array('column' => 'news_type', 'operator' => 'whereNull'),
+        array('column' => 'news_type', 'operator' => 'whereNotNull'),
+    ),
     'edit_column' => array(
         'platform', 'version_code', 'version', 'url', 'description', 'published_at', 'status'
     ),
