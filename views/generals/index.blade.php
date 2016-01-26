@@ -187,7 +187,7 @@
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
                 var data = table.row($(this).parents('tr')).data();
-                $("#" + '{{$action['target']}}' + '.modal-title').html('{{$action['dialog_title']}}');
+                $("#" + '{{$action['target']}}' + ' .modal-title').html('{{$action['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#{{$action['target']}}");
                 $(this).attr("data-action","{{$action['url']}}"+data[0]);
@@ -273,7 +273,7 @@
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{$rename['param']['name']}}' + ']', function () {
                 var data = table.row($(this).parents('tr')).data();
-                $("#" + '{{$rename['param']['target']}}' + "modal-title").html('{{$rename['param']['dialog_title']}}');
+                $("#" + '{{$rename['param']['target']}}' + " .modal-title").html('{{$rename['param']['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#{{$rename['param']['target']}}");
                 $(this).attr("data-action","{{$rename['param']['url']}}"+data[0]);
