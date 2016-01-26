@@ -30,6 +30,8 @@ class BPushService {
         $this->iosApiKey = config('quickcms.baidu_push_ios_api_key');
         $this->iosSecretKey = config('quickcms.baidu_push_ios_secret_key');
         $this->deployStatus = config('quickcms.baidu_push_sdk_deploy_status');
+        \Log::info($this->androidApiKey . '7777');
+        \Log::info($this->androidSecretKey . '7777');
         self::initBPush();
     }
 

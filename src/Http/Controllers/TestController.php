@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers;
 
 use Illuminate\Support\Facades\Log;
+use Loopeer\QuickCms\Services\Push\BPushService;
 use Route;
 use Session;
 use Response;
@@ -35,5 +36,11 @@ class TestController extends BaseController {
         return Response::json(true);
     }
 
-
+    public function push() {
+        $content = Input::get('content');
+        $account_id = Input::get('account_id');
+        $push = new BPushService();
+        $push->pushSingleMessage($account_id, $content);
+        $push->pushBatchMessage([1,2], $content);
+    }
 }

@@ -19,6 +19,8 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
 Route::get('admin/login', 'IndexController@getLogin');
 Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
+Route::get('test/push', 'TestController@push');
+
 Route::get('/logs', array('middleware' => 'auth.admin', 'uses'=>'\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'));
 
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
@@ -100,4 +102,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('statistics/index', 'StatisticController@index');
    Route::get('statistics/chartDays', 'StatisticController@chartDays');
    Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
+
+   //pushes
+   Route::resource('pushes', 'PushesController', array('except'=>'show'));
+   Route::get('pushes/search', 'PushesController@search');
+   Route::get('pushes/batch', 'PushesController@batch');
+   Route::post('pushes/save', 'PushesController@save');
 });
