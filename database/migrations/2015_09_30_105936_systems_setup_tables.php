@@ -57,10 +57,13 @@ class SystemsSetupTables extends Migration
         // 系统配置表
         Schema::create('systems', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title', 50); //网站标题
-            $table->string('build', 10); //版本号
-            $table->tinyInteger('app_review'); //app审核
-            $table->string('android_download', 255); //android下载地址
+            //$table->string('title', 50); //网站标题
+            //$table->string('build', 10); //版本号
+            //$table->tinyInteger('app_review'); //app审核
+            //$table->string('android_download', 255); //android下载地址
+            $table->string('system_key', 50);
+            $table->string('system_value', 255)->nullable();
+            $table->string('description', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -104,7 +107,7 @@ class SystemsSetupTables extends Migration
             $table->increments('id');
             $table->string('document_key', 255);
             $table->string('title', 255);
-            $table->text('document_content')->default(0);
+            $table->text('document_content')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -124,5 +127,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('selectors');
         Schema::dropIfExists('pushes');
         Schema::dropIfExists('statistics');
+        Schema::dropIfExists('documents');
     }
 }

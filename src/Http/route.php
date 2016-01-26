@@ -83,10 +83,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 //   Route::get('test/add/{id}', 'TestController@add');
 //   Route::post('test/add', 'TestController@submitAdd');
 
-   Route::get('systems', 'SystemController@index');
-   Route::post('systems/store', 'SystemController@store');
-   Route::post('systems/updateCode', 'SystemController@updateCode');
-   Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
+   //Route::get('systems', 'SystemController@index');
+   //Route::post('systems/store', 'SystemController@store');
+   //Route::post('systems/updateCode', 'SystemController@updateCode');
+   //Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
    //Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
 
    Route::resource('selector', 'SelectorController', array('except'=>'show'));
@@ -111,4 +111,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('pushes/search', 'PushesController@search');
    Route::get('pushes/batch', 'PushesController@batch');
    Route::post('pushes/save', 'PushesController@save');
+
+   Route::resource('systems', 'GeneralController', array('except'=>'show'));
+   Route::get('systems/search', 'GeneralController@search');
 });
