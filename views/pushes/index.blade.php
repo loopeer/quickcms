@@ -9,8 +9,10 @@
         </div>
         <div class="row">
             <p>
-                <a href="javascript:void(0);" class="btn btn-primary" id="push_batch" data-target="#similar_product" data-toggle="modal" data-action="/admin/pushes/batch">推送消息</a>
-                <a href="/admin/pushes/all/" class="btn btn-primary">全局推送</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="push_batch" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">推送消息</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="push_all" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">全局推送</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="push_android" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">Android推送</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="push_ios" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">Ios推送</a>
             </p>
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                 <header>
@@ -42,7 +44,7 @@
     </section>
 </div>
     <!-- Modal -->
-    <div class="modal fade" id="similar_product" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="push_btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="submitSimilar"><i class="fa fa-check"></i>提交</button>
+                    <button type="button" class="btn btn-primary" id="submitPush"><i class="fa fa-check"></i>提交</button>
                 </div>
             </div>
         </div>
@@ -81,12 +83,13 @@
                 "url": "/admin/pushes/search"
             }
         });
-        $('#similar_product').on('show.bs.modal', function(e) {
+        $('#push_btn').on('show.bs.modal', function(e) {
             var action = $(e.relatedTarget).data('action');
             //populate the div
-            loadURL(action, $('#similar_product .modal-content .modal-body #left'));
+            loadURL(action, $('#push_btn .modal-content .modal-body #left'));
         });
 
+        var push_type;
         $( "#push_batch" ).on("click", function() {
             var chk_value =[];
             $('input[type="checkbox"]:checked').each(function(){
@@ -97,11 +100,21 @@
                 alert('请选择推送的用户');
                 return false;
             }
+            push_type = 'batch';
+        });
+        $( "#push_all" ).on("click", function() {
+            push_type = 'all';
+        });
+        $( "#push_android" ).on("click", function() {
+            push_type = 'android';
+        });
+        $( "#push_ios" ).on("click", function() {
+            push_type = 'ios';
         });
 
-        $("#submitSimilar").click(function(){
-            $("#submitSimilar").text("正在保存...");
-            var $form = $('#add_similar_form');
+        $("#submitPush").click(function(){
+            $("#submitPush").text("正在保存...");
+            var $form = $('#push_form');
             var page_info = table.page.info();
             var page = page_info.page;
             var datatable = $('#dt_basic').dataTable();
@@ -110,16 +123,17 @@
                 var data = table.row($(this).parents('tr')).data();
                 chk_value.push(data[0]);
             });
-            var content = $("#content").val();
-            alert(content);
-            alert($form.serialize());
-
             var data = $form.serializeArray();
-            var uniquekey = {
+            var unique_key = {
                 name: "account_ids",
                 value: chk_value
             };
-            data.push(uniquekey);
+            var type_key = {
+                name: "push_type",
+                value: push_type
+            }
+            data.push(unique_key);
+            data.push(type_key);
             $($form).submit(function(event) {
                 var form = $(this);
                 $.ajax({
@@ -141,8 +155,8 @@
                         +'<strong>失败</strong>' + ' ' + result.content + '。'
                         +'</div>');
                     }
-                    $("#submitSimilar").text("提交");
-                    $('#similar_product').modal('hide');
+                    $("#submitPush").text("提交");
+                    $('#push_btn').modal('hide');
                     $form[0].reset();
                 });
                 event.preventDefault(); // Prevent the form from submitting via the browser.

@@ -1,4 +1,4 @@
-<form action="/admin/pushes/save" method="post" id="add_similar_form" class="smart-form client-form">
+<form action="/admin/pushes/save" method="post" id="push_form" class="smart-form client-form">
     <fieldset>
         <section>
             <label class="input">
