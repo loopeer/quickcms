@@ -42,21 +42,25 @@ class PushesController extends BaseController {
 
     public function save() {
         $content = Input::get('content');
+        $notice_type = Input::get('notice_type');
+        $notice_id = Input::get('notice_id');
+        $notice_url = Input::get('notice_url');
+        $custom_content = ['notice_type' => $notice_type, 'notice_id' => $notice_id, 'notice_url' => $notice_url];
         $account_ids = Input::get('account_ids');
         $push_type = Input::get('push_type');
         $push = new BPushService();
         switch($push_type) {
             case 'batch':
-                $push->pushBatchMessage(explode(',', $account_ids), $content, ['notice_type' => 1]);
+                $push->pushBatchMessage(explode(',', $account_ids), $content, $custom_content);
                 break;
             case 'android':
-                $push->pushAllAndroidMessage($content, ['notice_type' => 1]);
+                $push->pushAllAndroidMessage($content, $custom_content);
                 break;
             case 'ios':
-                $push->pushAllIosMessage($content, ['notice_type' => 1]);
+                $push->pushAllIosMessage($content, $custom_content);
                 break;
             default:
-                $push->pushAllMessage($content, ['notice_type' => 1]);
+                $push->pushAllMessage($content, $custom_content);
                 break;
         }
         $res = array('result' => true, 'content' => '提交成功');
