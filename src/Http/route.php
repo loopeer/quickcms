@@ -102,4 +102,5 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
 
    Route::resource('document', 'DocumentController', array('except'=>'show'));
+   Route::get('document/search', 'DocumentController@search');
 });

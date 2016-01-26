@@ -27,7 +27,7 @@ class DocumentController extends BaseController
     }
 
     public function search() {
-        $ret = self::simplePage(['id', 'document_key','document_title', 'document_content'], new Document());
+        $ret = self::simplePage(['id', 'document_key','title', 'created_at'], new Document());
         return Response::json($ret);
     }
 
@@ -41,12 +41,27 @@ class DocumentController extends BaseController
         return view('backend::documents.create', compact('document'));
     }
 
+    public function edit($id) {
+        $document = Document::find($id);
+        return view('backend::documents.create', compact('document'));
+    }
+
     public function store() {
         $data = Input::all();
         unset($data['_token']);
+        if (isset($data['id'])) {
+            if ($document  = Document::find($data['id'])->update($data)) {
+                return Redirect::to('/admin/document')->with('message', array('result'=>true, 'content'=>'编辑成功'));
+            }
+        }
         if ($document  = Document::create($data)) {
             return Redirect::to('/admin/document')->with('message', array('result'=>true, 'content'=>'添加成功'));
         }
+    }
+
+    public function destroy($id) {
+        Document::destroy($id);
+        return array('result'=>true, 'content'=>'删除成功');
     }
 
 }
