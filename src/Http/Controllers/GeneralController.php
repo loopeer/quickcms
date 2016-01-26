@@ -47,6 +47,7 @@ class GeneralController extends BaseController
         $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
         $path = str_replace('/create', '', $path);
         $path = str_replace('/search', '', $path);
+        $path = str_replace('/changeStatus', '', $path);
         $path = preg_replace('/\/{\w*}/', '', $path);
         $this->route_name = preg_replace('/\/edit/', '', $path);
         $general_name = 'generals.' . $this->route_name . '.';
