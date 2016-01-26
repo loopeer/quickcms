@@ -80,7 +80,29 @@ class GeneralController extends BaseController
         $model = $this->model;
         if(isset($this->where)) {
             foreach($this->where as $value) {
-                $model = $model->where($value['column'], $value['operator'], $value['value']);
+                switch($value['operator']) {
+                    case 'whereIn':
+                        $model = $model->whereIn($value['column'], $value['value']);
+                        break;
+                    case 'whereNotIn':
+                        $model = $model->whereNotIn($value['column'], $value['value']);
+                        break;
+                    case 'whereBetween':
+                        $model = $model->whereBetween($value['column'], $value['value']);
+                        break;
+                    case 'whereNotBetween':
+                        $model = $model->whereNotBetween($value['column'], $value['value']);
+                        break;
+                    case 'whereNull':
+                        $model = $model->whereNull($value['column']);
+                        break;
+                    case 'whereNotNull':
+                        $model = $model->whereNotNull($value['column']);
+                        break;
+                    default:
+                        $model = $model->where($value['column'], $value['operator'], $value['value']);
+                        break;
+                }
             }
         }
         if(isset($this->sort)) {

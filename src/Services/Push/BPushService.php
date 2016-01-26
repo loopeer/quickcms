@@ -52,15 +52,15 @@ class BPushService {
             $appChannelId = $push->app_channel_id;
             if($push->platform == 'android') {
                 $androidChannelIds[] = $appChannelId;
-            } else {
+            } elseif($push->platform == 'ios') {
                 $iosChannelIds[] = $appChannelId;
             }
         }
-        if(isset($androidChannelIds)) {
+        if(count($androidChannelIds) > 0) {
             $result = $this->androidPush->pushBatchMessage($androidChannelIds, $description, $customerContent);
             self::printResult('android', $result);
         }
-        if(isset($iosChannelIds)) {
+        if(count($iosChannelIds) > 0) {
             $result = $this->iosPush->pushBatchMessage($iosChannelIds, $description, $customerContent);
             self::printResult('ios', $result);
         }
@@ -69,6 +69,16 @@ class BPushService {
     public function pushAllMessage($description, $customer_content = array()) {
         $androidResult = $this->androidPush->pushAllMessage($description, $customer_content);
         self::printResult('android', $androidResult);
+        $iosResult = $this->iosPush->pushAllMessage($description, $customer_content);
+        self::printResult('ios', $iosResult);
+    }
+
+    public function pushAllAndroidMessage($description, $customer_content = array()) {
+        $androidResult = $this->androidPush->pushAllMessage($description, $customer_content);
+        self::printResult('android', $androidResult);
+    }
+
+    public function pushAllIosMessage($description, $customer_content = array()) {
         $iosResult = $this->iosPush->pushAllMessage($description, $customer_content);
         self::printResult('ios', $iosResult);
     }
