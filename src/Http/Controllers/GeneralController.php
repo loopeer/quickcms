@@ -40,6 +40,7 @@ class GeneralController extends BaseController
     protected $sort;
     protected $where;
     protected $edit_hidden;
+    protected $change_status;
 
     public function __construct() {
         //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
@@ -66,6 +67,7 @@ class GeneralController extends BaseController
         $this->index_multi = config($general_name . 'index_multi');
         $this->index_multi_column = config($general_name . 'index_multi_column');
         $this->index_multi_join = config($general_name . 'index_multi_join');
+        $this->change_status = config($general_name . 'change_status');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
         $middleware = config($general_name . 'middleware', array());
@@ -230,6 +232,28 @@ class GeneralController extends BaseController
         $model_data = $model::find($id);
         $data = self::getEditData($model_data);
         return View::make('backend::generals.create', $data);
+    }
+
+    /**
+     * 改变状态
+     * @param $id
+     * @return mixed
+     */
+    public function changeStatus($id) {
+        $model = $this->model;
+        $model_data = $model::find($id);
+        $status = $this->change_status;
+        if($model_data->$status['column'] == $status['value'][0]) {
+            $model_data->$status['column'] = $status['value'][1];
+        } elseif($model_data->$status['column'] == $status['value'][1]) {
+            $model_data->$status['column'] = $status['value'][0];
+        }
+        if($model_data->save()) {
+            $ret = true;
+        } else {
+            $ret = false;
+        }
+        return $ret ? 1 : 0;
     }
 
     private function getEditData($model_data) {
