@@ -7,6 +7,7 @@
         "qiniu/qiniu": "dev-master",
         "loopeer/loopeer-log-viewer": "dev-master",
         "loopeer/lib": "dev-master"
+        "loopeer/laravel-ueditor": "dev-master"
     },
     "autoload": {
         "psr-4": {
