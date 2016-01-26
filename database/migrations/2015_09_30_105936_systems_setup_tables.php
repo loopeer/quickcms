@@ -98,6 +98,16 @@ class SystemsSetupTables extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // 文档表
+        Schema::create('documents', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('document_key', 255);
+            $table->string('title', 255);
+            $table->text('document_content')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**

@@ -103,6 +103,9 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('statistics/chartDays', 'StatisticController@chartDays');
    Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
 
+   Route::resource('document', 'DocumentController', array('except'=>'show'));
+   Route::get('document/search', 'DocumentController@search');
+
    //pushes
    Route::resource('pushes', 'PushesController', array('except'=>'show'));
    Route::get('pushes/search', 'PushesController@search');
