@@ -243,12 +243,9 @@ class GeneralController extends BaseController
     public function changeStatus($id) {
         $model = $this->model;
         $model_data = $model::find($id);
-        $status = $this->change_status;
-        if($model_data->$status['column'] == $status['value'][0]) {
-            $model_data->$status['column'] = $status['value'][1];
-        } elseif($model_data->$status['column'] == $status['value'][1]) {
-            $model_data->$status['column'] = $status['value'][0];
-        }
+        $column = Input::get('column');
+        $value = Input::get('value');
+        $model_data->$column = $value;
         if($model_data->save()) {
             $ret = true;
         } else {

@@ -141,6 +141,8 @@
                                 type: '{{$action['method']}}',
                                 @if($action['method'] == 'delete')
                                     data: { '_token' : delete_token },
+                                @elseif(isset($action['data']))
+                                    data: { 'column' : '{{ $action['data']['column'] }}', 'value' : '{{ $action['data']['value'] }}'},
                                 @endif
                                 url: '{{$action['url']}}' + '/' + data[0], //resource
                                 success: function(result) {
