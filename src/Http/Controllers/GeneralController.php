@@ -42,13 +42,13 @@ class GeneralController extends BaseController
     protected $edit_hidden;
 
     public function __construct() {
-        //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
-        $path = str_replace('admin/', '', Route::getCurrentRoute()->getPath());
-        $path = str_replace('/create', '', $path);
-        $path = str_replace('/search', '', $path);
-        $path = str_replace('/changeStatus', '', $path);
-        $path = preg_replace('/\/{\w*}/', '', $path);
-        $this->route_name = preg_replace('/\/edit/', '', $path);
+//        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
+        $this->route_name = preg_replace('(/\/)|/(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '', Route::getCurrentRoute()->getPath());
+//        $path = str_replace('/create', '', $path);
+//        $path = str_replace('/search', '', $path);
+//        $path = str_replace('/changeStatus', '', $path);
+//        $path = preg_replace('/\/{\w*}/', '', $path);
+//        $this->route_name = preg_replace('/\/edit/', '', $path);
         $general_name = 'generals.' . $this->route_name . '.';
         $this->index_column = config($general_name . 'index_column');
         $this->index_column_format = config($general_name . 'index_column_format');
