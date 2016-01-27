@@ -40,7 +40,6 @@ class GeneralController extends BaseController
     protected $sort;
     protected $where;
     protected $edit_hidden;
-    protected $change_status;
 
     public function __construct() {
         //\Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
@@ -68,7 +67,6 @@ class GeneralController extends BaseController
         $this->index_multi = config($general_name . 'index_multi');
         $this->index_multi_column = config($general_name . 'index_multi_column');
         $this->index_multi_join = config($general_name . 'index_multi_join');
-        $this->change_status = config($general_name . 'change_status');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
         $middleware = config($general_name . 'middleware', array());
