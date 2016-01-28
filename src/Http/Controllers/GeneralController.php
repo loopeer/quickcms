@@ -43,7 +43,7 @@ class GeneralController extends BaseController
 
     public function __construct() {
 //        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
-        $this->route_name = preg_replace('(/\/)|/(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '', Route::getCurrentRoute()->getPath());
+        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '', Route::getCurrentRoute()->getPath());
 //        $path = str_replace('/create', '', $path);
 //        $path = str_replace('/search', '', $path);
 //        $path = str_replace('/changeStatus', '', $path);
