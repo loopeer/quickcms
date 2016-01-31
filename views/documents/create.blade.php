@@ -83,7 +83,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         保存
                                     </button>
-                                    <a href="/admin/article" class="btn btn-primary">
+                                    <a href="/admin/document" class="btn btn-primary">
                                         返回
                                     </a>
                                 </footer>
