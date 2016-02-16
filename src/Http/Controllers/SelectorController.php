@@ -59,6 +59,10 @@ class SelectorController extends BaseController {
     public function store() {
         $data = Input::all();
         unset($data['_token']);
+        if ($data['default_option'] == 0) {
+            $data['default_key'] = null;
+            $data['default_value'] = null;
+        }
         unset($data['default_option']);
 //        dd($data);
         if (isset($data['id'])) {
