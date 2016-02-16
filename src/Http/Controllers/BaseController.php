@@ -48,14 +48,16 @@ class BaseController extends Controller
      * @param string $append_column
      * @return array
      */
-    public function simplePage($show_column, $model, $append_column = NULL) {
+    public function simplePage($show_column, $model, $append_column = NULL, $str_column = NULL) {
         $search = Input::get('search')['value'];
         $search = addslashes($search);
         $order = Input::get('order')['0'];
         $length = Input::get('length');
         self::setCurrentPage($length);
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
-        $str_column = implode(',', $show_column);
+        if ($str_column == NULL) {
+            $str_column = implode(',', $show_column);
+        }
         $paginate = $model->selectRaw($str_column)
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
             ->orderByRaw($order_sql)
