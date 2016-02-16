@@ -75,6 +75,8 @@ class SystemsSetupTables extends Migration
             $table->string('enum_key');
             $table->tinyInteger('type');
             $table->string('enum_value');
+            $table->string('default_key')->nullable();
+            $table->string('default_value')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

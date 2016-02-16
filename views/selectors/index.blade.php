@@ -10,7 +10,6 @@
         <div class="row">
             <p>
                 <a href="/admin/selector/create" class="btn btn-primary">添加新枚举</a>&nbsp;&nbsp;
-                <button id="update_cache" class="btn btn-primary">一键更新缓存</button>
             </p>
             <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                 <header>
