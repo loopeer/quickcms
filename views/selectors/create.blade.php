@@ -62,6 +62,38 @@
                                     </section>
                                     <section>
                                         <label class="input">
+                                            <label class="label">是否有缺省选项</label>
+                                            <select class="select2" name="default_option" id="default_option">
+                                                @if(is_null($selector->default_key) || $selector->default_key == '')
+                                                    <option value="0" selected>无</option>
+                                                    <option value="1">有</option>
+                                                @else
+                                                    <option value="0">无</option>
+                                                    <option value="1" selected>有</option>
+                                                @endif
+                                            </select>
+                                        </label>
+                                    </section>
+                                    @if(is_null($selector->default_key) || $selector->default_key == '')
+                                    <div style="display: none;" id="has_default_option">
+                                    @else
+                                    <div id="has_default_option">
+                                    @endif
+                                        <section>
+                                            <label class="input">
+                                                <label class="label">缺省选项名</label>
+                                                <input type="text" name="default_key" id="default_key" value="{{$selector->default_key}}" placeholder="缺省选项名">
+                                            </label>
+                                        </section>
+                                        <section>
+                                            <label class="input">
+                                                <label class="label">缺省选项值</label>
+                                                <input type="text" name="default_value" id="default_value" value="{{$selector->default_value}}" placeholder="缺省选项值">
+                                            </label>
+                                        </section>
+                                    </div>
+                                    <section>
+                                        <label class="input">
                                             <label class="label">预览</label>
                                             <select class="select2" name="" id="select2">
                                             </select>
@@ -158,10 +190,23 @@
             }).done(function(data) {
                 var select = $('#select2');
                 select.html('');
+                var default_key = $('#default_key').val();
+                var default_value = $('#default_value').val();
+                if ($('#default_option').val() == 1) {
+                    select.append('<option value="'+ default_value +'">'+ default_key +'</option>');
+                }
                 for (var i in data) {
                     select.append('<option value="'+ i +'">'+ data[i] +'</option>');
                 }
             });
+        });
+        $('#default_option').change(function () {
+            var flag = $('#default_option').val();
+            if (flag == 1) {
+                $('#has_default_option').css('display', 'block');
+            } else {
+                $('#has_default_option').css('display', 'none');
+            }
         });
     });
 </script>

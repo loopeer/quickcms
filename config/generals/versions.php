@@ -130,7 +130,7 @@ return [
             'message'=>array('required'=>'必需填写时间发布时间')
         ),
         'platform'=>array(
-            'type'=>'selector:platform',
+            'type'=>'selector:parent_permissions',
             //验证暂时只支持 true 或 false
             'validator'=>array('required'=>true, 'number'=>true),
             'message'=>array('number'=>'必需为数字')

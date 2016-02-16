@@ -10,7 +10,6 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Cache;
 use Redirect;
 use Session;
 use Input;
@@ -60,6 +59,8 @@ class SelectorController extends BaseController {
     public function store() {
         $data = Input::all();
         unset($data['_token']);
+        unset($data['default_option']);
+//        dd($data);
         if (isset($data['id'])) {
             $flag = Selector::find($data['id'])->update($data);
         } else {
@@ -70,7 +71,6 @@ class SelectorController extends BaseController {
         } else {
             $message = array('result' => true, 'content' => '操作失败');
         }
-        $this->updateSingleCache($data['enum_key']);
         return Redirect::to('/admin/selector')->with('message', $message);
     }
 
@@ -95,35 +95,9 @@ class SelectorController extends BaseController {
             }
         } else {
             $result = $value;
+            $result = json_decode($result);
         }
         return json_encode($result);
     }
 
-    public static function updateSingleCache($enum_key) {
-        $selector = Selector::where('enum_key', $enum_key)->first()->toArray();
-        if ($selector['type'] == 1) {
-            $selector['enum_value'] = json_decode($selector['enum_value']);
-        }
-        $data = self::parseSelector($selector['type'], $selector['enum_value']);
-        self::is_update($enum_key, $data);
-    }
-
-    public function updateCache() {
-        $selector = Selector::all()->toArray();
-        foreach ($selector as $k => $v) {
-            if ($v['type'] == 1) {
-                $v['enum_value'] = json_decode($v['enum_value']);
-            }
-            $data = self::parseSelector($v['type'], $v['enum_value']);
-            self::is_update($v['enum_key'], $data);
-        }
-        return array('result' => true, 'content' => '操作成功');
-    }
-
-    private static function is_update($enum_key, $data) {
-        if (Cache::has('selector_' . $enum_key)) {
-            Cache::forget('selector_' . $enum_key);
-        }
-        Cache::forever('selector_' . $enum_key, $data);
-    }
 }

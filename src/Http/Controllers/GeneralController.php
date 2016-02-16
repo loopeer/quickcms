@@ -11,12 +11,14 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
+use Loopeer\QuickCms\Models\Selector;
 use Route;
 use Session;
 use Response;
 use Input;
 use View;
 use Redirect;
+use Loopeer\QuickCms\Http\Controllers\SelectorController;
 
 class GeneralController extends BaseController
 {
@@ -188,6 +190,22 @@ class GeneralController extends BaseController
     public function create() {
         $model_data = $this->model;
         $data = self::getEditData($model_data);
+        $selectors = $data['selectors'];
+        $selector_data = [];
+        foreach ($selectors as $k => $v) {
+            $selector = Selector::where('enum_key', $v)->first();
+            $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
+            $tmp_data = (array)json_decode($tmp_data);
+            $temp = [];
+            foreach ($tmp_data as $key=>$value) {
+                if (!isset($temp[$selector->default_value])) {
+                    $temp[$selector->default_value] = $selector->default_key;
+                }
+                $temp[$key] = $value;
+            }
+            $selector_data[$v] = $temp;
+        }
+        $data['selector_data'] = $selector_data;
         return View::make('backend::generals.create', $data);
     }
 
@@ -230,6 +248,22 @@ class GeneralController extends BaseController
         $model = $this->model;
         $model_data = $model::find($id);
         $data = self::getEditData($model_data);
+        $selectors = $data['selectors'];
+        $selector_data = [];
+        foreach ($selectors as $k => $v) {
+            $selector = Selector::where('enum_key', $v)->first();
+            $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
+            $tmp_data = (array)json_decode($tmp_data);
+            $temp = [];
+            foreach ($tmp_data as $key=>$value) {
+                if (!isset($temp[$selector->default_value])) {
+                    $temp[$selector->default_value] = $selector->default_key;
+                }
+                $temp[$key] = $value;
+            }
+            $selector_data[$v] = $temp;
+        }
+        $data['selector_data'] = $selector_data;
         return View::make('backend::generals.create', $data);
     }
 
@@ -255,6 +289,7 @@ class GeneralController extends BaseController
     private function getEditData($model_data) {
         $image_config = false;
         $images = array();
+        $selectors = [];
         foreach ($this->edit_column_detail as $k => $v) {
             if (!isset($v['type'])) {
                 continue;
@@ -263,6 +298,10 @@ class GeneralController extends BaseController
                 $image_config = true;
                 $v['name'] = $k;
                 $images[] = $v;
+            }
+            $tmp = explode(':', $v['type']);
+            if ($tmp[0] == 'selector') {
+                $selectors[] = $tmp[1];
             }
         }
         $data = array(
@@ -274,7 +313,8 @@ class GeneralController extends BaseController
             'edit_hidden' => $this->edit_hidden,
             'model_data' => $model_data,
             'image_config' => $image_config,
-            'images' => $images
+            'images' => $images,
+            'selectors' => $selectors
         );
         return $data;
     }
