@@ -62,7 +62,8 @@ return [
                 //模态框标题
                 'dialog_title' => 'Modal',
                 //模态框路由，结尾的'/'不能省略，url后会传递id值，路由需配置
-                'url' => '/admin/test/detail/'
+                'url' => '/admin/test/detail/',
+                'width' => 500
             )
         )
     ),

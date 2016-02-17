@@ -70,7 +70,8 @@ return [
                 //模态框标题
                 'dialog_title' => 'Modal',
                 //模态框路由，结尾的'/'不能省略，url后会传递id值，路由需配置
-                'url' => '/admin/test/detail/'
+                'url' => '/admin/test/detail/',
+                'width' => '80%'
             )
         )
     ),
@@ -130,7 +131,7 @@ return [
             'message'=>array('required'=>'必需填写时间发布时间')
         ),
         'platform'=>array(
-            'type'=>'selector:parent_permissions',
+            'type'=>'selector:platform',
             //验证暂时只支持 true 或 false
             'validator'=>array('required'=>true, 'number'=>true),
             'message'=>array('number'=>'必需为数字')
