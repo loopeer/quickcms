@@ -36,6 +36,7 @@ update config/app.php
 Kbwebs\MultiAuth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 Loopeer\QuickCms\QuickCmsServiceProvider::class,
+Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 ```
 update config/auth.php
 ```
