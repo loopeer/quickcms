@@ -63,6 +63,12 @@
         $('#dt_basic tbody').on('click', 'button[name=delete_version]', function () {
             var data = table.row($(this).parents('tr')).data();
             var delete_token = $('#delete_token').val();
+            var datatable = $('#dt_basic').dataTable();
+            var page_info = table.page.info();
+            var page = page_info.page;
+            if (page_info.length == 1 && page_info.page != 0) {
+                page = page - 1;
+            }
             if(confirm('删除这条记录?')) {
                 $.ajax({
                     type: "DELETE",
@@ -72,7 +78,7 @@
                         if (affectedRows > 0)
                             var table = $('#dt_basic').dataTable();
                             var nRow = $($(this).data('id')).closest("tr").get(0);
-                            table.fnDeleteRow( nRow, null, true );
+                            datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'
                                     +'<button class="close" data-dismiss="alert">×</button>'
                                     +'<i class="fa-fw fa fa-check"></i>'
