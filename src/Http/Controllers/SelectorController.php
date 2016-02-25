@@ -99,7 +99,9 @@ class SelectorController extends BaseController {
             }
         } else {
             $result = $value;
-            $result = json_decode($result);
+            if (!is_array($value)) {
+                $result = json_decode($result);
+            }
         }
         return json_encode($result);
     }
