@@ -42,6 +42,7 @@ class GeneralController extends BaseController
     protected $sort;
     protected $where;
     protected $edit_hidden;
+    protected $edit_editor;
 
     public function __construct() {
 //        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
@@ -65,6 +66,7 @@ class GeneralController extends BaseController
         $this->sort = config($general_name . 'sort');
         $this->where = config($general_name . 'index_where');
         $this->edit_hidden = config($general_name . 'edit_hidden');
+        $this->edit_editor = config($general_name . 'edit_editor');
         $this->create_able = config($general_name . 'create_able');
         $this->index_multi = config($general_name . 'index_multi');
         $this->index_multi_column = config($general_name . 'index_multi_column');
@@ -311,6 +313,7 @@ class GeneralController extends BaseController
             'edit_column_name' => $this->edit_column_name,
             'edit_column_detail' => $this->edit_column_detail,
             'edit_hidden' => $this->edit_hidden,
+            'edit_editor' => $this->edit_editor,
             'model_data' => $model_data,
             'image_config' => $image_config,
             'images' => $images,

@@ -10,6 +10,9 @@
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
                             <h2>新增{{$model_name}}</h2>
                         </header>
+                        @if(isset($edit_editor))
+                        @include('UEditor::head')
+                        @endif
                         <div>
                             <div class="jarviswidget-editbox">
                             </div>
@@ -66,6 +69,21 @@
                                                                     @endif
                                                                 @endforeach
                                                             </select>
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
+                                                            <script id="container" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                            <!-- 实例化编辑器 -->
+                                                            <script type="text/javascript">
+                                                                var ue = UE.getEditor('container',{
+                                                                    autoHeightEnabled: true,
+                                                                    lang:"zh-cn",
+                                                                    autoFloatEnabled: true,
+                                                                    initialFrameHeight: 500
+                                                                });
+                                                                ue.ready(function() {
+                                                                    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                    //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                });
+                                                            </script>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
                                                             @include('backend::image.upload', ['image_name' => $edit_column[$key]])
                                                         @else

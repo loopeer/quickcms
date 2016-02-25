@@ -122,19 +122,23 @@ return [
         )
     ),
     'edit_column_detail' => array(
-        'published_at'=>array(
+        'published_at' => array(
             //type 暂时只支持 date/time/selector，selector 需要配置 key 值，例：'type'=>'selector:key'
-            'type'=>'date',
+            'type' => 'date',
             //验证暂时只支持 true 或 false 类型
-            'validator'=>array('required'=>true),
+            'validator' => array('required' => true),
             //message 为选填
-            'message'=>array('required'=>'必需填写时间发布时间')
+            'message' => array('required' => '必需填写时间发布时间')
         ),
-        'platform'=>array(
-            'type'=>'selector:platform',
+        'platform' => array(
+            'type' => 'selector:platform',
             //验证暂时只支持 true 或 false
-            'validator'=>array('required'=>true, 'number'=>true),
-            'message'=>array('number'=>'必需为数字')
-        )
+            'validator' => array('required' => true, 'number' => true),
+            'message' => array('number' => '必需为数字')
+        ),
+        'description' => array(
+            'type' => 'editor',
+        ),
     ),
+    'edit_editor' => true,
 ];
