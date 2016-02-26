@@ -24,14 +24,18 @@ class BaseModel extends HookModel
 
     public function getImageAttribute(){
         $images = null;
-        if(isset($this->attributes['image']) && $this->attributes['image'] != ''){
-            $qn_images=array();
-            $images = explode(',',$this->attributes['image']);
-            foreach($images as $image){
-                $image = QiniuUtil::buildQiqiuImageUrl($image);
-                array_push($qn_images,$image);
+        if(isset($this->attributes['image']) && $this->attributes['image'] != '') {
+            $qn_images = array();
+            $images = explode(',', $this->attributes['image']);
+            if(count($images) > 1) {
+                foreach($images as $image) {
+                    $image = QiniuUtil::buildQiqiuImageUrl($image);
+                    array_push($qn_images,$image);
+                }
+                return $qn_images;
+            } else {
+                return QiniuUtil::buildQiqiuImageUrl($this->attributes['image']);
             }
-            return $qn_images;
         }
         return $images;
     }
