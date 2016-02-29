@@ -64,7 +64,7 @@
                     '</style>'+
                     @endif
                     '<li class="' + '{{$action['name']}}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{$action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
+                    '<a href="javascript:void(0);" name="' + '{{$action['btn_name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                     '</li>'+
                     @if($action['has_divider'])
                     '<li class="divider ' + '{{$action['name']}}' + '"></li>'+
@@ -127,7 +127,7 @@
                 });
             @endif
             @if($action['type'] == 'confirm')
-                $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
+                    $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
                         var data = table.row($(this).parents('tr')).data();
                         var delete_token = $('#delete_token').val();
                         var page_info = table.page.info();
@@ -187,7 +187,7 @@
                 '</div>'
             );
 
-            $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
+            $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
                 var data = table.row($(this).parents('tr')).data();
                 $("#" + '{{$action['target']}}' + ' .modal-title').html('{{$action['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
