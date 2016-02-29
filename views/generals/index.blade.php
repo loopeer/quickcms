@@ -146,7 +146,7 @@
                                 @endif
                                 url: '{{$action['url']}}' + '/' + data[0], //resource
                                 success: function(result) {
-                                    if (result){
+                                    if (result == 1){
                                         datatable.fnPageChange(page);
                                         $(".tips").html('<div class="alert alert-success fade in">'
                                             +'<button class="close" data-dismiss="alert">×</button>'
@@ -223,7 +223,7 @@
                         url: form.attr('action'),
                         data: form.serialize()
                     }).done(function(result) {
-                        if(result) {
+                        if(result == 1) {
                             datatable.fnPageChange(page);
                             $(".tips").html('<div class="alert alert-success fade in">'
                                 +'<button class="close" data-dismiss="alert">×</button>'
