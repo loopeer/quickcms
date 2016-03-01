@@ -64,7 +64,7 @@
                     '</style>'+
                     @endif
                     '<li class="' + '{{$action['name']}}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{$action['btn_name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
+                    '<a href="javascript:void(0);" name="' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                     '</li>'+
                     @if($action['has_divider'])
                     '<li class="divider ' + '{{$action['name']}}' + '"></li>'+
