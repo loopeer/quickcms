@@ -138,7 +138,16 @@ return [
             'confirm_msg' => '确定要删除吗?',
             'success_msg' => '删除成功',
             'failure_msg' => '删除失败'
-        )
+        ),
+        array(
+            'default_show' => true,
+            'type' => 'redirect_with_id',
+            'name' => 'add_topic',
+            'display_name' => '添加话题',
+            'has_divider' => true,
+            'method' => 'get',
+            'url' => '/admin/account/addTopic'
+        ),
     ),
     'versions_edit_column_detail' => array(
         'published_at'=>array(
