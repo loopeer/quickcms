@@ -112,7 +112,7 @@ class RoleController extends BaseController {
         unset($inputs['_token']);
         $permission_ids = array_values($inputs);
         $role->perms()->sync($permission_ids);
-        $message = array('result' => true,'content'=>'分配权限成功，重新登陆后即可更新左侧菜单栏');
-        return $message;
+//        $message = array('result' => true,'content'=>'分配权限成功，重新登陆后即可更新左侧菜单栏');
+        return 1;
     }
 }
