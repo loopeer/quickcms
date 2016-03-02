@@ -136,6 +136,9 @@ return [
             'validator' => array('required' => true, 'number' => true),
             'message' => array('number' => '必需为数字')
         ),
+        'url' => array(
+            'type' => 'editor',
+        ),
         'description' => array(
             'type' => 'editor',
         ),
