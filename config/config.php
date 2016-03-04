@@ -20,10 +20,10 @@ return [
     'sql_log_switch' => true,
 
     // qiniu config
-    'qiniu_access_key' => '',
-    'qiniu_secret_key' => '',
-    'qiniu_bucket' => '',
-    'qiniu_url' => '',
+    'qiniu_access_key' => env('qiniu_access_key'),
+    'qiniu_secret_key' => env('qiniu_secret_key'),
+    'qiniu_bucket' => env('qiniu_bucket'),
+    'qiniu_url' => env('qiniu_url'),
 
     // baidu push config
     'baidu_push_android_api_key' => env('baidu_push_android_api_key'),
