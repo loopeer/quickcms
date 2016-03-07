@@ -136,6 +136,9 @@
                         if (page_info.end - page_info.start == 1) {
                             page -= 1;
                         }
+                        function isObject(obj){
+                            return (typeof obj=='object')&&obj.constructor==Object;
+                        }
                         if (confirm('{{$action['confirm_msg']}}')) {
                             $.ajax({
                                 type: '{{$action['method']}}',
@@ -269,6 +272,9 @@
                     });
                     event.preventDefault(); // Prevent the form from submitting via the browser.
                 });
+                function isObject(obj){
+                    return (typeof obj=='object')&&obj.constructor==Object;
+                }
                 $form.trigger('submit'); // trigger form submit
             });
             @endif
