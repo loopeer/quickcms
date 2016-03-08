@@ -249,7 +249,7 @@
                                 html += '<strong>成功</strong>'+' '+ result.content +'。'
                                         +'</div>';
                             } else {
-                                html += '<strong>成功</strong>'+' '+ '{{$action['form']['success_msg']}}'+'。'
+                                html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
                                         +'</div>';
                             }
                             $(".tips").html(html);
@@ -261,7 +261,7 @@
                                 html += '<strong>失败</strong>'+' '+ result.content +'。'
                                         +'</div>';
                             } else {
-                                html += '<strong>失败</strong>'+' '+ '{{$action['form']['success_msg']}}'+'。'
+                                html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
                                         +'</div>';
                             }
                             $(".tips").html(html);
