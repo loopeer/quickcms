@@ -136,6 +136,9 @@
                         if (page_info.end - page_info.start == 1) {
                             page -= 1;
                         }
+                        function isObject(obj){
+                            return (typeof obj=='object')&&obj.constructor==Object;
+                        }
                         if (confirm('{{$action['confirm_msg']}}')) {
                             $.ajax({
                                 type: '{{$action['method']}}',
@@ -146,19 +149,32 @@
                                 @endif
                                 url: '{{$action['url']}}' + '/' + data[0], //resource
                                 success: function(result) {
-                                    if (result == 1){
+                                    var html = '';
+                                    if (result == 1 || result.result == true) {
                                         datatable.fnPageChange(page);
-                                        $(".tips").html('<div class="alert alert-success fade in">'
-                                            +'<button class="close" data-dismiss="alert">×</button>'
-                                            +'<i class="fa-fw fa fa-check"></i>'
-                                            +'<strong>成功</strong>'+' '+'{{$action['success_msg']}}'+'。'
-                                            +'</div>');
-                                    }else{
-                                        $(".tips").html('<div class="alert alert-danger fade in">'
-                                            +'<button class="close" data-dismiss="alert">×</button>'
-                                            +'<i class="fa-fw fa fa-warning"></i>'
-                                            +'<strong>失败</strong>'+' '+'{{$action['failure_msg']}}'+'。'
-                                            +'</div>');
+                                        html = '<div class="alert alert-success fade in">'
+                                                +'<button class="close" data-dismiss="alert">×</button>'
+                                                +'<i class="fa-fw fa fa-check"></i>';
+                                        if (isObject(result)) {
+                                            html += '<strong>成功</strong>'+' '+ result.content +'。'
+                                                    +'</div>';
+                                        } else {
+                                            html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                                    +'</div>';
+                                        }
+                                        $(".tips").html(html);
+                                    } else {
+                                        html = '<div class="alert alert-danger fade in">'
+                                                +'<button class="close" data-dismiss="alert">×</button>'
+                                                +'<i class="fa-fw fa fa-warning"></i>';
+                                        if (isObject(result)) {
+                                            html += '<strong>失败</strong>'+' '+ result.content +'。'
+                                                    +'</div>';
+                                        } else {
+                                            html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                                    +'</div>';
+                                        }
+                                        $(".tips").html(html);
                                     }
                                 }
                             });
@@ -223,19 +239,32 @@
                         url: form.attr('action'),
                         data: form.serialize()
                     }).done(function(result) {
-                        if(result == 1) {
+                        var html = '';
+                        if (result == 1 || result.result == true) {
                             datatable.fnPageChange(page);
-                            $(".tips").html('<div class="alert alert-success fade in">'
-                                +'<button class="close" data-dismiss="alert">×</button>'
-                                +'<i class="fa-fw fa fa-check"></i>'
-                                +'<strong>成功</strong>'+' '+'{{$action['form']['success_msg']}}'+'。'
-                                +'</div>');
+                            html = '<div class="alert alert-success fade in">'
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-check"></i>';
+                            if (isObject(result)) {
+                                html += '<strong>成功</strong>'+' '+ result.content +'。'
+                                        +'</div>';
+                            } else {
+                                html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                        +'</div>';
+                            }
+                            $(".tips").html(html);
                         } else {
-                            $(".tips").html('<div class="alert alert-danger fade in">'
-                                +'<button class="close" data-dismiss="alert">×</button>'
-                                +'<i class="fa-fw fa fa-warning"></i>'
-                                +'<strong>失败</strong>' + ' ' + '{{$action['form']['failure_msg']}}' + '。'
-                                +'</div>');
+                            html = '<div class="alert alert-danger fade in">'
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-warning"></i>';
+                            if (isObject(result)) {
+                                html += '<strong>失败</strong>'+' '+ result.content +'。'
+                                        +'</div>';
+                            } else {
+                                html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                        +'</div>';
+                            }
+                            $(".tips").html(html);
                         }
                         $('#' + '{{$action['form']['submit_id']}}').text("提交");
                         $('#' + '{{$action['target']}}').modal('hide');
@@ -243,6 +272,9 @@
                     });
                     event.preventDefault(); // Prevent the form from submitting via the browser.
                 });
+                function isObject(obj){
+                    return (typeof obj=='object')&&obj.constructor==Object;
+                }
                 $form.trigger('submit'); // trigger form submit
             });
             @endif
