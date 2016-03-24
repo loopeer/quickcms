@@ -70,10 +70,10 @@
                                                                 @endforeach
                                                             </select>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
-                                                            <script id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                            <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
                                                             <!-- 实例化编辑器 -->
                                                             <script type="text/javascript">
-                                                                var ue = UE.getEditor('{{ $edit_column[$key] }}',{
+                                                                var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
                                                                     autoHeightEnabled: true,
                                                                     lang:"zh-cn",
                                                                     autoFloatEnabled: true,
