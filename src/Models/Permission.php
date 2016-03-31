@@ -17,7 +17,7 @@ class Permission extends EntrustPermission
     protected $fillable = ['id','parent_id', 'name', 'display_name','route','sort','icon','description','level'];
 
     public function menus() {
-        return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id');
+        return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id')->orderBy('sort');
     }
 
     public function parent(){
