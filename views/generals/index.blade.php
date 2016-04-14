@@ -55,7 +55,8 @@
                     "data": null,
                     "defaultContent":
                     '<div class="btn-group">'+
-                    '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 <span class="caret"></span></button>'+
+                    '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
+                    '<span class="caret"></span></button>'+
                     '<ul class="dropdown-menu">'+
                     @foreach($actions as $action)
                             @if(!$action['default_show'])

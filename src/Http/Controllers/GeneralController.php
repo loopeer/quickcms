@@ -45,13 +45,8 @@ class GeneralController extends BaseController
     protected $edit_editor;
 
     public function __construct() {
-//        \Log::info('route_path = ' . Route::getCurrentRoute()->getPath());
-        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '', Route::getCurrentRoute()->getPath());
-//        $path = str_replace('/create', '', $path);
-//        $path = str_replace('/search', '', $path);
-//        $path = str_replace('/changeStatus', '', $path);
-//        $path = preg_replace('/\/{\w*}/', '', $path);
-//        $this->route_name = preg_replace('/\/edit/', '', $path);
+        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '',
+            Route::getCurrentRoute()->getPath());
         $general_name = 'generals.' . $this->route_name . '.';
         $this->index_column = config($general_name . 'index_column');
         $this->index_column_format = config($general_name . 'index_column_format');
@@ -80,6 +75,10 @@ class GeneralController extends BaseController
         parent::__construct();
     }
 
+    /**
+     * 搜索
+     * @return mixed
+     */
     public function search()
     {
         $model = $this->model;
@@ -154,6 +153,10 @@ class GeneralController extends BaseController
         return Response::json($ret);
     }
 
+    /**
+     * 列表
+     * @return mixed
+     */
     public function index()
     {
         $message = Session::get('message');
@@ -211,6 +214,9 @@ class GeneralController extends BaseController
         return View::make('backend::generals.create', $data);
     }
 
+    /**
+     * 详情
+     */
     public function show() {
 
     }
