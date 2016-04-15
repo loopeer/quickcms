@@ -12,7 +12,7 @@ return [
     //系统设置管理
     'create_able' => true,  //是否可创建
     'middleware'=>array(
-        'admin.system'
+        'admin.systems'
     ),
     'model_class' => 'Loopeer\QuickCms\Models\System',
     'model_name' => '设置',
