@@ -55,6 +55,16 @@
                                     </section>
                                     <section>
                                         <label class="input">
+                                            <label class="label">SQL语法：<span class="span text-primary">select id,name from table</span></label>
+                                        </label>
+                                    </section>
+                                    <section>
+                                        <label class="input">
+                                            <label class="label">JSON语法：<span class="span text-primary">{"k1":"v1","k2":[1,2,3],"k3":{"0":"v1","1":"v2"}}</span></label>
+                                        </label>
+                                    </section>
+                                    <section>
+                                        <label class="input">
                                             <label class="label">键值</label>
                                             <textarea name="enum_value" id="enum_value" style="width: 100%; height:150px">{{$selector->enum_value}}</textarea>
                                         </label>

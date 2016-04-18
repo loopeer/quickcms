@@ -21,8 +21,6 @@ Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.logi
 
 Route::get('test/push', 'TestController@push');
 
-Route::get('/logs', array('middleware' => 'auth.admin', 'uses'=>'\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'));
-
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
       Route::resource('build', 'AutoBuildController', array('except'=>'show'));
@@ -51,9 +49,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
    Route::get('users/checkEmail', 'UserController@checkEmail');
 
-//   Route::resource('roles', 'RoleController', array('except'=>'show'));
    Route::resource('roles', 'GeneralController', array('except'=>'show'));
-//   Route::get('roles/search', 'RoleController@search');
    Route::get('roles/search', 'GeneralController@search');
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
@@ -62,47 +58,33 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('permissions/search', 'PermissionController@search');
 
    Route::resource('permissions', 'PermissionController');
-//   Route::resource('permissions', 'GeneralController');
    Route::get('permissions/delete/{id}',array('as'=>'admin.permissions.delete','uses'=>'PermissionController@delete'));
    Route::post('permissions/update/{id}',array('as'=>'admin.permissions.update','uses'=>'PermissionController@update'));
 
+   Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
    //运维管理
-   Route::resource('logs', 'LogController', array('except'=>'show'));
-   Route::get('logs/search', 'LogController@search');
-   Route::get('logs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
+   Route::resource('actionLogs', 'LogController', array('except'=>'show'));
+   Route::get('actionLogs/search', 'LogController@search');
+   Route::get('actionLogs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
 
    Route::resource('feedbacks', 'GeneralController', array('except'=>'show'));
    Route::get('feedbacks/search', 'GeneralController@search');
 
    Route::resource('versions', 'GeneralController', array('except'=>'show'));
    Route::get('versions/search', 'GeneralController@search');
-   Route::get('versions/changeStatus/{id}', 'VersionController@changeStatus');
-
-   //test route
-//   Route::get('test/detail/{id}', 'TestController@detail');
-//   Route::get('test/add/{id}', 'TestController@add');
-//   Route::post('test/add', 'TestController@submitAdd');
-
-   //Route::get('systems', 'SystemController@index');
-   //Route::post('systems/store', 'SystemController@store');
-   //Route::post('systems/updateCode', 'SystemController@updateCode');
-   //Route::post('systems/uploadLogo', array('as' => 'admin.systems.uploadLogo', 'uses' => 'SystemController@uploadLogo'));
-   //Route::post('systems/title', array('as' => 'admin.systems.title', 'uses' => 'SystemController@title'));
+   Route::get('versions/changeStatus/{id}', 'GeneralController@changeStatus');
 
    Route::resource('selector', 'SelectorController', array('except'=>'show'));
    Route::get('selector/search', 'SelectorController@search');
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');
 
-   //general multi
-   Route::resource('actionLogs', 'GeneralController', array('except'=>'show'));
-   Route::get('actionLogs/search', 'GeneralController@search');
-
    Route::get('statistics/index', 'StatisticController@index');
    Route::get('statistics/chartDays', 'StatisticController@chartDays');
    Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
 
-   Route::resource('documents', 'DocumentController', array('except'=>'show'));
+   Route::resource('document', 'DocumentController', array('except'=>'show'));
    Route::get('document/search', 'DocumentController@search');
 
    //pushes

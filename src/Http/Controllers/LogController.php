@@ -25,7 +25,7 @@ class LogController extends BaseController {
     }
 
     public function search() {
-        $ret = self::simplePage(['id','name','content','handle_at', 'client_ip'], new ActionLog());
+        $ret = self::simplePage(['id', 'user_id', 'content', 'created_at', 'client_ip'], new ActionLog());
         return Response::json($ret);
     }
 
@@ -36,14 +36,17 @@ class LogController extends BaseController {
 
 
     public function destroy($log_id) {
-        $flag = ActionLog::destroy($log_id);
-        return $flag ? 1 : 0;
+        if (ActionLog::destroy($log_id)) {
+            return array('result' => true, 'content' => '删除成功');
+        } else {
+            return array('result' => false, 'content' => '删除失败');
+        }
     }
 
     public function emptyLogs() {
         ActionLog::truncate();
         $message['result'] = 1;
         $message['content'] = $message['result'] ? '清空日志成功' : '清空日志失败';
-        return Redirect::to('admin/logs/')->with('message', $message);
+        return Redirect::to('admin/actionLogs/')->with('message', $message);
     }
 }

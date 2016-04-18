@@ -16,25 +16,12 @@ return [
     ),
     'model_class' => 'Loopeer\QuickCms\Models\Version',
     'model_name' => '版本',
-//    'index_select_column' => array(
-//        'versions.id', 'versions.platform', 'versions.version_code', 'versions.version', 'versions.url', 'versions.message',
-//        'versions.description', 'versions.status','versions.published_at',
-//    ),
     'index_column' => array(
         'id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status', 'published_at',
     ),
     'index_column_name' => array(
         'ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',
     ),
-//    'index_where' => array(
-//        array('column' => 'news_type', 'operator' => '=', 'value' => 2),
-//        array('column' => 'news_type', 'operator' => 'whereIn', 'value' => [1,2]),
-//        array('column' => 'news_type', 'operator' => 'whereNotIn', 'value' => [1,2]),
-//        array('column' => 'news_type', 'operator' => 'whereBetween', 'value' => [1,2]),
-//        array('column' => 'news_type', 'operator' => 'whereNotBetween', 'value' => [1,2]),
-//        array('column' => 'news_type', 'operator' => 'whereNull'),
-//        array('column' => 'news_type', 'operator' => 'whereNotNull'),
-//    ),
     'edit_column' => array(
         'platform', 'version_code', 'version', 'url', 'description', 'published_at', 'status'
     ),
@@ -92,6 +79,7 @@ return [
             'has_divider' => true,
             'method' => 'get',
             'url' => '/admin/versions/changeStatus',
+            'data' => array('column' => 'status', 'value' => 1),
             'confirm_msg' => '确定要上线吗?',
             'success_msg' => '操作成功',
             'failure_msg' => '操作失败'
@@ -104,6 +92,7 @@ return [
             'has_divider' => true,
             'method' => 'get',
             'url' => '/admin/versions/changeStatus',
+            'data' => array('column' => 'status', 'value' => 0),
             'confirm_msg' => '确定要下线吗?',
             'success_msg' => '操作成功',
             'failure_msg' => '操作失败'
@@ -129,19 +118,7 @@ return [
             'validator' => array('required' => true),
             //message 为选填
             'message' => array('required' => '必需填写时间发布时间')
-        ),
-        'platform' => array(
-            'type' => 'selector:platform',
-            //验证暂时只支持 true 或 false
-            'validator' => array('required' => true, 'number' => true),
-            'message' => array('number' => '必需为数字')
-        ),
-        'url' => array(
-            'type' => 'editor',
-        ),
-        'description' => array(
-            'type' => 'editor',
-        ),
+        )
     ),
     'edit_editor' => true,
 ];

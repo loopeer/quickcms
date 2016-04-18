@@ -8,6 +8,7 @@
                 @include('backend::layouts.message')
             </div>
         <div class="row">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <p>
                 <a href="/admin/selector/create" class="btn btn-primary">添加新枚举</a>&nbsp;&nbsp;
             </p>

@@ -13,7 +13,7 @@
         <section id="widget-grid" class="">
             <div class="row">
                 <article class="col-sm-12">
-                    <ul style="height: {{ (count($statistics) / 4) * 78 }}px;">
+                    <ul style="height: {{ (count($statistics) / 4) * 78 }}px;min-height: 108px;">
                         @foreach($statistics as $statistic)
                         <li>
                             <h3>{{ $statistic->statistic_key }}</h3>

@@ -2,7 +2,7 @@
 <html lang="en-us" id="extr-page">
 <head>
     <meta charset="utf-8">
-    <title>{{ Cache::get('websiteTitle') }}</title>
+    <title>{{ config('quickcms.site_title') }}</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -34,11 +34,6 @@
     </style>
 </head>
 <body class="animated fadeInDown" style="width: 100%;height:100%;">
-{{--<header id="header">--}}
-{{--<div id="logo-group">--}}
-{{--<span id="logo"> <img src="{{ asset('loopeer/quickcms/img/logo.png') }}" alt="SmartAdmin"> </span>--}}
-{{--</div>--}}
-{{--</header>--}}
 <div id="wrap">
     <div id="main" role="main">
         <div id="background-full-screen" style="background-image: url('{{asset('loopeer/quickcms/img/background.jpg')}}');"></div>

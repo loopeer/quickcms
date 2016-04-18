@@ -8,6 +8,7 @@
             @include('backend::layouts.message')
         </div>
         <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <p>
                 <a href="javascript:void(0);" class="btn btn-primary" id="push_batch" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">推送消息</a>
                 <a href="javascript:void(0);" class="btn btn-primary" id="push_all" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">全局推送</a>
