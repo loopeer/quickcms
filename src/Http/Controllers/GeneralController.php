@@ -291,9 +291,13 @@ class GeneralController extends BaseController
     public function changeStatus($id) {
         $model = $this->model;
         $model_data = $model::find($id);
-        $column = Input::get('column');
-        $value = Input::get('value');
-        $model_data->$column = $value;
+        $data = Input::all();
+        foreach($data as $data_key => $data_val) {
+            if($data_val == 'now') {
+                $data_val = date('Y-m-d H:i:s', time());
+            }
+            $model_data->$data_key = $data_val;
+        }
         if($model_data->save()) {
             $ret = true;
         } else {

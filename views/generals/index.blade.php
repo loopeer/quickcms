@@ -150,7 +150,13 @@
                                 @if($action['method'] == 'delete')
                                     data: { '_token' : delete_token },
                                 @elseif(isset($action['data']))
-                                    data: { 'column' : '{{ $action['data']['column'] }}', 'value' : '{{ $action['data']['value'] }}'},
+                                    data: {
+                                        @foreach($action['data'] as $data_key => $data_val)
+                                        '{{ $data_key }}' : '{{ $data_val }}',
+                                        {{--'column' : '{{ $action['data']['column'] }}', --}}
+                                        {{--'value' : '{{ $action['data']['value'] }}'--}}
+                                        @endforeach
+                                    },
                                 @endif
                                 url: '{{$action['url']}}' + '/' + data[0], //resource
                                 success: function(result) {
