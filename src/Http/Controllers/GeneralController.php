@@ -160,9 +160,17 @@ class GeneralController extends BaseController
     public function index()
     {
         $message = Session::get('message');
+        $selector_data = [];
+        foreach($this->index_column_rename as $key => $column_name) {
+            if($column_name['type'] == 'selector') {
+                $selector = Selector::where('enum_key', $column_name['param'])->first();
+                $selector_data[$key] = $selector->enum_value;
+            }
+        }
         $data = array(
             'index_column_name' => $this->index_column_name,
             'index_column_rename' => $this->index_column_rename,
+            'selector_data' => $selector_data,
             'route_name' => $this->route_name,
             'model_name' => $this->model_name,
             'actions' => $this->actions,

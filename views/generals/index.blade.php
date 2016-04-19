@@ -105,6 +105,10 @@
                             @elseif($rename['type'] == 'href')
                                 var html = '<a href="' + $data[i][parseInt('{{$column_no}}')] + '" target="_blank" title="' + $data[i][parseInt('{{$column_no}}')] + '">点击查看</a>';
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                            @elseif($rename['type'] == 'selector')
+                                var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                                var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
+                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
                             @endif
                         @endforeach
                     @endif
