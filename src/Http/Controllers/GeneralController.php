@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers;
 
 use Loopeer\QuickCms\Models\Selector;
+use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Route;
 use Session;
 use Response;
@@ -37,7 +38,7 @@ class GeneralController extends BaseController
     protected $edit_column_name;
     protected $edit_column_detail;
     protected $actions;
-    protected $create_able;
+    protected $curd_action;
     protected $model;
     protected $sort;
     protected $where;
@@ -62,7 +63,7 @@ class GeneralController extends BaseController
         $this->where = config($general_name . 'index_where');
         $this->edit_hidden = config($general_name . 'edit_hidden');
         $this->edit_editor = config($general_name . 'edit_editor');
-        $this->create_able = config($general_name . 'create_able');
+        $this->curd_action = config($general_name . 'curd_action');
         $this->index_multi = config($general_name . 'index_multi');
         $this->index_multi_column = config($general_name . 'index_multi_column');
         $this->index_multi_join = config($general_name . 'index_multi_join');
@@ -167,6 +168,7 @@ class GeneralController extends BaseController
                 $selector_data[$key] = $selector->enum_value;
             }
         }
+        $this->curd_action = GeneralUtil::curdAction($this->curd_action);
         $data = array(
             'index_column_name' => $this->index_column_name,
             'index_column_rename' => $this->index_column_rename,
@@ -174,7 +176,7 @@ class GeneralController extends BaseController
             'route_name' => $this->route_name,
             'model_name' => $this->model_name,
             'actions' => $this->actions,
-            'create_able' => $this->create_able,
+            'curd_action' => $this->curd_action,
             'index_column' => $this->index_column,
             'message' => $message
         );

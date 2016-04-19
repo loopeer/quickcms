@@ -9,7 +9,7 @@
         </div>
         <div class="row">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                @if($create_able)
+                @if($curd_action['create'])
                     <p><a href="/admin/{{ $route_name }}/create/" class="btn btn-primary">新增{{ $model_name }}</a></p>
                 @endif
                 <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
@@ -58,17 +58,29 @@
                     '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
                     '<span class="caret"></span></button>'+
                     '<ul class="dropdown-menu">'+
-                    @foreach($actions as $action)
-                            @if(!$action['default_show'])
-                            '<style>'+
-                    '.{{$action['name']}} {display:none;}'+
-                    '</style>'+
+                    @if($curd_action['edit'])
+                    '<li class="edit_btn">'+
+                    '<a href="javascript:void(0);" name="edit_btn">编辑</a>'+
+                    '</li>'+
+                    '<li class="divider"></li>'+
                     @endif
+                    @if($curd_action['delete'])
+                    '<li class="delete_btn">'+
+                    '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
+                    '</li>'+
+                    '<li class="divider"></li>'+
+                    @endif
+                    @foreach($actions as $index => $action)
+                    {{--@if(!$action['default_show'])--}}
+                    {{--'<style>'+--}}
+                    {{--'.{{$action['name']}} {display:none;}'+--}}
+                    {{--'</style>'+--}}
+                    {{--@endif--}}
                     '<li class="' + '{{$action['name']}}' + '">'+
                     '<a href="javascript:void(0);" name="' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
                     '</li>'+
-                    @if($action['has_divider'])
-                    '<li class="divider ' + '{{$action['name']}}' + '"></li>'+
+                    @if($index != count($actions) - 1)
+                    '<li class="divider"></li>'+
                     @endif
                     @endforeach
                     '</ul>'+
@@ -114,17 +126,52 @@
                     @endif
                 }
             });
-            //
-            @if(!empty($actions))
-            @foreach($actions as $action)
-                //
-            @if($action['type'] == 'edit')
+
+            @if($curd_action['edit'])
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
-                        var data = table.row($(this).parents('tr')).data();
-                        window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
-                    });
+                    var data = table.row($(this).parents('tr')).data();
+                    window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
+                });
             @endif
 
+            @if($curd_action['delete'])
+                $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+                    var data = table.row($(this).parents('tr')).data();
+                    var delete_token = $('#delete_token').val();
+                    var datatable = $('#dt_basic').dataTable();
+                    var page_info = table.page.info();
+                    var page = page_info.page;
+                    if (page_info.length == 1 && page_info.page != 0) {
+                        page = page - 1;
+                    }
+                    if(confirm('删除这条记录?')) {
+                        $.ajax({
+                            type: "DELETE",
+                            data: { '_token' : delete_token },
+                            url: '/admin/' + route_name + '/' + data[0],
+                            success: function(result) {
+                                if (result == 1 || result.result == true) {
+                                    datatable.fnPageChange(page);
+                                    $(".tips").html('<div class="alert alert-success fade in">'
+                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                    + '<i class="fa-fw fa fa-check"></i>'
+                                    + '<strong>成功</strong>' + ' ' + '删除成功。'
+                                    + '</div>');
+                                } else {
+                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                    + '<strong>失败</strong>' + ' ' + '删除失败。'
+                                    + '</div>');
+                                }
+                            }
+                        });
+                    }
+                });
+            @endif
+
+            @if(!empty($actions))
+            @foreach($actions as $action)
             @if ($action['type'] == 'redirect_with_id')
                  $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
                         var data = table.row($(this).parents('tr')).data();
@@ -132,65 +179,60 @@
                 });
             @endif
             @if($action['type'] == 'confirm')
-                    $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
-                        var data = table.row($(this).parents('tr')).data();
-                        var delete_token = $('#delete_token').val();
-                        var page_info = table.page.info();
-                        var page = page_info.page;
-                        var datatable = $('#dt_basic').dataTable();
-                        if (page_info.end - page_info.start == 1) {
-                            page -= 1;
-                        }
-                        function isObject(obj){
-                            return (typeof obj=='object')&&obj.constructor==Object;
-                        }
-                        if (confirm('{{$action['confirm_msg']}}')) {
-                            $.ajax({
-                                type: '{{$action['method']}}',
-                                @if($action['method'] == 'delete')
-                                    data: { '_token' : delete_token },
-                                @elseif(isset($action['data']))
-                                    data: {
-                                        @foreach($action['data'] as $data_key => $data_val)
-                                        '{{ $data_key }}' : '{{ $data_val }}',
-                                        {{--'column' : '{{ $action['data']['column'] }}', --}}
-                                        {{--'value' : '{{ $action['data']['value'] }}'--}}
-                                        @endforeach
-                                    },
-                                @endif
-                                url: '{{$action['url']}}' + '/' + data[0], //resource
-                                success: function(result) {
-                                    var html = '';
-                                    if (result == 1 || result.result == true) {
-                                        datatable.fnPageChange(page);
-                                        html = '<div class="alert alert-success fade in">'
-                                                +'<button class="close" data-dismiss="alert">×</button>'
-                                                +'<i class="fa-fw fa fa-check"></i>';
-                                        if (isObject(result)) {
-                                            html += '<strong>成功</strong>'+' '+ result.content +'。'
-                                                    +'</div>';
-                                        } else {
-                                            html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
-                                                    +'</div>';
-                                        }
-                                        $(".tips").html(html);
+                $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
+                    var data = table.row($(this).parents('tr')).data();
+                    var page_info = table.page.info();
+                    var page = page_info.page;
+                    var datatable = $('#dt_basic').dataTable();
+                    if (page_info.end - page_info.start == 1) {
+                        page -= 1;
+                    }
+                    function isObject(obj){
+                        return (typeof obj=='object')&&obj.constructor==Object;
+                    }
+                    if (confirm('{{$action['confirm_msg']}}')) {
+                        $.ajax({
+                            type: '{{$action['method']}}',
+                            @if(isset($action['data']))
+                                data: {
+                                    @foreach($action['data'] as $data_key => $data_val)
+                                    '{{ $data_key }}' : '{{ $data_val }}',
+                                    @endforeach
+                                },
+                            @endif
+                            url: '{{$action['url']}}' + '/' + data[0], //resource
+                            success: function(result) {
+                                var html = '';
+                                if (result == 1 || result.result == true) {
+                                    datatable.fnPageChange(page);
+                                    html = '<div class="alert alert-success fade in">'
+                                            +'<button class="close" data-dismiss="alert">×</button>'
+                                            +'<i class="fa-fw fa fa-check"></i>';
+                                    if (isObject(result)) {
+                                        html += '<strong>成功</strong>'+' '+ result.content +'。'
+                                                +'</div>';
                                     } else {
-                                        html = '<div class="alert alert-danger fade in">'
-                                                +'<button class="close" data-dismiss="alert">×</button>'
-                                                +'<i class="fa-fw fa fa-warning"></i>';
-                                        if (isObject(result)) {
-                                            html += '<strong>失败</strong>'+' '+ result.content +'。'
-                                                    +'</div>';
-                                        } else {
-                                            html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
-                                                    +'</div>';
-                                        }
-                                        $(".tips").html(html);
+                                        html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                                +'</div>';
                                     }
+                                    $(".tips").html(html);
+                                } else {
+                                    html = '<div class="alert alert-danger fade in">'
+                                            +'<button class="close" data-dismiss="alert">×</button>'
+                                            +'<i class="fa-fw fa fa-warning"></i>';
+                                    if (isObject(result)) {
+                                        html += '<strong>失败</strong>'+' '+ result.content +'。'
+                                                +'</div>';
+                                    } else {
+                                        html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                                +'</div>';
+                                    }
+                                    $(".tips").html(html);
                                 }
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
+                });
             @endif
             //
             @if($action['type'] == 'dialog')
