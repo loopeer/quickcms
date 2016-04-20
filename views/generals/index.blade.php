@@ -71,13 +71,8 @@
                     '<li class="divider"></li>'+
                     @endif
                     @foreach($actions as $index => $action)
-                    {{--@if(!$action['default_show'])--}}
-                    {{--'<style>'+--}}
-                    {{--'.{{$action['name']}} {display:none;}'+--}}
-                    {{--'</style>'+--}}
-                    {{--@endif--}}
-                    '<li class="' + '{{$action['name']}}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + '">' + '{{$action['display_name']}}' + '</a>'+
+                    '<li class="' + '{{ $action['name'] }}' + '">'+
+                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '">' + '{{ $action['display_name'] }}' + '</a>'+
                     '</li>'+
                     @if($index != count($actions) - 1)
                     '<li class="divider"></li>'+
@@ -103,7 +98,6 @@
                                     if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
                                         $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!!$value["value"]!!}');
                                         @if(!empty($value['action_name']))
-                                        {{--$('tr').eq(i+1).children('td').('.{{$value['action_name']}}').html('');--}}
                                         $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();
                                         @endif
                                     }
@@ -138,7 +132,7 @@
                 $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
                     var data = table.row($(this).parents('tr')).data();
                     var delete_token = $('#delete_token').val();
-                    var datatable = $('#dt_basic').dataTable();
+                    var data_table = $('#dt_basic').dataTable();
                     var page_info = table.page.info();
                     var page = page_info.page;
                     if (page_info.length == 1 && page_info.page != 0) {
@@ -151,7 +145,7 @@
                             url: '/admin/' + route_name + '/' + data[0],
                             success: function(result) {
                                 if (result == 1 || result.result == true) {
-                                    datatable.fnPageChange(page);
+                                    data_table.fnPageChange(page);
                                     $(".tips").html('<div class="alert alert-success fade in">'
                                     + '<button class="close" data-dismiss="alert">×</button>'
                                     + '<i class="fa-fw fa fa-check"></i>'
@@ -173,26 +167,26 @@
             @if(!empty($actions))
             @foreach($actions as $action)
             @if ($action['type'] == 'redirect_with_id')
-                 $('#dt_basic tbody').on('click', 'a[name=' + '{{$action['name']}}' + ']', function () {
+                 $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
                         var data = table.row($(this).parents('tr')).data();
                         window.location = '{{$action['url']}}' + '/' + data[0];
                 });
             @endif
             @if($action['type'] == 'confirm')
-                $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
+                $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
                     var data = table.row($(this).parents('tr')).data();
                     var page_info = table.page.info();
                     var page = page_info.page;
-                    var datatable = $('#dt_basic').dataTable();
+                    var data_table = $('#dt_basic').dataTable();
                     if (page_info.end - page_info.start == 1) {
                         page -= 1;
                     }
                     function isObject(obj){
                         return (typeof obj=='object')&&obj.constructor==Object;
                     }
-                    if (confirm('{{$action['confirm_msg']}}')) {
+                    if (confirm('{{{ $action['confirm_msg'] or '是否继续操作?' }}}')) {
                         $.ajax({
-                            type: '{{$action['method']}}',
+                            type: '{{{ $action['method'] or 'get' }}}',
                             @if(isset($action['data']))
                                 data: {
                                     @foreach($action['data'] as $data_key => $data_val)
@@ -200,11 +194,11 @@
                                     @endforeach
                                 },
                             @endif
-                            url: '{{$action['url']}}' + '/' + data[0], //resource
+                            url: '{{ $action['url'] }}' + '/' + data[0],
                             success: function(result) {
                                 var html = '';
                                 if (result == 1 || result.result == true) {
-                                    datatable.fnPageChange(page);
+                                    data_table.fnPageChange(page);
                                     html = '<div class="alert alert-success fade in">'
                                             +'<button class="close" data-dismiss="alert">×</button>'
                                             +'<i class="fa-fw fa fa-check"></i>';
@@ -212,7 +206,7 @@
                                         html += '<strong>成功</strong>'+' '+ result.content +'。'
                                                 +'</div>';
                                     } else {
-                                        html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                        html += '<strong>成功</strong>'+' '+ '{{{ $action['success_msg'] or '操作成功' }}}' + '。'
                                                 +'</div>';
                                     }
                                     $(".tips").html(html);
@@ -224,7 +218,7 @@
                                         html += '<strong>失败</strong>'+' '+ result.content +'。'
                                                 +'</div>';
                                     } else {
-                                        html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                        html += '<strong>失败</strong>'+' '+ '{{{ $action['failure_msg'] or '操作失败' }}}' + '。'
                                                 +'</div>';
                                     }
                                     $(".tips").html(html);
@@ -237,8 +231,8 @@
             //
             @if($action['type'] == 'dialog')
             $('#content').after(
-                '<div class="modal fade" id="' + '{{$action['target']}}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog" style="{{isset($action['width']) ? "width:".$action['width'] : ""}};">' +
+                '<div class="modal fade" id="' + '{{ $action['target'] }}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                '<div class="modal-dialog" style="{{ $action['width'] ? "width:".$action['width'] : ''}};">' +
                 '<div class="modal-content">' +
                 '<div class="modal-header">' +
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
@@ -284,7 +278,7 @@
                 var $form = $("#" + '{{$action['form']['form_id']}}');
                 var page_info = table.page.info();
                 var page = page_info.page;
-                var datatable = $('#dt_basic').dataTable();
+                var data_table = $('#dt_basic').dataTable();
                 $($form).submit(function(event) {
                     var form = $(this);
                     $.ajax({
@@ -294,7 +288,7 @@
                     }).done(function(result) {
                         var html = '';
                         if (result == 1 || result.result == true) {
-                            datatable.fnPageChange(page);
+                            data_table.fnPageChange(page);
                             html = '<div class="alert alert-success fade in">'
                                     +'<button class="close" data-dismiss="alert">×</button>'
                                     +'<i class="fa-fw fa fa-check"></i>';
@@ -352,7 +346,6 @@
                     '<div id="left">' +
                     '</div>' +
                     '</div>' +
-
                     '</div>' +
                     '</div>' +
                     '</div>'
@@ -369,7 +362,6 @@
 
             $('#' + '{{$rename['param']['target']}}').on('show.bs.modal', function(e) {
                 var action = $(e.relatedTarget).data('action');
-                //populate the div
                 loadURL(action, $('#' + '{{$rename['param']['target']}}' + ' .modal-content .modal-body #left'));
             });
             @endif
