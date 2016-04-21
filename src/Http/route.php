@@ -57,7 +57,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::resource('permissions', 'PermissionController', array('except'=>'show'));
    Route::get('permissions/search', 'PermissionController@search');
 
-   Route::resource('permissions', 'PermissionController');
+   //Route::resource('permissions', 'PermissionController');
    Route::get('permissions/delete/{id}',array('as'=>'admin.permissions.delete','uses'=>'PermissionController@delete'));
    Route::post('permissions/update/{id}',array('as'=>'admin.permissions.update','uses'=>'PermissionController@update'));
 

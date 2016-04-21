@@ -46,6 +46,7 @@ class GeneralController extends BaseController
     protected $edit_editor;
 
     public function __construct() {
+        \Log::info('search...1');
         $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '',
             Route::getCurrentRoute()->getPath());
         $general_name = 'generals.' . $this->route_name . '.';
@@ -82,6 +83,7 @@ class GeneralController extends BaseController
      */
     public function search()
     {
+        \Log::info('search...1.5');
         $model = $this->model;
         if(isset($this->where)) {
             foreach($this->where as $value) {
@@ -151,6 +153,7 @@ class GeneralController extends BaseController
                 }
             }
         }
+        \Log::info('search...22');
         return Response::json($ret);
     }
 

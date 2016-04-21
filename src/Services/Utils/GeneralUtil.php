@@ -14,9 +14,11 @@ class GeneralUtil {
 
     public static function curdAction($curl_action = array()) {
         $default_action = array('create' => true, 'edit' => true, 'detail' => true, 'delete' => true);
-        foreach($curl_action as $action_key => $action_val) {
-            if(isset($action_val)) {
-                $default_action[$action_key] = $action_val;
+        if(count($curl_action) > 0) {
+            foreach($curl_action as $action_key => $action_val) {
+                if(isset($action_val)) {
+                    $default_action[$action_key] = $action_val;
+                }
             }
         }
         return $default_action;

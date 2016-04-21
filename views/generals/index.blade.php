@@ -49,7 +49,7 @@
                 "processing": false,
                 "serverSide": true,
                 "bStateSave": true,
-                @if(!empty($actions))
+                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'])
                 "columnDefs": [ {
                     "targets": -1,
                     "data": null,
@@ -70,6 +70,7 @@
                     '</li>'+
                     '<li class="divider"></li>'+
                     @endif
+                    @if(isset($actions))
                     @foreach($actions as $index => $action)
                     '<li class="' + '{{ $action['name'] }}' + '">'+
                     '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '">' + '{{ $action['display_name'] }}' + '</a>'+
@@ -78,6 +79,7 @@
                     '<li class="divider"></li>'+
                     @endif
                     @endforeach
+                    @endif
                     '</ul>'+
                     '</div>'
                 } ],
@@ -90,16 +92,36 @@
             table.on( 'draw.dt', function () {
                 var $data = table.data();
                 for (var i=0; i < $data.length; i++) {
+                    @if(isset($actions))
+                    @foreach($actions as $action)
+                        @if($action['type'] == 'confirm')
+                        @foreach($action['where'] as $where_key => $where_val)
+                            {{ $list_td = array_flip($index_column)[$where_key]}}
+                            var flag = false;
+                            @foreach($where_val as $val)
+                                if($data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {
+                                    flag = true;
+                                }
+                            @endforeach
+                            if(!flag) {
+                                $('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();
+                                $('tr:eq('+(i+1)+') '+'.divider:last').hide();
+                            }
+                        @endforeach
+                        @endif
+                    @endforeach
+                    @endif
+
                     @if(is_array($index_column_rename))
                         @foreach($index_column_rename as $column => $rename)
                             {{$column_no = array_flip($index_column)[$column]}}
                             @if($rename['type'] == 'normal')
                                 @foreach($rename['param'] as $key => $value)
                                     if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
-                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!!$value["value"]!!}');
-                                        @if(!empty($value['action_name']))
-                                        $('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();
-                                        @endif
+                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
+                                        {{--@if(!empty($value['action_name']))--}}
+                                        {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
+                                        {{--@endif--}}
                                     }
                                 @endforeach
                             @elseif($rename['type'] == 'dialog')
@@ -232,7 +254,7 @@
             @if($action['type'] == 'dialog')
             $('#content').after(
                 '<div class="modal fade" id="' + '{{ $action['target'] }}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog" style="{{ $action['width'] ? "width:".$action['width'] : ''}};">' +
+                '<div class="modal-dialog" style="{{ isset($action['width']) ? "width:".$action['width'] : ''}};">' +
                 '<div class="modal-content">' +
                 '<div class="modal-header">' +
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
