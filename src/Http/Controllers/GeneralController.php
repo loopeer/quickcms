@@ -44,10 +44,14 @@ class GeneralController extends BaseController
     protected $where;
     protected $edit_hidden;
     protected $edit_editor;
+    protected $detail_column;
+    protected $detail_column_name;
+    protected $detail_multi_column;
+    protected $detail_multi_join;
 
     public function __construct() {
         \Log::info('search...1');
-        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|{\w*}/', '',
+        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
             Route::getCurrentRoute()->getPath());
         $general_name = 'generals.' . $this->route_name . '.';
         $this->index_column = config($general_name . 'index_column');
@@ -71,6 +75,10 @@ class GeneralController extends BaseController
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
         $middleware = config($general_name . 'middleware', array());
+        $this->detail_column = config($general_name . 'detail_column', array());
+        $this->detail_column_name = config($general_name . 'detail_column_name', array());
+        $this->detail_multi_join = config($general_name . 'detail_multi_join');
+        $this->detail_multi_column = config($general_name . 'detail_multi_column');
         foreach ($middleware as $value) {
             $this->middleware('auth.permission:' . $value);
         }
@@ -343,5 +351,22 @@ class GeneralController extends BaseController
             'selectors' => $selectors
         );
         return $data;
+    }
+
+    public function detail($id) {
+        $model = $this->model;
+        if(is_null($this->detail_multi_join)) {
+            $data = $model;
+        } else {
+            $joins = $this->detail_multi_join;
+            foreach($joins as $join) {
+                $model = $model->leftJoin($join[0], $join[1], $join[2], $join[3]);
+            }
+            $data = $model->select($this->detail_multi_column);
+        }
+        $data = $data->find($id);
+        $columns = $this->detail_column;
+        $column_names = $this->detail_column_name;
+        return view('backend::generals.detail', compact('data', 'columns', 'column_names'));
     }
 }

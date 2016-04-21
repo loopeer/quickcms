@@ -62,13 +62,25 @@
                     '<li class="edit_btn">'+
                     '<a href="javascript:void(0);" name="edit_btn">编辑</a>'+
                     '</li>'+
+                    @if($curd_action['delete'])
                     '<li class="divider"></li>'+
+                    @endif
                     @endif
                     @if($curd_action['delete'])
                     '<li class="delete_btn">'+
                     '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
                     '</li>'+
+                    @if($curd_action['detail'])
                     '<li class="divider"></li>'+
+                    @endif
+                    @endif
+                    @if($curd_action['detail'])
+                    '<li class="detail_btn">'+
+                    '<a href="javascript:void(0);" name="detail_btn">详情</a>'+
+                    '</li>'+
+                    @if(isset($actions))
+                    '<li class="divider"></li>'+
+                    @endif
                     @endif
                     @if(isset($actions))
                     @foreach($actions as $index => $action)
@@ -184,6 +196,43 @@
                         });
                     }
                 });
+            @endif
+
+            @if($curd_action['detail'])
+            $('#content').after(
+                    '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                    '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+                    '&times;' +
+                    '</button>' +
+                    '<h4 class="modal-title"></h4>' +
+                    '</div>' +
+                    '<div class="modal-body custom-scroll terms-body">' +
+                    '<div id="left">' +
+                    '</div>' +
+                    '</div>' +
+
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
+            );
+
+            $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
+                var data = table.row($(this).parents('tr')).data();
+                $("#detail_dialog .modal-title").html('查看详情');
+                $(this).attr("data-toggle", "modal");
+                $(this).attr("data-target", "#detail_dialog");
+                $(this).attr("data-action", "/admin/" + "{{ $route_name }}" + "/detail/" + data[0]);
+                $(this).attr("data-id",data[0]);
+            });
+
+            $('#detail_dialog').on('show.bs.modal', function(e) {
+                var action = $(e.relatedTarget).data('action');
+                //populate the div
+                loadURL(action, $('#detail_dialog' + ' .modal-content .modal-body #left'));
+            });
             @endif
 
             @if(!empty($actions))
