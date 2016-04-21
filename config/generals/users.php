@@ -68,7 +68,7 @@ return [
             'display_name' => '启用',
             'url' => '/admin/users/changeStatus',
             'data' => array('status' => 1),
-            'where' => array('status' => 0),
+            'where' => array('status' => [0]),
             'confirm_msg' => '确定要启用吗?',
         ),
         array(
@@ -77,7 +77,7 @@ return [
             'display_name' => '禁用',
             'url' => '/admin/users/changeStatus',
             'data' => array('status' => 0),
-            'where' => array('status' => 1),
+            'where' => array('status' => [1]),
             'confirm_msg' => '确定要禁用吗?',
         ),
     ),
