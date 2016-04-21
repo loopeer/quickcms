@@ -45,6 +45,7 @@ class GeneralController extends BaseController
     protected $edit_hidden;
     protected $edit_editor;
     protected $detail_column;
+    protected $detail_column_rename;
     protected $detail_column_name;
     protected $detail_multi_column;
     protected $detail_multi_join;
@@ -78,6 +79,7 @@ class GeneralController extends BaseController
         $this->detail_column_name = config($general_name . 'detail_column_name', array());
         $this->detail_multi_join = config($general_name . 'detail_multi_join');
         $this->detail_multi_column = config($general_name . 'detail_multi_column');
+        $this->detail_column_rename = config($general_name . 'detail_column_rename');
         foreach ($middleware as $value) {
             $this->middleware('auth.permission:' . $value);
         }
@@ -363,6 +365,17 @@ class GeneralController extends BaseController
         $data = $data->find($id);
         $columns = $this->detail_column;
         $column_names = $this->detail_column_name;
-        return view('backend::generals.detail', compact('data', 'columns', 'column_names'));
+        $renames = $this->detail_column_rename;
+        $rename_keys = isset($renames) ? array_keys($renames) : array();
+        $selector_data = [];
+        if(isset($renames)) {
+            foreach($renames as $key => $column_name) {
+                if($column_name['type'] == 'selector') {
+                    $selector = Selector::where('enum_key', $column_name['param'])->first();
+                    $selector_data[$key] = json_decode($selector->enum_value, true);
+                }
+            }
+        }
+        return view('backend::generals.detail', compact('data', 'columns', 'column_names', 'renames', 'rename_keys', 'selector_data'));
     }
 }

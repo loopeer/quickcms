@@ -24,21 +24,36 @@
                     @foreach($columns as $key => $column)
                             <section>
                                 <label class="control-label"><strong>{{ $column_names[$key] }}：</strong></label>
-                                @if(! isset($column['type']))
-                                    {{ $data->$column['key'] }}
-                                @elseif($column['type'] == 'normal')
-                                    {{ $data->$column['key'] }}
-                                @elseif($column['type'] == 'rename')
-                                    {!! $column['value'][$data->$column['key']] !!}
-                                @elseif($column['type'] == 'amount')
-                                    {{ $data->$column['key'] / 100 }}
-                                @elseif($column['type'] == 'image')
-                                    <p>
-                                        <a href="{{ $data->$column['key'] }}" target="_blank" title="查看原图">
-                                            <img src="{{ $data->$column['key'] }}" alt="{{ $data->$column['key'] }}" width="100">
-                                        </a>
-                                    </p>
+                                @if(in_array($column, $rename_keys))
+                                    @if($renames[$column]['type'] == 'amount')
+                                        {{ $data->$column / 100 }}
+                                    @elseif($renames[$column]['type'] == 'normal')
+                                        {!! $renames[$column]['param'][$data->$column] !!}
+                                    @elseif($renames[$column]['type'] == 'image')
+                                        @if(is_array($data->$column))
+                                            <p>
+                                                @foreach($data->$column as $image)
+                                                    <a href="{{ $image }}" target="_blank" title="查看原图">
+                                                        <img src="{{ $image }}" alt="{{ $image }}" width="100">
+                                                    </a>
+                                                @endforeach
+                                            </p>
+                                        @else
+                                            <p>
+                                                <a href="{{ $data->$column }}" target="_blank" title="查看原图">
+                                                    <img src="{{ $data->$column }}" alt="{{ $data->$column }}" width="100">
+                                                </a>
+                                            </p>
+                                        @endif
+                                    @elseif($renames[$column]['type'] == 'selector')
+                                        {{ $selector_data[$column][$data->$column] }}
+                                    @elseif($renames[$column]['type'] == 'date')
+                                        {{ date($renames[$column]['format'], strtotime($data->$column)) }}
+                                    @endif
+                                @else
+                                    {{ $data->$column }}
                                 @endif
+
                             </section>
                     @endforeach
                 </fieldset>
