@@ -50,7 +50,6 @@ class GeneralController extends BaseController
     protected $detail_multi_join;
 
     public function __construct() {
-        \Log::info('search...1');
         $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
             Route::getCurrentRoute()->getPath());
         $general_name = 'generals.' . $this->route_name . '.';
@@ -91,7 +90,6 @@ class GeneralController extends BaseController
      */
     public function search()
     {
-        \Log::info('search...1.5');
         $model = $this->model;
         if(isset($this->where)) {
             foreach($this->where as $value) {
@@ -161,7 +159,6 @@ class GeneralController extends BaseController
                 }
             }
         }
-        \Log::info('search...22');
         return Response::json($ret);
     }
 
@@ -332,9 +329,8 @@ class GeneralController extends BaseController
                 $v['name'] = $k;
                 $images[] = $v;
             }
-            $tmp = explode(':', $v['type']);
-            if ($tmp[0] == 'selector') {
-                $selectors[] = $tmp[1];
+            if ($v['type'] == 'selector') {
+                $selectors[] = $v['selector_key'];
             }
         }
         $data = array(
