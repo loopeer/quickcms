@@ -121,9 +121,11 @@ class GeneralController extends BaseController
             }
         }
         if(isset($this->sort)) {
-           $model = $model->orderBy($this->sort[0], $this->sort[1]);
+            foreach ($this->sort as $sort) {
+                $model = $model->orderBy($sort[0], $sort[1]);
+            }
         }
-        if($this->index_multi) {
+        if(isset($this->index_multi_column)) {
             $search = Input::get('search')['value'];
             $length = Input::get('length');
             $str_columns = array();

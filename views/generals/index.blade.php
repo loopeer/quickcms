@@ -140,11 +140,9 @@
                                 var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                             @elseif($rename['type'] == 'html')
-                                var html = sprintf('{!! $rename["template"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
+                                var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
-                            @elseif($rename['type'] == 'href')
-                                var html = '<a href="' + $data[i][parseInt('{{$column_no}}')] + '" target="_blank" title="' + $data[i][parseInt('{{$column_no}}')] + '">点击查看</a>';
-                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+
                             @elseif($rename['type'] == 'selector')
                                 var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
                                 var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
