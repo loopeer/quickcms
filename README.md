@@ -59,7 +59,7 @@ php artisan quickcms:install
 # Step4
 ```
 localhost:8000/admin
-
+```
 # Doc
 [Doc](https://github.com/loopeer/quickcms/wiki)
 
