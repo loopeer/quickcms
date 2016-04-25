@@ -92,6 +92,8 @@
                                                             </script>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
                                                             @include('backend::image.upload', ['image_name' => $edit_column[$key]])
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
+                                                            @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column[$key]['dropzone_id']) ? $edit_column[$key]['dropzone_id'] : null])
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
@@ -122,12 +124,16 @@
 @section('script')
 {{--    <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>--}}
     <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
-    @if ($image_config)
-        @include('backend::image.script')
-        @foreach($images as $image)
-            @include('backend::image.action', ['image' => $image, 'image_data' => $model_data[$image['name']]])
-        @endforeach
-    @endif
+@if ($image_config)
+    @include('backend::image.script')
+    @foreach($images as $image)
+        @include('backend::image.action', ['image' => $image, 'image_data' => $model_data[$image['name']]])
+    @endforeach
+@endif
+@if($file_config)
+    @include('backend::dropzone.script')
+    @include('backend::dropzone.action', $files)
+@endif
     <script>
         $(document).ready(function() {
             $("#smart-form-register").validate({

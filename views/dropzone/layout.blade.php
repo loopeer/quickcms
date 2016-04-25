@@ -1,4 +1,4 @@
-<div class="dropzone dz-clickable" id="{{ $dropzone_id }}">
+<div class="dropzone dz-clickable" id="{{ isset($dropzone_id) ? $dropzone_id : 'mydropzone' }}">
     <div class="dz-default dz-message">
         <span>
             <span class="text-center">

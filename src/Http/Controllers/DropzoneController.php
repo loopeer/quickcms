@@ -18,12 +18,15 @@ class DropzoneController extends BaseController
         ));
 
         try {
-            $image = Input::file('file');
+            $file = Input::file('file');
+            $file_name = $file->getClientOriginalName();
+            $extension = pathinfo($file_name, PATHINFO_EXTENSION);
             $upload_key = 'file' . '_'.date('YmdHis',time()).rand(1,9999);
-            $photo = $qiniu->uploadFile($image->getRealPath(), $upload_key);
-            $key = $photo->data['key'];
-            $url = config('quickcms.qiniu_url').'/'.$key;
-            $ret = ['result' => true, 'key' => $key, 'url' => $url, 'msg' => '上传成功'];
+            $real_key = $upload_key  . '.' . $extension;
+            $upload = $qiniu->uploadFile($file->getRealPath(), $real_key);
+            $real_key = $upload->data['key'];
+            $url = config('quickcms.qiniu_url') . '/' . $real_key;
+            $ret = ['result' => true, 'key' => $upload_key, 'real_key' => $real_key, 'url' => $url, 'msg' => '上传成功'];
         } catch(Exception $e) {
             $ret = ['result' => false, 'msg' => '上传失败'];
         }
@@ -42,7 +45,8 @@ class DropzoneController extends BaseController
                 $file_info = json_decode(file_get_contents($url . '?stat'));
                 $size = $file_info->fsize;
                 $mime_type = $file_info->mimeType;
-                $files[] = ['name' => $key, 'size' => $size, 'key' => $key, 'url' => $url, 'mime_type' => $mime_type];
+                $upload_key = strstr($key, '.', true);
+                $files[] = ['name' => $key, 'size' => $size, 'key' => $upload_key, 'url' => $url, 'mime_type' => $mime_type, 'real_key' => $key];
             }
         }
         return $files;

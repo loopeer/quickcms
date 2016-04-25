@@ -336,6 +336,12 @@ class GeneralController extends BaseController
             if ($v['type'] == 'selector') {
                 $selectors[] = $v['selector_key'];
             }
+            if ($v['type'] == 'file') {
+                $file_config = true;
+                $v['file_name'] = $k;
+                $v['model'] = $model_data;
+                $files = $v;
+            }
         }
         $data = array(
             'route_name' => $this->route_name,
@@ -348,7 +354,9 @@ class GeneralController extends BaseController
             'model_data' => $model_data,
             'image_config' => $image_config,
             'images' => $images,
-            'selectors' => $selectors
+            'selectors' => $selectors,
+            'file_config' => $file_config,
+            'files' => $files
         );
         return $data;
     }
