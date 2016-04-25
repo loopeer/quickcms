@@ -340,7 +340,7 @@ class GeneralController extends BaseController
                 $file_config = true;
                 $v['file_name'] = $k;
                 $v['model'] = $model_data;
-                $files = $v;
+                $files[] = $v;
             }
         }
         $data = array(

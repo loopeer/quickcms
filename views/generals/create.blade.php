@@ -93,7 +93,7 @@
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
                                                             @include('backend::image.upload', ['image_name' => $edit_column[$key]])
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
-                                                            @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column[$key]['dropzone_id']) ? $edit_column[$key]['dropzone_id'] : null])
+                                                            @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
@@ -132,7 +132,9 @@
 @endif
 @if($file_config)
     @include('backend::dropzone.script')
-    @include('backend::dropzone.action', $files)
+    @foreach($files as $file)
+        @include('backend::dropzone.action', $file)
+    @endforeach
 @endif
     <script>
         $(document).ready(function() {
