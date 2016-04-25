@@ -40,6 +40,10 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('blueimp/{id}', array('as'=>'admin.blueimp.delete', 'uses'=>'BlueimpController@destroy'));
    Route::get('blueimp', array('as'=>'admin.blueimp.index', 'uses'=>'BlueimpController@getImage'));
 
+   //文件上传
+   Route::post('dropzone/upload', 'DropzoneController@upload');
+   Route::get('dropzone/fileList/{id}', 'DropzoneController@fileList');
+
    Route::resource('users', 'UserController', array('except'=>'show'));
    Route::get('users/search', 'GeneralController@search');
    Route::get('users', 'GeneralController@index', array('except'=>'show'));
