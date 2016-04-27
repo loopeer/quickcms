@@ -359,8 +359,8 @@ class GeneralController extends BaseController
             'image_config' => $image_config,
             'images' => $images,
             'selectors' => $selectors,
-            'file_config' => isset($file_config) ?: false,
-            'files' => isset($files) ?: null
+            'file_config' => isset($file_config) ? true : false,
+            'files' => isset($files) ? $files : null
         );
         return $data;
     }
