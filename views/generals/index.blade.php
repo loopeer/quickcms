@@ -199,7 +199,7 @@
             @if($curd_action['detail'])
             $('#content').after(
                     '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                    '<div class="modal-dialog">' +
+                    '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
                     '<div class="modal-content">' +
                     '<div class="modal-header">' +
                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
@@ -207,7 +207,7 @@
                     '</button>' +
                     '<h4 class="modal-title"></h4>' +
                     '</div>' +
-                    '<div class="modal-body custom-scroll terms-body">' +
+                    '<div class="modal-body custom-scroll terms-body" style="{{ isset($detail_style['height']) ? "max-height:" . $detail_style['height'] : ''}}">' +
                     '<div id="left">' +
                     '</div>' +
                     '</div>' +
@@ -309,7 +309,7 @@
                 '</button>' +
                 '<h4 class="modal-title"></h4>' +
                 '</div>' +
-                '<div class="modal-body custom-scroll terms-body">' +
+                '<div class="modal-body custom-scroll terms-body" style="{{ isset($action['height']) ? "max-height:".$action['height'] : ''}};">' +
                 '<div id="left">' +
                 '</div>' +
                 '</div>' +
@@ -411,7 +411,7 @@
                     '</button>' +
                     '<h4 class="modal-title"></h4>' +
                     '</div>' +
-                    '<div class="modal-body custom-scroll terms-body" style="min-height: 280px;">' +
+                    '<div class="modal-body custom-scroll terms-body"  style="{{isset($rename['param']['height']) ? "max-height: " . $rename['param']['height'] : "min-height: 280px;"}}>' +
                     '<div id="left">' +
                     '</div>' +
                     '</div>' +

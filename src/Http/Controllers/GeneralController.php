@@ -49,6 +49,7 @@ class GeneralController extends BaseController
     protected $detail_column_name;
     protected $detail_multi_column;
     protected $detail_multi_join;
+    protected $detail_style;
 
     public function __construct() {
         $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
@@ -80,6 +81,7 @@ class GeneralController extends BaseController
         $this->detail_multi_join = config($general_name . 'detail_multi_join');
         $this->detail_multi_column = config($general_name . 'detail_multi_column');
         $this->detail_column_rename = config($general_name . 'detail_column_rename');
+        $this->detail_style =  config($general_name . 'detail_style');
         foreach ($middleware as $value) {
             $this->middleware('auth.permission:' . $value);
         }
@@ -191,7 +193,8 @@ class GeneralController extends BaseController
             'actions' => $this->actions,
             'curd_action' => $this->curd_action,
             'index_column' => $this->index_column,
-            'message' => $message
+            'message' => $message,
+            'detail_style' => isset($this->detail_style) ? $this->detail_style : null
         );
         return View::make('backend::generals.index', $data);
     }
