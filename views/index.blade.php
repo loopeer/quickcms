@@ -48,9 +48,9 @@
                             <br>
                             <strong>姓名：</strong>{{ $user->name }}
                             <br>
-                            <br>
+                            {{--<br>--}}
                             {{--<strong>用户角色：</strong><span class="label label-primary">{{ $user->roles->first()->display_name }}</span>--}}
-                            <br>
+                            {{--<br>--}}
                             <br>
                             <strong>登陆IP：</strong>{{ Request::getClientIp() }}
                             <br>

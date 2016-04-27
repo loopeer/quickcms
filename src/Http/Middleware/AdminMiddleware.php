@@ -57,25 +57,18 @@ class AdminMiddleware{
                 return Redirect::to('/admin/index')->with('message', array('result'=>false, 'content'=>'您没有权限'));
             }
         }
-        $menus = Session::get('menu',null);
-        if(is_null($menus)){
+        if(!$request->session()->has('menu')){
             $user = Auth::admin()->get();
-            //$index = new IndexController($request);
             $this->getMenus($user);
         }
         return $next($request);
     }
 
     private function getMenus($user) {
-//        $menus = Cache::rememberForever('menus', function() {
         $menus = Permission::with('menus')->where('parent_id', 0)->orderBy('sort')->get();
-//        });
         if(isset($user)) {
             foreach($menus as $key=>$menu){
-                //$items = Cache::rememberForever('menus', function($menu) {
-                    //return
-                     $items =   Permission::where('parent_id', $menu->id)->get();
-                //});
+                $items = Permission::where('parent_id', $menu->id)->get();
                 if (!is_null($items) && count($items)>0) {
                     foreach ($items as $item_key => $item) {
                         if (!$user->can($item->name)) {

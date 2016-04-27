@@ -33,12 +33,12 @@ class BaseController extends Controller
     public function __construct()
     {
         $route_url = '/' . Route::getCurrentRoute()->getPath();
-//        if(!Session::has($route_url)){
-//            $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
-//                ->where('route', $route_url)
-//                ->first();
-//            session([$route_url => $permission]);
-//        }
+        if(!Session::has($route_url)){
+            $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
+                ->where('route', $route_url)
+                ->first();
+            Session::push($route_url, $permission);
+        }
     }
 
     /**

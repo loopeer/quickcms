@@ -14,6 +14,7 @@ use Auth;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Input;
+use Loopeer\QuickCms\Models\ActionLog;
 use Validator;
 use Loopeer\QuickCms\Models\User;
 
@@ -48,13 +49,17 @@ class AdminAuthenticate{
         //$password = sha1($password.config('quickcms.admin_pwd_salt'));
         //$admin = User::where('email',$email)->where('password',$password)->first();
 
-//        \Log::info($email);
-//        \Log::info($password);
-//        \Log::info(Auth::admin()->attempt(['email' => $email, 'password' => $password]));
         if (Auth::admin()->attempt(['email' => $email, 'password' => $password], true)) {
+            ActionLog::create(array(
+                'user_id' => Auth::admin()->get()->id,
+                'content' => config('quickcms.action_log.login'),
+                'client_ip' => $request->ip()
+            ));
             // 认证通过...
-            \Log::info('auth.login...1.1');
             return redirect('/admin/index');
+        } else {
+            $message = array('result' => false,'content' => '邮箱或密码错误');
+            return redirect('/admin/login')->with('message', $message);
         }
 
 //        if(is_null($admin)){
