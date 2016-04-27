@@ -49,6 +49,8 @@
                                         {{ $selector_data[$column][$data->$column] }}
                                     @elseif($renames[$column]['type'] == 'date')
                                         {{ date($renames[$column]['format'], strtotime($data->$column)) }}
+                                    @elseif($renames[$column]['type'] == 'html')
+                                        {!! $data->$column !!}
                                     @endif
                                 @else
                                     {{ $data->$column }}
