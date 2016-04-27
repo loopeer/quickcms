@@ -21,6 +21,8 @@ Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.logi
 
 Route::get('test/push', 'TestController@push');
 
+Route::get('admin/index/getLoginLog', 'IndexController@getLoginLog');
+
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
       Route::resource('build', 'AutoBuildController', array('except'=>'show'));
@@ -30,7 +32,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('/', 'IndexController@getIndex');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
-   Route::get('index/getLoginLog', 'IndexController@getLoginLog');
+
 
    Route::resource('generals', 'GeneralController@index');
    Route::get('generals/search', 'GeneralController@search');

@@ -45,16 +45,26 @@ class AdminAuthenticate{
     {
         $email = Input::get('email');
         $password = Input::get('password');
-        $password = sha1($password.config('quickcms.admin_pwd_salt'));
-        $admin = User::where('email',$email)->where('password',$password)->first();
-        if(is_null($admin)){
-            $message = array('result' => false,'content' => '邮箱或密码错误');
-            return redirect('/admin/login')->with('message',$message);
+        //$password = sha1($password.config('quickcms.admin_pwd_salt'));
+        //$admin = User::where('email',$email)->where('password',$password)->first();
+
+//        \Log::info($email);
+//        \Log::info($password);
+//        \Log::info(Auth::admin()->attempt(['email' => $email, 'password' => $password]));
+        if (Auth::admin()->attempt(['email' => $email, 'password' => $password], true)) {
+            // 认证通过...
+            \Log::info('auth.login...1.1');
+            return redirect('/admin/index');
         }
-        if($admin->status == 0){
-            $message = array('result' => false,'content' => '此用户已被禁用');
-            return redirect('/admin/login')->with('message',$message);
-        }
-        return $next($request);
+
+//        if(is_null($admin)){
+//            $message = array('result' => false,'content' => '邮箱或密码错误');
+//            return redirect('/admin/login')->with('message',$message);
+//        }
+//        if($admin->status == 0){
+//            $message = array('result' => false,'content' => '此用户已被禁用');
+//            return redirect('/admin/login')->with('message',$message);
+//        }
+        //return $next($request);
     }
 }

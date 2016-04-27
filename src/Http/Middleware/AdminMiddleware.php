@@ -14,6 +14,7 @@ use Auth;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Input;
+use Loopeer\QuickCms\Models\Permission;
 use Validator;
 use Session;
 use Loopeer\QuickCms\Http\Controllers\IndexController;
@@ -51,7 +52,7 @@ class AdminMiddleware{
         if (!Auth::admin()->check()) {
             return redirect('/admin/login');
         }
-        if (substr($_SERVER['REQUEST_URI'], 0 , 5) == '/logs') {
+        if ($_SERVER['REQUEST_URI'] == '/admin/logs') {
             if (!Auth::admin()->get()->can('admin.logs')) {
                 return Redirect::to('/admin/index')->with('message', array('result'=>false, 'content'=>'您没有权限'));
             }
@@ -59,14 +60,34 @@ class AdminMiddleware{
         $menus = Session::get('menu',null);
         if(is_null($menus)){
             $user = Auth::admin()->get();
-            $index = new IndexController($request);
-            $index->getMenus($user);
-        }
-        if (!Cache::has('websiteTitle')) {
-            Cache::rememberForever('websiteTitle', function() {
-                return System::find(1)['title'];
-            });
+            //$index = new IndexController($request);
+            $this->getMenus($user);
         }
         return $next($request);
+    }
+
+    private function getMenus($user) {
+//        $menus = Cache::rememberForever('menus', function() {
+        $menus = Permission::with('menus')->where('parent_id', 0)->orderBy('sort')->get();
+//        });
+        if(isset($user)) {
+            foreach($menus as $key=>$menu){
+                //$items = Cache::rememberForever('menus', function($menu) {
+                    //return
+                     $items =   Permission::where('parent_id', $menu->id)->get();
+                //});
+                if (!is_null($items) && count($items)>0) {
+                    foreach ($items as $item_key => $item) {
+                        if (!$user->can($item->name)) {
+                            unset($menus[$key]['menus'][$item_key]);
+                        }
+                    }
+                }
+                if (!$user->can($menu->name)) {
+                    unset($menus[$key]);
+                }
+            }
+        }
+        Session::put('menu', json_decode($menus, true));
     }
 }

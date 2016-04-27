@@ -21,7 +21,9 @@ use DB;
 use Redirect;
 use Response;
 use Auth;
+use Cache;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\Guard;
 
 class IndexController extends BaseController {
 
@@ -32,7 +34,9 @@ class IndexController extends BaseController {
 
     public function index() {
         $user = Auth::admin()->get();
-        $count_user = User::count();
+        $count_user = Cache::rememberForever('count_user', function() {
+            return User::count();
+        });
         return view('backend::index',compact('user', 'count_user'));
     }
 
@@ -43,7 +47,7 @@ class IndexController extends BaseController {
 
     public function postLogin(Request $request){
         $email = Input::get('email');
-        $remember = Input::get('remember',0);
+        $remember = Input::get('remember', 1);
         $user = User::where('email',$email)->first();
         Auth::admin()->login($user,$remember);
         $user->last_login = date('Y-m-d H:i:s');
@@ -54,7 +58,8 @@ class IndexController extends BaseController {
             'content' => config('quickcms.action_log.login'),
             'client_ip' => $request->ip()
         ));
-        return $this->getIndex();
+//        return $this->getIndex();
+        return redirect('/admin/index')->with('user', $user);
     }
 
     public function logout(){
@@ -76,26 +81,6 @@ class IndexController extends BaseController {
             }
         }
         return redirect('/admin/index');
-    }
-
-    public function getMenus($user){
-        $menus = Permission::with('menus')->where('parent_id', 0)->orderBy('sort')->get();
-        if(isset($user)){
-            foreach($menus as $key=>$menu){
-                $items = Permission::where('parent_id',$menu->id)->get();
-                if (!is_null($items) && count($items)>0) {
-                    foreach ($items as $item_key => $item) {
-                        if (!$user->can($item->name)) {
-                            unset($menus[$key]['menus'][$item_key]);
-                        }
-                    }
-                }
-                if (!$user->can($menu->name)) {
-                    unset($menus[$key]);
-                }
-            }
-        }
-        Session::put('menu', json_decode($menus, true));
     }
 
     public function getLoginLog(){

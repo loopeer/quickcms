@@ -17,6 +17,7 @@ Kbwebs\MultiAuth\AuthServiceProvider::class,
 Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 Loopeer\QuickCms\QuickCmsServiceProvider::class,
 Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+Stevenyangecho\UEditor\UEditorServiceProvider::class,
 ```
 in the `providers` array add
 ```
