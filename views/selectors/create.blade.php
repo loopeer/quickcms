@@ -37,9 +37,9 @@
                                         </label>
                                     </section>
                                     <section>
-                                        <label class="input">
-                                            <label class="label">键值类型</label>
-                                            <select name="type" id="value_type" class="select2">
+                                        <label class="label">键值类型</label>
+                                        <label class="select">
+                                            <select name="type" id="value_type">
                                                 @if($selector->type == 0)
                                                 <option selected value="0">SQL</option>
                                                 @else
@@ -51,6 +51,7 @@
                                                 <option value="1">JSON</option>
                                                 @endif
                                             </select>
+                                            <i></i>
                                         </label>
                                     </section>
                                     <section>
@@ -71,17 +72,18 @@
                                         <button type="button" id="preview"  class="btn btn-primary btn-sm">预览</button>
                                     </section>
                                     <section>
-                                        <label class="input">
-                                            <label class="label">是否有缺省选项</label>
-                                            <select class="select2" name="default_option" id="default_option">
-                                                @if(is_null($selector->default_key) || $selector->default_key == '')
-                                                    <option value="0" selected>无</option>
-                                                    <option value="1">有</option>
-                                                @else
-                                                    <option value="0">无</option>
-                                                    <option value="1" selected>有</option>
-                                                @endif
+                                        <label class="label">是否有缺省选项</label>
+                                        <label class="select">
+                                            <select name="default_option" id="default_option">
+                                            @if(is_null($selector->default_key) || $selector->default_key == '')
+                                                <option value="0" selected>无</option>
+                                                <option value="1">有</option>
+                                            @else
+                                                <option value="0">无</option>
+                                                <option value="1" selected>有</option>
+                                            @endif
                                             </select>
+                                            <i></i>
                                         </label>
                                     </section>
                                     @if(is_null($selector->default_key) || $selector->default_key == '')
