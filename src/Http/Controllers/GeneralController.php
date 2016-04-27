@@ -177,7 +177,8 @@ class GeneralController extends BaseController
         foreach($this->index_column_rename as $key => $column_name) {
             if($column_name['type'] == 'selector') {
                 $selector = Selector::where('enum_key', $column_name['param'])->first();
-                $selector_data[$key] = $selector->enum_value;
+                $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
+                $selector_data[$key] = $tmp_data;
             }
         }
         $this->curd_action = GeneralUtil::curdAction($this->curd_action);
