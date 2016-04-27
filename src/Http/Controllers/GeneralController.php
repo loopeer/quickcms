@@ -243,8 +243,32 @@ class GeneralController extends BaseController
     /**
      * 详情
      */
-    public function show() {
-
+    public function show($id) {
+        $model = $this->model;
+        if(is_null($this->detail_multi_join)) {
+            $data = $model;
+        } else {
+            $joins = $this->detail_multi_join;
+            foreach($joins as $join) {
+                $model = $model->leftJoin($join[0], $join[1], $join[2], $join[3]);
+            }
+            $data = $model->select($this->detail_multi_column);
+        }
+        $data = $data->find($id);
+        $columns = $this->detail_column;
+        $column_names = $this->detail_column_name;
+        $renames = $this->detail_column_rename;
+        $rename_keys = isset($renames) ? array_keys($renames) : array();
+        $selector_data = [];
+        if(isset($renames)) {
+            foreach($renames as $key => $column_name) {
+                if($column_name['type'] == 'selector') {
+                    $selector = Selector::where('enum_key', $column_name['param'])->first();
+                    $selector_data[$key] = json_decode($selector->enum_value, true);
+                }
+            }
+        }
+        return view('backend::generals.detail', compact('data', 'columns', 'column_names', 'renames', 'rename_keys', 'selector_data'));
     }
 
     /**
@@ -363,33 +387,5 @@ class GeneralController extends BaseController
             'files' => isset($files) ? $files : null
         );
         return $data;
-    }
-
-    public function detail($id) {
-        $model = $this->model;
-        if(is_null($this->detail_multi_join)) {
-            $data = $model;
-        } else {
-            $joins = $this->detail_multi_join;
-            foreach($joins as $join) {
-                $model = $model->leftJoin($join[0], $join[1], $join[2], $join[3]);
-            }
-            $data = $model->select($this->detail_multi_column);
-        }
-        $data = $data->find($id);
-        $columns = $this->detail_column;
-        $column_names = $this->detail_column_name;
-        $renames = $this->detail_column_rename;
-        $rename_keys = isset($renames) ? array_keys($renames) : array();
-        $selector_data = [];
-        if(isset($renames)) {
-            foreach($renames as $key => $column_name) {
-                if($column_name['type'] == 'selector') {
-                    $selector = Selector::where('enum_key', $column_name['param'])->first();
-                    $selector_data[$key] = json_decode($selector->enum_value, true);
-                }
-            }
-        }
-        return view('backend::generals.detail', compact('data', 'columns', 'column_names', 'renames', 'rename_keys', 'selector_data'));
     }
 }

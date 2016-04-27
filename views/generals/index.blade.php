@@ -222,7 +222,7 @@
                 $("#detail_dialog .modal-title").html('查看详情');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#detail_dialog");
-                $(this).attr("data-action", "/admin/" + "{{ $route_name }}" + "/detail/" + data[0]);
+                $(this).attr("data-action", "/admin/" + "{{ $route_name }}/" + data[0]);
                 $(this).attr("data-id",data[0]);
             });
 
