@@ -62,9 +62,9 @@
                                         @endforeach
                                     @endif
                                     <fieldset>
-                                        @foreach($edit_column_name as $key => $column_name)
+                                        @foreach($edit_column as $key => $column_name)
                                             <section>
-                                                <label class="label">{{ $column_name }}</label>
+                                                <label class="label">{{ $edit_column_name ? $edit_column_name[$key] : $column_names[$column_name] }}</label>
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
                                                 <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
                                                     @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')

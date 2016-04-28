@@ -10,8 +10,7 @@
  */
 namespace Loopeer\QuickCms\Services\Utils;
 
-use Loopeer\QuickCms\Http\Controllers\SelectorController;
-use Loopeer\QuickCms\Models\Selector;
+use Illuminate\Support\Facades\DB;
 
 class GeneralUtil {
 
@@ -25,5 +24,15 @@ class GeneralUtil {
             }
         }
         return $default_action;
+    }
+
+    public static function queryComment($model) {
+        $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns '
+              + 'WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
+        $column_names = [];
+        foreach($results as $result) {
+            $column_names[$result->COLUMN_NAME] = $result->COLUMN_COMMENT;
+        }
+        return $column_names;
     }
 }

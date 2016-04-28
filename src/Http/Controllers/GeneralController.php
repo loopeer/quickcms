@@ -75,6 +75,7 @@ class GeneralController extends BaseController
         $this->index_multi_join = config($general_name . 'index_multi_join');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
+        \Log::info('construct table value = ' . with($this->model)->getTable());
         $middleware = config($general_name . 'middleware', array());
         $this->detail_column = config($general_name . 'detail_column', array());
         $this->detail_column_name = config($general_name . 'detail_column_name', array());
@@ -196,6 +197,8 @@ class GeneralController extends BaseController
             'message' => $message,
             'detail_style' => isset($this->detail_style) ? $this->detail_style : null
         );
+        $column_names = GeneralUtil::queryComment($this->model);
+        $data['column_names'] = $column_names;
         return View::make('backend::generals.index', $data);
     }
 
@@ -256,7 +259,7 @@ class GeneralController extends BaseController
         }
         $data = $data->find($id);
         $columns = $this->detail_column;
-        $column_names = $this->detail_column_name;
+        $detail_column_name = $this->detail_column_name;
         $renames = $this->detail_column_rename;
         $rename_keys = isset($renames) ? array_keys($renames) : array();
         $selector_data = [];
@@ -269,7 +272,9 @@ class GeneralController extends BaseController
                 }
             }
         }
-        return view('backend::generals.detail', compact('data', 'columns', 'column_names', 'renames', 'rename_keys', 'selector_data'));
+        $column_names = GeneralUtil::queryComment($this->model);
+        $data['column_names'] = $column_names;
+        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data'));
     }
 
     /**
@@ -372,9 +377,12 @@ class GeneralController extends BaseController
                 $files[] = $v;
             }
         }
+        $column_names = GeneralUtil::queryComment($this->model);
+        $data['column_names'] = $column_names;
         $data = array(
             'route_name' => $this->route_name,
             'model_name' => $this->model_name,
+            'column_names' => $column_names,
             'edit_column' => $this->edit_column,
             'edit_column_name' => $this->edit_column_name,
             'edit_column_detail' => $this->edit_column_detail,

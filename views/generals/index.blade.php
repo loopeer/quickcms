@@ -24,9 +24,18 @@
                             <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
                                 <thead>
                                 <tr>
+                                @if(isset($index_column_name))
                                     @foreach($index_column_name as $name)
                                         <th>{{ $name }}</th>
                                     @endforeach
+                                @else
+                                    @foreach($index_column as $column)
+                                        <th>{{ $column_names[$column] }}</th>
+                                    @endforeach
+                                @endif
+                                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'])
+                                    <th>操作</th>
+                                @endif
                                 </tr>
                                 </thead>
                             </table>

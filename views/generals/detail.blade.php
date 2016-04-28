@@ -23,7 +23,7 @@
                     </style>
                     @foreach($columns as $key => $column)
                             <section>
-                                <label class="control-label"><strong>{{ $column_names[$key] }}：</strong></label>
+                                <label class="control-label"><strong>{{ $detail_column_name ? $detail_column_name[$key] : $column_names[$key] }}：</strong></label>
                                 @if(in_array($column, $rename_keys))
                                     @if($renames[$column]['type'] == 'amount')
                                         {{ $data->$column / 100 }}
