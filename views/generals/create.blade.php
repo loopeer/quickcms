@@ -4,6 +4,9 @@
         #ui-datepicker-div {
             z-index: 9999999!important;
         }
+        .select2-hidden-accessible {
+            display: none;
+        }
     </style>
 @endsection
 @section('content')
@@ -63,7 +66,7 @@
                                             <section>
                                                 <label class="label">{{ $column_name }}</label>
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
-                                                <label class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
+                                                <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
                                                     @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
                                                         <div class="input-group">
                                                             <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"

@@ -1,5 +1,11 @@
 @extends('backend::layouts.master')
-
+@section('style')
+    <style>
+        .select2-hidden-accessible {
+            display: none;
+        }
+    </style>
+@endsection
 @section('content')
     <!-- MAIN CONTENT -->
 <div id="content">
@@ -107,7 +113,25 @@
                                     <section>
                                         <label class="input">
                                             <label class="label">预览</label>
-                                            <select class="select2" name="" id="select2">
+                                            <select style="width:100%" class="select2">
+                                                <option value="AK">Alaska</option>
+                                                <option value="HI">Hawaii</option>
+                                                <option value="CT">Connecticut</option>
+                                                <option value="DE">Delaware</option>
+                                                <option value="FL">Florida</option>
+                                                <option value="GA">Georgia</option>
+                                                <option value="IN">Indiana</option>
+                                                <option value="ME">Maine</option>
+                                                <option value="MD">Maryland</option>
+                                                <option value="MA">Massachusetts</option>
+                                                <option value="MI">Michigan</option>
+                                                <option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
+                                                <option value="NY">New York</option>
+                                                <option value="NC">North Carolina</option>
+                                                <option value="OH">Ohio</option>
+                                                <option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option>
+                                                <option value="VT">Vermont</option><option value="VA">Virginia</option>
+                                                <option value="WV">West Virginia</option>
                                             </select>
                                         </label>
                                     </section>
