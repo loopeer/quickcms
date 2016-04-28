@@ -27,11 +27,23 @@ class GeneralUtil {
     }
 
     public static function queryComment($model) {
-        $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns '
-              + 'WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
+        $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
         $column_names = [];
         foreach($results as $result) {
-            $column_names[$result->COLUMN_NAME] = $result->COLUMN_COMMENT;
+            switch($result->COLUMN_NAME) {
+                case 'created_at':
+                    $column_names[$result->COLUMN_NAME] = '创建时间';
+                    break;
+                case 'updated_at':
+                    $column_names[$result->COLUMN_NAME] = '修改时间';
+                    break;
+                case 'deleted_at':
+                    $column_names[$result->COLUMN_NAME] = '删除时间';
+                    break;
+                default:
+                    $column_names[$result->COLUMN_NAME] = $result->COLUMN_COMMENT;
+                    break;
+            }
         }
         return $column_names;
     }

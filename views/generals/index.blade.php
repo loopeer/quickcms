@@ -58,6 +58,8 @@
                 "processing": false,
                 "serverSide": true,
                 "bStateSave": true,
+                "lengthMenu": [10, 25, 50, 100],
+                "pageLength": 25,
                 @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'])
                 "columnDefs": [ {
                     "targets": -1,
