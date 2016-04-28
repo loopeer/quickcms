@@ -264,7 +264,8 @@ class GeneralController extends BaseController
             foreach($renames as $key => $column_name) {
                 if($column_name['type'] == 'selector') {
                     $selector = Selector::where('enum_key', $column_name['param'])->first();
-                    $selector_data[$key] = json_decode($selector->enum_value, true);
+                    $selector_json =  SelectorController::parseSelector($selector->type, $selector->enum_value);
+                    $selector_data[$key] = json_decode($selector_json, true);
                 }
             }
         }
