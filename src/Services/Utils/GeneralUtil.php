@@ -10,6 +10,9 @@
  */
 namespace Loopeer\QuickCms\Services\Utils;
 
+use Loopeer\QuickCms\Http\Controllers\SelectorController;
+use Loopeer\QuickCms\Models\Selector;
+
 class GeneralUtil {
 
     public static function curdAction($curl_action = array()) {

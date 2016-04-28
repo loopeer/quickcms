@@ -1,4 +1,11 @@
 @extends('backend::layouts.master')
+@section('style')
+    <style>
+        #ui-datepicker-div {
+            z-index: 9999999!important;
+        }
+    </style>
+@endsection
 @section('content')
     <div id="content">
         <section id="widget-grid" class="">
@@ -55,52 +62,65 @@
                                         @foreach($edit_column_name as $key => $column_name)
                                             <section>
                                                 <label class="label">{{ $column_name }}</label>
-                                                <label class="input">
-                                                    @if (isset($edit_column_detail[$edit_column[$key]]['type']))
-                                                        @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
-                                                            <div class="input-group">
-                                                                <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"
-                                                                       value="{{ (!$model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['default_value'])) ? date('Y-m-d', time()) : $model_data[$edit_column[$key]] }}">
-                                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                            </div>
-                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
-                                                            <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
-                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'selector')
-                                                            <select class="select2" name="{{$edit_column[$key]}}" id="select2">
-                                                                @foreach($selector_data[$edit_column_detail[$edit_column[$key]]['selector_key']] as $k=>$v)
-                                                                    @if($model_data[$edit_column[$key]] == $k)
-                                                                    <option selected value="{{$k}}">{{$v}}</option>
-                                                                    @else
-                                                                    <option value="{{$k}}">{{$v}}</option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
-                                                            <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
-                                                            <!-- 实例化编辑器 -->
-                                                            <script type="text/javascript">
-                                                                var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
-                                                                    autoHeightEnabled: true,
-                                                                    lang:"zh-cn",
-                                                                    autoFloatEnabled: true,
-                                                                    initialFrameHeight: 500
-                                                                });
-                                                                ue.ready(function() {
-                                                                    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
-                                                                    //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-                                                                });
-                                                            </script>
-                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
-                                                            @include('backend::image.upload', ['image_name' => $edit_column[$key]])
-                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
-                                                            @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
-                                                        @else
-                                                            <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                @if (isset($edit_column_detail[$edit_column[$key]]['type']))
+                                                <label class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
+                                                    @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
+                                                        <div class="input-group">
+                                                            <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"
+                                                                   value="{{ (!$model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['default_value'])) ? date('Y-m-d', time()) : $model_data[$edit_column[$key]] }}">
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
+                                                        <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'selector')
+                                                        <select class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'select' }}" name="{{$edit_column[$key]}}" id="select2">
+                                                            @foreach($selector_data[$edit_column_detail[$edit_column[$key]]['selector_key']] as $k=>$v)
+                                                                @if($model_data[$edit_column[$key]] == $k)
+                                                                <option selected value="{{$k}}">{{$v}}</option>
+                                                                @else
+                                                                <option value="{{$k}}">{{$v}}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                        @if(isset($edit_column_detail[$edit_column[$key]]['style']) && $edit_column_detail[$edit_column[$key]]['style'] == 'select')
+                                                            <i></i>
                                                         @endif
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
+                                                        <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                        <!-- 实例化编辑器 -->
+                                                        <script type="text/javascript">
+                                                            var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                            var toolbars = new Array();
+                                                            if(toolbar != null) {
+                                                                toolbars = toolbar.split(',');
+                                                            }
+                                                            var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
+                                                                @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                    toolbars: [toolbars],
+                                                                @endif
+                                                                autoHeightEnabled: true,
+                                                                lang:"zh-cn",
+                                                                autoFloatEnabled: true,
+                                                                initialFrameHeight: 350
+                                                            });
+                                                            ue.ready(function() {
+                                                                ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                            });
+                                                        </script>
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
+                                                        @include('backend::image.upload', ['image_name' => $edit_column[$key]])
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
+                                                        @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
                                                     @else
                                                         <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif
                                                 </label>
+                                                @else
+                                                    <label class="input">
+                                                    <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                    </label>
+                                                @endif
                                             </section>
                                         @endforeach
                                     </fieldset>
