@@ -21,6 +21,7 @@ class QiniuUtil {
         if (is_null($key)) {
             return null;
         }
+	\Log::info(config('quickcms.qiniu_url'));
         return config('quickcms.qiniu_url') . '/' . $key;
     }
 }

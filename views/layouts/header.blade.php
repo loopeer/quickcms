@@ -10,7 +10,7 @@
         <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
             <li class="">
                 <a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
-                    <img src="{{ asset('loopeer/quickcms/img/avatars/sunny.png') }}" alt="John Doe" class="online" />
+                    <img src="{{ isset(Auth::admin()->get()->avatar) ? Auth::admin()->get()->avatar : asset('loopeer/quickcms/img/avatars/sunny.png') }}" alt="John Doe" class="online" />
                 </a>
                 <ul class="dropdown-menu pull-right">
                     <li>

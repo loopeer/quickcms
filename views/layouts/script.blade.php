@@ -9,7 +9,6 @@
 <script src="{{ asset('loopeer/quickcms/js/plugin/select2/select2.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/msie-fix/jquery.mb.browser.min.js') }}"></script>
-<script src="{{ asset('loopeer/quickcms/js/demo.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/app.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatables/dataTables.colVis.min.js') }}"></script>

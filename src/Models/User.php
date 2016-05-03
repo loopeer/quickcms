@@ -16,6 +16,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 
 class User extends Eloquent  implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -23,4 +24,17 @@ class User extends Eloquent  implements AuthenticatableContract, CanResetPasswor
 
     protected $fillable = ['name', 'email','password','remember_token','status','last_login'];
 
+    public function getAvatarAttribute(){
+	//if($this->attributes['avatar'] == null) {
+	//	return null;
+	//}
+	\Log::info($this->attributes['avatar']);
+	if(isset($this->attributes['avatar'])) {
+    	$image = QiniuUtil::buildQiqiuImageUrl($this->attributes['avatar']);
+	\Log::info($image);
+       	return $image;
+	} else {
+return null;
+	}
+    }
 }

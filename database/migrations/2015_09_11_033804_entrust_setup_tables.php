@@ -16,6 +16,7 @@ class EntrustSetupTables extends Migration
             $table->string('name', 50);
             $table->string('email', 50);
             $table->string('password', 100);
+            $table->string('avatar', 100)->nullable();
             $table->string('remember_token')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamp('last_login')->nullable();
