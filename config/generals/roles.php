@@ -14,7 +14,7 @@ return [
     'model_class' => 'Loopeer\QuickCms\Models\Role',
     'model_name' => '角色',
     'index_column' => array('id', 'name', 'display_name', 'description'),
-    'index_column_name' => array('编号', '名称', '显示名称', '描述', '操作'),
+    'index_column_name' => array('编号', '名称', '显示名称', '描述'),
     'edit_column' => array('name', 'display_name', 'description'),
     'edit_column_name' => array('名称', '显示名称', '描述'),
     'table_action' => array(
