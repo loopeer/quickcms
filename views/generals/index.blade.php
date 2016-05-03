@@ -158,6 +158,10 @@
                                 var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
                                 var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
                                 $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
+				
+                            @elseif($rename['type'] == 'limit')
+                                var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+				$('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, {{ $rename['param'] }}));
                             @endif
                         @endforeach
                     @endif
