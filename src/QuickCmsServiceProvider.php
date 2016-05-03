@@ -48,6 +48,7 @@ class QuickCmsServiceProvider extends ServiceProvider {
 	 */
 	public function register() {
 		$this->commands(['Loopeer\QuickCms\Console\Commands\InstallCommand']);
+		$this->commands(['Loopeer\QuickCms\Console\Commands\CreateBackendUser']);
     }
 
 }

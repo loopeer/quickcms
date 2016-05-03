@@ -53,9 +53,10 @@ update app/Http/Kernel.php,add protected $routeMiddleware []
 ```
 # Step3
 ```
-php artisan vendor:publish --force
-php artisan migrate
-php artisan quickcms:install
+php artisan vendor:publish --force //发布配置文件、资源文件等
+php artisan migrate //执行数据库建表
+php artisan quickcms:install //初始化用户权限菜单等db数据
+php artisan quickcms:create_backend_user //新增superadmin命令
 ```
 # Step4
 ```
