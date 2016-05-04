@@ -7,7 +7,8 @@
         "qiniu/qiniu": "dev-master",
         "loopeer/loopeer-log-viewer": "dev-master",
         "loopeer/lib": "dev-master",
-        "loopeer/laravel-ueditor": "dev-master"
+        "loopeer/laravel-ueditor": "dev-master",
+        "hyancat/sendcloud": "dev-master"
     },
     "autoload": {
         "psr-4": {

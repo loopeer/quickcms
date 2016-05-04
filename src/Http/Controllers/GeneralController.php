@@ -19,7 +19,6 @@ use Response;
 use Input;
 use View;
 use Redirect;
-use Loopeer\QuickCms\Http\Controllers\SelectorController;
 
 class GeneralController extends BaseController
 {
