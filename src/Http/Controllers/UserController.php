@@ -19,6 +19,8 @@ use Loopeer\QuickCms\Models\User;
 use Response;
 use DB;
 use Redirect;
+use Auth;
+use Hash;
 
 class UserController extends BaseController {
 
@@ -92,6 +94,33 @@ class UserController extends BaseController {
         $message = Session::get('message');
         return view('backend::users.create', compact('roles','action','user','message'));
     }
+
+public function update() {
+    $user = Auth::admin()->get();
+    $message = Session::get('message');
+    $image = array(
+	                'name' => 'image',
+			            'min_count' => 1,
+				                'max_count' => 1,
+						            'min_error_msg' => '至少上传%s张图片',
+							                'max_error_msg' => '最多只允许上传%s张图片',
+									            'editable' => true
+										            );
+    return view('backend::users.update', compact('user','message', 'image'));   
+}
+
+public function profile() {
+	$user = Auth::admin()->get();
+	$inputs = Input::all();
+	$user->name = $inputs['name'];
+	if($inputs['password'] != '') {
+		$user->password = Hash::make($inputs['password']);
+	}
+	$user->avatar = $inputs['image'][0];
+	$user->save();
+	$message = array('result' => true, 'content' => '保存成功');
+	return redirect('admin/users/update')->with('message', $message);
+}
 
     public function destroy($id) {
         $flag = User::find($id)->delete();

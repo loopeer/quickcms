@@ -61,6 +61,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('users/role/{id}', 'UserController@getRole');
    Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
    Route::get('users/checkEmail', 'UserController@checkEmail');
+   Route::get('users/update', 'UserController@update');
+   Route::post('users/update', 'UserController@profile');
    Route::resource('users', 'UserController');
 
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));

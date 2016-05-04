@@ -25,16 +25,11 @@ class User extends Eloquent  implements AuthenticatableContract, CanResetPasswor
     protected $fillable = ['name', 'email','password','remember_token','status','last_login'];
 
     public function getAvatarAttribute(){
-	//if($this->attributes['avatar'] == null) {
-	//	return null;
-	//}
-	\Log::info($this->attributes['avatar']);
-	if(isset($this->attributes['avatar'])) {
-    	$image = QiniuUtil::buildQiqiuImageUrl($this->attributes['avatar']);
-	\Log::info($image);
-       	return $image;
+	if(isset($this->attributes['avatar']) && $this->attributes['avatar'] != '') {
+    		$image = QiniuUtil::buildQiqiuImageUrl($this->attributes['avatar']);
+       		return $image;
 	} else {
-return null;
+		return $this->attributes['avatar'];
 	}
     }
 }

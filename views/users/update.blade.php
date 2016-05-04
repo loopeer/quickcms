@@ -4,26 +4,22 @@
         <section id="widget-grid" class="">
             <div class="row">
                 <article class="col-sm-12 col-md-12 col-lg-6">
+                    @include('backend::layouts.message')
                     <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                            <h2>用户管理 </h2>
+                            <h2>个人资料 </h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="{{ route('admin.users.store') }}" method="post" id="smart-form-register" class="smart-form">
+                                <form action="/admin/users/update" method="post" id="smart-form-register" class="smart-form">
                                     {!! csrf_field() !!}
-                                    <header>
-                                        编辑用户
-                                    </header>
                                     <fieldset>
-                                        <section>
-                                            <label class="input"> <i class="icon-append fa fa-envelope-o"></i>
-                                                <input type="email" name="email" placeholder="Email address">
-                                                <b class="tooltip tooltip-bottom-right">Needed to verify your account</b> </label>
-                                        </section>
+<section>
+               <label class="label">图片</label>
+              @include('backend::image.upload', ['image_name' => 'image'])         </section>
                                         <section>
                                             <label class="input"> <i class="icon-append fa fa-lock"></i>
                                                 <input type="password" name="password" placeholder="Password" id="password">
@@ -36,7 +32,7 @@
                                         </section>
                                         <section>
                                             <label class="input">
-                                                <input type="text" name="name" placeholder="name">
+                                                <input type="text" value="{{ $user->name }}" name="name" placeholder="name">
                                             </label>
                                         </section>
                                     </fieldset>
@@ -59,6 +55,8 @@
 @endsection
 
 @section('script')
+@include('backend::image.script')
+@include('backend::image.action', ['image' => $image, 'image_data' => $user->avatar])
 <script>
     $(document).ready(function() {
         var $registerForm = $("#smart-form-register").validate({
@@ -69,7 +67,6 @@
                     email: true
                 },
                 password: {
-                    required: true,
                     minlength: 3,
                     maxlength: 20
                 },
