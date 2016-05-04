@@ -8,46 +8,43 @@
                     <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                            <h2>创建模板</h2>
+                            <h2>发送普通邮件</h2>
                         </header>
                         @include('UEditor::head')
                         <div>
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="{{ $action }}" method="post" id="smart-form-register" class="smart-form client-form">
+                                <form action="{{ route('admin.sendcloud.send') }}" method="post" id="smart-form-register" class="smart-form client-form">
                                     {!! csrf_field() !!}
                                     <fieldset>
                                         <section>
-                                            <label class="label">模板名称</label>
+                                            <label class="label">发件人地址</label>
                                             <label class="input">
-                                                <input id="name" name="name" value="{{ isset($template) ? $template->name : '' }}">
+                                                <input type="email" id="from" name="from">
                                             </label>
                                         </section>
                                         <section>
-                                            <label class="label">调用名称</label>
+                                            <label class="label">发件人名称</label>
                                             <label class="input">
-                                                <input id="invokeName" name="invokeName" value="{{ isset($template) ? $template->invokeName : '' }}">
+                                                <input id="fromName" name="fromName">
                                             </label>
                                         </section>
                                         <section>
-                                            <label class="label">邮件标题</label>
+                                            <label class="label">默认回复地址</label>
                                             <label class="input">
-                                                <input id="subject" name="subject" value="{{ isset($template) ? $template->subject : '' }}">
+                                                <input type="email" id="replyTo" name="replyTo">
                                             </label>
                                         </section>
                                         <section>
-                                            <label class="label">邮件类型</label>
-                                            <div class="row">
-                                                <div class="col col-4">
-                                                    <label class="radio state-success"><input type="radio" name="templateType" value="0" @if(isset($template) && $template->templateType == 0) checked @endif><i></i>触发邮件</label>
-                                                    <label class="radio state-success"><input type="radio" name="templateType" value="1" @if(isset($template) && $template->templateType == 1) checked @endif @if(!isset($template)) checked @endif><i></i>批量邮件</label>
-                                                </div>
-                                            </div>
+                                            <label class="label">邮件主题</label>
+                                            <label class="input">
+                                                <input id="subject" name="subject">
+                                            </label>
                                         </section>
                                         <section>
-                                            <label class="label">模板内容</label>
-                                            <script id="container" name="html" type="text/plain">{!! isset($template) ? $template->html : '' !!}</script>
+                                            <label class="label">邮件内容</label>
+                                            <script id="container" name="html" type="text/plain"></script>
                                             <!-- 实例化编辑器 -->
                                             <script type="text/javascript">
                                                 var ue = UE.getEditor('container',{
@@ -65,13 +62,19 @@
                                             </script>
                                         </section>
                                         <section>
-                                            <label class="label">是否提交审核</label>
+                                            <label class="label">是否批量发送</label>
                                             <div class="row">
                                                 <div class="col col-4">
-                                                    <label class="radio state-success"><input type="radio" name="isSubmitAudit" value="1" checked><i></i>是</label>
-                                                    <label class="radio state-success"><input type="radio" name="isSubmitAudit" value="0"><i></i>否</label>
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="1" checked><i></i>是</label>
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="0"><i></i>否</label>
                                                 </div>
                                             </div>
+                                        </section>
+                                        <section id="to_content" style="display: none;">
+                                            <label class="label">收件人地址</label>
+                                            <label class="input">
+                                                <input type="email" id="to" name="to">
+                                            </label>
                                         </section>
                                     </fieldset>
                                     <footer>
@@ -79,7 +82,7 @@
                                             提交
                                         </button>
                                         <a href="{{route('admin.sendcloud.index')}}" class="btn btn-primary">
-                                        返回
+                                            返回
                                         </a>
                                     </footer>
                                 </form>
@@ -96,13 +99,21 @@
         $(document).ready(function() {
             pageSetUp();
 
+            $(".isGroup").click( function () {
+                var isGroup = $('input:radio[name="isGroup"]:checked').val();
+                //  alert(is_secondary);
+                if(isGroup == 1){
+                    $('#to_content').hide();
+                    $('#to_content').val("");
+                } else {
+                    $('#to_content').show();
+                }
+            });
 
             var $registerForm = $("#smart-form-register").validate({
                 // Rules for form validation
                 rules : {
-                    invokeName : {
-                        required : true
-                    },name : {
+                    from : {
                         required : true
                     },subject : {
                         required : true
@@ -111,12 +122,10 @@
 
                 // Messages for form validation
                 messages : {
-                    invokeName : {
-                        required : '必须填写模板调用名称'
-                    },name : {
-                        required : '必须填写模板名称'
+                    from : {
+                        required : '必须填写发件人地址'
                     },subject : {
-                        required : '必须填写邮件标题'
+                        required : '必须填写邮件主题'
                     }
                 },
 

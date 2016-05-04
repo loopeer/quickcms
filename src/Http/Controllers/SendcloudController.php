@@ -101,9 +101,13 @@ class SendcloudController extends BaseController
         return $message;
     }
 
-    public function send() {
-        $action = '';
+    public function normal() {
+        return view('backend::sendcloud.normal');
+    }
+
+    public function template() {
         $templates = $this->getTemplatesList();
+        $message = Session::get('message');
         $group_templates = [];
         $trigger_templates = [];
         foreach($templates as $template) {
@@ -113,7 +117,7 @@ class SendcloudController extends BaseController
                 $group_templates[] = $template;
             }
         }
-        return view('backend::sendcloud.send', compact('group_templates', 'trigger_templates', 'action'));
+        return view('backend::sendcloud.template', compact('group_templates', 'trigger_templates', 'message'));
     }
 
     private function getTemplateDetail($invokeName) {

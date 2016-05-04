@@ -9,7 +9,8 @@
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <p>
                         <a href="{{route('admin.sendcloud.create')}}" class="btn btn-primary">新建模板</a>
-                        <a href="/admin/sendcloud/send" class="btn btn-primary">发送邮件</a>
+                        {{--<a href="/admin/sendcloud/normal" class="btn btn-primary">发送普通邮件</a>--}}
+                        <a href="/admin/sendcloud/template" class="btn btn-primary">发送邮件</a>
                     </p>
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <header>

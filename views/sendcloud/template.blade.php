@@ -8,13 +8,13 @@
                     <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                            <h2>发送邮件</h2>
+                            <h2>发送模板邮件</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="{{ $action }}" method="post" id="smart-form-register" class="smart-form client-form">
+                                <form action="{{ route('admin.sendcloud.sendTemplate') }}" method="post" id="smart-form-register" class="smart-form client-form">
                                     {!! csrf_field() !!}
                                     <fieldset>
                                         <section>
@@ -36,6 +36,24 @@
                                                 </div>
                                             </div>
                                         </section>
+                                        {{--<section>--}}
+                                            {{--<label class="label">发件人地址</label>--}}
+                                            {{--<label class="input">--}}
+                                                {{--<input type="email" id="from" name="from">--}}
+                                            {{--</label>--}}
+                                        {{--</section>--}}
+                                        {{--<section>--}}
+                                            {{--<label class="label">发件人名称</label>--}}
+                                            {{--<label class="input">--}}
+                                                {{--<input id="fromName" name="fromName">--}}
+                                            {{--</label>--}}
+                                        {{--</section>--}}
+                                        {{--<section>--}}
+                                            {{--<label class="label">默认回复地址</label>--}}
+                                            {{--<label class="input">--}}
+                                                {{--<input type="email" id="replyTo" name="replyTo">--}}
+                                            {{--</label>--}}
+                                        {{--</section>--}}
                                         <section>
                                             <button type="button" id="preview" class="btn btn-primary btn-sm"> <i class="fa fa-plus"></i> 添加自定义字段</button>
                                         </section>
@@ -53,6 +71,21 @@
                                                 </section>
                                             </div>
                                         </div>
+                                        <section>
+                                            <label class="label">是否批量发送</label>
+                                            <div class="row">
+                                                <div class="col col-4">
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="1" checked><i></i>是</label>
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="0"><i></i>否</label>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <section id="to_content" style="display: none;">
+                                            <label class="label">收件人地址</label>
+                                            <label class="input">
+                                                <input type="email" id="to" name="to">
+                                            </label>
+                                        </section>
                                     </fieldset>
                                     <footer>
                                         <button type="submit" class="btn btn-primary">
@@ -76,34 +109,37 @@
         $(document).ready(function() {
             pageSetUp();
 
-//            var $registerForm = $("#smart-form-register").validate({
-//                // Rules for form validation
-//                rules : {
-//                    name : {
-//                        required : true
-//                    },display_name : {
-//                        required : true
-//                    },route : {
-//                        required : true
-//                    }
-//                },
-//
-//                // Messages for form validation
-//                messages : {
-//                    name : {
-//                        required : '必须填写权限名称'
-//                    },display_name : {
-//                        required : '必须填写显示名称'
-//                    },route : {
-//                        required : '必须填写路由'
-//                    }
-//                },
-//
-//                // Do not change code below
-//                errorPlacement : function(error, element) {
-//                    error.insertAfter(element.parent());
-//                }
-//            });
+            $(".isGroup").click( function () {
+                var isGroup = $('input:radio[name="isGroup"]:checked').val();
+                //  alert(is_secondary);
+                if(isGroup == 1){
+                    $('#to_content').hide();
+                    $('#to_content').val("");
+                } else {
+                    $('#to_content').show();
+                }
+            });
+
+            var $registerForm = $("#smart-form-register").validate({
+                // Rules for form validation
+                rules : {
+                    from : {
+                        required : true
+                    }
+                },
+
+                // Messages for form validation
+                messages : {
+                    from : {
+                        required : '必须填写发件人地址'
+                    }
+                },
+
+                // Do not change code below
+                errorPlacement : function(error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
         });
     </script>
 @endsection

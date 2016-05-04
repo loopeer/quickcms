@@ -101,7 +101,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::resource('systems', 'GeneralController');
 
-   Route::get('sendcloud/send', 'SendcloudController@send');
+   Route::get('sendcloud/template', 'SendcloudController@template');
+   Route::get('sendcloud/normal', 'SendcloudController@normal');
    Route::resource('sendcloud', 'SendcloudController');
    Route::get('sendcloud/{invokeName}/review', 'SendcloudController@review');
 });
