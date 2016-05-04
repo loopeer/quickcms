@@ -10,7 +10,7 @@
         <div class="row">
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 @if($curd_action['create'])
-                    <p><a href="/admin/{{ $route_name }}/create/" class="btn btn-primary">新增{{ $model_name }}</a></p>
+                    <p><a href="/admin/{{ $route_name }}/create/" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a></p>
                 @endif
                 <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                     <header>
@@ -71,7 +71,7 @@
                     '<ul class="dropdown-menu">'+
                     @if($curd_action['edit'])
                     '<li class="edit_btn">'+
-                    '<a href="javascript:void(0);" name="edit_btn">编辑</a>'+
+                    '<a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $route_name }}.edit">编辑</a>'+
                     '</li>'+
                     @if($curd_action['delete'])
                     '<li class="divider"></li>'+
@@ -451,7 +451,29 @@
             @endif
         @endforeach
 
+	var create_btn = $('#create_btn').attr('permission');	
+	    //var edit_btn = $('a[name=edit_btn]').first().attr('permission');
+	    //console.log($('#dt_basic a[name=edit_btn]').attr('permission'));
+	    //console.log($('a[name=edit_btn]'));
+	    $('.edit_btn').each(function() {
+		    console($(this).attr('class'));
+	    });
+	    var edit_btn = $("a[name='edit_btn']");
+	    console.log(document.getElementsByName("edit_btn")[0].getAttribute("href"));
+	    var disable_flag = true;
+	@foreach(Session::get('permissions') as $key => $permission)
+		if('{!! $permission->name !!}' == create_btn) {
+			disable_flag = false;
+		}	
+	@endforeach
+		if(disable_flag) {
+			$('#create_btn').attr('href', 'javascript:void(0)');
+			$('#create_btn').addClass('disabled');
+		}
     });
+	$(window).load(function() {
+		console.log($('#dt_basic tr td').length);
+	})
         function sprintf()
         {
             var arg = arguments,
