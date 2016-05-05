@@ -79,7 +79,7 @@
                     @endif
                     @if($curd_action['delete'])
                     '<li class="delete_btn">'+
-                    '<a href="javascript:void(0);" name="delete_btn">删除</a>'+
+                    '<a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $route_name }}.delete">删除</a>'+
                     '</li>'+
                     @if($curd_action['detail'])
                     '<li class="divider"></li>'+
@@ -87,7 +87,7 @@
                     @endif
                     @if($curd_action['detail'])
                     '<li class="detail_btn">'+
-                    '<a href="javascript:void(0);" name="detail_btn">详情</a>'+
+                    '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.detail">详情</a>'+
                     '</li>'+
                     @if(isset($actions))
                     '<li class="divider"></li>'+
@@ -96,7 +96,7 @@
                     @if(isset($actions))
                     @foreach($actions as $index => $action)
                     '<li class="' + '{{ $action['name'] }}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '">' + '{{ $action['display_name'] }}' + '</a>'+
+                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '" permission="{{ $action['permission'] }}">' + '{{ $action['display_name'] }}' + '</a>'+
                     '</li>'+
                     @if($index != count($actions) - 1)
                     '<li class="divider"></li>'+
@@ -166,17 +166,21 @@
                         @endforeach
                     @endif
                 }
+		permission();
             });
 
-            @if($curd_action['edit'])
+            if('{!! $curd_action["edit"] !!}') {
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
-                    var data = table.row($(this).parents('tr')).data();
-                    window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
+			if(isDisabled($(this))) {
+                    		var data = table.row($(this).parents('tr')).data();
+                    		window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
+			}
                 });
-            @endif
+		}
 
-            @if($curd_action['delete'])
+            if('{!! $curd_action['delete'] !!}') {
                 $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+		    	if(isDisabled($(this))) {
                     var data = table.row($(this).parents('tr')).data();
                     var delete_token = $('#delete_token').val();
                     var data_table = $('#dt_basic').dataTable();
@@ -208,10 +212,11 @@
                             }
                         });
                     }
+			}
                 });
-            @endif
+	    } 
 
-            @if($curd_action['detail'])
+            if('{!! $curd_action['detail'] !!}') {
             $('#content').after(
                     '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
@@ -233,12 +238,14 @@
             );
 
             $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
+			if(isDisabled($(this))) {
                 var data = table.row($(this).parents('tr')).data();
                 $("#detail_dialog .modal-title").html('查看详情');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#detail_dialog");
                 $(this).attr("data-action", "/admin/" + "{{ $route_name }}/" + data[0]);
                 $(this).attr("data-id",data[0]);
+			}
             });
 
             $('#detail_dialog').on('show.bs.modal', function(e) {
@@ -246,7 +253,7 @@
                 //populate the div
                 loadURL(action, $('#detail_dialog' + ' .modal-content .modal-body #left'));
             });
-            @endif
+	    }
 
             @if(!empty($actions))
             @foreach($actions as $action)
@@ -258,6 +265,7 @@
             @endif
             @if($action['type'] == 'confirm')
                 $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+			if(isDisabled($(this))) {
                     var data = table.row($(this).parents('tr')).data();
                     var page_info = table.page.info();
                     var page = page_info.page;
@@ -310,6 +318,7 @@
                             }
                         });
                     }
+			}
                 });
             @endif
             //
@@ -451,29 +460,7 @@
             @endif
         @endforeach
 
-	var create_btn = $('#create_btn').attr('permission');	
-	    //var edit_btn = $('a[name=edit_btn]').first().attr('permission');
-	    //console.log($('#dt_basic a[name=edit_btn]').attr('permission'));
-	    //console.log($('a[name=edit_btn]'));
-	    $('.edit_btn').each(function() {
-		    console($(this).attr('class'));
 	    });
-	    var edit_btn = $("a[name='edit_btn']");
-	    console.log(document.getElementsByName("edit_btn")[0].getAttribute("href"));
-	    var disable_flag = true;
-	@foreach(Session::get('permissions') as $key => $permission)
-		if('{!! $permission->name !!}' == create_btn) {
-			disable_flag = false;
-		}	
-	@endforeach
-		if(disable_flag) {
-			$('#create_btn').attr('href', 'javascript:void(0)');
-			$('#create_btn').addClass('disabled');
-		}
-    });
-	$(window).load(function() {
-		console.log($('#dt_basic tr td').length);
-	})
         function sprintf()
         {
             var arg = arguments,

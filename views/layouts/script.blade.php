@@ -32,4 +32,29 @@
             });
         });
     });
+
+    function permission() {
+var all_action_btn = $('a[permission]');
+$.each(all_action_btn, function(i) {
+	var all_action_flag = true;
+	@foreach(Session::get('permissions') as $key => $permission)
+	'{!! $permission_name = $permission->name !!}'
+	if('{!! $permission_name !!}' == $(this).attr('permission')) {
+		all_action_flag = false;
+	}
+	@endforeach
+	if(all_action_flag) {
+		if($(this).parent().is('li')) {                       	    
+			$(this).parent().addClass('disabled');
+		} else {
+			$(this).attr('href', 'javascript:void(0)');
+			$(this).addClass('disabled');
+		}
+	}
+});
+    }
+
+    function isDisabled(obj) {
+	    return !obj.parent().hasClass('disabled');
+    }
 </script>
