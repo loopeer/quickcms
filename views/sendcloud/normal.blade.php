@@ -62,11 +62,11 @@
                                             </script>
                                         </section>
                                         <section>
-                                            <label class="label">是否批量发送</label>
+                                            <label class="label">发送方式</label>
                                             <div class="row">
                                                 <div class="col col-4">
-                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="1" checked><i></i>是</label>
-                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="0"><i></i>否</label>
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="1" checked><i></i>批量发送</label>
+                                                    <label class="radio state-success"><input type="radio" class="isGroup" name="isGroup" value="0"><i></i>单独发送</label>
                                                 </div>
                                             </div>
                                         </section>

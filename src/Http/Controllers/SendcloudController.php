@@ -10,46 +10,42 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers;
 
+use Loopeer\QuickCms\Services\Email\SendcloudService;
 use Route;
 use Session;
 use Response;
 use Input;
 use Redirect;
 use Log;
+use Cache;
 
 class SendcloudController extends BaseController
 {
-    private $api_user;
-    private $api_key;
-    private $template_list_api;
-    private $template_detail_api;
-    private $template_create_api;
-    private $template_update_api;
-    private $template_delete_api;
-    private $template_submit_api;
+    protected $api_user;
+    protected $api_key;
+    protected $sendcloud;
 
     public function __construct() {
         $this->middleware('auth.permission:admin.sendcloud');
-        $this->api_user = config('sendcloud.api.user');
-        $this->api_key = config('sendcloud.api.key');
-        $this->template_list_api = 'https://sendcloud.sohu.com/apiv2/template/list?apiUser=' . $this->api_user . '&apiKey=' . $this->api_key;
-        $this->template_detail_api = 'https://sendcloud.sohu.com/apiv2/template/get?apiUser=' . $this->api_user . '&apiKey=' . $this->api_key . '&invokeName=';
-        $this->template_create_api = 'http://api.sendcloud.net/apiv2/template/add';
-        $this->template_update_api = 'http://api.sendcloud.net/apiv2/template/update';
-        $this->template_delete_api = 'http://api.sendcloud.net/apiv2/template/delete?apiUser=' . $this->api_user . '&apiKey=' . $this->api_key . '&invokeName=';
-        $this->template_submit_api = 'http://api.sendcloud.net/apiv2/template/submit?apiUser=' . $this->api_user . '&apiKey=' . $this->api_key . '&invokeName=';
+        $this->api_key = config('quickcms.sendcloud_api_key');
+        if(is_null(Cache::get('sendcloud_api_user'))) {
+            $api_users = config('quickcms.sendcloud_api_users');
+            Cache::forever('sendcloud_api_user', $api_users[0]);
+        }
+        $this->api_user = Cache::get('sendcloud_api_user');
+        $this->sendcloud = new SendcloudService($this->api_key, $this->api_user);
         parent::__construct();
     }
 
     public function index() {
-        $templates = $this->getTemplatesList();
+        $templates = $this->sendcloud->getTemplatesList();
         $message = Session::get('message');
         return view('backend::sendcloud.index', compact('templates', 'message'));
     }
 
     public function edit($invokeName) {
         $action = route('admin.sendcloud.store', array('is_edit' => true));
-        $template = $this->getTemplateDetail($invokeName);
+        $template = $this->sendcloud->getTemplateDetail($invokeName);
         $message = Session::get('message');
         return view('backend::sendcloud.create', compact('template', 'action', 'message'));
     }
@@ -60,9 +56,9 @@ class SendcloudController extends BaseController
         $data['apiKey'] = $this->api_key;
         $is_edit  = Input::get('is_edit', false);
         if ($is_edit) {
-            $ret = json_decode($this->updateTemplate($data));
+            $ret = json_decode($this->sendcloud->updateTemplate($data));
         } else {
-            $ret = json_decode($this->addTemplate($data));
+            $ret = json_decode($this->sendcloud->addTemplate($data));
         }
         if($ret->result) {
             $message = array('result' => true , 'content' => '操作成功');
@@ -80,7 +76,7 @@ class SendcloudController extends BaseController
     }
 
     public function destroy($invokeName) {
-        $ret = json_decode($this->deleteTemplate($invokeName));
+        $ret = json_decode($this->sendcloud->deleteTemplate($invokeName));
         if($ret->result) {
             $message = array('result' => true , 'content' => '删除模板成功');
         } else {
@@ -90,7 +86,7 @@ class SendcloudController extends BaseController
     }
 
     public function review($invokeName) {
-        $ret = $this->submitTemplate($invokeName);
+        $ret = $this->sendcloud->submitTemplate($invokeName);
         $status = Input::get('status');
         if($ret->result) {
             $content = $status == 0 ? '撤销审核成功' : '提交审核成功';
@@ -102,11 +98,12 @@ class SendcloudController extends BaseController
     }
 
     public function normal() {
-        return view('backend::sendcloud.normal');
+        $message = Session::get('message');
+        return view('backend::sendcloud.normal', compact('message'));
     }
 
     public function template() {
-        $templates = $this->getTemplatesList();
+        $templates = $this->sendcloud->getTemplatesList();
         $message = Session::get('message');
         $group_templates = [];
         $trigger_templates = [];
@@ -120,66 +117,15 @@ class SendcloudController extends BaseController
         return view('backend::sendcloud.template', compact('group_templates', 'trigger_templates', 'message'));
     }
 
-    private function getTemplateDetail($invokeName) {
-        $ret = json_decode(file_get_contents($this->template_detail_api . $invokeName));
-        $data = $ret->info->data;
-        return $data;
+    public function changeApiUser() {
+        $users = config('quickcms.sendcloud_api_users');
+        return view('backend::sendcloud.user', compact('users'));
     }
 
-    private function getTemplatesList() {
-        $ret = json_decode(file_get_contents($this->template_list_api));
-        $data = $ret->info->dataList;
-        return $data;
-    }
-
-    private function addTemplate($data) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->template_create_api);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Requested-With:XMLHttpRequest'));
-        curl_setopt($ch, CURLOPT_HEADER, 0);//是否显示头信息
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//是否自动显示返回的信息
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $ret = curl_exec($ch);
-        Log::info($ret);
-        curl_close($ch);
-        return $ret;
-    }
-
-    private function updateTemplate($data) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->template_update_api);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Requested-With:XMLHttpRequest'));
-        curl_setopt($ch, CURLOPT_HEADER, 0);//是否显示头信息
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//是否自动显示返回的信息
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        $ret = curl_exec($ch);
-        Log::info($ret);
-        curl_close($ch);
-        return $ret;
-    }
-
-    private function deleteTemplate($invokeName) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->template_delete_api . $invokeName);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $ret = curl_exec($ch);
-        Log::info($ret);
-        curl_close($ch);
-        return $ret;
-    }
-
-    private function submitTemplate($invokeName) {
-        $template = $this->getTemplateDetail($invokeName);
-        if($template->templateStat == 0) {
-            //撤销审核
-            $ret = json_decode(file_get_contents($this->template_submit_api . $invokeName . '&cancel=1'));
-        } else {
-            //提交审核
-            $ret = json_decode(file_get_contents($this->template_submit_api . $invokeName . '&cancel=0'));
-        }
-        return $ret;
+    public function saveApiUser() {
+        $api_user = Input::get('api_user');
+        Cache::forever('sendcloud_api_user', $api_user);
+        $message = array('result' => true , 'content' => 'API USER成功设置为' . $api_user);
+        return $message;
     }
 }

@@ -103,4 +103,7 @@ return [
             'statistic_value' => 1
         ),
     ),
+
+    'sendcloud_api_key' => env('SENDCLOUD_API_KEY'),
+    'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER'))
 ];

@@ -8,9 +8,10 @@
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <p>
+                        <a href="#" data-toggle="modal" data-action="/admin/sendcloud/apiuser" data-target="#user_dialog" class="btn btn-primary">设置API USER</a>
                         <a href="{{route('admin.sendcloud.create')}}" class="btn btn-primary">新建模板</a>
                         {{--<a href="/admin/sendcloud/normal" class="btn btn-primary">发送普通邮件</a>--}}
-                        <a href="/admin/sendcloud/template" class="btn btn-primary">发送邮件</a>
+                        <a href="/admin/sendcloud/template" class="btn btn-primary">发送模板邮件</a>
                     </p>
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <header>
@@ -90,6 +91,25 @@
         <input type="hidden" id="delete_token" value="{{ csrf_token() }}"/>
     </div>
     <!-- Modal -->
+    <div class="modal fade" id="user_dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">设置API USER</h4>
+                </div>
+                <div class="modal-body custom-scroll terms-body" style="padding: 10px;">
+                    <div id="left"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveApiUser"><i class="fa fa-check"></i>提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 @section('script')
     <script>
@@ -100,6 +120,45 @@
             $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
                 var data = table.row($(this).parents('tr')).data();
                 window.location.href = '/admin/sendcloud/' + data[1] + '/edit';
+            });
+
+            $('#user_dialog').on('show.bs.modal', function(e) {
+                var action = $(e.relatedTarget).data('action');
+                //populate the div
+                loadURL(action, $('#user_dialog .modal-content .modal-body #left'));
+            });
+
+            $("#saveApiUser").click(function(){
+                $("#saveApiUser").text("正在保存...");
+                var $form = $('#api_user_form');
+                $($form).submit(function(event) {
+                    var form = $(this);
+                    $.ajax({
+                        type: form.attr('method'),
+                        url: form.attr('action'),
+                        data: form.serialize()
+                    }).done(function(result) {
+                        // Optionally alert the user of success here...
+                        $("#saveApiUser").text("提交");
+                        $('#user_dialog').modal('hide');
+                        $("#tips").html(result.tip);
+                        if (result.result){
+                            $(".tips").html('<div class="alert alert-success fade in">'
+                            +'<button class="close" data-dismiss="alert">×</button>'
+                            +'<i class="fa-fw fa fa-check"></i>'
+                            +'<strong>成功</strong>'+' '+result.content+'。'
+                            +'</div>');
+                        }else{
+                            $(".tips").html('<div class="alert alert-danger fade in">'
+                            +'<button class="close" data-dismiss="alert">×</button>'
+                            +'<i class="fa-fw fa fa-warning"></i>'
+                            +'<strong>失败</strong>'+' '+result.content+'。'
+                            +'</div>');
+                        }
+                    });
+                    event.preventDefault(); // Prevent the form from submitting via the browser.
+                });
+                $form.trigger('submit'); // trigger form submit
             });
 
             $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
