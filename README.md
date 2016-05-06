@@ -65,6 +65,13 @@ localhost:8000/admin
 # Doc
 [Doc](https://github.com/loopeer/quickcms/wiki)
 
+# Artisan
+```
+php artisan quickcms:install
+php artisan quickcms:create_backend_user
+php artisan quickcms:init_permission 
+```
+
 # Coding
 [dengyongbin](https//github.com/dengyongbin)
 

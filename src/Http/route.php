@@ -34,6 +34,8 @@ Route::get('admin/pushes/search', 'PushesController@search');
 Route::get('admin/systems/search', 'GeneralController@search');
 Route::get('admin/generals/search', 'GeneralController@search');
 
+Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
+
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
       Route::resource('build', 'AutoBuildController');
@@ -71,6 +73,11 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::get('permissions/delete/{id}',array('as'=>'admin.permissions.delete','uses'=>'PermissionController@delete'));
    Route::post('permissions/update/{id}',array('as'=>'admin.permissions.update','uses'=>'PermissionController@update'));
+   Route::get('permissions/{id}/indexPermission', 'OperationPermissionController@index');
+   Route::get('permissions/{id}/createPermission', 'OperationPermissionController@create');
+   Route::get('permissions/{id}/editPermission/{permission_id}', 'OperationPermissionController@edit');
+   Route::post('permissions/{id}/deletePermission/{permission_id}', 'OperationPermissionController@destroy');
+   Route::post('permissions/{id}/storePermission', 'OperationPermissionController@store');
    Route::resource('permissions', 'PermissionController');
 
    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');

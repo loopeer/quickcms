@@ -7,11 +7,14 @@
             </div>
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <p><a href="{{route('admin.permissions.create')}}" class="btn btn-primary">新增权限</a></p>
+                    <p>
+                        <a href="/admin/permissions" class="btn btn-primary">返回</a>  
+                        <a href="/admin/permissions/{{ $id }}/createPermission" class="btn btn-primary">新增功能权限</a>
+                    </p>
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>权限列表</h2>
+                            <h2>功能权限列表</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -25,9 +28,6 @@
                                         <th>名称</th>
                                         <th>显示名称</th>
                                         <th>路由</th>
-                                        <th>上级权限</th>
-                                        <th>排序</th>
-                                        <th>图标</th>
                                         <th>描述</th>
                                         <th>操作</th>
                                     </tr>
@@ -55,31 +55,25 @@
                     "data": null,
                     "defaultContent": '<button name="edit_permission" class="btn btn-primary">编辑</button>' +
                     '&nbsp;' +
-                    '<button name="delete_permission" class="btn btn-primary">删除</button>' +
-                    '&nbsp;' +
-                    '<button name="permission_btn" class="btn btn-primary">功能权限</button>'
+                    '<button name="delete_permission" class="btn btn-primary">删除</button>' 
                 } ],
                 "ajax": {
-                    "url": "/admin/permissions/search"
+                    "url": "/admin/permissions/" + {{ $id }} + "/searchPermission"
                 }
             });
 
             $('#dt_basic tbody').on('click', 'button[name=edit_permission]', function () {
                 var data = table.row($(this).parents('tr')).data();
-                window.location.href = '/admin/permissions/' + data[0] + '/edit';
-            });
-            $('#dt_basic tbody').on('click', 'button[name=permission_btn]', function () {
-                var data = table.row($(this).parents('tr')).data();
-                window.location.href = '/admin/permissions/' + data[0] + '/indexPermission';
+                window.location.href = '/admin/permissions/' + {{ $id }} + '/editPermission/' + data[0];
             });
             $('#dt_basic tbody').on('click', 'button[name=delete_permission]', function () {
                 var data = table.row($(this).parents('tr')).data();
                 var delete_token = $('#delete_token').val();
                 if(confirm('确定要删除此权限吗?')) {
                     $.ajax({
-                        type: "DELETE",
+                        type: "post",
                         data: { '_token' : delete_token },
-                        url: '/admin/permissions/' + data[0], //resource
+                        url: '/admin/permissions/' + {{ $id }} + '/deletePermission/' + data[0], //resource
                         success: function(result) {
                             if (result.result){
                                 var nRow = $($(this).data('id')).closest("tr").get(0);
