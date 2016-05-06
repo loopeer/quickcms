@@ -29,7 +29,7 @@ class IndexController extends BaseController {
 
     public function __construct(){
         $this->middleware('auth.permission:admin.index',['only' => ['index','getLoginLog']]);
-        parent::__construct();
+//        parent::__construct();
     }
 
     public function index() {

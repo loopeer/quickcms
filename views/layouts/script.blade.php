@@ -39,12 +39,14 @@
             var all_action_btn = $('a[permission]');
             $.each(all_action_btn, function(i) {
                 var all_action_flag = true;
+                @if(Session::get('permissions'))
                 @foreach(Session::get('permissions') as $key => $permission)
                 '{!! $permission_name = $permission->name !!}'
                 if('{!! $permission_name !!}' == $(this).attr('permission')) {
                     all_action_flag = false;
                 }
                 @endforeach
+                    @endif
                 if(all_action_flag) {
                     if($(this).parent().is('li')) {                       	    
                         $(this).parent().addClass('disabled');
