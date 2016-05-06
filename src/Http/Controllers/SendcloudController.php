@@ -10,7 +10,7 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Loopeer\QuickCms\Services\Email\SendcloudService;
+use Loopeer\Lib\Sendcloud\SendcloudService;
 use Route;
 use Session;
 use Response;
