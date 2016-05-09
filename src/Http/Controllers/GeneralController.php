@@ -74,7 +74,6 @@ class GeneralController extends BaseController
         $this->index_multi_join = config($general_name . 'index_multi_join');
         $reflectionClass = new \ReflectionClass($this->model_class);
         $this->model = $reflectionClass->newInstance();
-        \Log::info('construct table value = ' . with($this->model)->getTable());
         $middleware = config($general_name . 'middleware', array());
         $this->detail_column = config($general_name . 'detail_column', array());
         $this->detail_column_name = config($general_name . 'detail_column_name', array());

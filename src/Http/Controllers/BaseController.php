@@ -40,10 +40,12 @@ class BaseController extends Controller
                 ->first();
             Session::push($route_url, $permission);
         }
-	$roles = Auth::admin()->get()->roles()->first();
-	$permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
-	$permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();
-	Session::put('permissions', $permissions);
+        if(!Session::has('permissions')) {
+            $roles = Auth::admin()->get()->roles()->first();
+            $permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
+            $permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();
+            Session::put('permissions', $permissions);
+        }
     }
 
     /**
