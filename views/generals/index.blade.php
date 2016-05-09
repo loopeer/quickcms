@@ -96,7 +96,7 @@
                     @if(isset($actions))
                     @foreach($actions as $index => $action)
                     '<li class="' + '{{ $action['name'] }}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '" permission="{{ $action['permission'] }}">' + '{{ $action['display_name'] }}' + '</a>'+
+                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '" permission="{{ $action['permission'] or '' }}">' + '{{ $action['display_name'] }}' + '</a>'+
                     '</li>'+
                     @if($index != count($actions) - 1)
                     '<li class="divider"></li>'+

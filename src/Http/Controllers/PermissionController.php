@@ -55,16 +55,32 @@ class PermissionController extends BaseController {
 
     public function store() {
         $inputs = Input::all();
+        $operation_permission = Input::get('operation_permission');
         $permission_id = Input::get('permission_id',null);
         if ($inputs['parent_id'] == 13) {
             $inputs['parent_id'] = 0;
         }
         $inputs['level'] = $inputs['parent_id'] == 0 ? 1 : 2;
         if(is_null($permission_id)){
+            array_except($inputs, array('operation_permission'));
             //创建
             $isset = Permission::where('name',$inputs['name'])->first();
             if(is_null($isset)){
-                Permission::create($inputs);
+                $permission = Permission::create($inputs);
+                if(isset($operation_permission) && $operation_permission == 'Y') {
+                    $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'detail' => '详情');
+                    $permissions = [];
+                    foreach($operation as $operation_key => $operation_value) {
+                        $permissions[] = array(                                                       
+                            'name' => $permission->name . '.' . $operation_key, 
+                            'display_name' => $operation_value,                            
+                            'route' => $permission->route . '/' . $operation_key, 
+                            'type' => 1,
+                            'parent_id' => $permission->id,
+                        );
+                    }
+                    DB::table('permissions')->insert($permissions);
+                }
                 $message = array('result' => true,'content' => '添加权限成功，重新登陆后即可更新左侧菜单栏');
                 return redirect('admin/permissions')->with('message', $message);
             }else{
