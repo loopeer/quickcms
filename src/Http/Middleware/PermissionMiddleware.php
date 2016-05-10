@@ -30,7 +30,7 @@ class PermissionMiddleware {
     public function handle($request, Closure $next,$permissions)
     {
         $admin = Auth::admin()->get();
-        if(!$admin->can($permissions)){
+        if(!$admin->can(explode(',', $permissions))){
             App::abort('404');
         }
         return $next($request);

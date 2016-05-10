@@ -266,6 +266,7 @@
             @if($action['type'] == 'confirm')
                 $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
 			if(isDisabled($(this))) {
+                console.log($(this).attr('permission'));
                     var data = table.row($(this).parents('tr')).data();
                     var page_info = table.page.info();
                     var page = page_info.page;
@@ -278,7 +279,7 @@
                     }
                     if (confirm('{{{ $action['confirm_msg'] or '是否继续操作?' }}}')) {
                         $.ajax({
-                            type: '{{{ $action['method'] or 'get' }}}',
+                            type: '{{{ $action['method'] or 'post' }}}',
                             @if(isset($action['data']))
                                 data: {
                                     @foreach($action['data'] as $data_key => $data_val)

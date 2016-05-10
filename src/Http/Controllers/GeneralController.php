@@ -19,6 +19,7 @@ use Response;
 use Input;
 use View;
 use Redirect;
+use Illuminate\Http\Request;
 
 class GeneralController extends BaseController
 {
@@ -50,9 +51,10 @@ class GeneralController extends BaseController
     protected $detail_multi_join;
     protected $detail_style;
 
-    public function __construct() {
+    public function __construct(Request $request) {
         $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
             Route::getCurrentRoute()->getPath());
+        GeneralUtil::filterOperationPermission($request, null, $this->route_name);
         $general_name = 'generals.' . $this->route_name . '.';
         $this->index_column = config($general_name . 'index_column');
         $this->index_column_format = config($general_name . 'index_column_format');
@@ -81,9 +83,9 @@ class GeneralController extends BaseController
         $this->detail_multi_column = config($general_name . 'detail_multi_column');
         $this->detail_column_rename = config($general_name . 'detail_column_rename');
         $this->detail_style =  config($general_name . 'detail_style');
-        foreach ($middleware as $value) {
-            $this->middleware('auth.permission:' . $value);
-        }
+        //foreach ($middleware as $value) {
+            //$this->middleware('auth.permission:' . implode(',', $middleware));
+        //}
         parent::__construct();
     }
 

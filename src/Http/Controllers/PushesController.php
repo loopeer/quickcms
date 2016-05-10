@@ -22,7 +22,7 @@ use Response;
 class PushesController extends BaseController {
 
     public function __construct(){
-        $this->middleware('auth.permission:admin.pushes');
+        $this->middleware('auth.permission:admin.pushes.index');
         parent::__construct();
     }
 

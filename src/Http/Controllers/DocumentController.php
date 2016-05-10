@@ -22,7 +22,7 @@ class DocumentController extends BaseController
 
     public function __construct() {
         $this->middleware('auth.permission:maintenance');
-        $this->middleware('auth.permission:admin.document');
+        $this->middleware('auth.permission:admin.document.index');
         parent::__construct();
     }
 
