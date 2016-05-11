@@ -55,7 +55,7 @@ class EntrustSetupTables extends Migration
             $table->string('icon', 50);
             $table->string('route', 200);
             $table->integer('sort');
-            $table->tinyint('type')->default(0);
+            $table->tinyInteger('type')->default(0);
             $table->timestamps();
         });
 
