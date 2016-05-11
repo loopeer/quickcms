@@ -19,6 +19,7 @@ return [
     'admin_pwd_salt' => '',
     'api_sign_validate' => false,
     'sql_log_switch' => true,
+    'permission_switch' => true,
 
     // qiniu config
     'qiniu_access_key' => env('qiniu_access_key'),
