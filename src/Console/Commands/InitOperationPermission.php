@@ -45,7 +45,7 @@ class InitOperationPermission extends Command
         foreach($parent_permissions as $parent_key => $parent_value) {
             foreach($operation as $operate_key => $operate_value) {
                 $permission[] = array(
-                    'name' => $parent_value->name . '.' . $operate_key,
+                    'name' => str_replace('.index', '', $parent_value->name) . '.' . $operate_key,
                     'display_name' => $operate_value, 
                     'route' => $parent_value->route . '/' . $operate_key, 
                     'type' => 1,

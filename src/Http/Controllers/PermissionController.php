@@ -72,7 +72,7 @@ class PermissionController extends BaseController {
                     $permissions = [];
                     foreach($operation as $operation_key => $operation_value) {
                         $permissions[] = array(                                                       
-                            'name' => $permission->name . '.' . $operation_key, 
+                            'name' => str_replace('.index', '', $permission->name) . '.' . $operation_key, 
                             'display_name' => $operation_value,                            
                             'route' => $permission->route . '/' . $operation_key, 
                             'type' => 1,

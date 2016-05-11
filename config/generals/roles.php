@@ -22,6 +22,8 @@ return [
             'type' => 'dialog',
             'name' => 'edit_permission',
             'target' => 'edit_permission',
+            'method' => 'get',
+            'permission' => 'admin.roles.permissions',
             'dialog_title' => '分配权限',
             'display_name' => '分配权限',
             'url' => '/admin/roles/permissions/',
