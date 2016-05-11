@@ -10,6 +10,7 @@
  */
 return [
     //角色管理
+    'curd_action' => array('detail' => false),
     'middleware' => array('admin.roles'),
     'model_class' => 'Loopeer\QuickCms\Models\Role',
     'model_name' => '角色',

@@ -73,7 +73,7 @@
                     '<li class="edit_btn">'+
                     '<a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $route_name }}.edit">编辑</a>'+
                     '</li>'+
-                    @if($curd_action['delete'])
+                    @if($curd_action['edit'])
                     '<li class="divider"></li>'+
                     @endif
                     @endif
@@ -81,7 +81,7 @@
                     '<li class="delete_btn">'+
                     '<a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $route_name }}.delete">删除</a>'+
                     '</li>'+
-                    @if($curd_action['detail'])
+                    @if($curd_action['delete'])
                     '<li class="divider"></li>'+
                     @endif
                     @endif
@@ -89,7 +89,7 @@
                     '<li class="detail_btn">'+
                     '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.detail">详情</a>'+
                     '</li>'+
-                    @if(isset($actions))
+                    @if($curd_action['detail'])
                     '<li class="divider"></li>'+
                     @endif
                     @endif
