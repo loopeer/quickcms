@@ -26,7 +26,7 @@ class RoleController extends BaseController {
 
     public function __construct(){
         $this->middleware('auth.permission:system');
-        $this->middleware('auth.permission:admin.roles');
+        $this->middleware('auth.permission:admin.roles.index');
         parent::__construct();
     }
 

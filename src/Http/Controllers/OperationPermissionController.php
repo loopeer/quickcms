@@ -51,7 +51,7 @@ class OperationPermissionController extends BaseController {
         $permission_id = Input::get('permission_id',null);
         $inputs['parent_id'] = $id;
         $inputs['type'] = 1;
-        if(is_null($permission_id)){
+        if($permission_id == null){
             //创建
             $isset = Permission::where('name',$inputs['name'])->first();
             if(is_null($isset)){

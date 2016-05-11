@@ -14,7 +14,7 @@ use Zizaco\Entrust\EntrustPermission;
 
 class Permission extends EntrustPermission
 {
-    protected $fillable = ['id','parent_id', 'name', 'display_name','route','sort','icon','description','level'];
+    protected $fillable = ['id','parent_id', 'name', 'display_name','route','sort','icon','description','level','type'];
 
     public function menus() {
         return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id')->orderBy('sort')->where('type', 0);
