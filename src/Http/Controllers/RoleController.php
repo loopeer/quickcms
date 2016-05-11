@@ -103,7 +103,7 @@ class RoleController extends BaseController {
         $role = Role::find($id);
         $perents = Permission::with('menus')->where('parent_id',0)->get();
         $permission_ids = PermissionRole::where('role_id',$role->id)->lists('permission_id')->all();
-        return view('backend::roles.permissions', compact('perents','role','permission_ids'));
+        return view('backend::roles.permission', compact('perents','role','permission_ids'));
     }
 
     public function savePermissions($id){

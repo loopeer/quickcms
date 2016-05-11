@@ -17,10 +17,14 @@ class Permission extends EntrustPermission
     protected $fillable = ['id','parent_id', 'name', 'display_name','route','sort','icon','description','level','type'];
 
     public function menus() {
-        return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id')->orderBy('sort')->where('type', 0);
+        return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id')->orderBy('sort')->where('type', 0)->with('actions');
     }
 
-    public function parent(){
+    public function parent() {
         return $this->belongsTo('Loopeer\QuickCms\Models\Permission','parent_id');
+    }
+
+    public function actions() {
+        return $this->hasMany('Loopeer\QuickCms\Models\Permission', 'parent_id')->where('type', 1);
     }
 }
