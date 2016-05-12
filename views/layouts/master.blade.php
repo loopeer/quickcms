@@ -13,7 +13,6 @@
 @include('backend::layouts.header')
 @include('backend::layouts.nav')
 <div id="main" role="main">
-    @include('backend::layouts.ribbon')
     @yield('content')
 </div>
 @include('backend::layouts.script')

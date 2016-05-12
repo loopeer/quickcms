@@ -71,7 +71,9 @@ class AdminMiddleware{
                 $items = Permission::where('parent_id', $menu->id)->where('type', 0)->get();
                 if (!is_null($items) && count($items)>0) {
                     foreach ($items as $item_key => $item) {
+                        \Log::info($item->name);
                         if (!$user->can($item->name)) {
+                            \Log::info($item->name);
                             unset($menus[$key]['menus'][$item_key]);
                         }
                     }

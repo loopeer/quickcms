@@ -39,7 +39,7 @@ class InitOperationPermission extends Command
      */
     public function handle()
     {
-        $parent_permissions = Permission::where('type', 0)->where('route', '!=', '#')->get();
+        $parent_permissions = Permission::where('type', 0)->where('route', '!=', '#')->where('route', '!=', '/admin/index')->get();
         $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'detail' => '详情');
         $permission = [];
         foreach($parent_permissions as $parent_key => $parent_value) {

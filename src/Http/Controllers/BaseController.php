@@ -33,14 +33,15 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        $route_url = '/' . Route::getCurrentRoute()->getPath();
-        if(!Session::has($route_url)){
+        //$route_url = '/' . Route::getCurrentRoute()->getPath();
+        /*if(!Session::has($route_url)){
             $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
                 ->where('route', $route_url)
                 ->first();
             Session::push($route_url, $permission);
-        }
+        }*/
         if(!Session::has('permissions')) {
+            \Log::info('permission session not exist');
             $roles = Auth::admin()->get()->roles()->first();
             $permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
             $permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();

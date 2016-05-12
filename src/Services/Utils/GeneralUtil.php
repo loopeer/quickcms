@@ -57,31 +57,8 @@ class GeneralUtil {
         $path = str_replace("/", ".", $path);
         $route = Route::currentRouteName();
         $user = Auth::admin()->get();
-        if($route != 'admin.' . $route_name . '.search' && !$user->can($route)) {
+        if($route != 'admin.' . $route_name . '.search' && $route != 'admin.' . $route_name . '.store'  && !$user->can($route)) {
             App::abort('403');
         }
-        /*switch($method) {
-            case 'GET':
-                $path = preg_replace('/.{' . $route_name . '}/', '', $path);
-                \Log::info(Route::currentRouteName());
-                if($path == 'admin.' . $route_name) {
-                    $path = 'admin.' . $route_name . '.detail';
-                }
-                if($path !='admin.test.search' && !$user->can($path)) {
-                    App::abort('403', 'Unauthorized action.');
-                    //return view('backend::errors.403');
-                } 
-                \Log::info($path);
-                break;
-            case 'POST':
-                break;
-            case 'DELETE':
-                if(!$user->can($path)) {
-                    App::abort('403', 'Unauthorized action.');
-                }
-                break;
-            default:
-                break;
-        }*/
     }
 }
