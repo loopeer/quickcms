@@ -20,6 +20,8 @@ use Input;
 use View;
 use Redirect;
 use Illuminate\Http\Request;
+use Exception;
+use Log;
 
 class GeneralController extends BaseController
 {
@@ -52,40 +54,44 @@ class GeneralController extends BaseController
     protected $detail_style;
 
     public function __construct(Request $request) {
-        $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
-            Route::getCurrentRoute()->getPath());
-        GeneralUtil::filterOperationPermission($request, null, $this->route_name);
-        $general_name = 'generals.' . $this->route_name . '.';
-        $this->index_column = config($general_name . 'index_column');
-        $this->index_column_format = config($general_name . 'index_column_format');
-        $this->index_column_name = config($general_name . 'index_column_name');
-        $this->index_column_rename = config($general_name . 'index_column_rename', array());
-        $this->edit_column = config($general_name . 'edit_column');
-        $this->edit_column_name = config($general_name . 'edit_column_name');
-        $this->edit_column_detail = config($general_name . 'edit_column_detail');
-        $this->model_class = config($general_name . 'model_class');
-        $this->model_name = config($general_name . 'model_name');
-        $this->actions = config($general_name . 'table_action');
-        $this->sort = config($general_name . 'sort');
-        $this->where = config($general_name . 'index_where');
-        $this->edit_hidden = config($general_name . 'edit_hidden');
-        $this->edit_editor = config($general_name . 'edit_editor');
-        $this->curd_action = config($general_name . 'curd_action');
-        $this->index_multi = config($general_name . 'index_multi');
-        $this->index_multi_column = config($general_name . 'index_multi_column');
-        $this->index_multi_join = config($general_name . 'index_multi_join');
-        $reflectionClass = new \ReflectionClass($this->model_class);
-        $this->model = $reflectionClass->newInstance();
-        $middleware = config($general_name . 'middleware', array());
-        $this->detail_column = config($general_name . 'detail_column', array());
-        $this->detail_column_name = config($general_name . 'detail_column_name', array());
-        $this->detail_multi_join = config($general_name . 'detail_multi_join');
-        $this->detail_multi_column = config($general_name . 'detail_multi_column');
-        $this->detail_column_rename = config($general_name . 'detail_column_rename');
-        $this->detail_style =  config($general_name . 'detail_style');
-        //foreach ($middleware as $value) {
+        try {
+            $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
+                Route::getCurrentRoute()->getPath());
+            GeneralUtil::filterOperationPermission($request, null, $this->route_name);
+            $general_name = 'generals.' . $this->route_name . '.';
+            $this->index_column = config($general_name . 'index_column');
+            $this->index_column_format = config($general_name . 'index_column_format');
+            $this->index_column_name = config($general_name . 'index_column_name');
+            $this->index_column_rename = config($general_name . 'index_column_rename', array());
+            $this->edit_column = config($general_name . 'edit_column');
+            $this->edit_column_name = config($general_name . 'edit_column_name');
+            $this->edit_column_detail = config($general_name . 'edit_column_detail');
+            $this->model_class = config($general_name . 'model_class');
+            $this->model_name = config($general_name . 'model_name');
+            $this->actions = config($general_name . 'table_action');
+            $this->sort = config($general_name . 'sort');
+            $this->where = config($general_name . 'index_where');
+            $this->edit_hidden = config($general_name . 'edit_hidden');
+            $this->edit_editor = config($general_name . 'edit_editor');
+            $this->curd_action = config($general_name . 'curd_action');
+            $this->index_multi = config($general_name . 'index_multi');
+            $this->index_multi_column = config($general_name . 'index_multi_column');
+            $this->index_multi_join = config($general_name . 'index_multi_join');
+            $reflectionClass = new \ReflectionClass($this->model_class);
+            $this->model = $reflectionClass->newInstance();
+            $middleware = config($general_name . 'middleware', array());
+            $this->detail_column = config($general_name . 'detail_column', array());
+            $this->detail_column_name = config($general_name . 'detail_column_name', array());
+            $this->detail_multi_join = config($general_name . 'detail_multi_join');
+            $this->detail_multi_column = config($general_name . 'detail_multi_column');
+            $this->detail_column_rename = config($general_name . 'detail_column_rename');
+            $this->detail_style =  config($general_name . 'detail_style');
+            //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
-        //}
+            //}
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
         parent::__construct();
     }
 
