@@ -59,6 +59,14 @@ return [
     'code_no_version_upgrade' => 16,
     'message_no_version_upgrade' => '已是最新版本',
 
+    'message_account_not_exist' => '账号不存在',
+    'message_password_error' => '密码错误',
+    'message_phone_is_register' => '该手机号已被注册',
+    'message_captcha_error' => '验证码输入错误',
+    'message_oldPassword_error' => '旧密码输入错误',
+    'message_update_success' => '修改成功',
+    'code_black_account' => 20, 
+    'message_black_account' => '账号已禁用',
     'code_precondition_failed' => 412,
 
     'REQUEST_PARAMETER_USER_ID' => 'account_id',
