@@ -33,7 +33,7 @@
                                         @foreach($menu->actions as $action)
                                             <li>
                                                 <span> <label class="checkbox inline-block">
-                                                        <input type="checkbox" name="{{{ $action->name }}}" value="{{$menu->id}}" @if(in_array($action->id,$permission_ids)) checked @endif>
+                                                        <input type="checkbox" name="{{{ $action->name }}}" value="{{$action->id}}" @if(in_array($action->id,$permission_ids)) checked @endif>
                                                         <i></i>{{ $action->display_name }}</label>
                                                 </span>
                                             </li>
