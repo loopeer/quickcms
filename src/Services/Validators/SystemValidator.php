@@ -9,21 +9,21 @@ namespace Loopeer\QuickCms\Services\Validators;
 
 class SystemValidator extends Validator {
 
-    public static $feedbackRules = [
+    public $feedbackRules = [
         'content' => 'required|max:200',
     ];
 
-    public static $checkVersionRules = [
+    public $checkVersionRules = [
         'version_code' => 'required',
         'platform' => 'required',
     ];
 
-    public static $registerPushRules = [
+    public $registerPushRules = [
         'app_channel_id' => 'required',
         'app_user_id' => 'required',
     ];
 
-    public static $labelRules = [
+    public $labelRules = [
         'label_type' => 'required',
     ];
 }
