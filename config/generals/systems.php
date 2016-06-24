@@ -14,7 +14,7 @@ return [
     'model_class' => 'Loopeer\QuickCms\Models\System',
     'model_name' => '设置',
     'index_column' => array('id', 'system_key', 'system_value', 'description',),
-    'index_column_name' => array('ID', 'system_key', 'system_value', '描述', '选项',),
+    'index_column_name' => array('ID', 'system_key', 'system_value', '描述'),
     'edit_column' => array('system_key', 'system_value', 'description'),
     'edit_column_name' => array('system_key', 'system_value', '描述'),
     'edit_column_detail' => array(
