@@ -26,7 +26,7 @@ class SendcloudController extends BaseController
     protected $sendcloud;
 
     public function __construct() {
-        $this->middleware('auth.permission:admin.sendcloud');
+        $this->middleware('auth.permission:admin.sendcloud.index');
         $this->api_key = config('quickcms.sendcloud_api_key');
         if(is_null(Cache::get('sendcloud_api_user'))) {
             $api_users = config('quickcms.sendcloud_api_users');
