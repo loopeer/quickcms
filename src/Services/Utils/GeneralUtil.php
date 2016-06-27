@@ -12,6 +12,7 @@ namespace Loopeer\QuickCms\Services\Utils;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Loopeer\QuickCms\Models\Permission;
 use Route;
 use App;
 
@@ -57,8 +58,17 @@ class GeneralUtil {
         $path = str_replace("/", ".", $path);
         $route = Route::currentRouteName();
         $user = Auth::admin()->get();
-        if($route != 'admin.' . $route_name . '.search' && $route != 'admin.' . $route_name . '.store'  && !$user->can($route)) {
-            App::abort('403');
+        if(config('quickcms.permission_switch')) {
+            if($route != 'admin.' . $route_name . '.search' && $route != 'admin.' . $route_name . '.store'  && !$user->can($route)) {
+                App::abort('403');
+            }
+        } else {
+            $permissions = Permission::where('name', $route)->first();
+            if(isset($permissions) && $permissions->type == 0) {
+                if(!$user->can($route)) {
+                    App::abort('403');
+                }
+            }
         }
     }
 }

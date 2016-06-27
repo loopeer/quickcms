@@ -63,6 +63,6 @@
 	    if(permission_switch == '1') {
 	        return !obj.parent().hasClass('disabled');
 	    }
-	    return false;
+	    return true;
     }
 </script>
