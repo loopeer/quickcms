@@ -91,7 +91,7 @@ class GeneralController extends BaseController
             //}
         } catch (Exception $e) {
             Log::info($e->getMessage());
-            App::abort('403');
+//            App::abort('403');
         }
         parent::__construct();
     }
