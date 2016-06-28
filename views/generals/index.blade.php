@@ -117,23 +117,25 @@
                 for (var i=0; i < $data.length; i++) {
                     @if(isset($actions))
                     @foreach($actions as $action)
-                        @if($action['type'] == 'confirm')
-                        @foreach($action['where'] as $where_key => $where_val)
-                            {{ $list_td = array_flip($index_column)[$where_key]}}
-                            var flag = false;
-                            @foreach($where_val as $val)
-                                if($data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {
-                                    flag = true;
-                                }
-                            @endforeach
-                            if(!flag) {
-                                $('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();
-                                $('tr:eq('+(i+1)+') '+'.divider:last').hide();
-                            }
-                        @endforeach
-                        @endif
+                    @if($action['type'] == 'confirm' || $action['type'] == 'dialog')
+                    @if(isset($action['where']))
+                    @foreach($action['where'] as $where_key => $where_val)
+                    {{ $list_td = array_flip($index_column)[$where_key]}}
+                    var flag = false;
+                    @foreach($where_val as $val)
+                    if($data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {
+                        flag = true;
+                    }
+                    @endforeach
+                    if(!flag) {
+                        $('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();
+                        $('tr:eq('+(i+1)+') '+'.divider:last').hide();
+                    }
                     @endforeach
                     @endif
+                    @endif
+                @endforeach
+                @endif
 
                     @if(is_array($index_column_rename))
                         @foreach($index_column_rename as $column => $rename)
@@ -436,7 +438,7 @@
                     '</button>' +
                     '<h4 class="modal-title"></h4>' +
                     '</div>' +
-                    '<div class="modal-body custom-scroll terms-body"  style="{{isset($rename['param']['height']) ? "max-height: " . $rename['param']['height'] : "min-height: 280px;"}}>' +
+                    '<div class="modal-body custom-scroll terms-body"  style="{{isset($rename['param']['height']) ? "max-height: " . $rename['param']['height'] : "min-height: 280px;"}}">' +
                     '<div id="left">' +
                     '</div>' +
                     '</div>' +
