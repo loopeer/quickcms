@@ -26,6 +26,10 @@ class DocumentController extends BaseController
         parent::__construct();
     }
 
+    public function show() {
+
+    }
+    
     public function search() {
         $ret = self::simplePage(['id', 'document_key','title', 'created_at'], new Document());
         return Response::json($ret);
