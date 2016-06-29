@@ -26,7 +26,7 @@ class DocumentController extends BaseController
         parent::__construct();
     }
 
-    public function show() {
+    public function show($id) {
 
     }
     
