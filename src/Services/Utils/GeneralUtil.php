@@ -33,7 +33,7 @@ class GeneralUtil {
     public static function queryComment($model) {
         try{
             $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
-        } catch(Exception $ex) {
+        } catch(\Exception $ex) {
             return [];
         }
         $column_names = [];
