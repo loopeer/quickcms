@@ -80,7 +80,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::post('permissions/{id}/storePermission', 'OperationPermissionController@store');
    Route::resource('permissions', 'PermissionController');
 
-   Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+   Route::get('log', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
    //运维管理
    Route::get('actionLogs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));

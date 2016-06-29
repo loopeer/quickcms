@@ -31,7 +31,11 @@ class GeneralUtil {
     }
 
     public static function queryComment($model) {
-        $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
+        try{
+            $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
+        } catch(Exception $ex) {
+            return [];
+        }
         $column_names = [];
         foreach($results as $result) {
             switch($result->COLUMN_NAME) {
