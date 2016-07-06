@@ -26,4 +26,8 @@ class SystemValidator extends Validator {
     public $labelRules = [
         'label_type' => 'required',
     ];
+
+    public $phoneRules = [
+        'phone' => array('required'),
+    ];
 }

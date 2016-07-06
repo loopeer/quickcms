@@ -34,6 +34,11 @@ return [
     'baidu_push_ios_secret_key' => env('baidu_push_ios_secret_key'),
     'baidu_push_sdk_deploy_status' => env('baidu_push_sdk_deploy_status'),
 
+    'account_model_class' => ,
+    'push_model_class' => ,
+    'feedback_model_class' => ,
+    'system_model_class' => ,
+
     'code_success' => 0,
     'message_success' => '请求成功',
     'message_update_success' => '修改成功',

@@ -10,7 +10,6 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
-use App\Models\Api\Account;
 use Loopeer\QuickCms\Services\Validators\AccountValidator as AccountValidation;
 use Auth;
 use DB;
@@ -24,9 +23,12 @@ use Loopeer\QuickCms\Http\Controllers\Api\BaseController;
 class AccountController extends BaseController {
 
     protected $validation;
+    protected $model;
 
     public function __construct(AccountValidation $validation) {
         $this->validation = $validation;
+        $reflectionClass = new \ReflectionClass(config('quickcms.account_model_class'));
+        $this->model = $reflectionClass->newInstance();
     }
 
     /**
@@ -40,7 +42,7 @@ class AccountController extends BaseController {
         $phone = Input::get('phone');
         $password = Input::get('password');
         // 验证帐号
-        $account = Account::where('phone', $phone)->first();
+        $account = $this->model->where('phone', $phone)->first();
         if (is_null($account)) {
             return ApiResponse::errorPreCondition(config('quickcms.message_account_not_exist'));
         }
@@ -73,7 +75,7 @@ class AccountController extends BaseController {
         $password = Input::get('password');
 
         // 该手机号已被注册
-        $account_phone = Account::where('phone', $phone)->first();
+        $account_phone = $this->model->where('phone', $phone)->first();
         if (!is_null($account_phone)) {
             return ApiResponse::errorPreCondition(config('quickcms.message_phone_is_register'));
         }
@@ -82,7 +84,7 @@ class AccountController extends BaseController {
             return ApiResponse::errorPreCondition(config('quickcms.message_captcha_error'));
         }
         $token = self::generateToken();
-        $account = Account::create(array(
+        $account = $this->model->create(array(
             'phone' => $phone,
             'password' => md5($password),
             'token' => $token,
@@ -106,7 +108,7 @@ class AccountController extends BaseController {
         if (self::checkCaptcha($phone, $captcha)) {
             return ApiResponse::errorPreCondition(config('quickcms.message_captcha_error'));
         }
-        $account = Account::where('phone', $phone)->first();
+        $account = $this->model->where('phone', $phone)->first();
         if ($account == null) {
             return ApiResponse::errorPreCondition(config('quickcms.message_account_is_not_exist'));
         }
@@ -128,7 +130,7 @@ class AccountController extends BaseController {
 
         $password = Input::get('password');
         // 旧密码输入错误
-        $account = Account::find($account_id);
+        $account = $this->model->find($account_id);
         if ($account->password != md5($old_password)) {
             return ApiResponse::errorPreCondition(config('quickcms.message_oldPassword_error'));
         }
@@ -169,7 +171,7 @@ class AccountController extends BaseController {
             return ApiResponse::validation($this->validation);
         }
         $scan_account_id = Input::get('scan_account_id');
-        $account = Account::find($scan_account_id);
+        $account = $this->model->find($scan_account_id);
         return ApiResponse::responseSuccess($account);
     }
 
@@ -198,7 +200,7 @@ class AccountController extends BaseController {
         }
         $account_id = Input::get('account_id');
         $avatar = Input::get('avatar');
-        $account = Account::find($account_id);
+        $account = $this->model->find($account_id);
         $account->avatar = $avatar;
         $account->save();
         return ApiResponse::responseSuccess($account);
@@ -211,7 +213,7 @@ class AccountController extends BaseController {
     public function update() {
         $account_id = Input::get('account_id');
         $datas = Input::except(['account_id']);
-        $account = Account::find($account_id)->update($datas);
+        $account = $this->model->find($account_id)->update($datas);
         return ApiResponse::responseSuccess($account);
     }
     
