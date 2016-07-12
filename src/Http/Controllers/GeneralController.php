@@ -167,7 +167,11 @@ class GeneralController extends BaseController
                         continue;
                     }
                     if($format_value['type'] == 'date') {
-                        $ret['data'][$ret_key][$format_value['column']] = date($format_value['format'], time($ret_value[$format_value['column']]));
+                        if(is_numeric($ret_value[$format_value['column']])) {
+                            $ret['data'][$ret_key][$format_value['column']] = date($format_value['format'], $ret_value[$format_value['column']]);
+                        } else {
+                            $ret['data'][$ret_key][$format_value['column']] = date($format_value['format'], time($ret_value[$format_value['column']]));
+                        }
                         continue;
                     }
                 }
