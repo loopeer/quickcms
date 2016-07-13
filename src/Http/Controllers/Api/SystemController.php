@@ -11,6 +11,7 @@
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
 use Input;
+use Loopeer\QuickCms\Models\Version;
 use Request;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
 use Loopeer\QuickCms\Models\Pushes;
@@ -108,10 +109,19 @@ class SystemController extends BaseController {
         }
         $result = $feedback->save();
         if ($result) {
+            $message = config('quickcms.message_feedback_success');
+            if(!empty($message)) {
+                return ApiResponse::responseSuccessWithMessage($message);
+            }
             return ApiResponse::responseSuccess();
         } else {
             return ApiResponse::responseFailure();
         }
+    }
+
+    public function version() {
+        $version = Version::select('id', 'version_code', 'url', 'message', 'description')->where('platform', 0)->where('status', 1)->orderBy('version_code', 'desc')->first();
+        return ApiResponse::responseSuccess($version);
     }
 
 }
