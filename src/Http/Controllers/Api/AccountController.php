@@ -10,22 +10,19 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
-use Loopeer\QuickCms\Services\Validators\AccountValidator as AccountValidation;
-use Auth;
-use DB;
-use Input;
-use Cache;
 use Carbon\Carbon;
 use Loopeer\Lib\Sms\LuoSiMaoSms;
-use Loopeer\QuickCms\Http\Controllers\Api\ApiResponse;
-use Loopeer\QuickCms\Http\Controllers\Api\BaseController;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Loopeer\QuickCms\Services\Validators\QuickApiValidator;
 
 class AccountController extends BaseController {
 
     protected $validation;
     protected $model;
 
-    public function __construct(AccountValidation $validation) {
+    public function __construct(QuickApiValidator $validation) {
         $this->validation = $validation;
         $reflectionClass = new \ReflectionClass(config('quickcms.account_model_class'));
         $this->model = $reflectionClass->newInstance();
@@ -144,7 +141,7 @@ class AccountController extends BaseController {
      * @return mixed
      */
     public function captcha() {
-        if (!$this->validation->passes($this->validation->captchaRules)) {
+        if (!$this->validation->passes($this->validation->phoneRules)) {
             return ApiResponse::validation($this->validation);
         }
         $phone = Input::get('phone');
@@ -167,11 +164,7 @@ class AccountController extends BaseController {
      * @return mixed
      */
     public function detail() {
-        if (!$this->validation->passes($this->validation->detailRules)) {
-            return ApiResponse::validation($this->validation);
-        }
-        $scan_account_id = Input::get('scan_account_id');
-        $account = $this->model->find($scan_account_id);
+        $account = Auth::user()->get();
         return ApiResponse::responseSuccess($account);
     }
 
@@ -222,14 +215,15 @@ class AccountController extends BaseController {
      * @return mixed
      */
     public function verify() {
-        if (!$this->validation->passes($this->validation->captchaRules)) {
+        if (!$this->validation->passes($this->validation->phoneRules)) {
             return ApiResponse::validation($this->validation);
         }
         $phone = Input::get('phone');
-        if(Config::get('quickcms.sms_api_switch')){
+        if(config('quickcms.sms_api_switch')){
             $captcha = rand(1000, 9999);
+            $sms = new LuoSiMaoSms(config('quickcms.sms_api_key'));
             // 拨打语音电话至用户
-            SmsHelpers::sendVerify($phone, $captcha);
+            $sms->sendVerify($phone, $captcha);
         } else {
             $captcha = '1234';
         }
@@ -238,5 +232,5 @@ class AccountController extends BaseController {
         return ApiResponse::responseSuccess();
     }
 
-   }
+}
 

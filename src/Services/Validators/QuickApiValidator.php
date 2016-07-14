@@ -7,7 +7,7 @@
  */
 namespace Loopeer\QuickCms\Services\Validators;
 
-class AccountValidator extends Validator {
+class QuickApiValidator extends Validator {
 
     public $quickLoginRules = [
         'union_id' => 'required',
@@ -17,10 +17,6 @@ class AccountValidator extends Validator {
 
     public $avatarRules = [
         'avatar' => 'required'
-    ];
-
-    public $detailRules = [
-        'scan_account_id' => 'required'
     ];
 
     public $loginRules = [
@@ -35,7 +31,7 @@ class AccountValidator extends Validator {
         'nickname' => 'required',
     ];
 
-    public $captchaRules = [
+    public $phoneRules = [
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/')
     ];
 

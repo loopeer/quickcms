@@ -34,46 +34,43 @@ return [
     'baidu_push_ios_secret_key' => env('baidu_push_ios_secret_key'),
     'baidu_push_sdk_deploy_status' => env('baidu_push_sdk_deploy_status'),
 
-    'account_model_class' => ,
-    'push_model_class' => ,
-    'feedback_model_class' => ,
-    'system_model_class' => ,
+    // sms config
+    'sms_api_switch' => false,
+    'sms_captcha' => '手机验证码：%s，请于30分钟内输入使用，如非本人操作请忽略本短信。【loopeer】',
+    'sms_api_key' => '',
 
+    // quick api model namespace
+    'account_model_class' => '',
+    'push_model_class' => '',
+    'feedback_model_class' => '',
+    'system_model_class' => '',
+
+    // api response message and code
     'code_success' => 0,
     'message_success' => '请求成功',
     'message_update_success' => '修改成功',
-
     'code_invalid_timestamp' => 1,
     'message_invalid_timestamp' => '非法请求时间戳',
-
     'code_illegal_request' => 2,
     'message_illegal_request' => '非法请求',
-
     'code_default_error' => 3,
     'message_default_error' => '请求失败',
-
     'code_invalid_parameters' => 4,
     'message_invalid_parameters' => '不合法的请求参数',
-
     'code_invalid_pagination_parameters' => 5,
     'message_invalid_pagination_parameters' => '不合法的分页参数',
-
     'code_no_content' => 6,
     'message_content_not_exist' => '请求的内容不存在',
-
     'code_no_version_upgrade' => 16,
     'message_no_version_upgrade' => '已是最新版本',
-
     'message_account_not_exist' => '账号不存在',
     'message_password_error' => '密码错误',
     'message_phone_is_register' => '该手机号已被注册',
     'message_captcha_error' => '验证码输入错误',
     'message_oldPassword_error' => '旧密码输入错误',
-    'message_update_success' => '修改成功',
-    'code_black_account' => 20, 
+    'code_black_account' => 20,
     'message_black_account' => '账号已禁用',
     'code_precondition_failed' => 412,
-
     'REQUEST_PARAMETER_USER_ID' => 'account_id',
     'REQUEST_PARAMETER_TOKEN' => 'token',
     'REQUEST_PARAMETER_PAGE' => 'page',
@@ -84,8 +81,8 @@ return [
     'DEFAULT_POST_LIMIT' => 1,
 
     //account_status
-    'user_status_usable'=>0,  //正常可用
-    'user_status_disabled'=>1,  //暂时被禁
+    'user_status_usable' => 0,  //正常可用
+    'user_status_disabled' => 1,  //暂时被禁
 
     // admin layout
     'admin_body_layout' => 'menu-on-top',
@@ -118,6 +115,7 @@ return [
         ),
     ),
 
+    // email config
     'sendcloud_api_key' => env('SENDCLOUD_API_KEY'),
     'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER'))
 ];
