@@ -29,10 +29,10 @@ class AccountController extends BaseController {
     }
 
     /**
-     * 手机用户登陆API
+     * 手机号+密码登陆方式
      * @return mixed
      */
-    public function login() {
+    public function loginByPassword() {
         if (!$this->validation->passes($this->validation->loginRules)) {
             return ApiResponse::validation($this->validation);
         }
@@ -56,6 +56,41 @@ class AccountController extends BaseController {
         $account->token = $token;
         $account->save();
         Auth::user()->setUser($account);
+        return ApiResponse::responseSuccess($account);
+    }
+
+    /**
+     * 手机号+验证码登陆方式
+     * @return mixed
+     * @throws \Exception
+     */
+    public function loginByCaptcha() {
+        if (!$this->validation->passes($this->validation->loginByCaptchaRules)) {
+            return ApiResponse::validation($this->validation);
+        }
+        $phone = Input::get('phone');
+        $captcha = Input::get('captcha');
+        // 验证码输入错误
+        if(self::checkCaptcha($phone, $captcha)) {
+            return ApiResponse::errorPreCondition(config('quickcms.message_captcha_error'));
+        }
+        // 验证帐号
+        $account = $this->model->where('phone', $phone)->first();
+        // token
+        $token = self::generateToken();
+        if(is_null($account)) {
+            $account = new $this->model;
+            $account->phone = $phone;
+            $account->token = $token;
+            $account->save();
+        } else {
+            // 黑名单
+            if($account->status != 0) {
+                return ApiResponse::responseFailure(config('quickcms.code_black_account'), config('quickcms.message_black_account'));
+            }
+            $account->token = $token;
+            $account->save();
+        }
         return ApiResponse::responseSuccess($account);
     }
 

@@ -35,6 +35,11 @@ class QuickApiValidator extends Validator {
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/')
     ];
 
+    public $loginByCaptchaRules = [
+        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
+        'captcha' => 'required',
+    ];
+
     public $forgetPwdRules = [
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
         'captcha' => 'required',
