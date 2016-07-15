@@ -20,7 +20,7 @@ class ApiUtil {
      * @param string $captcha 验证码
      * @return bool
      */
-    public function checkCaptcha($phone, $captcha) {
+    public static function checkCaptcha($phone, $captcha) {
         $captcha_service = Cache::get($phone);
         if ($captcha != $captcha_service) {
             return true;
