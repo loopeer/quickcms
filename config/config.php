@@ -34,6 +34,7 @@ return [
     'baidu_push_ios_secret_key' => env('baidu_push_ios_secret_key'),
     'baidu_push_sdk_deploy_status' => env('baidu_push_sdk_deploy_status'),
 
+
     // sms config
     'sms_api_switch' => false,
     'sms_captcha' => '手机验证码：%s，请于30分钟内输入使用，如非本人操作请忽略本短信。【loopeer】',
@@ -117,5 +118,7 @@ return [
 
     // email config
     'sendcloud_api_key' => env('SENDCLOUD_API_KEY'),
-    'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER'))
+    'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER')),
+
+    'custom_data' => [],
 ];

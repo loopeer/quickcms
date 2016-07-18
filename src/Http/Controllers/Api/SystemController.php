@@ -58,6 +58,7 @@ class SystemController extends BaseController {
         $configs = array(
             'up_token' => $upToken,
             'appstore_reviewing' => $appstore_reviewing,
+            'custom_data' => config('quickcms.custom_data', [])
         );
         return ApiResponse::responseSuccess($configs);
     }
