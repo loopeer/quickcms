@@ -147,6 +147,8 @@
                                         {{--@if(!empty($value['action_name']))--}}
                                         {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
                                         {{--@endif--}}
+                                    } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
+                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
                                     }
                                 @endforeach
                             @elseif($rename['type'] == 'dialog')
