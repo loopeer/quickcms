@@ -115,6 +115,10 @@
                                                         @include('backend::image.upload', ['image_name' => $edit_column[$key]])
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
                                                         @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'textarea')
+                                                        <label class="textarea">
+                                                            <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
+                                                            <label>
                                                     @else
                                                         <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif
