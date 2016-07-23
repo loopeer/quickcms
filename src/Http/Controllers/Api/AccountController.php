@@ -256,7 +256,7 @@ class AccountController extends BaseController {
         $phone = Input::get('phone');
         if(config('quickcms.sms_api_switch')){
             $captcha = rand(1000, 9999);
-            $sms = new LuoSiMaoSms(config('quickcms.sms_api_key'));
+            $sms = new LuoSiMaoSms(config('quickcms.sms_api_key_verify'));
             // 拨打语音电话至用户
             $sms->sendVerify($phone, $captcha);
         } else {

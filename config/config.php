@@ -36,9 +36,10 @@ return [
 
 
     // sms config
-    'sms_api_switch' => false,
+    'sms_api_switch' => env('sms_api_switch', false),
     'sms_captcha' => '手机验证码：%s，请于30分钟内输入使用，如非本人操作请忽略本短信。【loopeer】',
-    'sms_api_key' => '',
+    'sms_api_key' => env('sms_api_key'),
+    'sms_api_key_verify' => env('sms_api_key_verify'),
 
     // quick api model namespace
     'account_model_class' => '',
