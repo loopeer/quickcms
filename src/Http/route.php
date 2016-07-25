@@ -106,7 +106,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::post('pushes/save', 'PushesController@save');
    Route::resource('pushes', 'PushesController');
 
-   Route::resource('systems', 'GeneralController');
+   Route::resource('systems', 'SystemController');
 
    Route::get('sendcloud/template', 'SendcloudController@template');
 //   Route::get('sendcloud/normal', 'SendcloudController@normal');
