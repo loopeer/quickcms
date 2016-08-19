@@ -157,7 +157,7 @@ class AccountController extends BaseController {
         if (!$this->validation->passes($this->validation->updatePwdRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = Input::get('account_id');
+        $account_id = Input::header('account_id');
         $old_password = Input::get('old_password');
 
         $password = Input::get('password');
@@ -226,7 +226,7 @@ class AccountController extends BaseController {
         if (!$this->validation->passes($this->validation->avatarRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = Input::get('account_id');
+        $account_id = Input::header('account_id');
         $avatar = Input::get('avatar');
         $account = $this->model->find($account_id);
         $account->avatar = $avatar;
@@ -239,7 +239,7 @@ class AccountController extends BaseController {
      * @return mixed
      */
     public function update() {
-        $account_id = Input::get('account_id');
+        $account_id = Input::header('account_id');
         $datas = Input::except(['account_id']);
         $account = $this->model->find($account_id)->update($datas);
         return ApiResponse::responseSuccess($account);
