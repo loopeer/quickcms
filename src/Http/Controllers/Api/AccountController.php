@@ -241,7 +241,8 @@ class AccountController extends BaseController {
     public function update() {
         $account_id = Input::header('account_id');
         $datas = Input::except(['account_id']);
-        $account = $this->model->find($account_id)->update($datas);
+        $account = $this->model->find($account_id);
+        $account->update($datas);
         return ApiResponse::responseSuccess($account);
     }
     
