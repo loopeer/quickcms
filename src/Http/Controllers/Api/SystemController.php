@@ -91,17 +91,17 @@ class SystemController extends BaseController {
         if (!$this->validation->passes($this->validation->feedbackRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = Input::get('account_id');
+        $account_id = Input::header('account_id');
         $content = Input::get('content');
         $contact = Input::get('contact');
         $version = Request::header('version');
-        $versionCode = Request::header('version_code');
+        $versionCode = Request::header('build');
         $deviceId = Request::header('device_id');
         $channelId = Request::header('channel_id');
         $feedback = new Feedback;
         $feedback->account_id = $account_id;
         $feedback->content = $content;
-        $feedback->version = $version + '-' + $versionCode;
+        $feedback->version = $version . '-' . $versionCode;
         $feedback->version_code = $versionCode;
         $feedback->device_id = $deviceId;
         $feedback->channel_id = $channelId;
