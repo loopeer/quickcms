@@ -25,7 +25,7 @@ class ApiResponse extends Response {
      * @return mixed
      * @throws Exception
      */
-    public static function validation($validator, $code = '412', $message = NULL) {
+    public static function validation($validator, $code = 412, $message = NULL) {
         if ( !($validator instanceof Validator) ) {
             throw new Exception('Argument is not a Validator instance ('.get_class($validator).' found).');
         }
@@ -131,7 +131,7 @@ class ApiResponse extends Response {
 
     public static function errorForbidden($message = NULL, $data = NULL) {
         return self::json([
-            'code' => '403',
+            'code' => 403,
             'message' => $message ? : 'error for bidden',
             'data' => $data
         ]);
@@ -144,7 +144,7 @@ class ApiResponse extends Response {
      * @param string $message
      * @return mixed
      */
-    public static function errorUnauthorized($data = NULL, $code = '401', $message = 'Not authenticated') {
+    public static function errorUnauthorized($data = NULL, $code = 401, $message = 'Not authenticated') {
         return self::json([
             'code' => $code,
             'message' => $message,
@@ -165,7 +165,7 @@ class ApiResponse extends Response {
      */
     public static function errorVersion() {
         return self::json([
-            'code' => '505',
+            'code' => 505,
             'message' => 'API Version Not Supported',
             'data' => null
         ]);
