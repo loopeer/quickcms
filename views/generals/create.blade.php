@@ -64,7 +64,9 @@
                                     <fieldset>
                                         @foreach($edit_column as $key => $column_name)
                                             <section>
-                                                <label class="label">{{ $edit_column_name ? $edit_column_name[$key] : $column_names[$column_name] }}</label>
+                                                <label class="label">
+                                                    {{ $edit_column_name ? $edit_column_name[$key] : $column_names[$column_name] }}
+                                                </label>
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
                                                 <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
                                                     @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
@@ -119,6 +121,10 @@
                                                         <label class="textarea">
                                                             <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
                                                             <label>
+                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
+                                                        @foreach($language as $lang_key => $lang_value)
+                                                            <input type="text" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                        @endforeach
                                                     @else
                                                         <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif

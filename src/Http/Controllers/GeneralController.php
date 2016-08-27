@@ -11,6 +11,7 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
+use App\Models\LanguageResource;
 use Loopeer\QuickCms\Models\Selector;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Route;
@@ -64,6 +65,7 @@ class GeneralController extends BaseController
             $this->index_column_name = config($general_name . 'index_column_name');
             $this->index_column_rename = config($general_name . 'index_column_rename', array());
             $this->edit_column = config($general_name . 'edit_column');
+            $this->edit_column_label = config($general_name . 'edit_column_label');
             $this->edit_column_name = config($general_name . 'edit_column_name');
             $this->edit_column_detail = config($general_name . 'edit_column_detail');
             $this->model_class = config($general_name . 'model_class');
@@ -90,7 +92,7 @@ class GeneralController extends BaseController
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
         } catch (Exception $e) {
-            Log::info($e->getMessage());
+            //Log::info($e->getMessage());
 //            App::abort('403');
         }
         parent::__construct();
@@ -196,13 +198,16 @@ class GeneralController extends BaseController
     {
         $message = Session::get('message');
         $selector_data = [];
-        foreach($this->index_column_rename as $key => $column_name) {
-            if($column_name['type'] == 'selector') {
-                $selector = Selector::where('enum_key', $column_name['param'])->first();
-                $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
-                $selector_data[$key] = $tmp_data;
+        if(isset($this->index_column_rename)) {
+            foreach($this->index_column_rename as $key => $column_name) {
+                if($column_name['type'] == 'selector') {
+                    $selector = Selector::where('enum_key', $column_name['param'])->first();
+                    $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
+                    $selector_data[$key] = $tmp_data;
+                }
             }
         }
+
         $this->curd_action = GeneralUtil::curdAction($this->curd_action);
         $data = array(
             'index_column_name' => $this->index_column_name,
@@ -305,6 +310,7 @@ class GeneralController extends BaseController
         if (isset($data['_token'])) {
             unset($data['_token']);
         }
+
         $model = $this->model;
         foreach($data as $key => $value) {
             if(is_array($value)) {
@@ -314,6 +320,23 @@ class GeneralController extends BaseController
         if (isset($data['id'])) {
             $result = $model::find($data['id'])->update($data);
         } else {
+            $time = time();
+            if (isset($data['language'])) {
+                $key = with($model)->getTable() . '_' . $data['language'] . '_' . $time;
+                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                $language_resource = $reflectionClass->newInstance();
+                foreach(config('quickcms.language') as $lang_key => $lang_value) {
+                    $language_column = $data['language'] . '_' . $lang_key;
+                    $language_resource::create(array(
+                        'key' => $key,
+                        'value' => $data[$language_column],
+                        'language' => $lang_key,
+                    ));
+                    $data = array_except($data, [$language_column]);
+                }
+                $data = array_add($data, $data['language'], $key);
+                $data = array_except($data, ['language']);
+            }
             $result = $model::create($data);
         }
         $message['result'] = $result ? true : false;
@@ -412,7 +435,9 @@ class GeneralController extends BaseController
             'images' => $images,
             'selectors' => $selectors,
             'file_config' => isset($file_config) ? true : false,
-            'files' => isset($files) ? $files : null
+            'files' => isset($files) ? $files : null,
+            'language' => config('quickcms.language'),
+            'edit_column_label' => $this->edit_column_label,
         );
         return $data;
     }

@@ -41,7 +41,6 @@ class BaseController extends Controller
             Session::push($route_url, $permission);
         }*/
         if(!Session::has('permissions')) {
-            \Log::info('permission session not exist');
             $roles = Auth::admin()->get()->roles()->first();
             $permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
             $permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();

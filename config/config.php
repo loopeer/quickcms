@@ -122,4 +122,9 @@ return [
     'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER')),
 
     'custom_data' => [],
+
+    'language' => array(
+        'en' => '英文',
+        'zh' => '中文',
+    ),
 ];
