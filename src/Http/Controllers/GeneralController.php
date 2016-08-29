@@ -294,11 +294,16 @@ class GeneralController extends BaseController
                     $selector_json =  SelectorController::parseSelector($selector->type, $selector->enum_value);
                     $selector_data[$key] = json_decode($selector_json, true);
                 }
+                if ($column_name['type'] == 'language') {
+                    $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                    $language_resource = $reflectionClass->newInstance();
+                    $language_resource_data = $language_resource::where('key', $data->$key)->get();
+                }
             }
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data'));
+        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data', 'language_resource_data'));
     }
 
     /**
@@ -317,21 +322,40 @@ class GeneralController extends BaseController
                 $data[$key] = implode(',', $value);
             }
         }
-        if (isset($data['id'])) {
-            $result = $model::find($data['id'])->update($data);
-        } else {
+        if (isset($data['language'])) {
             $time = time();
-            if (isset($data['language'])) {
-                $key = with($model)->getTable() . '_' . $data['language'] . '_' . $time;
-                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
-                $language_resource = $reflectionClass->newInstance();
-                foreach(config('quickcms.language') as $lang_key => $lang_value) {
+            $key = with($model)->getTable() . '_' . $data['language'] . '_' . $time;
+            $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+            $language_resource = $reflectionClass->newInstance();
+        }
+        if (isset($data['id'])) {
+            $update_model = $model::find($data['id']);
+            if (isset($language_resource)) {
+                foreach (config('quickcms.language') as $lang_key => $lang_value) {
+                    $language_column = $data['language'] . '_' . $lang_key;
+                    $language_resource_data = $language_resource::where('key', $update_model->$data['language'])->where('language', $lang_key)->first();
+                    $language_resource_data->value = $data[$language_column];
+                    $language_resource_data->save();
+                    if ($lang_key == 'zh') {
+                        $data = array_add($data, $data['language'] . '_resource', $data[$language_column]);
+                    }
+                    $data = array_except($data, [$language_column]);
+                }
+                $data = array_except($data, ['language']);
+            }
+            $result = $update_model->update($data);
+        } else {
+            if (isset($language_resource)) {
+                foreach (config('quickcms.language') as $lang_key => $lang_value) {
                     $language_column = $data['language'] . '_' . $lang_key;
                     $language_resource::create(array(
                         'key' => $key,
                         'value' => $data[$language_column],
                         'language' => $lang_key,
                     ));
+                    if ($lang_key == 'zh') {
+                        $data = array_add($data, $data['language'] . '_resource', $data[$language_column]);
+                    }
                     $data = array_except($data, [$language_column]);
                 }
                 $data = array_add($data, $data['language'], $key);
@@ -382,13 +406,13 @@ class GeneralController extends BaseController
         $model = $this->model;
         $model_data = $model::find($id);
         $data = Input::all();
-        foreach($data as $data_key => $data_val) {
-            if($data_val == 'now') {
+        foreach ($data as $data_key => $data_val) {
+            if ($data_val == 'now') {
                 $data_val = date('Y-m-d H:i:s', time());
             }
             $model_data->$data_key = $data_val;
         }
-        if($model_data->save()) {
+        if ($model_data->save()) {
             $ret = true;
         } else {
             $ret = false;
@@ -418,6 +442,11 @@ class GeneralController extends BaseController
                 $v['model'] = $model_data;
                 $files[] = $v;
             }
+            if ($v['type'] == 'language') {
+                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                $language_resource = $reflectionClass->newInstance();
+                $language_resource_data = $language_resource::where('key', $model_data->$k)->get();
+            }
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
@@ -437,6 +466,7 @@ class GeneralController extends BaseController
             'file_config' => isset($file_config) ? true : false,
             'files' => isset($files) ? $files : null,
             'language' => config('quickcms.language'),
+            'language_resource' => isset($language_resource_data) ? $language_resource_data : null,
             'edit_column_label' => $this->edit_column_label,
         );
         return $data;

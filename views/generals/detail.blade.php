@@ -51,6 +51,12 @@
                                         {{ date($renames[$column]['format'], strtotime($data->$column)) }}
                                     @elseif($renames[$column]['type'] == 'html')
                                         {!! $data->$column !!}
+                                    @elseif($renames[$column]['type'] == 'language')
+                                        <label style="vertical-align: text-top;">
+                                        @foreach($language_resource_data as $lang_res_data_key => $lang_res_data_value)
+                                        {{ $lang_res_data_value->value }}<br>
+                                        @endforeach
+                                        </label>
                                     @endif
                                 @else
                                     {{ $data->$column }}

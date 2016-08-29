@@ -122,9 +122,19 @@
                                                             <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
                                                             <label>
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
+                                                        @if(!$model_data['id'])
                                                         @foreach($language as $lang_key => $lang_value)
-                                                            <input type="text" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                            <input type="text" required="" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                            <br>
                                                         @endforeach
+                                                        @else
+                                                        @foreach($language_resource as $lang_res_key => $lang_res_value)
+                                                            <input type="text" placeholder="{{ $language[$lang_res_value->language] }}"
+                                                                   name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}"
+                                                                   value="{{ $lang_res_value->value }}">
+                                                            <br>
+                                                        @endforeach
+                                                        @endif
                                                     @else
                                                         <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                     @endif
