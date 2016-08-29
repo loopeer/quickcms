@@ -11,7 +11,6 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use App\Models\LanguageResource;
 use Loopeer\QuickCms\Models\Selector;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Route;
@@ -92,7 +91,7 @@ class GeneralController extends BaseController
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
         } catch (Exception $e) {
-            //Log::info($e->getMessage());
+            Log::info($e->getMessage());
 //            App::abort('403');
         }
         parent::__construct();
