@@ -64,7 +64,7 @@ class SystemController extends BaseController {
     }
 
     public function registerPush() {
-        $account_id = Input::get('account_id');
+        $account_id = Input::header('account_id');
         $app_user_id = Input::get('app_user_id');
         $app_channel_id = Input::get('app_channel_id');
         $platform = Request::header('platform');
