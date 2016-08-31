@@ -33,6 +33,7 @@ class GeneralController extends BaseController
     protected $index_column_format;
     protected $index_column_name;
     protected $index_column_rename;
+    protected $search_dialog_id;
     protected $index_multi;
     protected $index_multi_column;
     protected $index_multi_join;
@@ -63,24 +64,31 @@ class GeneralController extends BaseController
             $this->index_column_format = config($general_name . 'index_column_format');
             $this->index_column_name = config($general_name . 'index_column_name');
             $this->index_column_rename = config($general_name . 'index_column_rename', array());
+            $this->search_dialog_id = config($general_name . 'search_dialog_id');
+
             $this->edit_column = config($general_name . 'edit_column');
             $this->edit_column_label = config($general_name . 'edit_column_label');
             $this->edit_column_name = config($general_name . 'edit_column_name');
             $this->edit_column_detail = config($general_name . 'edit_column_detail');
+
             $this->model_class = config($general_name . 'model_class');
             $this->model_name = config($general_name . 'model_name');
             $this->actions = config($general_name . 'table_action');
             $this->sort = config($general_name . 'sort');
             $this->where = config($general_name . 'index_where');
+
             $this->edit_hidden = config($general_name . 'edit_hidden');
             $this->edit_editor = config($general_name . 'edit_editor');
             $this->curd_action = config($general_name . 'curd_action');
+
             $this->index_multi = config($general_name . 'index_multi');
             $this->index_multi_column = config($general_name . 'index_multi_column');
             $this->index_multi_join = config($general_name . 'index_multi_join');
+
             $reflectionClass = new \ReflectionClass($this->model_class);
             $this->model = $reflectionClass->newInstance();
             $middleware = config($general_name . 'middleware', array());
+
             $this->detail_column = config($general_name . 'detail_column', array());
             $this->detail_column_name = config($general_name . 'detail_column_name', array());
             $this->detail_multi_join = config($general_name . 'detail_multi_join');
@@ -99,9 +107,10 @@ class GeneralController extends BaseController
 
     /**
      * 搜索
+     * @param $dialog_id
      * @return mixed
      */
-    public function search()
+    public function search($dialog_id = null)
     {
         $model = $this->model;
         if(isset($this->where)) {
@@ -130,6 +139,9 @@ class GeneralController extends BaseController
                         break;
                 }
             }
+        }
+        if (isset($dialog_id)) {
+            $model = $model->where($this->search_dialog_id, $dialog_id);
         }
         if(isset($this->sort)) {
             foreach ($this->sort as $sort) {
@@ -218,7 +230,8 @@ class GeneralController extends BaseController
             'curd_action' => $this->curd_action,
             'index_column' => $this->index_column,
             'message' => $message,
-            'detail_style' => isset($this->detail_style) ? $this->detail_style : null
+            'detail_style' => isset($this->detail_style) ? $this->detail_style : null,
+            'search_dialog_id' => isset($this->search_dialog_id) ? $this->search_dialog_id : null,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;

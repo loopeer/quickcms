@@ -108,7 +108,7 @@
                 } ],
                 @endif
                 "ajax": {
-                    "url": "/admin/" + route_name + "/search"
+                    "url": "/admin/" + route_name + "/search" + '{{ isset($search_dialog_id) ? '/' . $search_dialog_id : '' }}'
                 }
             });
 
