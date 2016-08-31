@@ -33,7 +33,6 @@ class GeneralController extends BaseController
     protected $index_column_format;
     protected $index_column_name;
     protected $index_column_rename;
-    protected $search_dialog_id;
     protected $index_multi;
     protected $index_multi_column;
     protected $index_multi_join;
@@ -64,7 +63,6 @@ class GeneralController extends BaseController
             $this->index_column_format = config($general_name . 'index_column_format');
             $this->index_column_name = config($general_name . 'index_column_name');
             $this->index_column_rename = config($general_name . 'index_column_rename', array());
-            $this->search_dialog_id = config($general_name . 'search_dialog_id');
 
             $this->edit_column = config($general_name . 'edit_column');
             $this->edit_column_label = config($general_name . 'edit_column_label');
@@ -139,9 +137,6 @@ class GeneralController extends BaseController
                         break;
                 }
             }
-        }
-        if (isset($dialog_id)) {
-            $model = $model->where($this->search_dialog_id, $dialog_id);
         }
         if(isset($this->sort)) {
             foreach ($this->sort as $sort) {
@@ -231,13 +226,9 @@ class GeneralController extends BaseController
             'index_column' => $this->index_column,
             'message' => $message,
             'detail_style' => isset($this->detail_style) ? $this->detail_style : null,
-            'search_dialog_id' => isset($this->search_dialog_id) ? $this->search_dialog_id : null,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        if (isset($this->search_dialog_id)) {
-            return view::make('backend::generals.dialog', $data);
-        }
         return View::make('backend::generals.index', $data);
     }
 

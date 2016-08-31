@@ -7,7 +7,7 @@
         <div class="jarviswidget-editbox">
         </div>
         <div class="widget-body no-padding">
-            <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
+            <table id="dt_basic_dialog" class="table table-striped table-bordered table-hover" width="100%">
                 <thead>
                 <tr>
                 @if(isset($index_column_name))
@@ -32,7 +32,7 @@
 <script>
     $(document).ready(function() {
         var route_name = '{{ $route_name }}';
-        var table = $('#dt_basic').DataTable({
+        var table = $('#dt_basic_dialog').DataTable({
             "processing": false,
             "serverSide": true,
             "bStateSave": true,
@@ -152,7 +152,7 @@
         });
 
         if('{!! $curd_action["edit"] !!}') {
-            $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
+            $('#dt_basic_dialog tbody').on('click', 'a[name=edit_btn]', function () {
         if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
                         window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
@@ -161,11 +161,11 @@
     }
 
         if('{!! $curd_action['delete'] !!}') {
-            $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+            $('#dt_basic_dialog tbody').on('click', 'a[name=delete_btn]', function () {
             if(isDisabled($(this))) {
                 var data = table.row($(this).parents('tr')).data();
                 var delete_token = $('#delete_token').val();
-                var data_table = $('#dt_basic').dataTable();
+                var data_table = $('#dt_basic_dialog').dataTable();
                 var page_info = table.page.info();
                 var page = page_info.page;
                 if (page_info.length == 1 && page_info.page != 0) {
@@ -219,7 +219,7 @@
                 '</div>'
         );
 
-        $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
+        $('#dt_basic_dialog tbody').on('click', 'a[name=detail_btn]', function () {
         if(isDisabled($(this))) {
             var data = table.row($(this).parents('tr')).data();
             $("#detail_dialog .modal-title").html('查看详情');
@@ -240,19 +240,19 @@
         @if(!empty($actions))
         @foreach($actions as $action)
         @if ($action['type'] == 'redirect_with_id')
-             $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+             $('#dt_basic_dialog tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
                     var data = table.row($(this).parents('tr')).data();
                     window.location = '{{$action['url']}}' + '/' + data[0];
             });
         @endif
         @if($action['type'] == 'confirm')
-            $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+            $('#dt_basic_dialog tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
         if(isDisabled($(this))) {
             console.log($(this).attr('permission'));
                 var data = table.row($(this).parents('tr')).data();
                 var page_info = table.page.info();
                 var page = page_info.page;
-                var data_table = $('#dt_basic').dataTable();
+                var data_table = $('#dt_basic_dialog').dataTable();
                 if (page_info.end - page_info.start == 1) {
                     page -= 1;
                 }
@@ -326,7 +326,7 @@
             '</div>'
         );
 
-        $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
+        $('#dt_basic_dialog tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
             var data = table.row($(this).parents('tr')).data();
             $("#" + '{{$action['target']}}' + ' .modal-title').html('{{$action['dialog_title']}}');
             $(this).attr("data-toggle", "modal");
@@ -354,7 +354,7 @@
             var $form = $("#" + '{{$action['form']['form_id']}}');
             var page_info = table.page.info();
             var page = page_info.page;
-            var data_table = $('#dt_basic').dataTable();
+            var data_table = $('#dt_basic_dialog').dataTable();
             $($form).submit(function(event) {
                 var form = $(this);
                 $.ajax({
@@ -427,7 +427,7 @@
                 '</div>'
         );
 
-        $('#dt_basic tbody').on('click', 'a[name=' + '{{$rename['param']['name']}}' + ']', function () {
+        $('#dt_basic_dialog tbody').on('click', 'a[name=' + '{{$rename['param']['name']}}' + ']', function () {
             var data = table.row($(this).parents('tr')).data();
             $("#" + '{{$rename['param']['target']}}' + " .modal-title").html('{{$rename['param']['dialog_title']}}');
             $(this).attr("data-toggle", "modal");
