@@ -33,7 +33,7 @@
                                         <th>{{ $column_names[$column] }}</th>
                                     @endforeach
                                 @endif
-                                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'])
+                                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
                                     <th>操作</th>
                                 @endif
                                 </tr>
