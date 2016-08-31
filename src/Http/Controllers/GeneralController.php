@@ -235,6 +235,9 @@ class GeneralController extends BaseController
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
+        if (isset($this->search_dialog_id)) {
+            return view::make('backend::generals.dialog', $data);
+        }
         return View::make('backend::generals.index', $data);
     }
 
