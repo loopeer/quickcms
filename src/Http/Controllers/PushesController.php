@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers;
 
 use Illuminate\Support\Facades\Redirect;
+use Loopeer\QuickCms\Models\PushMessage;
 use Loopeer\QuickCms\Services\Push\BPushService;
 use Session;
 use Loopeer\QuickCms\Models\Pushes;
@@ -47,7 +48,7 @@ class PushesController extends BaseController {
         $notice_url = Input::get('notice_url');
         $custom_content = ['notice_type' => $notice_type, 'notice_id' => $notice_id, 'notice_url' => $notice_url];
         $account_ids = Input::get('account_ids');
-        $push_type = Input::get('push_type');
+        $push_type = Input::get('push_type', 'all');
         $push = new BPushService();
         switch($push_type) {
             case 'batch':
@@ -63,6 +64,14 @@ class PushesController extends BaseController {
                 $push->pushAllMessage($content, $custom_content);
                 break;
         }
+        PushMessage::create([
+            'content' => $content,
+            'account_ids' => $account_ids,
+            'push_type' => $push_type,
+            'notice_id' => $notice_id,
+            'notice_type' => $notice_type,
+            'notice_url' => $notice_url
+        ]);
         $res = array('result' => true, 'content' => '提交成功');
         return $res;
     }

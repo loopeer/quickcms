@@ -114,5 +114,8 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::post('sendcloud/apiuser', 'SendcloudController@saveApiUser');
    Route::resource('sendcloud', 'SendcloudController');
    Route::get('sendcloud/{invokeName}/review', 'SendcloudController@review');
+
+   Route::get('pushMsg/search', ['as' => 'admin.pushMsg.search', 'uses' => 'GeneralController@search']);
+   Route::resource('pushMsg', 'GeneralController');
 });
 
