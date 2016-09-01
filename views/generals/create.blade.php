@@ -91,28 +91,84 @@
                                                             <i></i>
                                                         @endif
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
-                                                        <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
-                                                        <!-- 实例化编辑器 -->
-                                                        <script type="text/javascript">
-                                                            var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
-                                                            var toolbars = new Array();
-                                                            if(toolbar != null) {
-                                                                toolbars = toolbar.split(',');
-                                                            }
-                                                            var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
-                                                                @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                        @if($edit_column_detail[$edit_column[$key]]['language'])
+                                                            @if(!$model_data['id'])
+                                                                @foreach($language as $lang_key => $lang_value)
+                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                                    <!-- 实例化编辑器 -->
+                                                                    <script type="text/javascript">
+                                                                        var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                        var toolbars = new Array();
+                                                                        if(toolbar != null) {
+                                                                            toolbars = toolbar.split(',');
+                                                                        }
+                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}',{
+                                                                            @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                            toolbars: [toolbars],
+                                                                            @endif
+                                                                            autoHeightEnabled: true,
+                                                                            lang:"zh-cn",
+                                                                            autoFloatEnabled: true,
+                                                                            initialFrameHeight: 350
+                                                                        });
+                                                                        ue.ready(function() {
+                                                                            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                            //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                        });
+                                                                    </script>
+                                                                    <br>
+                                                                @endforeach
+                                                            @else
+                                                                @foreach($language_resource_editor as $lang_res_key => $lang_res_value)
+                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_key }}" name="{{ $edit_column[$key] . '_' . $lang_res_key }}" type="text/plain">{!! $lang_res_value->value !!}</script>
+                                                                    <!-- 实例化编辑器 -->
+                                                                    <script type="text/javascript">
+                                                                        var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                        var toolbars = new Array();
+                                                                        if(toolbar != null) {
+                                                                            toolbars = toolbar.split(',');
+                                                                        }
+                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_res_key }}',{
+                                                                            @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                            toolbars: [toolbars],
+                                                                            @endif
+                                                                            autoHeightEnabled: true,
+                                                                            lang:"zh-cn",
+                                                                            autoFloatEnabled: true,
+                                                                            initialFrameHeight: 350
+                                                                        });
+                                                                        ue.ready(function() {
+                                                                            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                            //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                        });
+                                                                    </script>
+                                                                    <br>
+                                                                @endforeach
+                                                            @endif
+                                                        @else
+                                                            <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                            <!-- 实例化编辑器 -->
+                                                            <script type="text/javascript">
+                                                                var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                var toolbars = new Array();
+                                                                if(toolbar != null) {
+                                                                    toolbars = toolbar.split(',');
+                                                                }
+                                                                var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
+                                                                    @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
                                                                     toolbars: [toolbars],
-                                                                @endif
-                                                                autoHeightEnabled: true,
-                                                                lang:"zh-cn",
-                                                                autoFloatEnabled: true,
-                                                                initialFrameHeight: 350
-                                                            });
-                                                            ue.ready(function() {
-                                                                ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
-                                                                //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-                                                            });
-                                                        </script>
+                                                                    @endif
+                                                                    autoHeightEnabled: true,
+                                                                    lang:"zh-cn",
+                                                                    autoFloatEnabled: true,
+                                                                    initialFrameHeight: 350
+                                                                });
+                                                                ue.ready(function() {
+                                                                    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                    //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                });
+                                                            </script>
+                                                        @endif
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
                                                         @include('backend::image.upload', ['image_name' => $edit_column[$key]])
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')

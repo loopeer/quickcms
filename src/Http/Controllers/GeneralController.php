@@ -328,45 +328,51 @@ class GeneralController extends BaseController
                 $data[$key] = implode(',', $value);
             }
         }
-        if (isset($data['language'])) {
-            $time = time();
-            $key = with($model)->getTable() . '_' . $data['language'] . '_' . $time;
+        if (isset($data['language_hidden'])) {
             $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
             $language_resource = $reflectionClass->newInstance();
         }
         if (isset($data['id'])) {
             $update_model = $model::find($data['id']);
-            if (isset($language_resource)) {
-                foreach (config('quickcms.language') as $lang_key => $lang_value) {
-                    $language_column = $data['language'] . '_' . $lang_key;
-                    $language_resource_data = $language_resource::where('key', $update_model->$data['language'])->where('language', $lang_key)->first();
-                    $language_resource_data->value = $data[$language_column];
-                    $language_resource_data->save();
-                    if ($lang_key == 'zh') {
-                        $data = array_add($data, $data['language'] . '_resource', $data[$language_column]);
+            if (isset($data['language_hidden'])) {
+                $language_hidden = explode(',', $data['language_hidden']);
+                foreach ($language_hidden as $hidden_key => $hidden_value) {
+                    foreach (config('quickcms.language') as $lang_key => $lang_value) {
+                        $language_column = $hidden_value . '_' . $lang_key;
+                        $language_resource_data = $language_resource::where('key', $update_model->$data[$hidden_value])->where('language', $lang_key)->first();
+                        $language_resource_data->value = $data[$language_column];
+                        $language_resource_data->save();
+                        if ($lang_key == 'zh') {
+                            $data = array_add($data, $hidden_value . '_resource', $data[$language_column]);
+                        }
+                        $data = array_except($data, [$language_column]);
                     }
-                    $data = array_except($data, [$language_column]);
                 }
                 $data = array_except($data, ['language']);
             }
             $result = $update_model->update($data);
         } else {
-            if (isset($language_resource)) {
-                foreach (config('quickcms.language') as $lang_key => $lang_value) {
-                    $language_column = $data['language'] . '_' . $lang_key;
-                    $language_resource::create(array(
-                        'key' => $key,
-                        'value' => $data[$language_column],
-                        'language' => $lang_key,
-                    ));
-                    if ($lang_key == 'zh') {
-                        $data = array_add($data, $data['language'] . '_resource', $data[$language_column]);
+            if (isset($data['language_hidden'])) {
+                $time = time();
+                $language_hidden = explode(',', $data['language_hidden']);
+                foreach ($language_hidden as $hidden_key => $hidden_value) {
+                    $key = with($model)->getTable() . '_' . $hidden_value . '_' . $time;
+                    foreach (config('quickcms.language') as $lang_key => $lang_value) {
+                        $language_column = $hidden_value . '_' . $lang_key;
+                        $language_resource::create(array(
+                            'key' => $key,
+                            'value' => $data[$language_column],
+                            'language' => $lang_key,
+                        ));
+                        if ($lang_key == 'zh' && $hidden_key == 0) {
+                            $data = array_add($data, $hidden_value . '_resource', $data[$language_column]);
+                        }
+                        $data = array_except($data, [$language_column]);
                     }
-                    $data = array_except($data, [$language_column]);
+                    $data = array_add($data, $hidden_value, $key);
                 }
-                $data = array_add($data, $data['language'], $key);
-                $data = array_except($data, ['language']);
             }
+            $data = array_except($data, ['language_hidden']);
             $result = $model::create($data);
         }
         $message['result'] = $result ? true : false;
@@ -453,6 +459,11 @@ class GeneralController extends BaseController
                 $language_resource = $reflectionClass->newInstance();
                 $language_resource_data = $language_resource::where('key', $model_data->$k)->get();
             }
+            if ($v['type'] == 'editor' && $v['language']) {
+                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                $language_resource = $reflectionClass->newInstance();
+                $language_resource_editor_data = $language_resource::where('key', $model_data->$k)->get();
+            }
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
@@ -473,6 +484,7 @@ class GeneralController extends BaseController
             'files' => isset($files) ? $files : null,
             'language' => config('quickcms.language'),
             'language_resource' => isset($language_resource_data) ? $language_resource_data : null,
+            'language_resource_editor' => isset($language_resource_editor_data) ? $language_resource_editor_data : null,
             'edit_column_label' => $this->edit_column_label,
         );
         return $data;
