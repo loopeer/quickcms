@@ -120,7 +120,7 @@
                                                                 @endforeach
                                                             @else
                                                                 @foreach($language_resource_editor as $lang_res_key => $lang_res_value)
-                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_key }}" name="{{ $edit_column[$key] . '_' . $lang_res_key }}" type="text/plain">{!! $lang_res_value->value !!}</script>
+                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}" name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}" type="text/plain">{!! $lang_res_value->value !!}</script>
                                                                     <!-- 实例化编辑器 -->
                                                                     <script type="text/javascript">
                                                                         var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
@@ -128,7 +128,7 @@
                                                                         if(toolbar != null) {
                                                                             toolbars = toolbar.split(',');
                                                                         }
-                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_res_key }}',{
+                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}',{
                                                                             @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
                                                                             toolbars: [toolbars],
                                                                             @endif

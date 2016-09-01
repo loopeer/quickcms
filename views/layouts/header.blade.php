@@ -1,7 +1,7 @@
 <!-- HEADER -->
 <header id="header">
     <div id="logo-group">
-        <span id="logo" style="height:25px;"> <img id="logo-img" style="height:100%;" src="{{ asset('loopeer/quickcms/img/logo.png') }}" alt="SmartAdmin"> </span>
+        <span style="width: 110px;height:25px;padding-left: 3px;"> <img id="logo-img" style="height:100%;" src="{{ asset('loopeer/quickcms/img/logo.png') }}" alt="SmartAdmin"> </span>
     </div>
 
 

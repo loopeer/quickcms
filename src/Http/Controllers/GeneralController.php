@@ -345,16 +345,16 @@ class GeneralController extends BaseController
                 foreach ($language_hidden as $hidden_key => $hidden_value) {
                     foreach (config('quickcms.language') as $lang_key => $lang_value) {
                         $language_column = $hidden_value . '_' . $lang_key;
-                        $language_resource_data = $language_resource::where('key', $update_model->$data[$hidden_value])->where('language', $lang_key)->first();
+                        $language_resource_data = $language_resource::where('key', $update_model->$hidden_value)->where('language', $lang_key)->first();
                         $language_resource_data->value = $data[$language_column];
                         $language_resource_data->save();
-                        if ($lang_key == 'zh') {
+                        if ($lang_key == 'zh' && $hidden_key == 0) {
                             $data = array_add($data, $hidden_value . '_resource', $data[$language_column]);
                         }
                         $data = array_except($data, [$language_column]);
                     }
                 }
-                $data = array_except($data, ['language']);
+                $data = array_except($data, ['language_hidden']);
             }
             $result = $update_model->update($data);
         } else {
