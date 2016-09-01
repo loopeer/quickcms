@@ -305,11 +305,17 @@ class GeneralController extends BaseController
                     $language_resource = $reflectionClass->newInstance();
                     $language_resource_data = $language_resource::where('key', $data->$key)->get();
                 }
+                if ($column_name['type'] == 'html' && $column_name['language']) {
+                    $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                    $language_resource = $reflectionClass->newInstance();
+                    $language_resource_editor_data = $language_resource::where('key', $data->$key)->get();
+                }
             }
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data', 'language_resource_data'));
+        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames',
+            'rename_keys', 'selector_data', 'language_resource_data', 'language_resource_editor_data'));
     }
 
     /**
