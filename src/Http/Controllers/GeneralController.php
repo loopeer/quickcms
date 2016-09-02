@@ -465,7 +465,7 @@ class GeneralController extends BaseController
                 $language_resource = $reflectionClass->newInstance();
                 $language_resource_data = $language_resource::where('key', $model_data->$k)->get();
             }
-            if ($v['type'] == 'editor' && $v['language']) {
+            if ($v['type'] == 'editor' && isset($v['language'])) {
                 $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
                 $language_resource = $reflectionClass->newInstance();
                 $language_resource_editor_data = $language_resource::where('key', $model_data->$k)->get();
