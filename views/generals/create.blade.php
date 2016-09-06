@@ -91,7 +91,7 @@
                                                             <i></i>
                                                         @endif
                                                     @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
-                                                        @if($edit_column_detail[$edit_column[$key]]['language'])
+                                                        @if(isset($edit_column_detail[$edit_column[$key]]['language']))
                                                             @if(!$model_data['id'])
                                                                 @foreach($language as $lang_key => $lang_value)
                                                                     <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
@@ -207,9 +207,11 @@
                                         <button type="submit" id="submit_btn" class="btn btn-primary">
                                             保存
                                         </button>
+                                        @if(!isset($business_user))
                                         <a href="{{ route('admin.' . $route_name . '.index') }}" class="btn btn-primary">
                                             返回
                                         </a>
+                                        @endif
                                     </footer>
                                 </form>
                             </div>

@@ -11,6 +11,7 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Loopeer\QuickCms\Models\Selector;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Route;
@@ -39,6 +40,7 @@ class GeneralController extends BaseController
     protected $edit_column;
     protected $edit_column_name;
     protected $edit_column_detail;
+    protected $edit_redirect_location;
     protected $actions;
     protected $curd_action;
     protected $model;
@@ -75,6 +77,7 @@ class GeneralController extends BaseController
             $this->sort = config($general_name . 'sort');
             $this->where = config($general_name . 'index_where');
 
+            $this->edit_redirect_location = config($general_name . 'edit_redirect_location');
             $this->edit_hidden = config($general_name . 'edit_hidden');
             $this->edit_editor = config($general_name . 'edit_editor');
             $this->curd_action = config($general_name . 'curd_action');
@@ -383,7 +386,9 @@ class GeneralController extends BaseController
         }
         $message['result'] = $result ? true : false;
         $message['content'] = $message['result'] ? '操作成功' : '操作失败';
-
+        if (isset($this->edit_redirect_location)) {
+            return Redirect::to($this->edit_redirect_location)->with('message', $message);
+        }
         return Redirect::to('admin/' . $this->route_name)->with('message', $message);
     }
 
@@ -394,6 +399,12 @@ class GeneralController extends BaseController
      */
     public function edit($id) {
         $model = $this->model;
+        if (!isset($id)) {
+            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $business_user = $reflectionClass->newInstance();
+            $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
+            $id = $business_user->business_id;
+        }
         $model_data = $model::find($id);
         $data = self::getEditData($model_data);
         $selectors = $data['selectors'];
@@ -412,6 +423,11 @@ class GeneralController extends BaseController
             $selector_data[$v] = $temp;
         }
         $data['selector_data'] = $selector_data;
+        if (isset($business_user)) {
+            $data['business_user'] = true;
+        }
+        $message = Session::get('message');
+        $data['message'] = $message;
         return View::make('backend::generals.create', $data);
     }
 
