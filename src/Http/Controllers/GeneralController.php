@@ -273,7 +273,7 @@ class GeneralController extends BaseController
      * 添加记录
      * @return mixed
      */
-    public function create($custom_id) {
+    public function create($custom_id = null) {
         $model_data = $this->model;
         $data = self::getEditData($model_data, $custom_id);
         $selectors = $data['selectors'];

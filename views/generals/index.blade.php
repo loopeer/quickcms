@@ -13,9 +13,12 @@
                         <p>
                             @if(isset($custom_id))
                                 <a href="{{ $custom_id_back_url }}" class="btn btn-primary">返回</a>&nbsp;
+                                <a href="{{ $route_path . '/create' }}"
+                                   id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
+                            @else
+                                <a href="{{ '/admin/' . $route_name . '/create' }}"
+                                   id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
                             @endif
-                            <a href="{{ isset($custom_id) ? $route_path . '/create' : '/admin/' + $route_name + '/create/' }}"
-                               id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
                         </p>
                     @endif
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
