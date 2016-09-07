@@ -11,7 +11,6 @@
 
 namespace Loopeer\QuickCms\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Loopeer\QuickCms\Models\Selector;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Route;
@@ -22,6 +21,7 @@ use View;
 use Redirect;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Log;
 
 class GeneralController extends BaseController
@@ -54,12 +54,15 @@ class GeneralController extends BaseController
     protected $detail_multi_column;
     protected $detail_multi_join;
     protected $detail_style;
+    protected $custom_id_relation_column;
+    protected $custom_id_back_url;
 
     public function __construct(Request $request) {
         try {
             $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
                 Route::getCurrentRoute()->getPath());
             GeneralUtil::filterOperationPermission($request, null, $this->route_name);
+            \Log::info(Route::getCurrentRoute()->getPath());
             $general_name = 'generals.' . $this->route_name . '.';
             $this->index_column = config($general_name . 'index_column');
             $this->index_column_format = config($general_name . 'index_column_format');
@@ -96,6 +99,9 @@ class GeneralController extends BaseController
             $this->detail_multi_column = config($general_name . 'detail_multi_column');
             $this->detail_column_rename = config($general_name . 'detail_column_rename');
             $this->detail_style =  config($general_name . 'detail_style');
+
+            $this->custom_id_relation_column = config($general_name . 'custom_id_relation_column');
+            $this->custom_id_back_url = config($general_name . 'custom_id_back_url');
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
@@ -111,7 +117,7 @@ class GeneralController extends BaseController
      * @param $dialog_id
      * @return mixed
      */
-    public function search($dialog_id = null)
+    public function search($custom_id = null)
     {
         $model = $this->model;
         if(isset($this->where)) {
@@ -145,6 +151,9 @@ class GeneralController extends BaseController
             foreach ($this->sort as $sort) {
                 $model = $model->orderBy($sort[0], $sort[1]);
             }
+        }
+        if (isset($custom_id)) {
+            $model = $model->where($this->custom_id_relation_column, $custom_id);
         }
         if(isset($this->index_multi_column)) {
             $search = Input::get('search')['value'];
@@ -203,35 +212,45 @@ class GeneralController extends BaseController
      * 列表
      * @return mixed
      */
-    public function index()
+    public function index($custom_id = null)
     {
         $message = Session::get('message');
         $selector_data = [];
         if(isset($this->index_column_rename)) {
-            foreach($this->index_column_rename as $key => $column_name) {
-                if($column_name['type'] == 'selector') {
+            foreach ($this->index_column_rename as $key => $column_name) {
+                if ($column_name['type'] == 'selector') {
                     $selector = Selector::where('enum_key', $column_name['param'])->first();
                     $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
                     $selector_data[$key] = $tmp_data;
                 }
             }
         }
-
+        if (isset($custom_id)) {
+            $model = $this->model;
+            $custom_data = $model::find($custom_id);
+            $column = $this->custom_id_relation_column;
+            $back_url = str_replace('{custom_id}', $custom_data->$column, $this->custom_id_back_url);
+        }
         $this->curd_action = GeneralUtil::curdAction($this->curd_action);
         $data = array(
             'index_column_name' => $this->index_column_name,
             'index_column_rename' => $this->index_column_rename,
             'selector_data' => $selector_data,
             'route_name' => $this->route_name,
+            'route_path' => '/' . str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath()),
             'model_name' => $this->model_name,
             'actions' => $this->actions,
             'curd_action' => $this->curd_action,
             'index_column' => $this->index_column,
             'message' => $message,
             'detail_style' => isset($this->detail_style) ? $this->detail_style : null,
+            'custom_id_back_url' => isset($back_url) ? $back_url : null,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
+        if (isset($custom_id)) {
+            $data['custom_id'] = $custom_id;
+        }
         return View::make('backend::generals.index', $data);
     }
 
@@ -240,9 +259,9 @@ class GeneralController extends BaseController
      * @param $id
      * @return int
      */
-    public function destroy($id) {
+    public function destroy($custom_id = null, $id = null) {
         $model = $this->model;
-        if($model::destroy($id)) {
+        if($model::destroy(isset($id) ? $id : $custom_id)) {
             $result = true;
         } else {
             $result = false;
@@ -254,9 +273,9 @@ class GeneralController extends BaseController
      * 添加记录
      * @return mixed
      */
-    public function create() {
+    public function create($custom_id) {
         $model_data = $this->model;
-        $data = self::getEditData($model_data);
+        $data = self::getEditData($model_data, $custom_id);
         $selectors = $data['selectors'];
         $selector_data = [];
         foreach ($selectors as $k => $v) {
@@ -308,24 +327,18 @@ class GeneralController extends BaseController
                     $language_resource = $reflectionClass->newInstance();
                     $language_resource_data = $language_resource::where('key', $data->$key)->get();
                 }
-                if ($column_name['type'] == 'html' && $column_name['language']) {
-                    $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
-                    $language_resource = $reflectionClass->newInstance();
-                    $language_resource_editor_data = $language_resource::where('key', $data->$key)->get();
-                }
             }
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames',
-            'rename_keys', 'selector_data', 'language_resource_data', 'language_resource_editor_data'));
+        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data', 'language_resource_data'));
     }
 
     /**
      * 保存记录
      * @return mixed
      */
-    public function store() {
+    public function store($custom_id = null) {
         $data = Input::all();
         if (isset($data['_token'])) {
             unset($data['_token']);
@@ -389,6 +402,12 @@ class GeneralController extends BaseController
         if (isset($this->edit_redirect_location)) {
             return Redirect::to($this->edit_redirect_location)->with('message', $message);
         }
+        if (isset($custom_id)) {
+            $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
+            $route_path = str_replace('/create', '', $route_path);
+            $route_path = str_replace('/edit', '', $route_path);
+            return Redirect::to($route_path)->with('message', $message);
+        }
         return Redirect::to('admin/' . $this->route_name)->with('message', $message);
     }
 
@@ -397,16 +416,19 @@ class GeneralController extends BaseController
      * @param $id
      * @return mixed
      */
-    public function edit($id) {
+    public function edit($custom_id = null, $id = null) {
         $model = $this->model;
-        if (!isset($id)) {
+        if (!isset($custom_id) && !isset($id)) {
             $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
             $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
             $id = $business_user->business_id;
         }
-        $model_data = $model::find($id);
-        $data = self::getEditData($model_data);
+        $model_data = $model::find(isset($id) ? $id : $custom_id);
+        if (!isset($id)) {
+            $custom_id = null;
+        }
+        $data = self::getEditData($model_data, $custom_id);
         $selectors = $data['selectors'];
         $selector_data = [];
         foreach ($selectors as $k => $v) {
@@ -454,7 +476,7 @@ class GeneralController extends BaseController
         return $ret ? 1 : 0;
     }
 
-    private function getEditData($model_data) {
+    private function getEditData($model_data, $custom_id = null) {
         $image_config = false;
         $images = array();
         $selectors = [];
@@ -489,8 +511,13 @@ class GeneralController extends BaseController
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
+        $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
+        $route_path = str_replace('/create', '', $route_path);
+        $route_path = str_replace('/edit', '', $route_path);
+        $route_path = str_replace('/{id}', '', $route_path);
         $data = array(
             'route_name' => $this->route_name,
+            'route_path' => '/' . $route_path,
             'model_name' => $this->model_name,
             'column_names' => $column_names,
             'edit_column' => $this->edit_column,
@@ -508,6 +535,8 @@ class GeneralController extends BaseController
             'language_resource' => isset($language_resource_data) ? $language_resource_data : null,
             'language_resource_editor' => isset($language_resource_editor_data) ? $language_resource_editor_data : null,
             'edit_column_label' => $this->edit_column_label,
+            'custom_id_relation_column' => $this->custom_id_relation_column,
+            'custom_id' => isset($custom_id) ? $custom_id : null,
         );
         return $data;
     }

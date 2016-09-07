@@ -1,53 +1,59 @@
 @extends('backend::layouts.master')
 
 @section('content')
-        <!-- MAIN CONTENT -->
-<div id="content">
-    <section id="widget-grid" class="">
-        <div class="row tips">
-            @include('backend::layouts.message')
-        </div>
-        <div class="row">
-            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                @if($curd_action['create'])
-                    <p><a href="/admin/{{ $route_name }}/create/" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a></p>
-                @endif
-                <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-                    <header>
-                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                        <h2>{{ $model_name }}列表</h2>
-                    </header>
-                    <div>
-                        <div class="jarviswidget-editbox">
+    <!-- MAIN CONTENT -->
+    <div id="content">
+        <section id="widget-grid" class="">
+            <div class="row tips">
+                @include('backend::layouts.message')
+            </div>
+            <div class="row">
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @if($curd_action['create'])
+                        <p>
+                            @if(isset($custom_id))
+                                <a href="{{ $custom_id_back_url }}" class="btn btn-primary">返回</a>&nbsp;
+                            @endif
+                            <a href="{{ isset($custom_id) ? $route_path . '/create' : '/admin/' + $route_name + '/create/' }}"
+                               id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
+                        </p>
+                    @endif
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                            <h2>{{ $model_name }}列表</h2>
+                        </header>
+                        <div>
+                            <div class="jarviswidget-editbox">
+                            </div>
+                            <div class="widget-body no-padding">
+                                <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
+                                    <thead>
+                                    <tr>
+                                        @if(isset($index_column_name))
+                                            @foreach($index_column_name as $name)
+                                                <th>{{ $name }}</th>
+                                            @endforeach
+                                        @else
+                                            @foreach($index_column as $column)
+                                                <th>{{ $column_names[$column] }}</th>
+                                            @endforeach
+                                        @endif
+                                        @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
+                                            <th>操作</th>
+                                        @endif
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
-                        <div class="widget-body no-padding">
-                            <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
-                                <thead>
-                                <tr>
-                                @if(isset($index_column_name))
-                                    @foreach($index_column_name as $name)
-                                        <th>{{ $name }}</th>
-                                    @endforeach
-                                @else
-                                    @foreach($index_column as $column)
-                                        <th>{{ $column_names[$column] }}</th>
-                                    @endforeach
-                                @endif
-                                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
-                                    <th>操作</th>
-                                @endif
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
+                        <input type="hidden" id="delete_token" value="{{ csrf_token() }}"/>
                     </div>
-                    <input type="hidden" id="delete_token" value="{{ csrf_token() }}"/>
-                </div>
-            </article>
-        </div>
-    </section>
-</div>
-<!-- END MAIN CONTENT -->
+                </article>
+            </div>
+        </section>
+    </div>
+    <!-- END MAIN CONTENT -->
 @endsection
 
 @section('script')
@@ -107,9 +113,15 @@
                     '</div>'
                 } ],
                 @endif
+                @if(isset($custom_id))
+                "ajax": {
+                    "url": "{{ $route_path }}" + "/search"
+                }
+                @else
                 "ajax": {
                     "url": "/admin/" + route_name + "/search"
                 }
+                @endif
             });
 
             table.on( 'draw.dt', function () {
@@ -138,139 +150,151 @@
                 @endif
 
                     @if(is_array($index_column_rename))
-                        @foreach($index_column_rename as $column => $rename)
-                            {{$column_no = array_flip($index_column)[$column]}}
-                            @if($rename['type'] == 'normal')
-                                @foreach($rename['param'] as $key => $value)
-                                    if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
-                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
-                                        {{--@if(!empty($value['action_name']))--}}
-                                        {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
-                                        {{--@endif--}}
-                                    } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
-                                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
-                                    }
-                                @endforeach
-                            @elseif($rename['type'] == 'dialog')
-                                var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
-                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
-                            @elseif($rename['type'] == 'html')
-                                var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
-                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                    @foreach($index_column_rename as $column => $rename)
+                    {{$column_no = array_flip($index_column)[$column]}}
+                    @if($rename['type'] == 'normal')
+                    @foreach($rename['param'] as $key => $value)
+                    if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
+                        {{--@if(!empty($value['action_name']))--}}
+                        {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
+                        {{--@endif--}}
+                    } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
+                    }
+                    @endforeach
+                @elseif($rename['type'] == 'dialog')
+                    var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                    @elseif($rename['type'] == 'html')
+                    var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
 
-                            @elseif($rename['type'] == 'selector')
-                                var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
-                                var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
-                                $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
-				
-                            @elseif($rename['type'] == 'limit')
-                                var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
-				$('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, {{ $rename['param'] }}));
-                            @endif
-                        @endforeach
+                    @elseif($rename['type'] == 'selector')
+                    var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                    var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
+
+                    @elseif($rename['type'] == 'limit')
+                    var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, {{ $rename['param'] }}));
                     @endif
-                }
-		permission();
+                @endforeach
+            @endif
+        }
+                permission();
             });
 
             if('{!! $curd_action["edit"] !!}') {
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
-			if(isDisabled($(this))) {
-                    		var data = table.row($(this).parents('tr')).data();
-                    		window.location = '/admin/' + route_name + '/' + data[0] + '/edit/';
-			}
+                    if(isDisabled($(this))) {
+                        var data = table.row($(this).parents('tr')).data();
+                        var url = '/admin/' + route_name + '/' + data[0] + '/edit/';
+                        @if(isset($custom_id))
+                        url = '{{ $route_path }}' + '/' + data[0] + '/edit/';
+                        @endif
+                        window.location = url;
+                    }
                 });
-		}
+            }
 
             if('{!! $curd_action['delete'] !!}') {
                 $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
-		    	if(isDisabled($(this))) {
-                    var data = table.row($(this).parents('tr')).data();
-                    var delete_token = $('#delete_token').val();
-                    var data_table = $('#dt_basic').dataTable();
-                    var page_info = table.page.info();
-                    var page = page_info.page;
-                    if (page_info.length == 1 && page_info.page != 0) {
-                        page = page - 1;
-                    }
-                    if(confirm('删除这条记录?')) {
-                        $.ajax({
-                            type: "DELETE",
-                            data: { '_token' : delete_token },
-                            url: '/admin/' + route_name + '/' + data[0],
-                            success: function(result) {
-                                if (result == 1 || result.result == true) {
-                                    data_table.fnPageChange(page);
-                                    $(".tips").html('<div class="alert alert-success fade in">'
-                                    + '<button class="close" data-dismiss="alert">×</button>'
-                                    + '<i class="fa-fw fa fa-check"></i>'
-                                    + '<strong>成功</strong>' + ' ' + '删除成功。'
-                                    + '</div>');
-                                } else {
-                                    $(".tips").html('<div class="alert alert-danger fade in">'
-                                    + '<button class="close" data-dismiss="alert">×</button>'
-                                    + '<i class="fa-fw fa fa-warning"></i>'
-                                    + '<strong>失败</strong>' + ' ' + '删除失败。'
-                                    + '</div>');
+                    if(isDisabled($(this))) {
+                        var data = table.row($(this).parents('tr')).data();
+                        var delete_token = $('#delete_token').val();
+                        var data_table = $('#dt_basic').dataTable();
+                        var page_info = table.page.info();
+                        var page = page_info.page;
+                        if (page_info.length == 1 && page_info.page != 0) {
+                            page = page - 1;
+                        }
+                        var url = '/admin/' + route_name + '/' + data[0];
+                        @if(isset($custom_id))
+                        url = '{{ $route_path }}' + '/' + data[0];
+                        @endif
+                        if(confirm('删除这条记录?')) {
+                            $.ajax({
+                                type: "DELETE",
+                                data: { '_token' : delete_token },
+                                url: url,
+                                success: function(result) {
+                                    if (result == 1 || result.result == true) {
+                                        data_table.fnPageChange(page);
+                                        $(".tips").html('<div class="alert alert-success fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-check"></i>'
+                                        + '<strong>成功</strong>' + ' ' + '删除成功。'
+                                        + '</div>');
+                                    } else {
+                                        $(".tips").html('<div class="alert alert-danger fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-warning"></i>'
+                                        + '<strong>失败</strong>' + ' ' + '删除失败。'
+                                        + '</div>');
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
-			}
                 });
-	    } 
+            }
 
             if('{!! $curd_action['detail'] !!}') {
-            $('#content').after(
-                    '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                    '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-header">' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
-                    '&times;' +
-                    '</button>' +
-                    '<h4 class="modal-title"></h4>' +
-                    '</div>' +
-                    '<div class="modal-body custom-scroll terms-body" style="{{ isset($detail_style['height']) ? "max-height:" . $detail_style['height'] : ''}}">' +
-                    '<div id="left">' +
-                    '</div>' +
-                    '</div>' +
+                $('#content').after(
+                        '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                        '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+                        '&times;' +
+                        '</button>' +
+                        '<h4 class="modal-title"></h4>' +
+                        '</div>' +
+                        '<div class="modal-body custom-scroll terms-body" style="{{ isset($detail_style['height']) ? "max-height:" . $detail_style['height'] : ''}}">' +
+                        '<div id="left">' +
+                        '</div>' +
+                        '</div>' +
 
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
-            );
+                        '</div>' +
+                        '</div>' +
+                        '</div>'
+                );
 
-            $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
-			if(isDisabled($(this))) {
-                var data = table.row($(this).parents('tr')).data();
-                $("#detail_dialog .modal-title").html('查看详情');
-                $(this).attr("data-toggle", "modal");
-                $(this).attr("data-target", "#detail_dialog");
-                $(this).attr("data-action", "/admin/" + "{{ $route_name }}/" + data[0]);
-                $(this).attr("data-id",data[0]);
-			}
-            });
+                $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
+                    if(isDisabled($(this))) {
+                        var data = table.row($(this).parents('tr')).data();
+                        $("#detail_dialog .modal-title").html('查看详情');
+                        $(this).attr("data-toggle", "modal");
+                        $(this).attr("data-target", "#detail_dialog");
+                        $(this).attr("data-action", "/admin/" + "{{ $route_name }}/" + data[0]);
+                        $(this).attr("data-id",data[0]);
+                    }
+                });
 
-            $('#detail_dialog').on('show.bs.modal', function(e) {
-                var action = $(e.relatedTarget).data('action');
-                //populate the div
-                loadURL(action, $('#detail_dialog' + ' .modal-content .modal-body #left'));
-            });
-	    }
+                $('#detail_dialog').on('show.bs.modal', function(e) {
+                    var action = $(e.relatedTarget).data('action');
+                    //populate the div
+                    loadURL(action, $('#detail_dialog' + ' .modal-content .modal-body #left'));
+                });
+            }
 
             @if(!empty($actions))
             @foreach($actions as $action)
             @if ($action['type'] == 'redirect_with_id')
-                 $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
-                        var data = table.row($(this).parents('tr')).data();
-                        window.location = '{{$action['url']}}' + '/' + data[0];
-                });
+            $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+                var data = table.row($(this).parents('tr')).data();
+                if ('{{$action['url']}}'.indexOf("{custom_id}") == -1) {
+                    window.location = '{{$action['url']}}' + '/' + data[0];
+                } else {
+                    window.location = '{{$action['url']}}'.replace('{custom_id}', data[0]);
+                }
+            });
             @endif
             @if($action['type'] == 'confirm')
-                $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
-			if(isDisabled($(this))) {
-                console.log($(this).attr('permission'));
+            $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+                if(isDisabled($(this))) {
+                    console.log($(this).attr('permission'));
                     var data = table.row($(this).parents('tr')).data();
                     var page_info = table.page.info();
                     var page = page_info.page;
@@ -285,11 +309,11 @@
                         $.ajax({
                             type: '{{{ $action['method'] or 'post' }}}',
                             @if(isset($action['data']))
-                                data: {
-                                    @foreach($action['data'] as $data_key => $data_val)
-                                    '{{ $data_key }}' : '{{ $data_val }}',
-                                    @endforeach
-                                },
+                            data: {
+                                @foreach($action['data'] as $data_key => $data_val)
+                                '{{ $data_key }}' : '{{ $data_val }}',
+                                @endforeach
+                            },
                             @endif
                             url: '{{ $action['url'] }}' + '/' + data[0],
                             success: function(result) {
@@ -297,55 +321,55 @@
                                 if (result == 1 || result.result == true) {
                                     data_table.fnPageChange(page);
                                     html = '<div class="alert alert-success fade in">'
-                                            +'<button class="close" data-dismiss="alert">×</button>'
-                                            +'<i class="fa-fw fa fa-check"></i>';
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-check"></i>';
                                     if (isObject(result)) {
                                         html += '<strong>成功</strong>'+' '+ result.content +'。'
-                                                +'</div>';
+                                        +'</div>';
                                     } else {
                                         html += '<strong>成功</strong>'+' '+ '{{{ $action['success_msg'] or '操作成功' }}}' + '。'
-                                                +'</div>';
+                                        +'</div>';
                                     }
                                     $(".tips").html(html);
                                 } else {
                                     html = '<div class="alert alert-danger fade in">'
-                                            +'<button class="close" data-dismiss="alert">×</button>'
-                                            +'<i class="fa-fw fa fa-warning"></i>';
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-warning"></i>';
                                     if (isObject(result)) {
                                         html += '<strong>失败</strong>'+' '+ result.content +'。'
-                                                +'</div>';
+                                        +'</div>';
                                     } else {
                                         html += '<strong>失败</strong>'+' '+ '{{{ $action['failure_msg'] or '操作失败' }}}' + '。'
-                                                +'</div>';
+                                        +'</div>';
                                     }
                                     $(".tips").html(html);
                                 }
                             }
                         });
                     }
-			}
-                });
+                }
+            });
             @endif
             //
             @if($action['type'] == 'dialog')
             $('#content').after(
-                '<div class="modal fade" id="' + '{{ $action['target'] }}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                '<div class="modal-dialog" style="{{ isset($action['width']) ? "width:".$action['width'] : ''}};">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
-                '&times;' +
-                '</button>' +
-                '<h4 class="modal-title"></h4>' +
-                '</div>' +
-                '<div class="modal-body custom-scroll terms-body" style="{{ isset($action['height']) ? "max-height:".$action['height'] : ''}};">' +
-                '<div id="left">' +
-                '</div>' +
-                '</div>' +
+                    '<div class="modal fade" id="' + '{{ $action['target'] }}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                    '<div class="modal-dialog" style="{{ isset($action['width']) ? "width:".$action['width'] : ''}};">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
+                    '&times;' +
+                    '</button>' +
+                    '<h4 class="modal-title"></h4>' +
+                    '</div>' +
+                    '<div class="modal-body custom-scroll terms-body" style="{{ isset($action['height']) ? "max-height:".$action['height'] : ''}};">' +
+                    '<div id="left">' +
+                    '</div>' +
+                    '</div>' +
 
-                '</div>' +
-                '</div>' +
-                '</div>'
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
             );
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
@@ -365,10 +389,10 @@
 
             @if(!empty($action['form']))
             $('#' + '{{$action['target']}}' + " .modal-body").after(
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
-                '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
-                '</div>'
+                    '<div class="modal-footer">' +
+                    '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+                    '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
+                    '</div>'
             );
 
             $('#' + '{{$action['form']['submit_id']}}').click(function(){
@@ -388,26 +412,26 @@
                         if (result == 1 || result.result == true) {
                             data_table.fnPageChange(page);
                             html = '<div class="alert alert-success fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-check"></i>';
+                            +'<button class="close" data-dismiss="alert">×</button>'
+                            +'<i class="fa-fw fa fa-check"></i>';
                             if (isObject(result)) {
                                 html += '<strong>成功</strong>'+' '+ result.content +'。'
-                                        +'</div>';
+                                +'</div>';
                             } else {
                                 html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
-                                        +'</div>';
+                                +'</div>';
                             }
                             $(".tips").html(html);
                         } else {
                             html = '<div class="alert alert-danger fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-warning"></i>';
+                            +'<button class="close" data-dismiss="alert">×</button>'
+                            +'<i class="fa-fw fa fa-warning"></i>';
                             if (isObject(result)) {
                                 html += '<strong>失败</strong>'+' '+ result.content +'。'
-                                        +'</div>';
+                                +'</div>';
                             } else {
                                 html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
-                                        +'</div>';
+                                +'</div>';
                             }
                             $(".tips").html(html);
                         }
@@ -430,7 +454,7 @@
 
         @foreach($index_column_rename as $column => $rename)
             @if($rename['type'] == 'dialog')
-                $('#content').after(
+            $('#content').after(
                     '<div class="modal fade" id="' + '{{$rename['param']['target']}}' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                     '<div class="modal-dialog" style="{{isset($rename['param']['width']) ? "width: ".$rename['param']['width'] : ""}}">' +
                     '<div class="modal-content">' +

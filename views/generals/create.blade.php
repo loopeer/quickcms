@@ -23,13 +23,13 @@
                             </h2>
                         </header>
                         @if(isset($edit_editor))
-                        @include('UEditor::head')
+                            @include('UEditor::head')
                         @endif
                         <div>
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="/admin/{{ $route_name }}" method="post" id="smart-form-register" class="smart-form client-form">
+                                <form action="{{ isset($custom_id) ? $route_path : '/admin/' . $route_name }}" method="post" id="smart-form-register" class="smart-form client-form">
                                     <style>
                                         .btn {
                                             display: inline-block;
@@ -61,6 +61,9 @@
                                             <input type="hidden" name="{{ $hidden['name'] }}" value="{{ $hidden['value'] }}">
                                         @endforeach
                                     @endif
+                                    @if(isset($custom_id))
+                                        <input type="hidden" name="{{ $custom_id_relation_column }}" value="{{ $custom_id }}">
+                                    @endif
                                     <fieldset>
                                         @foreach($edit_column as $key => $column_name)
                                             <section>
@@ -68,137 +71,137 @@
                                                     {{ $edit_column_name ? $edit_column_name[$key] : $column_names[$column_name] }}
                                                 </label>
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
-                                                <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
-                                                    @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
-                                                        <div class="input-group">
-                                                            <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"
-                                                                   value="{{ (!$model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['default_value'])) ? date('Y-m-d', time()) : $model_data[$edit_column[$key]] }}">
-                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                        </div>
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
-                                                        <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'selector')
-                                                        <select class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'select' }}" name="{{$edit_column[$key]}}" id="select2">
-                                                            @foreach($selector_data[$edit_column_detail[$edit_column[$key]]['selector_key']] as $k=>$v)
-                                                                @if($model_data[$edit_column[$key]] == $k)
-                                                                <option selected value="{{$k}}">{{$v}}</option>
-                                                                @else
-                                                                <option value="{{$k}}">{{$v}}</option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                        @if(isset($edit_column_detail[$edit_column[$key]]['style']) && $edit_column_detail[$edit_column[$key]]['style'] == 'select')
-                                                            <i></i>
-                                                        @endif
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
-                                                        @if(isset($edit_column_detail[$edit_column[$key]]['language']))
-                                                            @if(!$model_data['id'])
-                                                                @foreach($language as $lang_key => $lang_value)
-                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
-                                                                    <!-- 实例化编辑器 -->
-                                                                    <script type="text/javascript">
-                                                                        var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
-                                                                        var toolbars = new Array();
-                                                                        if(toolbar != null) {
-                                                                            toolbars = toolbar.split(',');
-                                                                        }
-                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}',{
-                                                                            @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
-                                                                            toolbars: [toolbars],
-                                                                            @endif
-                                                                            autoHeightEnabled: true,
-                                                                            lang:"zh-cn",
-                                                                            autoFloatEnabled: true,
-                                                                            initialFrameHeight: 350
-                                                                        });
-                                                                        ue.ready(function() {
-                                                                            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
-                                                                            //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-                                                                        });
-                                                                    </script>
-                                                                    <br>
-                                                                @endforeach
-                                                            @else
-                                                                @foreach($language_resource_editor as $lang_res_key => $lang_res_value)
-                                                                    <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}" name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}" type="text/plain">{!! $lang_res_value->value !!}</script>
-                                                                    <!-- 实例化编辑器 -->
-                                                                    <script type="text/javascript">
-                                                                        var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
-                                                                        var toolbars = new Array();
-                                                                        if(toolbar != null) {
-                                                                            toolbars = toolbar.split(',');
-                                                                        }
-                                                                        var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}',{
-                                                                            @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
-                                                                            toolbars: [toolbars],
-                                                                            @endif
-                                                                            autoHeightEnabled: true,
-                                                                            lang:"zh-cn",
-                                                                            autoFloatEnabled: true,
-                                                                            initialFrameHeight: 350
-                                                                        });
-                                                                        ue.ready(function() {
-                                                                            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
-                                                                            //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-                                                                        });
-                                                                    </script>
-                                                                    <br>
-                                                                @endforeach
-                                                            @endif
-                                                        @else
-                                                            <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
-                                                            <!-- 实例化编辑器 -->
-                                                            <script type="text/javascript">
-                                                                var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
-                                                                var toolbars = new Array();
-                                                                if(toolbar != null) {
-                                                                    toolbars = toolbar.split(',');
-                                                                }
-                                                                var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
-                                                                    @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
-                                                                    toolbars: [toolbars],
+                                                    <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
+                                                        @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
+                                                            <div class="input-group">
+                                                                <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"
+                                                                       value="{{ (!$model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['default_value'])) ? date('Y-m-d', time()) : $model_data[$edit_column[$key]] }}">
+                                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                            </div>
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
+                                                            <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'selector')
+                                                            <select class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'select' }}" name="{{$edit_column[$key]}}" id="select2">
+                                                                @foreach($selector_data[$edit_column_detail[$edit_column[$key]]['selector_key']] as $k=>$v)
+                                                                    @if($model_data[$edit_column[$key]] == $k)
+                                                                        <option selected value="{{$k}}">{{$v}}</option>
+                                                                    @else
+                                                                        <option value="{{$k}}">{{$v}}</option>
                                                                     @endif
-                                                                    autoHeightEnabled: true,
-                                                                    lang:"zh-cn",
-                                                                    autoFloatEnabled: true,
-                                                                    initialFrameHeight: 350
-                                                                });
-                                                                ue.ready(function() {
-                                                                    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
-                                                                    //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-                                                                });
-                                                            </script>
-                                                        @endif
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
-                                                        @include('backend::image.upload', ['image_name' => $edit_column[$key]])
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
-                                                        @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'textarea')
-                                                        <label class="textarea">
-                                                            <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
-                                                            <label>
-                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
-                                                        @if(!$model_data['id'])
-                                                        @foreach($language as $lang_key => $lang_value)
-                                                            <input type="text" required="" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                            <br>
-                                                        @endforeach
-                                                        @else
-                                                        @foreach($language_resource as $lang_res_key => $lang_res_value)
-                                                            <input type="text" placeholder="{{ $language[$lang_res_value->language] }}"
-                                                                   name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}"
-                                                                   value="{{ $lang_res_value->value }}">
-                                                            <br>
-                                                        @endforeach
-                                                        @endif
-                                                    @else
-                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                    @endif
-                                                </label>
-                                                @else
-                                                    <label class="input">
-                                                    <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                    </label>
+                                                                @endforeach
+                                                            </select>
+                                                            @if(isset($edit_column_detail[$edit_column[$key]]['style']) && $edit_column_detail[$edit_column[$key]]['style'] == 'select')
+                                                                <i></i>
+                                                            @endif
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
+                                                            @if(isset($edit_column_detail[$edit_column[$key]]['language']))
+                                                                @if(!$model_data['id'])
+                                                                    @foreach($language as $lang_key => $lang_value)
+                                                                        <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                                        <!-- 实例化编辑器 -->
+                                                                        <script type="text/javascript">
+                                                                            var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                            var toolbars = new Array();
+                                                                            if(toolbar != null) {
+                                                                                toolbars = toolbar.split(',');
+                                                                            }
+                                                                            var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}',{
+                                                                                @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                                toolbars: [toolbars],
+                                                                                @endif
+                                                                                autoHeightEnabled: true,
+                                                                                lang:"zh-cn",
+                                                                                autoFloatEnabled: true,
+                                                                                initialFrameHeight: 350
+                                                                            });
+                                                                            ue.ready(function() {
+                                                                                ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                                //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                            });
+                                                                        </script>
+                                                                        <br>
+                                                                    @endforeach
+                                                                @else
+                                                                    @foreach($language_resource_editor as $lang_res_key => $lang_res_value)
+                                                                        <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}" name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}" type="text/plain">{!! $lang_res_value->value !!}</script>
+                                                                        <!-- 实例化编辑器 -->
+                                                                        <script type="text/javascript">
+                                                                            var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                            var toolbars = new Array();
+                                                                            if(toolbar != null) {
+                                                                                toolbars = toolbar.split(',');
+                                                                            }
+                                                                            var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}',{
+                                                                                @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                                toolbars: [toolbars],
+                                                                                @endif
+                                                                                autoHeightEnabled: true,
+                                                                                lang:"zh-cn",
+                                                                                autoFloatEnabled: true,
+                                                                                initialFrameHeight: 350
+                                                                            });
+                                                                            ue.ready(function() {
+                                                                                ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                                //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                            });
+                                                                        </script>
+                                                                        <br>
+                                                                    @endforeach
+                                                                @endif
+                                                            @else
+                                                                <script id="{{ $edit_column[$key] . '_editor' }}" name="{{ $edit_column[$key] }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
+                                                                <!-- 实例化编辑器 -->
+                                                                <script type="text/javascript">
+                                                                    var toolbar = '{{ isset($edit_column_detail[$edit_column[$key]]["toolbars"]) ? implode(',',  $edit_column_detail[$edit_column[$key]]["toolbars"]) : '' }}';
+                                                                    var toolbars = new Array();
+                                                                    if(toolbar != null) {
+                                                                        toolbars = toolbar.split(',');
+                                                                    }
+                                                                    var ue = UE.getEditor('{{ $edit_column[$key] . '_editor' }}',{
+                                                                        @if(isset($edit_column_detail[$edit_column[$key]]["toolbars"]))
+                                                                        toolbars: [toolbars],
+                                                                        @endif
+                                                                        autoHeightEnabled: true,
+                                                                        lang:"zh-cn",
+                                                                        autoFloatEnabled: true,
+                                                                        initialFrameHeight: 350
+                                                                    });
+                                                                    ue.ready(function() {
+                                                                        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                                                                        //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+                                                                    });
+                                                                </script>
+                                                            @endif
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'image')
+                                                            @include('backend::image.upload', ['image_name' => $edit_column[$key]])
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'file')
+                                                            @include('backend::dropzone.layout', ['dropzone_id' => isset($edit_column_detail[$edit_column[$key]]['dropzone_id']) ? $edit_column_detail[$edit_column[$key]]['dropzone_id'] : null])
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'textarea')
+                                                            <label class="textarea">
+                                                                <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
+                                                                <label>
+                                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
+                                                                        @if(!$model_data['id'])
+                                                                            @foreach($language as $lang_key => $lang_value)
+                                                                                <input type="text" required="" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                                                <br>
+                                                                            @endforeach
+                                                                        @else
+                                                                            @foreach($language_resource as $lang_res_key => $lang_res_value)
+                                                                                <input type="text" placeholder="{{ $language[$lang_res_value->language] }}"
+                                                                                       name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}"
+                                                                                       value="{{ $lang_res_value->value }}">
+                                                                                <br>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    @else
+                                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                                    @endif
+                                                                </label>
+                                                                @else
+                                                                    <label class="input">
+                                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                                    </label>
                                                 @endif
                                             </section>
                                         @endforeach
@@ -208,9 +211,15 @@
                                             保存
                                         </button>
                                         @if(!isset($business_user))
-                                        <a href="{{ route('admin.' . $route_name . '.index') }}" class="btn btn-primary">
-                                            返回
-                                        </a>
+                                            @if(isset($custom_id))
+                                                <a href="{{URL::previous()}}" class="btn btn-primary">
+                                                    返回
+                                                </a>
+                                            @else
+                                                <a href="{{ route('admin.' . $route_name . '.index') }}" class="btn btn-primary">
+                                                    返回
+                                                </a>
+                                            @endif
                                         @endif
                                     </footer>
                                 </form>
@@ -223,20 +232,20 @@
     </div>
 @endsection
 @section('script')
-{{--    <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>--}}
+    {{--    <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>--}}
     <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
-@if ($image_config)
-    @include('backend::image.script')
-    @foreach($images as $image)
-        @include('backend::image.action', ['image' => $image, 'image_data' => $model_data[$image['name']]])
-    @endforeach
-@endif
-@if($file_config)
-    @include('backend::dropzone.script')
-    @foreach($files as $file)
-        @include('backend::dropzone.action', $file)
-    @endforeach
-@endif
+    @if ($image_config)
+        @include('backend::image.script')
+        @foreach($images as $image)
+            @include('backend::image.action', ['image' => $image, 'image_data' => $model_data[$image['name']]])
+        @endforeach
+    @endif
+    @if($file_config)
+        @include('backend::dropzone.script')
+        @foreach($files as $file)
+            @include('backend::dropzone.action', $file)
+        @endforeach
+    @endif
     <script>
         $(document).ready(function() {
             $("#smart-form-register").validate({
@@ -299,9 +308,9 @@
             @endforeach
 
             $('.time').clockpicker({
-                placement: 'top',
-                donetext: '确定'
-            });
+                        placement: 'top',
+                        donetext: '确定'
+                    });
         });
     </script>
     <script>
