@@ -11,19 +11,19 @@ class BaseModel extends HookModel
         'id' => 'integer',
     ];
 
-    public function getPublishTimeAttribute() {
-        $time = strtotime($this->attributes['publish_time']);
+    public function getPublishTimeAttribute($value) {
+        $time = strtotime($value);
         if (is_int($time)) {
             return $time >= 0 ? $time : 0;
         }
         return 0;
     }
 
-    public function getImageAttribute() {
-        if(is_null($this->attributes['image']) || $this->attributes['image'] == ''){
+    public function getImageAttribute($value) {
+        if(is_null($value) || $value == ''){
             return null;
         }
-        $images = explode(',', $this->attributes['image']);
+        $images = explode(',', $value);
         foreach($images as $key => $image) {
             if(stripos($image, 'http:') === FALSE) {
                 $images[$key] = QiniuUtil::buildQiqiuImageUrl($image);
@@ -32,11 +32,11 @@ class BaseModel extends HookModel
         return implode(',', $images);
     }
 
-    public function getAvatarAttribute() {
-        if(is_null($this->attributes['avatar']) || $this->attributes['avatar'] == ''){
+    public function getAvatarAttribute($value) {
+        if(is_null($value) || $value == ''){
             return null;
         }
-        $images = explode(',', $this->attributes['avatar']);
+        $images = explode(',', $value);
         foreach($images as $key => $image) {
             if(stripos($image, 'http:') === FALSE) {
                 $images[$key] = QiniuUtil::buildQiqiuImageUrl($image);
