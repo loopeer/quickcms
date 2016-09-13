@@ -57,6 +57,7 @@ class GeneralController extends BaseController
     protected $custom_id_relation_column;
     protected $custom_id_back_url;
     protected $edit_hidden_business_id;
+    protected $index_business_where;
 
     public function __construct(Request $request) {
         try {
@@ -104,12 +105,12 @@ class GeneralController extends BaseController
             $this->custom_id_back_url = config($general_name . 'custom_id_back_url');
 
             $this->edit_hidden_business_id = config($general_name . 'edit_hidden_business_id');
+            $this->index_business_where = config($general_name . 'index_business_where');
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
         } catch (Exception $e) {
             Log::info($e->getMessage());
-//            App::abort('403');
         }
         parent::__construct();
     }
@@ -156,6 +157,14 @@ class GeneralController extends BaseController
         }
         if (isset($custom_id)) {
             $model = $model->where($this->custom_id_relation_column, $custom_id);
+        }
+        if (isset($this->index_business_where)) {
+            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $business_user = $reflectionClass->newInstance();
+            $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
+            if (isset($business_user)) {
+                $model = $model->where($this->index_business_where['column'], $business_user->business_id);
+            }
         }
         if(isset($this->index_multi_column)) {
             $search = Input::get('search')['value'];
