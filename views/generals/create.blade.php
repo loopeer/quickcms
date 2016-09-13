@@ -61,6 +61,9 @@
                                             <input type="hidden" name="{{ $hidden['name'] }}" value="{{ $hidden['value'] }}">
                                         @endforeach
                                     @endif
+                                    @if(isset($edit_hidden_business_id))
+                                        <input type="hidden" name="{{ $edit_hidden_business_id['name'] }}" value="{{ $edit_hidden_business_id['value'] }}">
+                                    @endif
                                     @if(isset($custom_id))
                                         <input type="hidden" name="{{ $custom_id_relation_column }}" value="{{ $custom_id }}">
                                     @endif

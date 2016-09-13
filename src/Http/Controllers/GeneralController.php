@@ -56,13 +56,13 @@ class GeneralController extends BaseController
     protected $detail_style;
     protected $custom_id_relation_column;
     protected $custom_id_back_url;
+    protected $edit_hidden_business_id;
 
     public function __construct(Request $request) {
         try {
             $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
                 Route::getCurrentRoute()->getPath());
             GeneralUtil::filterOperationPermission($request, null, $this->route_name);
-            \Log::info(Route::getCurrentRoute()->getPath());
             $general_name = 'generals.' . $this->route_name . '.';
             $this->index_column = config($general_name . 'index_column');
             $this->index_column_format = config($general_name . 'index_column_format');
@@ -102,6 +102,8 @@ class GeneralController extends BaseController
 
             $this->custom_id_relation_column = config($general_name . 'custom_id_relation_column');
             $this->custom_id_back_url = config($general_name . 'custom_id_back_url');
+
+            $this->edit_hidden_business_id = config($general_name . 'edit_hidden_business_id');
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
@@ -515,6 +517,12 @@ class GeneralController extends BaseController
         $route_path = str_replace('/create', '', $route_path);
         $route_path = str_replace('/edit', '', $route_path);
         $route_path = str_replace('/{id}', '', $route_path);
+        if (isset($this->edit_hidden_business_id)) {
+            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $business_user = $reflectionClass->newInstance();
+            $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
+            $this->edit_hidden_business_id['value'] = $business_user->business_id;
+        }
         $data = array(
             'route_name' => $this->route_name,
             'route_path' => '/' . $route_path,
@@ -537,6 +545,7 @@ class GeneralController extends BaseController
             'edit_column_label' => $this->edit_column_label,
             'custom_id_relation_column' => $this->custom_id_relation_column,
             'custom_id' => isset($custom_id) ? $custom_id : null,
+            'edit_hidden_business_id' => $this->edit_hidden_business_id,
         );
         return $data;
     }
