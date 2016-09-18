@@ -7,26 +7,26 @@ use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 
 class BaseModel extends HookModel
 {
-    public function getCreatedAtAttribute() {
-        $time = strtotime($this->attributes['created_at']);
+    public function getCreatedAtAttribute($value) {
+        $time = strtotime($value);
         if (is_int($time)) {
             return $time >= 0 ? date('Y-m-d H:i:s',$time) : 0;
         }
         return 0;
     }
-    public function getUpdatedAtAttribute() {
-        $time = strtotime($this->attributes['updated_at']);
+    public function getUpdatedAtAttribute($value) {
+        $time = strtotime($value);
         if (is_int($time)) {
             return $time >= 0 ? date('Y-m-d H:i:s',$time) : 0;
         }
         return 0;
     }
 
-    public function getImageAttribute(){
+    public function getImageAttribute($value){
         $images = null;
-        if(isset($this->attributes['image']) && $this->attributes['image'] != '') {
+        if(isset($va) && $va != '') {
             $qn_images = array();
-            $images = explode(',', $this->attributes['image']);
+            $images = explode(',', $value);
             if(count($images) > 1) {
                 foreach($images as $image) {
                     $image = QiniuUtil::buildQiqiuImageUrl($image);
@@ -34,7 +34,7 @@ class BaseModel extends HookModel
                 }
                 return $qn_images;
             } else {
-                return QiniuUtil::buildQiqiuImageUrl($this->attributes['image']);
+                return QiniuUtil::buildQiqiuImageUrl($value);
             }
         }
         return $images;
