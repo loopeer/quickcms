@@ -67,6 +67,7 @@ class IndexController extends BaseController {
         //Session::flush();
         Session::forget('menu');
         Session::forget('permissions');
+        Session::forget('business_id');
         $message = array('result' => true,'content' => '退出成功');
         return redirect('/admin/login')->with('message',$message);
     }

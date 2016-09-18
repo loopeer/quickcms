@@ -25,8 +25,8 @@ use Hash;
 class UserController extends BaseController {
 
     public function __construct(){
-        $this->middleware('auth.permission:system');
-        $this->middleware('auth.permission:admin.users.index');
+        //$this->middleware('auth.permission:system');
+        //$this->middleware('auth.permission:admin.users.index');
         parent::__construct();
     }
 
@@ -156,8 +156,7 @@ class UserController extends BaseController {
         $user = User::find($user_id);
         RoleUser::where('user_id',$user_id)->delete();
         $user->attachRole($role_id);
-        $res = array('result' => true,'content' => '分配用户角色成功');
-        return $res;
+
     }
 
     public function checkEmail() {

@@ -411,7 +411,7 @@ class GeneralController extends BaseController
         $message['result'] = $result ? true : false;
         $message['content'] = $message['result'] ? '操作成功' : '操作失败';
         if (isset($this->edit_redirect_location)) {
-            return Redirect::to($this->edit_redirect_location)->with('message', $message);
+            return Redirect::to(str_replace('{id}', $data['id'], $this->edit_redirect_location))->with('message', $message);
         }
         if (isset($custom_id)) {
             $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
