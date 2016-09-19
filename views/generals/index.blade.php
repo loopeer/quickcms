@@ -9,6 +9,9 @@
             </div>
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    @if(isset($custom_id))
+                        <p><a href="{{ $custom_id_back_url }}" class="btn btn-primary">返回</a></p>
+                    @endif
                     @if($curd_action['create'])
                         <p>
                             @if(isset($custom_id))
@@ -24,7 +27,7 @@
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>{{ $model_name }}列表</h2>
+                            <h2>@if(isset($custom_id)) {{ $custom_id . ' -' }} @endif{{ $model_name }}列表</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">

@@ -58,6 +58,7 @@ class GeneralController extends BaseController
     protected $custom_id_back_url;
     protected $edit_hidden_business_id;
     protected $index_business_where;
+    protected $custom_id_relation;
 
     public function __construct(Request $request) {
         try {
@@ -106,6 +107,7 @@ class GeneralController extends BaseController
 
             $this->edit_hidden_business_id = config($general_name . 'edit_hidden_business_id');
             $this->index_business_where = config($general_name . 'index_business_where');
+            $this->custom_id_relation = config($general_name . 'custom_id_relation');
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
@@ -156,7 +158,16 @@ class GeneralController extends BaseController
             }
         }
         if (isset($custom_id)) {
-            $model = $model->where($this->custom_id_relation_column, $custom_id);
+            if (isset($this->custom_id_relation_column)) {
+                $model = $model->where($this->custom_id_relation_column, $custom_id);
+            } elseif(isset($this->custom_id_relation)) {
+                $reflectionClass = new \ReflectionClass($this->custom_id_relation['relation_model_class']);
+                $relation_model = $reflectionClass->newInstance();
+                $relation_ids = $relation_model->where($this->custom_id_relation['custom_id_column'], $custom_id)
+                    ->lists($this->custom_id_relation['relation_id_column'])
+                    ->all();
+                $model = $model->whereIn('id', $relation_ids);
+            }
         }
         if (isset($this->index_business_where)) {
             $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
@@ -237,10 +248,15 @@ class GeneralController extends BaseController
             }
         }
         if (isset($custom_id)) {
-            $model = $this->model;
-            $custom_data = $model::find($custom_id);
-            $column = $this->custom_id_relation_column;
-            $back_url = str_replace('{custom_id}', $custom_data->$column, $this->custom_id_back_url);
+            if (isset($this->custom_id_relation_column)) {
+                $model = $this->model;
+                $custom_data = $model::find($custom_id);
+                $column = $this->custom_id_relation_column;
+                $back_url = str_replace('{custom_id}', $custom_data->$column, $this->custom_id_back_url);
+            } elseif(isset($this->custom_id_relation)) {
+                $back_url = $this->custom_id_back_url;
+            }
+
         }
         $this->curd_action = GeneralUtil::curdAction($this->curd_action);
         $data = array(

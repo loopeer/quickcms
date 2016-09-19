@@ -224,4 +224,11 @@ return [
     'actionLogs_index_column_name' => array(
         'ID', '姓名', '邮箱', 'IP', '时间'
     ),
+
+
+    'custom_id_relation' => array(
+        'relation_model_class' => 'App\Models\Backend\GoodsCategory',
+        'relation_id_column' => 'goods_id',
+        'custom_id_column' => 'category_id',
+    ),
 ];
