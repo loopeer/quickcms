@@ -174,7 +174,7 @@ class GeneralController extends BaseController
             $business_user = $reflectionClass->newInstance();
             $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
             if (isset($business_user)) {
-                $model = $model->where($this->index_business_where['column'], $business_user->business_id);
+                $model = $model->where($this->index_business_where[$business_user->type], $business_user->business_id);
             }
         }
         if(isset($this->index_multi_column)) {
