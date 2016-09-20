@@ -402,7 +402,6 @@
             );
 
             $('#' + '{{$action['form']['submit_id']}}').click(function(){
-                $('#' + '{{$action['form']['submit_id']}}').text("正在保存...");
                 var $form = $("#" + '{{$action['form']['form_id']}}');
                 var page_info = table.page.info();
                 var page = page_info.page;
