@@ -76,7 +76,7 @@ class AdminMiddleware{
             }
             Session::put('business_id', $business_id);
             foreach($menus as $key=>$menu){
-                $items = Permission::where('parent_id', $menu->id)->where('type', 0)->get();
+                $items = Permission::where('parent_id', $menu->id)->orderBy('sort')->where('type', 0)->get();
                 if (!is_null($items) && count($items)>0) {
                     foreach ($items as $item_key => $item) {
                         if (!$user->can($item->name)) {
