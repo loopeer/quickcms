@@ -24,13 +24,24 @@ class BlueimpController extends BaseController {
 
     public function getImage() {
         $url = Input::get('url');
-        $key=str_replace(config('quickcms.qiniu_url') . '/', '', $url);
-        if(isset($key)) {
+        if (strpos($url, config('quickcms.qiniu_url')) !== false) {
+            $key = str_replace(config('quickcms.qiniu_url') . '/', '', $url);
+        } else {
+            $key = $url;
+        }
+        if (isset($key)) {
+            if (strpos($key, 'http') !== false) {
+                $size = null;
+                $thumbnailUrl = $url;
+            } else {
+                $size = json_decode(file_get_contents($url . '?stat'))->fsize;
+                $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+            }
             $success = new \stdClass();
             $success->name = $key;
-            $success->size = json_decode(file_get_contents($url . '?stat'))->fsize;
+            $success->size = $size;
             $success->url = $url;
-            $success->thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+            $success->thumbnailUrl = $thumbnailUrl;
 
             // Remove the file from qiniu when invoke the delete action
             $success->deleteUrl = route('admin.blueimp.delete', 1);// 处理删除的action
