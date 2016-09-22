@@ -241,6 +241,7 @@
                                     }
                                 }
                             });
+                            hideTips();
                         }
                     }
                 });
@@ -352,6 +353,7 @@
                                 }
                             }
                         });
+                        hideTips();
                     }
                 }
             });
@@ -443,6 +445,7 @@
                         $('#' + '{{$action['form']['submit_id']}}').text("提交");
                         $('#' + '{{$action['target']}}').modal('hide');
                         $form[0].reset();
+                        hideTips();
                     });
                     event.preventDefault(); // Prevent the form from submitting via the browser.
                 });

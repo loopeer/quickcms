@@ -32,7 +32,12 @@
             });
         });
     });
-	
+
+    function hideTips() {
+        $(".tips").show();
+        $(".tips").delay({{ config('quickcms.hide_tips_time') }}).hide(0);
+    }
+
     var permission_switch = '{{ config("quickcms.permission_switch") }}';
     function permission() {
         if(permission_switch == '1') {
