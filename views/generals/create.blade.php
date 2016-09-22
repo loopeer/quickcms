@@ -100,6 +100,7 @@
                                                             @if(isset($edit_column_detail[$edit_column[$key]]['language']))
                                                                 @if(!$model_data['id'])
                                                                     @foreach($language as $lang_key => $lang_value)
+                                                                        <label>{{ $lang_value }}</label>
                                                                         <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_key }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" type="text/plain">{!! $model_data[$edit_column[$key]] !!}</script>
                                                                         <!-- 实例化编辑器 -->
                                                                         <script type="text/javascript">
@@ -126,6 +127,7 @@
                                                                     @endforeach
                                                                 @else
                                                                     @foreach($language_resource_editor as $lang_res_key => $lang_res_value)
+                                                                        <label>{{ $lang_res_value->language }}</label>
                                                                         <script id="{{ $edit_column[$key] . '_editor' . '_' . $lang_res_value->language }}" name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}" type="text/plain">{!! $lang_res_value->value !!}</script>
                                                                         <!-- 实例化编辑器 -->
                                                                         <script type="text/javascript">
