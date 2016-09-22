@@ -21,7 +21,7 @@ use Hash;
 use Cache;
 
 class SystemController extends GeneralController {
-    public function store() {
+    public function store($custom_id = null) {
         $data = Input::all();
         if (isset($data['_token'])) {
             unset($data['_token']);
