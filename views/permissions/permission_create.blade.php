@@ -66,8 +66,6 @@
                         required : true
                     },display_name : {
                         required : true
-                    },route : {
-                        required : true
                     }
                 },
 
@@ -77,8 +75,6 @@
                         required : '必须填写权限名称'
                     },display_name : {
                         required : '必须填写显示名称'
-                    },route : {
-                        required : '必须填写路由'
                     }
                 },
 

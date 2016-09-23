@@ -10,6 +10,7 @@
                     <p>
                         <a href="/admin/permissions" class="btn btn-primary">返回</a>  
                         <a href="/admin/permissions/{{ $id }}/createPermission" class="btn btn-primary">新增功能权限</a>
+                        <a href="/admin/permissions/{{ $id }}/initPermission" class="btn btn-primary">初始化CURD功能权限</a>
                     </p>
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
                         <header>

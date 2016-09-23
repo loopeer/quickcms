@@ -50,7 +50,7 @@
                                     @elseif($renames[$column]['type'] == 'date')
                                         {{ date($renames[$column]['format'], strtotime($data->$column)) }}
                                     @elseif($renames[$column]['type'] == 'html')
-                                        @if($renames[$column]['language'])
+                                        @if(isset($renames[$column]['language']))
                                         <label style="vertical-align: text-top;">
                                         @foreach($language_resource_data as $lang_res_data_key => $lang_res_data_value)
                                             {!! $lang_res_data_value->value !!}<br>

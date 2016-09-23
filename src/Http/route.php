@@ -78,6 +78,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('permissions/{id}/editPermission/{permission_id}', 'OperationPermissionController@edit');
    Route::post('permissions/{id}/deletePermission/{permission_id}', 'OperationPermissionController@destroy');
    Route::post('permissions/{id}/storePermission', 'OperationPermissionController@store');
+   Route::get('permissions/{id}/initPermission', 'OperationPermissionController@init');
    Route::resource('permissions', 'PermissionController');
 
    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
