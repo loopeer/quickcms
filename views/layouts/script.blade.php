@@ -41,26 +41,29 @@
     var permission_switch = '{{ config("quickcms.permission_switch") }}';
     function permission() {
         if(permission_switch == '1') {
-            var all_action_btn = $('a[permission]');
-            $.each(all_action_btn, function(i) {
-                var all_action_flag = true;
-                @if(Session::get('permissions'))
-                @foreach(Session::get('permissions') as $key => $permission)
-                '{!! $permission_name = $permission->name !!}'
-                if('{!! $permission_name !!}' == $(this).attr('permission')) {
-                    all_action_flag = false;
-                }
-                @endforeach
-                    @endif
-                if(all_action_flag) {
-                    if($(this).parent().is('li')) {                       	    
-                        $(this).parent().addClass('disabled');
-                    } else {
-                        $(this).attr('href', 'javascript:void(0)');
-                        $(this).addClass('disabled');
+            @if(isset($is_permission) && $is_permission)
+                var all_action_btn = $('a[permission]');
+                $.each(all_action_btn, function (i) {
+                    var all_action_flag = true;
+                    @if(Session::get('permissions'))
+                    @foreach(Session::get('permissions') as $key => $permission)
+                    '{!! $permission_name = $permission->name !!}'
+                    if ('{!! $permission_name !!}' == $(this).attr('permission')) {
+                        all_action_flag = false;
                     }
-                }
-            });
+                    @endforeach
+                        @endif
+                    if (all_action_flag) {
+                        if ($(this).parent().is('li')) {
+                            $(this).parent().addClass('disabled');
+                        } else {
+                            $(this).attr('href', 'javascript:void(0)');
+                            $(this).addClass('disabled');
+                        }
+                    }
+                });
+            }
+            @endif
         }
     }
 

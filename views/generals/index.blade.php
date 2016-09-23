@@ -15,7 +15,6 @@
                     @if($curd_action['create'])
                         <p>
                             @if(isset($custom_id))
-                                <a href="{{ $custom_id_back_url }}" class="btn btn-primary">返回</a>&nbsp;
                                 <a href="{{ $route_path . '/create' }}"
                                    id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
                             @else

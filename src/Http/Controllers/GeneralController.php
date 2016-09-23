@@ -59,13 +59,21 @@ class GeneralController extends BaseController
     protected $edit_hidden_business_id;
     protected $index_business_where;
     protected $custom_id_relation;
+    protected $is_permission;
 
     public function __construct(Request $request) {
         try {
             $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
                 Route::getCurrentRoute()->getPath());
-            GeneralUtil::filterOperationPermission($request, null, $this->route_name);
             $general_name = 'generals.' . $this->route_name . '.';
+            $is_permission = true;
+            if (config($general_name . 'disable_permission') === true) {
+                $is_permission = false;
+            }
+            $this->is_permission = $is_permission;
+            if ($is_permission) {
+                GeneralUtil::filterOperationPermission($request, null, $this->route_name);
+            }
             $this->index_column = config($general_name . 'index_column');
             $this->index_column_format = config($general_name . 'index_column_format');
             $this->index_column_name = config($general_name . 'index_column_name');
@@ -272,6 +280,7 @@ class GeneralController extends BaseController
             'message' => $message,
             'detail_style' => isset($this->detail_style) ? $this->detail_style : null,
             'custom_id_back_url' => isset($back_url) ? $back_url : null,
+            'is_permission' => $this->is_permission,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
