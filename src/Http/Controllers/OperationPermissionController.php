@@ -79,6 +79,23 @@ class OperationPermissionController extends BaseController {
 
     }
 
+    public function init($id) {
+        $permission = Permission::find($id);
+        $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'show' => '详情', 'changeStatus' => '状态变更');
+        $permissions = [];
+        foreach($operation as $operation_key => $operation_value) {
+            $permissions[] = array(
+                'name' => str_replace('.index', '', $permission->name) . '.' . $operation_key,
+                'display_name' => $operation_value,
+                'route' => $permission->route . '/' . $operation_key,
+                'type' => 1,
+                'parent_id' => $permission->id,
+            );
+        }
+        DB::table('permissions')->insert($permissions);
+        return Redirect::to('/admin/permission/' . $id . '/indexPermission');
+    }
+
     public function edit($id, $permission_id) {
         $permission = Permission::find($permission_id);
         $message = Session::get('message');
