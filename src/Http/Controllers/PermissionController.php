@@ -68,7 +68,7 @@ class PermissionController extends BaseController {
             if(is_null($isset)){
                 $permission = Permission::create($inputs);
                 if(isset($operation_permission) && $operation_permission == 'Y') {
-                    $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'detail' => '详情');
+                    $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'show' => '详情', 'changeStatus' => '状态变更');
                     $permissions = [];
                     foreach($operation as $operation_key => $operation_value) {
                         $permissions[] = array(                                                       

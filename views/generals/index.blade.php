@@ -99,7 +99,7 @@
                     @endif
                     @if($curd_action['detail'])
                     '<li class="detail_btn">'+
-                    '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.detail">详情</a>'+
+                    '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.show">详情</a>'+
                     '</li>'+
                     @if($curd_action['detail'])
                     '<li class="divider"></li>'+
@@ -381,12 +381,14 @@
             );
 
             $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
-                var data = table.row($(this).parents('tr')).data();
-                $("#" + '{{$action['target']}}' + ' .modal-title').html('{{$action['dialog_title']}}');
-                $(this).attr("data-toggle", "modal");
-                $(this).attr("data-target", "#{{$action['target']}}");
-                $(this).attr("data-action","{{$action['url']}}"+data[0]);
-                $(this).attr("data-id",data[0]);
+                if(isDisabled($(this))) {
+                    var data = table.row($(this).parents('tr')).data();
+                    $("#" + '{{$action['target']}}' + ' .modal-title').html('{{$action['dialog_title']}}');
+                    $(this).attr("data-toggle", "modal");
+                    $(this).attr("data-target", "#{{$action['target']}}");
+                    $(this).attr("data-action", "{{$action['url']}}" + data[0]);
+                    $(this).attr("data-id", data[0]);
+                }
             });
 
             $('#' + '{{$action['target']}}').on('show.bs.modal', function(e) {
