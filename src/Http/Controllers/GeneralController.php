@@ -502,6 +502,9 @@ class GeneralController extends BaseController
             if ($data_val == 'now') {
                 $data_val = date('Y-m-d H:i:s', time());
             }
+            if ($data_val == 'admin_id') {
+                $data_val = Auth::admin()->get()->id;
+            }
             $model_data->$data_key = $data_val;
         }
         if ($model_data->save()) {
