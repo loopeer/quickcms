@@ -256,13 +256,14 @@ class GeneralController extends BaseController
             }
         }
         if (isset($custom_id)) {
+            $back_url = $this->custom_id_back_url;
             if (isset($this->custom_id_relation_column)) {
                 $model = $this->model;
                 $custom_data = $model::find($custom_id);
                 $column = $this->custom_id_relation_column;
-                $back_url = str_replace('{custom_id}', $custom_data->$column, $this->custom_id_back_url);
-            } elseif(isset($this->custom_id_relation)) {
-                $back_url = $this->custom_id_back_url;
+                if (isset($custom_data)) {
+                    $back_url = str_replace('{custom_id}', $custom_data->$column, $this->custom_id_back_url);
+                }
             }
 
         }
