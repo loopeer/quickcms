@@ -377,6 +377,13 @@ class GeneralController extends BaseController
      */
     public function store($custom_id = null) {
         $data = Input::all();
+        \Log::info($data);
+        foreach($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = implode(',', $value);
+            }
+        }
+        \Log::info($data);
         if (isset($data['_token'])) {
             unset($data['_token']);
         }

@@ -7,6 +7,25 @@
         .select2-hidden-accessible {
             display: none;
         }
+         .bootstrap-tagsinput {
+             color: #555;
+             font-size: 13px;
+             line-height: 1.42857;
+         }
+        .bootstrap-tagsinput .tag {
+            color: #fff;
+            display: inline-block;
+            margin: 3px 0 3px 2px;
+            position: relative;
+        }
+        .bootstrap-tagsinput > span {
+            background: none repeat scroll 0 0 #3276b1;
+            border: 1px solid #285e8e;
+            border-radius: 0 !important;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 3px 28px 4px 8px;
+        }
     </style>
 @endsection
 @section('content')
@@ -74,6 +93,16 @@
                                                     {{ $edit_column_name ? $edit_column_name[$key] : $column_names[$column_name] }}
                                                 </label>
                                                 @if (isset($edit_column_detail[$edit_column[$key]]['type']))
+                                                    @if($edit_column_detail[$edit_column[$key]]['type'] == 'checkbox')
+                                                        <div class="inline-group">
+                                                        @foreach($edit_column_detail[$edit_column[$key]]['value'] as $checkBoxKey => $checkBoxValue)
+                                                            <label class="checkbox">
+                                                            <input type="checkbox" name="{{ $column_name }}[]" value="{{ $checkBoxKey }}" {{ in_array($checkBoxKey, explode(',', $model_data[$edit_column[$key]])) == true ? 'checked' : ''}}>
+                                                            <i></i>{{ $checkBoxValue }}
+                                                            </label>
+                                                        @endforeach
+                                                        </div>
+                                                    @else
                                                     <label style="width: 100%;" class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'input' }}">
                                                         @if ($edit_column_detail[$edit_column[$key]]['type'] == 'date')
                                                             <div class="input-group">
@@ -96,6 +125,11 @@
                                                             @if(isset($edit_column_detail[$edit_column[$key]]['style']) && $edit_column_detail[$edit_column[$key]]['style'] == 'select')
                                                                 <i></i>
                                                             @endif
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'tagsinput')
+                                                            <input class="form-control tagsinput" name="{{ $edit_column[$key] }}" type="text" value="{{ $model_data[$edit_column[$key]] }}" data-role="tagsinput">
+                                                            <div class="note">
+                                                                每输入一个标签后请按回车键确认
+                                                            </div>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'editor')
                                                             @if(isset($edit_column_detail[$edit_column[$key]]['language']))
                                                                 @if(!$model_data['id'])
@@ -184,29 +218,31 @@
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'textarea')
                                                             <label class="textarea">
                                                                 <textarea name="{{ $edit_column[$key] }}" rows="{{ $edit_column_detail[$edit_column[$key]]['row'] }}">{{ $model_data[$edit_column[$key]] }}</textarea>
-                                                                <label>
-                                                                    @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
-                                                                        @if(!$model_data['id'])
-                                                                            @foreach($language as $lang_key => $lang_value)
-                                                                                <input type="text" required="" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                                                <br>
-                                                                            @endforeach
-                                                                        @else
-                                                                            @foreach($language_resource as $lang_res_key => $lang_res_value)
-                                                                                <input type="text" placeholder="{{ $language[$lang_res_value->language] }}"
-                                                                                       name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}"
-                                                                                       value="{{ $lang_res_value->value }}">
-                                                                                <br>
-                                                                            @endforeach
-                                                                        @endif
-                                                                    @else
-                                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                                    @endif
-                                                                </label>
-                                                                @else
-                                                                    <label class="input">
-                                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
-                                                                    </label>
+                                                        </label>
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'language')
+                                                            @if(!$model_data['id'])
+                                                                @foreach($language as $lang_key => $lang_value)
+                                                                    <input type="text" required="" placeholder="{{ $lang_value }}" name="{{ $edit_column[$key] . '_' . $lang_key }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                                    <br>
+                                                                @endforeach
+                                                            @else
+                                                                @foreach($language_resource as $lang_res_key => $lang_res_value)
+                                                                    <input type="text" placeholder="{{ $language[$lang_res_value->language] }}"
+                                                                           name="{{ $edit_column[$key] . '_' . $lang_res_value->language }}"
+                                                                           value="{{ $lang_res_value->value }}">
+                                                                    <br>
+                                                                @endforeach
+                                                            @endif
+                                                        @else
+                                                            <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                        @endif
+                                                        {{--@else--}}
+                                                            {{--<label class="input">--}}
+                                                                {{--<input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">--}}
+                                                            {{--</label>--}}
+                                                        {{--@endif--}}
+                                                        </label>
+                                                    @endif
                                                 @endif
                                             </section>
                                         @endforeach
@@ -239,6 +275,8 @@
 @section('script')
     {{--    <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>--}}
     <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
+    <script src="{{{ asset('loopeer/quickcms/js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js') }}}"></script>
+    <script src="{{{ asset('loopeer/quickcms/js/plugin/bootstrap-tags/bootstrap-tagsinput-angular.min.js') }}}"></script>
     @if ($image_config)
         @include('backend::image.script')
         @foreach($images as $image)

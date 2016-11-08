@@ -154,35 +154,38 @@
                 @endforeach
                 @endif
 
-                    @if(is_array($index_column_rename))
-                    @foreach($index_column_rename as $column => $rename)
+                @if(is_array($index_column_rename))
+                @foreach($index_column_rename as $column => $rename)
                     {{$column_no = array_flip($index_column)[$column]}}
                     @if($rename['type'] == 'normal')
-                    @foreach($rename['param'] as $key => $value)
-                    if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
-                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
-                        {{--@if(!empty($value['action_name']))--}}
-                        {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
-                        {{--@endif--}}
-                    } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
-                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
-                    }
-                    @endforeach
-                @elseif($rename['type'] == 'dialog')
-                    var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                        @foreach($rename['param'] as $key => $value)
+                        if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
+                            $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
+                            {{--@if(!empty($value['action_name']))--}}
+                            {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
+                            {{--@endif--}}
+                        } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
+                            $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
+                        }
+                        @endforeach
+                    @elseif($rename['type'] == 'dialog')
+                        var html = '<a href="javascript:void(0);" name="{{$rename['param']['name']}}">' + $data[i][parseInt('{{$column_no}}')] + '</a>';
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
                     @elseif($rename['type'] == 'html')
-                    var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                        var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
 
                     @elseif($rename['type'] == 'selector')
-                    var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
-                    var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
+                        var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                        var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(selector_val[html]);
 
                     @elseif($rename['type'] == 'limit')
-                    var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
-                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, {{ $rename['param'] }}));
+                        var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, parseInt('{{ $rename['param'] }}')));
+                    @elseif($rename['type'] == 'format')
+                        var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
+                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('');
                     @endif
                 @endforeach
             @endif
