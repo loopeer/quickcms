@@ -183,9 +183,10 @@
                     @elseif($rename['type'] == 'limit')
                         var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
                         $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, parseInt('{{ $rename['param'] }}')));
-                    @elseif($rename['type'] == 'format')
-                        var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
-                        $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('');
+                    {{--@elseif($rename['type'] == 'format')--}}
+                        {{--var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();--}}
+                        {{--{{{ $rename["param"] }}}--}}
+                        {{--$('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(format(html));--}}
                     @endif
                 @endforeach
             @endif

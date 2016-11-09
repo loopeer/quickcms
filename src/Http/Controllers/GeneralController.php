@@ -232,6 +232,10 @@ class GeneralController extends BaseController
                         }
                         continue;
                     }
+                    if($format_value['type'] == 'function') {
+                        $ret['data'][$ret_key][$format_value['column']] = $format_value['value']($ret_value[$format_value['column']]);
+                        continue;
+                    }
                 }
             }
         }
