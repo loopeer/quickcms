@@ -21,6 +21,7 @@ use Hash;
 use Cache;
 
 class SystemController extends GeneralController {
+
     public function store($custom_id = null) {
         $data = Input::all();
         if (isset($data['_token'])) {
@@ -43,6 +44,7 @@ class SystemController extends GeneralController {
         } else {
             $result = $model::create($data);
         }
+        Cache::forget("system_config");
         $message['result'] = $result ? true : false;
         $message['content'] = $message['result'] ? '操作成功' : '操作失败';
 

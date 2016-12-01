@@ -17,6 +17,7 @@ use Input;
 use Illuminate\Pagination\Paginator;
 use Cache;
 use Auth;
+use Loopeer\QuickCms\Models\System;
 use Request;
 use Route;
 use Session;
@@ -31,6 +32,7 @@ use Loopeer\QuickCms\Models\PermissionRole;
 class BaseController extends Controller
 {
 
+    protected $systemConfig;
     public function __construct()
     {
         //$route_url = '/' . Route::getCurrentRoute()->getPath();
@@ -46,6 +48,9 @@ class BaseController extends Controller
             $permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();
             Session::put('permissions', $permissions);
         }
+        $this->systemConfig = Cache::rememberForever('system_config', function() {
+            return System::get();
+        });
     }
 
     /**
@@ -163,5 +168,12 @@ class BaseController extends Controller
             ->paginate($length);
         $ret = self::queryPage($show_column, $obj);
         return Response::json($ret);
+    }
+
+    public function getSystemValue($key)
+    {
+        $collection = $this->systemConfig;
+        $filtered = $collection->where('system_key', $key);
+        return $filtered->first()['system_value'];
     }
 }
