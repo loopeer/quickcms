@@ -236,13 +236,12 @@
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
-                                                        {{--@else--}}
-                                                            {{--<label class="input">--}}
-                                                                {{--<input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">--}}
-                                                            {{--</label>--}}
-                                                        {{--@endif--}}
                                                         </label>
                                                     @endif
+                                                @else
+                                                    <label class="input">
+                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                    </label>
                                                 @endif
                                             </section>
                                         @endforeach
