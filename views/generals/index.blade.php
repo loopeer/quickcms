@@ -174,7 +174,17 @@
                     @elseif($rename['type'] == 'html')
                         var html = sprintf('{!! $rename["param"] !!}', 1, $data[i][parseInt('{{$column_no}}')]);
                         $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
-
+                    @elseif($rename['type'] == 'image')
+                    var html = '<a href="' + $data[i][parseInt('{{$column_no}}')] + '" target="_blank"><img style="width:50px;height:50px" src="'
+                            + $data[i][parseInt('{{$column_no}}')] + '" alt=""></a>';
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html);
+                    @elseif($rename['type'] == 'images')
+                    var images = '';
+                    for(var images_index = 0; images_index < $data[i][parseInt('{{$column_no}}')].length; images_index++ ) {
+                        images += '<a href="' + $data[i][parseInt('{{$column_no}}')][images_index] + '" target="_blank"><img style="width:50px;height:50px" src="'
+                        + $data[i][parseInt('{{$column_no}}')][images_index] + '" alt=""></a>&nbsp;';
+                    }
+                    $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(images);
                     @elseif($rename['type'] == 'selector')
                         var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
                         var selector_val = JSON.parse('{!! $selector_data[$column] !!}');
