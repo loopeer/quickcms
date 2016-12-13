@@ -13,10 +13,10 @@ return [
     'middleware' => array('admin.versions'),
     'model_class' => 'Loopeer\QuickCms\Models\Version',
     'model_name' => '版本',
-    'index_column' => array('id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status', 'published_at',),
-    'index_column_name' => array('ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间', '选项',),
-    'edit_column' => array('platform', 'version_code', 'version', 'url', 'description', 'published_at', 'status'),
-    'edit_column_name' => array('发布平台', '版本号', '版本名称', '下载地址', '版本描述', '发布时间', '版本状态',),
+    'index_column' => array('id', 'platform', 'version_code', 'version', 'url', 'message', 'description', 'status', 'published_at'),
+    'index_column_name' => array('ID', '发布平台', '版本号', '版本名称', '下载地址', '消息提示', '版本描述', '版本状态', '发布时间'),
+    'edit_column' => array('platform', 'version_code', 'version', 'url', 'description', 'published_at'),
+    'edit_column_name' => array('发布平台', '版本号', '版本名称', '下载地址', '版本描述', '发布时间'),
     'index_column_rename' => array(
         'status' => array(
             'type' => 'normal',

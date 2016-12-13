@@ -89,7 +89,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::resource('feedbacks', 'GeneralController');
 
-   Route::get('versions/changeStatus/{id}', 'GeneralController@changeStatus');
+   Route::post('versions/changeStatus/{id}', 'GeneralController@changeStatus');
    Route::resource('versions', 'GeneralController');
 
    Route::get('selector/preview', 'SelectorController@preview');
