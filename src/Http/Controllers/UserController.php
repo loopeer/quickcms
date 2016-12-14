@@ -116,7 +116,9 @@ class UserController extends BaseController {
         if($inputs['password'] != '') {
             $user->password = Hash::make($inputs['password']);
         }
-        $user->avatar = $inputs['image'][0];
+        if ($inputs['image']) {
+            $user->avatar = $inputs['image'][0];
+        }
         $user->save();
         $message = array('result' => true, 'content' => '保存成功');
         return redirect('admin/users/update')->with('message', $message);
