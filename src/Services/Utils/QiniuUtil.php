@@ -10,6 +10,8 @@
  */
 namespace Loopeer\QuickCms\Services\Utils;
 
+use Carbon\Carbon;
+
 class QiniuUtil {
 
     /**
@@ -22,5 +24,31 @@ class QiniuUtil {
             return null;
         }
         return config('quickcms.qiniu_url') . '/' . $key;
+    }
+
+    public static function buildQiniuUrl($key) {
+        if (is_null($key)) {
+            return null;
+        }
+        $url = config('quickcms.qiniu_url') . '/' . $key;
+        if (config('quickcms.qiniu_private')) {
+            $mac = new \Qiniu\Mac(config('quickcms.qiniu_access_key'), config('quickcms.qiniu_secret_key'));
+            $url .= '?e=' . Carbon::now()->addMinutes(10)->timestamp;
+            $url .= '&token=' . $mac->sign($url);
+        }
+        return $url;
+    }
+
+    public static function buildQiniuThumbnail($key) {
+        if (is_null($key)) {
+            return null;
+        }
+        $url = config('quickcms.qiniu_url') . '/' . $key . '?imageView2/2/w/200/h/100';
+        if (config('quickcms.qiniu_private')) {
+            $mac = new \Qiniu\Mac(config('quickcms.qiniu_access_key'), config('quickcms.qiniu_secret_key'));
+            $url .= '&e=' . Carbon::now()->addMinutes(10)->timestamp;
+            $url .= '&token=' . $mac->sign($url);
+        }
+        return $url;
     }
 }

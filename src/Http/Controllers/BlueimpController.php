@@ -14,6 +14,7 @@ namespace Loopeer\QuickCms\Http\Controllers;
 use Config;
 use Input;
 use Log;
+use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 use Session;
 use DB;
 use Redirect;
@@ -67,12 +68,14 @@ class BlueimpController extends BaseController {
             $photo = $qiniu->uploadFile($image->getRealPath(), $upload_key);
 
             $key = $photo->data['key'];
-            $url = config('quickcms.qiniu_url').'/'.$key;
-            $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+//            $url = config('quickcms.qiniu_url').'/'.$key;
+//            $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+            $thumbnailUrl = QiniuUtil::buildQiniuThumbnail($key);
+            $url = QiniuUtil::buildQiniuUrl($key);
 
             $success = new \stdClass();
             $success->name = $key;
-            $success->size = json_decode(file_get_contents($url . '?stat'))->fsize;
+//            $success->size = json_decode(file_get_contents($url . '?stat'))->fsize;
             $success->url = $url;
             $success->thumbnailUrl = $thumbnailUrl;
             $success->photo_name='';
