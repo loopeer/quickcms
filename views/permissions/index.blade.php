@@ -88,7 +88,8 @@
                 "columnDefs": [ {
                     "targets": -1,
                     "data": null,
-                    "defaultContent": '<button name="edit_permission" class="btn btn-primary">编辑</button>' +
+                    "defaultContent":
+                    '<button name="edit_permission" class="btn btn-primary">编辑</button>' +
                     '&nbsp;' +
                     '<button name="delete_permission" class="btn btn-primary">删除</button>' +
                     '&nbsp;' +

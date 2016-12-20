@@ -112,46 +112,64 @@
                     "targets": -1,
                     "data": null,
                     "defaultContent":
-                    '<div class="btn-group">'+
-                    '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
-                    '<span class="caret"></span></button>'+
-                    '<ul class="dropdown-menu">'+
-                    @if($curd_action['edit'])
-                    '<li class="edit_btn">'+
-                    '<a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $route_name }}.edit">编辑</a>'+
-                    '</li>'+
-                    @if($curd_action['edit'])
-                    '<li class="divider"></li>'+
+                    @if(config('quickcms.operate_style') == 'line')
+                        @if($curd_action['edit'])
+                            '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.edit">编辑</a>&nbsp;' +
+                        @endif
+                        @if($curd_action['delete'])
+                            '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.delete">删除</a>&nbsp;' +
+                        @endif
+                        @if($curd_action['detail'])
+                            '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.detail">详情</a>&nbsp;'
+                        @endif
+                        @if(isset($actions))
+                            @foreach($actions as $index => $action)
+                                + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['display_name'] }}</a>&nbsp;'
+                            @endforeach
+                        @endif
+
+                    @else
+                        '<div class="btn-group">' +
+                        '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
+                        '<span class="caret"></span></button>' +
+                        '<ul class="dropdown-menu">' +
+                        @if($curd_action['edit'])
+                            '<li class="edit_btn">' +
+                            '<a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $route_name }}.edit">编辑</a>' +
+                            '</li>'+
+                        @endif
+                        @if($curd_action['edit'])
+                            '<li class="divider"></li>' +
+                        @endif
+                        @if($curd_action['delete'])
+                            '<li class="delete_btn">' +
+                            '<a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $route_name }}.delete">删除</a>' +
+                            '</li>'+
+                        @endif
+                        @if($curd_action['delete'])
+                            '<li class="divider"></li>' +
+                        @endif
+                        @if($curd_action['detail'])
+                            '<li class="detail_btn">' +
+                            '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.show">详情</a>' +
+                            '</li>'+
+                        @endif
+                        @if($curd_action['detail'])
+                            '<li class="divider"></li>' +
+                        @endif
+                        @if(isset($actions))
+                            @foreach($actions as $index => $action)
+                                '<li class="' + '{{ $action['name'] }}' + '">' +
+                                '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '" permission="{{ $action['permission'] or '' }}">' + '{{ $action['display_name'] }}' + '</a>'+
+                                '</li>'+
+                            @if($index != count($actions) - 1)
+                                '<li class="divider"></li>' +
+                            @endif
+                            @endforeach
+                        @endif
+                        '</ul>'+
+                        '</div>'
                     @endif
-                    @endif
-                    @if($curd_action['delete'])
-                    '<li class="delete_btn">'+
-                    '<a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $route_name }}.delete">删除</a>'+
-                    '</li>'+
-                    @if($curd_action['delete'])
-                    '<li class="divider"></li>'+
-                    @endif
-                    @endif
-                    @if($curd_action['detail'])
-                    '<li class="detail_btn">'+
-                    '<a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $route_name }}.show">详情</a>'+
-                    '</li>'+
-                    @if($curd_action['detail'])
-                    '<li class="divider"></li>'+
-                    @endif
-                    @endif
-                    @if(isset($actions))
-                    @foreach($actions as $index => $action)
-                    '<li class="' + '{{ $action['name'] }}' + '">'+
-                    '<a href="javascript:void(0);" name="' + '{{ $action['name'] }}' + '" permission="{{ $action['permission'] or '' }}">' + '{{ $action['display_name'] }}' + '</a>'+
-                    '</li>'+
-                    @if($index != count($actions) - 1)
-                    '<li class="divider"></li>'+
-                    @endif
-                    @endforeach
-                    @endif
-                    '</ul>'+
-                    '</div>'
                 } ],
                 @endif
                 @if(isset($custom_id))
