@@ -22,17 +22,17 @@
               @include('backend::image.upload', ['image_name' => 'image'])         </section>
                                         <section>
                                             <label class="input"> <i class="icon-append fa fa-lock"></i>
-                                                <input type="password" name="password" placeholder="Password" id="password">
+                                                <input type="password" name="password" placeholder="密码" id="password">
                                                 <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
                                         </section>
                                         <section>
                                             <label class="input"> <i class="icon-append fa fa-lock"></i>
-                                                <input type="password" name="passwordConfirm" placeholder="Confirm password">
+                                                <input type="password" name="passwordConfirm" placeholder="确认密码">
                                                 <b class="tooltip tooltip-bottom-right">Don't forget your password</b> </label>
                                         </section>
                                         <section>
                                             <label class="input">
-                                                <input type="text" value="{{ $user->name }}" name="name" placeholder="name">
+                                                <input type="text" value="{{ $user->name }}" name="name" placeholder="名称">
                                             </label>
                                         </section>
                                     </fieldset>
@@ -74,18 +74,18 @@
                 // Messages for form validation
                 messages: {
                     email: {
-                        required: 'Please enter your email address',
-                        email: 'Please enter a VALID email address'
+                        required: '请输入您的邮箱',
+                        email: '请输入有效的邮箱'
                     },
                     password: {
-                        required: 'Please enter your password'
+                        required: '请输入您的密码'
                     },
                     passwordConfirm: {
-                        required: 'Please enter your password one more time',
-                        equalTo: 'Please enter the same password as above'
+                        required: '请输入您的密码',
+                        equalTo: '请输入相同的密码'
                     },
                     name: {
-                        required: 'Please select your name'
+                        required: '请输入的名称'
                     }
                 },
 

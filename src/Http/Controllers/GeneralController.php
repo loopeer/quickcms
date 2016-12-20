@@ -60,6 +60,7 @@ class GeneralController extends BaseController
     protected $index_business_where;
     protected $custom_id_relation;
     protected $is_permission;
+    protected $table_sort;
 
     public function __construct(Request $request) {
         try {
@@ -89,6 +90,7 @@ class GeneralController extends BaseController
             $this->actions = config($general_name . 'table_action');
             $this->sort = config($general_name . 'sort');
             $this->where = config($general_name . 'index_where');
+            $this->table_sort = config($general_name . 'table_sort');
 
             $this->edit_redirect_location = config($general_name . 'edit_redirect_location');
             $this->edit_hidden = config($general_name . 'edit_hidden');
@@ -127,7 +129,7 @@ class GeneralController extends BaseController
 
     /**
      * 搜索
-     * @param $dialog_id
+     * @param $custom_id
      * @return mixed
      */
     public function search($custom_id = null)
@@ -244,6 +246,7 @@ class GeneralController extends BaseController
 
     /**
      * 列表
+     * @param $custom_id
      * @return mixed
      */
     public function index($custom_id = null)
@@ -286,6 +289,7 @@ class GeneralController extends BaseController
             'detail_style' => isset($this->detail_style) ? $this->detail_style : null,
             'custom_id_back_url' => isset($back_url) ? $back_url : null,
             'is_permission' => $this->is_permission,
+            'table_sort' => $this->table_sort,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
@@ -297,6 +301,7 @@ class GeneralController extends BaseController
 
     /**
      * 删除记录
+     * @param $custom_id
      * @param $id
      * @return int
      */
@@ -312,6 +317,7 @@ class GeneralController extends BaseController
 
     /**
      * 添加记录
+     * @param $custom_id
      * @return mixed
      */
     public function create($custom_id = null) {
@@ -338,6 +344,8 @@ class GeneralController extends BaseController
 
     /**
      * 详情
+     * @param $id
+     * @return mixed
      */
     public function show($id) {
         $model = $this->model;
@@ -377,17 +385,16 @@ class GeneralController extends BaseController
 
     /**
      * 保存记录
+     * @param $custom_id
      * @return mixed
      */
     public function store($custom_id = null) {
         $data = Input::all();
-        \Log::info($data);
         foreach($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = implode(',', $value);
             }
         }
-        \Log::info($data);
         if (isset($data['_token'])) {
             unset($data['_token']);
         }
@@ -461,6 +468,7 @@ class GeneralController extends BaseController
 
     /**
      * 编辑记录
+     * @param $custom_id
      * @param $id
      * @return mixed
      */

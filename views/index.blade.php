@@ -72,7 +72,7 @@
         <section id="widget-grid" class="">
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                             <h2>后台用户登陆日志</h2>

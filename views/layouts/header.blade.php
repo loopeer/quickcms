@@ -31,7 +31,7 @@
             </li>
         </ul>
         <div id="logout" class="btn-header transparent pull-right">
-            <span> <a href="{{route('admin.logout')}}" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+            <span> <a href="{{route('admin.logout')}}" title="Sign Out" data-action="userLogout" data-logout-msg="您可以在登出后通过关闭此打开的浏览器进一步提高安全性"><i class="fa fa-sign-out"></i></a> </span>
         </div>
         <div id="fullscreen" class="btn-header transparent pull-right">
             <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>

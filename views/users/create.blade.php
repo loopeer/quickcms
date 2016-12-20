@@ -28,7 +28,7 @@
                                             <section>
                                                 <label class="label">账号</label>
                                                 <label class="input"> <i class="icon-append fa fa-envelope-o"></i>
-                                                    <input type="email" name="email" id="email" placeholder="Email">
+                                                    <input type="email" name="email" id="email" placeholder="邮箱">
                                                     <b class="tooltip tooltip-bottom-right">登录时输入的账号</b> </label>
                                             </section>
                                         @endif

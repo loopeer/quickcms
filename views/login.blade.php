@@ -100,11 +100,11 @@
             },
             messages : {
                 email : {
-                    required : 'Please enter your email address',
-                    email : 'Please enter a VALID email address'
+                    required : '请输入您的邮箱',
+                    email : '请输入有效的邮箱'
                 },
                 password : {
-                    required : 'Please enter your password'
+                    required : '请输入您的密码'
                 }
             },
             errorPlacement : function(error, element) {

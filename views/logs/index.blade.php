@@ -45,6 +45,14 @@
             "processing": false,
             "bStateSave": true,
             "serverSide": true,
+            "columns" : [
+                null,
+                { "orderable" : false },
+                { "orderable" : false },
+                { "orderable" : false },
+                { "orderable" : false },
+                { "orderable" : false },
+            ],
             "columnDefs": [ {
                 "targets": -1,
                 "data": null,
