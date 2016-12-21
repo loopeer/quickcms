@@ -27,6 +27,7 @@ class BlueimpController extends BaseController {
         $url = Input::get('url');
         if (strpos($url, config('quickcms.qiniu_url')) !== false) {
             $key = str_replace(config('quickcms.qiniu_url') . '/', '', $url);
+            $key = substr($key, 0, strrpos($key, '?'));
         } else {
             $key = $url;
         }
@@ -35,12 +36,12 @@ class BlueimpController extends BaseController {
                 $size = null;
                 $thumbnailUrl = $url;
             } else {
-                $size = json_decode(file_get_contents($url . '?stat'))->fsize;
+//                $size = json_decode(file_get_contents($url . '?stat'))->fsize;
                 $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
             }
             $success = new \stdClass();
             $success->name = $key;
-            $success->size = $size;
+//            $success->size = $size;
             $success->url = $url;
             $success->thumbnailUrl = $thumbnailUrl;
 
