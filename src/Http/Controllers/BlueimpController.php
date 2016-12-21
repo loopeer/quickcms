@@ -37,7 +37,8 @@ class BlueimpController extends BaseController {
                 $thumbnailUrl = $url;
             } else {
 //                $size = json_decode(file_get_contents($url . '?stat'))->fsize;
-                $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+//                $thumbnailUrl = $url . '?imageView2/2/w/200/h/100';
+                $thumbnailUrl = $url;
             }
             $success = new \stdClass();
             $success->name = $key;
