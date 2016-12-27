@@ -159,6 +159,7 @@
                         @endif
 
                     @else
+                        @if($curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'] || isset($actions))
                         '<div class="btn-group">' +
                         '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
                         '<span class="caret"></span></button>' +
@@ -199,6 +200,7 @@
                         @endif
                         '</ul>'+
                         '</div>'
+                        @endif
                     @endif
                 } ],
                 @endif
@@ -215,18 +217,11 @@
             });
 
             $('input.column_filter').on( 'keyup', function () {
-                console.log($('#col1_filter').val());
-//                filterColumn( $(this).attr('data-column') );
                 var index = $(this).attr('data-column');
                 table.column(index).search($('#col' + index + '_filter').val()).draw();
                 console.log('draw done');
             } );
 
-            function filterColumn ( i ) {
-//                table.column( i ).search($('#col'+i+'_filter').val()).draw();
-            }
-
-//            $("div.dt-toolbar label:first").append('<a class="btn btn-primary">待审核</a><a class="btn btn-primary">待审核</a><a class="btn btn-primary">待审核</a>');
             table.on( 'draw.dt', function () {
                 var $data = table.data();
                 for (var i=0; i < $data.length; i++) {
@@ -259,9 +254,6 @@
                         @foreach($rename['param'] as $key => $value)
                         if($data[i][parseInt('{{$column_no}}')] == parseInt('{{$key}}')) {
                             $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
-                            {{--@if(!empty($value['action_name']))--}}
-                            {{--$('tr:eq('+(i+1)+') '+'.'+'{{$value['action_name']}}').show();--}}
-                            {{--@endif--}}
                         } else if($data[i][parseInt('{{$column_no}}')] == '{{$key}}') {
                             $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html('{!! $value !!}');
                         }
@@ -291,10 +283,6 @@
                     @elseif($rename['type'] == 'limit')
                         var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();
                         $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(html.slice(0, parseInt('{{ $rename['param'] }}')));
-                    {{--@elseif($rename['type'] == 'format')--}}
-                        {{--var html = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html();--}}
-                        {{--{{{ $rename["param"] }}}--}}
-                        {{--$('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}')).html(format(html));--}}
                     @endif
                 @endforeach
             @endif
