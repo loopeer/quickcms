@@ -142,19 +142,20 @@
                     "targets": -1,
                     "data": null,
                     "defaultContent":
+                            ''
                     @if($table_action_line)
                         @if($curd_action['edit'])
-                            '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.edit">编辑</a>&nbsp;' +
+                            + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.edit">编辑</a>&nbsp;'
                         @endif
                         @if($curd_action['delete'])
-                            '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.delete">删除</a>&nbsp;' +
+                            + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.delete">删除</a>&nbsp;'
                         @endif
                         @if($curd_action['detail'])
-                            '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.detail">详情</a>&nbsp;'
+                            + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.detail">详情</a>&nbsp;'
                         @endif
                         @if(isset($actions))
                             @foreach($actions as $index => $action)
-                                + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['display_name'] }}</a>&nbsp;'
+                               + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['display_name'] }}</a>&nbsp;'
                             @endforeach
                         @endif
 
