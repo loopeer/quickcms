@@ -138,7 +138,7 @@
                 "lengthMenu": [10, 25, 50, 100],
                 "pageLength": 25,
                 @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
-                "columnDefs": [ {
+                "columnDefs": [ {"targets": 2, "width": "10%"},{
                     "targets": -1,
                     "data": null,
                     "defaultContent":
