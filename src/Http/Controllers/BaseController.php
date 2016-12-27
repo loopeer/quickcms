@@ -70,10 +70,20 @@ class BaseController extends Controller
         if ($str_column == NULL) {
             $str_column = implode(',', $show_column);
         }
-        $paginate = $model->selectRaw($str_column)
-            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-            ->orderByRaw($order_sql)
-            ->paginate($length);
+
+        $query = $model->selectRaw($str_column);
+
+//        $columns = Input::get('columns');
+//        foreach ($columns as $column) {
+//            $value = $column['search']['value'];
+//            if ($value) {
+//                $query->where($show_column[$column['data']], 'like', '%' . $value . '%');
+//            }
+//        }
+
+        $paginate =
+            $query->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+            $query->orderByRaw($order_sql)->paginate($length);
         if(isset($append_column)) {
             $show_column[$append_column] = $append_column;
         }

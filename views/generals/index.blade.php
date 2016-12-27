@@ -23,6 +23,32 @@
                             @endif
                         </p>
                     @endif
+
+                        {{--<fieldset>--}}
+                            {{--<div class="row">--}}
+                                {{--<section class="col col-3">--}}
+                                    {{--<label class="input">--}}
+                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col0_filter" data-column="0">--}}
+                                    {{--</label>--}}
+                                {{--</section>--}}
+                                {{--<section class="col col-3">--}}
+                                    {{--<label class="input">--}}
+                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col1_filter" data-column="1">--}}
+                                    {{--</label>--}}
+                                {{--</section>--}}
+                                {{--<section class="col col-3">--}}
+                                    {{--<label class="input">--}}
+                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col2_filter" data-column="2">--}}
+                                    {{--</label>--}}
+                                {{--</section>--}}
+                                {{--<section class="col col-3">--}}
+                                    {{--<label class="input">--}}
+                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col3_filter" data-column="3">--}}
+                                    {{--</label>--}}
+                                {{--</section>--}}
+                            {{--</div>--}}
+                        {{--</fieldset>--}}
+
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
@@ -63,6 +89,8 @@
 
 @section('script')
     <script>
+
+
         $(document).ready(function() {
             var route_name = '{{ $route_name }}';
             var table = $('#dt_basic').DataTable({
@@ -94,11 +122,13 @@
                     }
                 },
                 "columns" : [
-                    @foreach($index_column as $column)
-                        @if(isset($table_sort[$column]) && $table_sort[$column])
-                        { "orderable" : true },
-                        @else
-                        { "orderable" : false },
+                    @foreach($index_column as $index => $column)
+                        @if (count($index_column_name) != $index)
+                            @if(isset($table_sort[$column]) && $table_sort[$column])
+                            { "orderable" : true },
+                            @else
+                            { "orderable" : false },
+                            @endif
                         @endif
                     @endforeach
                     @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
@@ -181,8 +211,22 @@
                     "url": "/admin/" + route_name + "/search"
                 }
                 @endif
+
             });
 
+            $('input.column_filter').on( 'keyup', function () {
+                console.log($('#col1_filter').val());
+//                filterColumn( $(this).attr('data-column') );
+                var index = $(this).attr('data-column');
+                table.column(index).search($('#col' + index + '_filter').val()).draw();
+                console.log('draw done');
+            } );
+
+            function filterColumn ( i ) {
+//                table.column( i ).search($('#col'+i+'_filter').val()).draw();
+            }
+
+//            $("div.dt-toolbar label:first").append('<a class="btn btn-primary">待审核</a><a class="btn btn-primary">待审核</a><a class="btn btn-primary">待审核</a>');
             table.on( 'draw.dt', function () {
                 var $data = table.data();
                 for (var i=0; i < $data.length; i++) {
