@@ -71,7 +71,7 @@ class BaseController extends Controller
             $str_column = implode(',', $show_column);
         }
 
-        $query = $model->selectRaw($str_column);
+//        $query = $model->selectRaw($str_column);
 
 //        $columns = Input::get('columns');
 //        foreach ($columns as $column) {
@@ -81,9 +81,14 @@ class BaseController extends Controller
 //            }
 //        }
 
-        $paginate =
-            $query->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-            $query->orderByRaw($order_sql)->paginate($length);
+//        $paginate = $query->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'");
+//        $query->orderByRaw($order_sql)->paginate($length);
+
+        $paginate = $model->selectRaw($str_column)
+            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+            ->orderByRaw($order_sql)
+            ->paginate($length);
+
         if(isset($append_column)) {
             $show_column[$append_column] = $append_column;
         }

@@ -57,7 +57,12 @@
                                         @endforeach
                                         </label>
                                         @else
-                                            {!! $data->$column !!}
+                                            @if(isset($renames[$column]['param']))
+                                                {!! str_replace('%s', $data->$column, $renames[$column]['param']) !!}
+                                            @else
+                                                {!! $data->$column !!}
+                                            @endif
+
                                         @endif
                                     @elseif($renames[$column]['type'] == 'language')
                                         <label style="vertical-align: text-top;">
