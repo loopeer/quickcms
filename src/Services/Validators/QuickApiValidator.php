@@ -28,7 +28,6 @@ class QuickApiValidator extends Validator {
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
         'captcha' => 'required',
         'password' => array('required', 'min:6', 'max:16'),
-        'nickname' => 'required',
     ];
 
     public $phoneRules = [
