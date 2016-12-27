@@ -142,7 +142,7 @@
                     "targets": -1,
                     "data": null,
                     "defaultContent":
-                    @if(config('quickcms.operate_style') == 'line')
+                    @if($table_action_line)
                         @if($curd_action['edit'])
                             '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.edit">编辑</a>&nbsp;' +
                         @endif

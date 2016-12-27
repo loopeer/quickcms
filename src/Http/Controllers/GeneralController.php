@@ -61,6 +61,7 @@ class GeneralController extends BaseController
     protected $custom_id_relation;
     protected $is_permission;
     protected $table_sort;
+    protected $table_action_line;
 
     public function __construct(Request $request) {
         try {
@@ -91,6 +92,7 @@ class GeneralController extends BaseController
             $this->sort = config($general_name . 'sort');
             $this->where = config($general_name . 'index_where');
             $this->table_sort = config($general_name . 'table_sort');
+            $this->table_action_line = config($general_name . 'table_action_line');
 
             $this->edit_redirect_location = config($general_name . 'edit_redirect_location');
             $this->edit_hidden = config($general_name . 'edit_hidden');
@@ -290,6 +292,7 @@ class GeneralController extends BaseController
             'custom_id_back_url' => isset($back_url) ? $back_url : null,
             'is_permission' => $this->is_permission,
             'table_sort' => $this->table_sort,
+            'table_action_line' => $this->table_action_line,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;

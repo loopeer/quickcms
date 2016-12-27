@@ -1,8 +1,8 @@
 <!-- HEADER -->
 <header id="header">
-    <div id="logo-group">
-        <img id="logo-img" style="width: 50px;height: 50px;" src="{{ asset('loopeer/quickcms/img/logo.png') }}">
-        <div>后台管理系统</div>
+    <div id="logo-group" style="padding: 10px;">
+        <img id="logo-img" style="width: 32px;height: 32px;" src="{{ asset('loopeer/quickcms/img/cms_logo.png') }}">
+        <div style="display: inline-block;margin-left: 4px;">后台管理系统</div>
     </div>
 
     <div class="pull-right">
