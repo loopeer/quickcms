@@ -62,6 +62,7 @@ class GeneralController extends BaseController
     protected $is_permission;
     protected $table_sort;
     protected $table_action_line;
+    protected $table_column_width;
 
     public function __construct(Request $request) {
         try {
@@ -93,6 +94,7 @@ class GeneralController extends BaseController
             $this->where = config($general_name . 'index_where');
             $this->table_sort = config($general_name . 'table_sort');
             $this->table_action_line = config($general_name . 'table_action_line');
+            $this->table_column_width = config($general_name . 'table_column_width');
 
             $this->edit_redirect_location = config($general_name . 'edit_redirect_location');
             $this->edit_hidden = config($general_name . 'edit_hidden');
@@ -293,6 +295,7 @@ class GeneralController extends BaseController
             'is_permission' => $this->is_permission,
             'table_sort' => $this->table_sort,
             'table_action_line' => $this->table_action_line,
+            'table_column_width' => $this->table_column_width,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;

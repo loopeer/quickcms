@@ -138,7 +138,11 @@
                 "lengthMenu": [10, 25, 50, 100],
                 "pageLength": 25,
                 @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
-                "columnDefs": [ {"targets": 2, "width": "10%"},{
+                "columnDefs": [
+                        @foreach($table_column_width as $width_key => $width_value)
+                        {"targets": {{ $width_key }}, "width": "{{ $width_value }}"},
+                        @endforeach
+                    {
                     "targets": -1,
                     "data": null,
                     "defaultContent":
@@ -161,7 +165,7 @@
 
                     @else
                         @if($curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'] || isset($actions))
-                        '<div class="btn-group">' +
+                        + '<div class="btn-group">' +
                         '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 ' +
                         '<span class="caret"></span></button>' +
                         '<ul class="dropdown-menu">' +
