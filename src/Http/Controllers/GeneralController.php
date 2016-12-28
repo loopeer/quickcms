@@ -64,6 +64,7 @@ class GeneralController extends BaseController
     protected $table_action_line;
     protected $table_column_width;
     protected $table_order;
+    protected $detail_filter_empty;
 
     public function __construct(Request $request) {
         try {
@@ -117,6 +118,7 @@ class GeneralController extends BaseController
             $this->detail_multi_column = config($general_name . 'detail_multi_column');
             $this->detail_column_rename = config($general_name . 'detail_column_rename');
             $this->detail_style =  config($general_name . 'detail_style');
+            $this->detail_filter_empty = config($general_name . 'detail_filter_empty');
 
             $this->custom_id_relation_column = config($general_name . 'custom_id_relation_column');
             $this->custom_id_back_url = config($general_name . 'custom_id_back_url');
@@ -193,6 +195,9 @@ class GeneralController extends BaseController
                 $model = $model->where($this->index_business_where[$business_user->type], $business_user->business_id);
             }
         }
+        $order = Input::get('order')['0'];
+        $order_sql = $this->index_column[$order['column']] . ' ' . $order['dir'];
+        $model = $model->orderByRaw($order_sql);
         if(isset($this->index_multi_column)) {
             $search = Input::get('search')['value'];
             $length = Input::get('length');
@@ -389,7 +394,9 @@ class GeneralController extends BaseController
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames', 'rename_keys', 'selector_data', 'language_resource_data'));
+        $detail_filter_empty = $this->detail_filter_empty;
+        return view('backend::generals.detail', compact('data', 'columns', 'detail_column_name', 'column_names', 'renames',
+            'rename_keys', 'selector_data', 'language_resource_data', 'detail_filter_empty'));
     }
 
     /**

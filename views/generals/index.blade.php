@@ -144,13 +144,13 @@
                 @endif
                 "lengthMenu": [10, 25, 50, 100],
                 "pageLength": 25,
-                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
                 "columnDefs": [
                     @if(isset($table_column_width))
                         @foreach($table_column_width as $width_key => $width_value)
                             {"targets": {{ $width_key }}, "width": "{{ $width_value }}"},
                         @endforeach
                     @endif
+                @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])
                     {
                     "targets": -1,
                     "data": null,
@@ -216,8 +216,9 @@
                         '</div>'
                         @endif
                     @endif
-                } ],
+                    }
                 @endif
+                ],
                 @if(isset($custom_id))
                 "ajax": {
                     "url": "{{ $route_path }}" + "/search"

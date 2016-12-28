@@ -20,7 +20,7 @@ class ApiResponse extends Response {
     /**
      * API输入参数的校验
      * @param $validator
-     * @param string $code
+     * @param int $code
      * @param null $message
      * @return mixed
      * @throws Exception
@@ -43,7 +43,7 @@ class ApiResponse extends Response {
         }
         return self::json([
             'code' => $code ? : config('quickcms.code_invalid_parameters'),
-            'message' => $message ? : config('quickcms.message_invalid_parameters'),
+            'message' => $message ? : trans('api::messages.invalid_parameters'),
             'data' => $response
         ]);
     }
@@ -56,7 +56,7 @@ class ApiResponse extends Response {
     public static function responseSuccess($data = NULL) {
         $ret = array(
             'code' => config('quickcms.code_success'),
-            'message' => config('quickcms.message_success'),
+            'message' => trans('api::messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -71,7 +71,7 @@ class ApiResponse extends Response {
     public static function responseSuccessWithMessage($message = NULL, $data = NULL) {
         $ret = array(
             'code' => config('quickcms.code_success'),
-            'message' => $message ? : config('quickcms.message_success'),
+            'message' => $message ? : trans('api::messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -85,7 +85,7 @@ class ApiResponse extends Response {
     public static function responseSuccessWithPagination($pagination) {
         $ret = array (
             'code' => config('quickcms.code_success'),
-            'message' => config('quickcms.message_success'),
+            'message' => trans('api::messages.request_success'),
             'page' => $pagination->currentPage(),
             'page_size' => $pagination->perPage(),
             'total_size' => $pagination->total(),
@@ -103,7 +103,7 @@ class ApiResponse extends Response {
     public static function responseFailure($errorCode = NULL, $errorMessage = NULL) {
         $ret = array (
             'code' => $errorCode == NULL ? config('quickcms.code_default_error') : $errorCode,
-            'message' => $errorMessage == NULL ? config('quickcms.message_default_error') : $errorMessage,
+            'message' => $errorMessage == NULL ? trans('api::messages.default_error') : $errorMessage,
             'data' => NULL
         );
         return Response::json($ret);
@@ -115,7 +115,7 @@ class ApiResponse extends Response {
      */
     public static function responseFailureInvalidParameters() {
         return self::responseFailure(config('quickcms.code_invalid_parameters'),
-            config('quickcms.message_invalid_parameters'));
+            trans('api::messages.invalid_parameters'));
     }
 
     /**
@@ -125,7 +125,7 @@ class ApiResponse extends Response {
     public static function errorNoContent($errorMessage = NULL) {
         return self::responseFailure(
             config('quickcms.code_no_content'),
-            $errorMessage ? : config('quickcms.message_content_not_exist')
+            $errorMessage ? : trans('api::messages.content_not_exist')
         );
     }
 
@@ -140,7 +140,7 @@ class ApiResponse extends Response {
     /**
      * 用户权限未通过
      * @param null $data
-     * @param string $code
+     * @param int $code
      * @param string $message
      * @return mixed
      */
