@@ -18,11 +18,11 @@ class ApiValidate
     public function handle($request, Closure $next)
     {
         // signature
-        $debug = Input::get('debug');
+        $debug = Input::header('debug');
         if (is_null($debug) && config('quickcms.api_sign_validate')) {
-            $sign = Input::get('sign');
-            $timestamp = Input::get('timestamp');
-            $params = Input::except('sign');
+            $sign = Input::header('sign');
+            $timestamp = Input::header('timestamp');
+            $params = Input::all('sign');
             // validate the timestamp
             if (($timestamp < strtotime('-10 minutes') || $timestamp > strtotime('+10 minutes'))) {
                 return Response::json(array(
