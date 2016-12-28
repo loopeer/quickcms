@@ -135,6 +135,13 @@
                         { "orderable" : false },
                     @endif
                 ],
+                @if(isset($table_order))
+                "order": [
+                        @foreach($table_order as $order_key => $order_value)
+                        [{{ $order_key }}, '{{ $order_value }}'],
+                        @endforeach
+                ],
+                @endif
                 "lengthMenu": [10, 25, 50, 100],
                 "pageLength": 25,
                 @if(isset($actions) || $curd_action['edit'] || $curd_action['delete'] || $curd_action['detail'])

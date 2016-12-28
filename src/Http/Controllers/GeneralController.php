@@ -63,6 +63,7 @@ class GeneralController extends BaseController
     protected $table_sort;
     protected $table_action_line;
     protected $table_column_width;
+    protected $table_order;
 
     public function __construct(Request $request) {
         try {
@@ -95,6 +96,7 @@ class GeneralController extends BaseController
             $this->table_sort = config($general_name . 'table_sort');
             $this->table_action_line = config($general_name . 'table_action_line');
             $this->table_column_width = config($general_name . 'table_column_width');
+            $this->table_order = config($general_name . 'table_order');
 
             $this->edit_redirect_location = config($general_name . 'edit_redirect_location');
             $this->edit_hidden = config($general_name . 'edit_hidden');
@@ -166,11 +168,11 @@ class GeneralController extends BaseController
                 }
             }
         }
-        if(isset($this->sort)) {
-            foreach ($this->sort as $sort) {
-                $model = $model->orderBy($sort[0], $sort[1]);
-            }
-        }
+//        if(isset($this->sort)) {
+//            foreach ($this->sort as $sort) {
+//                $model = $model->orderBy($sort[0], $sort[1]);
+//            }
+//        }
         if (isset($custom_id)) {
             if (isset($this->custom_id_relation_column)) {
                 $model = $model->where($this->custom_id_relation_column, $custom_id);
@@ -296,6 +298,7 @@ class GeneralController extends BaseController
             'table_sort' => $this->table_sort,
             'table_action_line' => $this->table_action_line,
             'table_column_width' => $this->table_column_width,
+            'table_order' => $this->table_order,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
