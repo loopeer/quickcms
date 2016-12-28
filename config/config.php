@@ -13,13 +13,13 @@ return [
     'action_log' => array(
         'login' => '登陆系统'
     ),
-    'site_title' => '后台管理系统',
+    'site_title' => env('site_title', '后台管理系统'),
 
     //加密字符串
     'admin_pwd_salt' => '',
-    'api_sign_validate' => false,
-    'sql_log_switch' => true,
-    'permission_switch' => true,
+    'api_sign_validate' => env('api_sign_validate', false),
+    'sql_log_switch' => env('sql_log_switch', false),
+    'permission_switch' => env('permission_switch', true),
 
     // qiniu config
     'qiniu_access_key' => env('qiniu_access_key'),

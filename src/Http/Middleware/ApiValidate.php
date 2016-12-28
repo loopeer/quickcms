@@ -19,7 +19,7 @@ class ApiValidate
     {
         // signature
         $debug = Input::get('debug');
-        if (is_null($debug) && config('api.api_sign_validate')) {
+        if (is_null($debug) && config('quickcms.api_sign_validate')) {
             $sign = Input::get('sign');
             $timestamp = Input::get('timestamp');
             $params = Input::except('sign');

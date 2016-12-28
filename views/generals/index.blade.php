@@ -49,7 +49,8 @@
                             {{--</div>--}}
                         {{--</fieldset>--}}
 
-                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false">
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false"
+                         data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                             <h2>@if(isset($custom_id)) {{ $custom_id . ' -' }} @endif{{ $model_name }}列表</h2>
