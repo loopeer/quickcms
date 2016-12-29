@@ -142,7 +142,7 @@ class AccountController extends BaseController {
         }
         $account = $this->model->where('phone', $phone)->first();
         if ($account == null) {
-            return ApiResponse::errorPreCondition(config('quickcms.message_account_is_not_exist'));
+            return ApiResponse::errorPreCondition(config('quickcms.message_account_not_exist'));
         }
         $account->password = md5($password);
         $account->save();
