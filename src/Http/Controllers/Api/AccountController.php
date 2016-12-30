@@ -49,7 +49,7 @@ class AccountController extends BaseController {
         }
         // 黑名单
         if ($account->status != 0) {
-            return ApiResponse::responseFailure(config('quickcms.code_black_account'), config('api.message_black_account'));
+            return ApiResponse::responseFailure(config('quickcms.code_black_account'), config('quickcms.message_black_account'));
         }
         // token
         $token = self::generateToken();
