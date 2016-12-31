@@ -603,8 +603,8 @@
                 $("#" + '{{$rename['param']['target']}}' + " .modal-title").html('{{$rename['param']['dialog_title']}}');
                 $(this).attr("data-toggle", "modal");
                 $(this).attr("data-target", "#{{$rename['param']['target']}}");
-                $(this).attr("data-action","{{$rename['param']['url']}}"+data[0]);
-                $(this).attr("data-id",data[0]);
+                $(this).attr("data-action","{{$rename['param']['url']}}" + data[parseInt({{ $rename['param']['index'] }})]);
+                $(this).attr("data-id", data[parseInt({{ $rename['param']['index'] }})]);
             });
 
             $('#' + '{{$rename['param']['target']}}').on('show.bs.modal', function(e) {
