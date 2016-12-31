@@ -22,6 +22,7 @@ return [
     'account_not_exist' => '账号不存在',
     'password_error' => '密码错误',
     'phone_is_register' => '该手机号已被注册',
+    'email_is_register' => '该邮箱已被注册',
     'captcha_error' => '验证码输入错误',
     'oldPassword_error' => '旧密码输入错误',
     'black_account' => '账号已禁用',

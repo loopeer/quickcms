@@ -20,29 +20,30 @@ class QuickApiValidator extends Validator {
     ];
 
     public $loginRules = [
-        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
+        'phone' => array('sometimes', 'required', 'regex:/^1[0-9]\d{9}$/'),
+        'email' => array('sometimes', 'required', 'email'),
         'password' => 'required',
     ];
 
     public $registerRules = [
-        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
-        'captcha' => 'required',
+        'phone' => array('sometimes', 'required', 'regex:/^1[0-9]\d{9}$/'),
+        'email' => array('sometimes', 'required', 'email'),
         'password' => array('required', 'min:6', 'max:16'),
+        'captcha' => 'required',
     ];
 
     public $phoneRules = [
-        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/')
+        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
+    ];
+
+    public $captchaRules = [
+        'phone' => array('sometimes', 'required', 'regex:/^1[0-9]\d{9}$/'),
+        'email' => array('sometimes', 'required', 'email'),
     ];
 
     public $loginByCaptchaRules = [
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
         'captcha' => 'required',
-    ];
-
-    public $forgetPwdRules = [
-        'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
-        'captcha' => 'required',
-        'password' => array('required', 'min:6', 'max:16')
     ];
 
     public $updatePwdRules = [

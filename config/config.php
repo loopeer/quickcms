@@ -68,6 +68,7 @@ return [
     'message_account_not_exist' => '账号不存在',
     'message_password_error' => '密码错误',
     'message_phone_is_register' => '该手机号已被注册',
+    'message_email_is_register' => '',
     'message_captcha_error' => '验证码输入错误',
     'message_oldPassword_error' => '旧密码输入错误',
     'code_black_account' => 20,
