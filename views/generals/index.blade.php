@@ -354,6 +354,13 @@
                                         + '<strong>失败</strong>' + ' ' + '删除失败。'
                                         + '</div>');
                                     }
+                                },
+                                error: function() {
+                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                    + '</div>');
                                 }
                             });
                             hideTips();
@@ -466,6 +473,13 @@
                                     }
                                     $(".tips").html(html);
                                 }
+                            },
+                            error: function() {
+                                $(".tips").html('<div class="alert alert-danger fade in">'
+                                + '<button class="close" data-dismiss="alert">×</button>'
+                                + '<i class="fa-fw fa fa-warning"></i>'
+                                + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                + '</div>');
                             }
                         });
                         hideTips();
@@ -525,6 +539,8 @@
                 var page_info = table.page.info();
                 var page = page_info.page;
                 var data_table = $('#dt_basic').dataTable();
+                $('#' + '{{$action['form']['submit_id']}}').text("提交");
+                $('#' + '{{$action['target']}}').modal('hide');
                 $($form).submit(function(event) {
                     var form = $(this);
                     $.ajax({
@@ -559,8 +575,6 @@
                             }
                             $(".tips").html(html);
                         }
-                        $('#' + '{{$action['form']['submit_id']}}').text("提交");
-                        $('#' + '{{$action['target']}}').modal('hide');
                         $form[0].reset();
                         hideTips();
                     });
