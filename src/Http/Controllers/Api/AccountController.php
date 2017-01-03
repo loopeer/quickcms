@@ -101,6 +101,30 @@ class AccountController extends BaseController {
     }
 
     /**
+     * 微信登录方式
+     * @param $request
+     * @return mixed
+     */
+    public function loginByWeChat(Request $request)
+    {
+        if (!$this->validation->passes($this->validation->loginByWeChatRules)) {
+            return ApiResponse::validation($this->validation);
+        }
+        $data = $request->all();
+        $token = self::generateToken();
+        $account = $this->model->where('open_id', $data['open_id'])->first();
+        if (isset($account)) {
+            $account->token = $token;
+            $account->save();
+        } else {
+            $data['token'] = $token;
+            $account = $this->model->create($data);
+        }
+        Auth::user()->setUser($account);
+        return ApiResponse::responseSuccess($account);
+    }
+
+    /**
      * 用户注册API
      * @param $request
      * @return mixed
@@ -225,6 +249,35 @@ class AccountController extends BaseController {
     }
 
     /**
+     * 校验验证码
+     * @param $request
+     * @return mixed
+     * @throws \Exception
+     */
+    public function validatorCaptcha(Request $request)
+    {
+        if (!$this->validation->passes($this->validation->validatorCaptchaRules)) {
+            return ApiResponse::validation($this->validation);
+        }
+        $phone = $request->phone;
+        $email = $request->email;
+        if (isset($phone)) {
+            $query = $this->model->where('phone', $phone);
+        } else {
+            $query = $this->model->where('email', $email);
+        }
+        $account = $query->first();
+        if (!is_null($account)) {
+            return ApiResponse::errorPreCondition(config('api::messages.email_is_register'));
+        }
+        // 验证码输入错误
+        if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
+            return ApiResponse::errorPreCondition(trans('api::messages.captcha_error'));
+        }
+        return ApiResponse::responseSuccess();
+    }
+
+    /**
      * 个人详情
      * @return mixed
      */
@@ -254,7 +307,8 @@ class AccountController extends BaseController {
      * @return mixed
      */
     public function update(Request $request) {
-        $account = Auth::user()->get()->update($request->all());
+        $account = Auth::user()->get();
+        $account->update($request->all());
         return ApiResponse::responseSuccess($account);
     }
     
@@ -289,6 +343,31 @@ class AccountController extends BaseController {
     public function easeMobDetail(Request $request) {
         $account = $this->model->where('im_username', $request->im_username)->first();
         return ApiResponse::responseSuccess($account);
+    }
+
+    /**
+     * 用户xx业务记录分页
+     * @param $type
+     * @return mixed
+     * @throws \Exception
+     */
+    public function myListByPage($type)
+    {
+        $pageSize = $this->setCurrentPage();
+        $myList = $this->{str_plural($type)}()->latest()->paginate($pageSize);
+        return ApiResponse::responseSuccessWithPagination($myList);
+    }
+
+    /**
+     * 用户xx业务记录
+     * @param $type
+     * @return mixed
+     * @throws \Exception
+     */
+    public function myList($type)
+    {
+        $myList = $this->{str_plural($type)}()->latest()->get();
+        return ApiResponse::responseSuccess($myList);
     }
 }
 

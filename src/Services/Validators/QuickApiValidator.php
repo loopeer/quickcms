@@ -41,9 +41,19 @@ class QuickApiValidator extends Validator {
         'email' => array('sometimes', 'required', 'email'),
     ];
 
+    public $validatorCaptchaRules = [
+        'phone' => array('sometimes', 'required', 'regex:/^1[0-9]\d{9}$/'),
+        'email' => array('sometimes', 'required', 'email'),
+        'captcha' => 'required',
+    ];
+
     public $loginByCaptchaRules = [
         'phone' => array('required', 'regex:/^1[0-9]\d{9}$/'),
         'captcha' => 'required',
+    ];
+
+    public $loginByWeChatRules = [
+        'open_id' => 'required',
     ];
 
     public $updatePwdRules = [
