@@ -68,8 +68,12 @@ class GeneralController extends BaseController
 
     public function __construct(Request $request) {
         try {
-            $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
-                Route::getCurrentRoute()->getPath());
+            if (is_null(Route::getCurrentRoute()->getName())) {
+                $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
+                    Route::getCurrentRoute()->getPath());
+            } else {
+                $this->route_name = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
+            }
             $general_name = 'generals.' . $this->route_name . '.';
             $is_permission = true;
             if (config($general_name . 'disable_permission') === true) {

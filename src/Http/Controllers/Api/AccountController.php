@@ -354,7 +354,8 @@ class AccountController extends BaseController {
     public function myListByPage($type)
     {
         $pageSize = $this->setCurrentPage();
-        $myList = $this->{str_plural($type)}()->latest()->paginate($pageSize);
+        $account = Auth::user()->get();
+        $myList = $account->{str_plural($type)}()->latest()->paginate($pageSize);
         return ApiResponse::responseSuccessWithPagination($myList);
     }
 
@@ -366,7 +367,8 @@ class AccountController extends BaseController {
      */
     public function myList($type)
     {
-        $myList = $this->{str_plural($type)}()->latest()->get();
+        $account = Auth::user()->get();
+        $myList = $account->{str_plural($type)}()->latest()->get();
         return ApiResponse::responseSuccess($myList);
     }
 }
