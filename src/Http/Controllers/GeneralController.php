@@ -30,6 +30,7 @@ class GeneralController extends BaseController
     protected $model_class;
     protected $model_name;
     protected $route_name;
+    protected $route_path;
     protected $index_column;
     protected $index_column_format;
     protected $index_column_name;
@@ -68,9 +69,12 @@ class GeneralController extends BaseController
 
     public function __construct(Request $request) {
         try {
+            $this->route_path = preg_replace('/(admin\/)|(\/create)|(\/search)|(\/edit)|(\/changeStatus)|(\/detail)|\/{(?!custom_id).*?}/', '',
+                Route::getCurrentRoute()->getPath());
+            $this->route_path = str_replace('{custom_id}', Route::getCurrentRoute()->parameter('custom_id'), $this->route_path);
+
             if (is_null(Route::getCurrentRoute()->getName())) {
-                $this->route_name = preg_replace('/(\/)|(admin)|(create)|(search)|(edit)|(changeStatus)|(detail)|{\w*}/', '',
-                    Route::getCurrentRoute()->getPath());
+                $this->route_name = preg_replace('/(\/\d*\/)|(\/)/', '.', $this->route_path);
             } else {
                 $this->route_name = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
             }
@@ -295,7 +299,8 @@ class GeneralController extends BaseController
             'index_column_rename' => $this->index_column_rename,
             'selector_data' => $selector_data,
             'route_name' => $this->route_name,
-            'route_path' => '/' . str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath()),
+//            'route_path' => '/' . str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath()),
+            'route_path' => $this->route_path,
             'model_name' => $this->model_name,
             'actions' => $this->actions,
             'curd_action' => $this->curd_action,
@@ -590,10 +595,10 @@ class GeneralController extends BaseController
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-        $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
-        $route_path = str_replace('/create', '', $route_path);
-        $route_path = str_replace('/edit', '', $route_path);
-        $route_path = str_replace('/{id}', '', $route_path);
+//        $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
+//        $route_path = str_replace('/create', '', $route_path);
+//        $route_path = str_replace('/edit', '', $route_path);
+//        $route_path = str_replace('/{id}', '', $route_path);
         if (isset($this->edit_hidden_business_id)) {
             $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
@@ -602,7 +607,8 @@ class GeneralController extends BaseController
         }
         $data = array(
             'route_name' => $this->route_name,
-            'route_path' => '/' . $route_path,
+//            'route_path' => '/' . $route_path,
+            'route_path' => $this->route_path,
             'model_name' => $this->model_name,
             'column_names' => $column_names,
             'edit_column' => $this->edit_column,

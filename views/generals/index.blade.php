@@ -14,13 +14,13 @@
                     @endif
                     @if($curd_action['create'])
                         <p>
-                            @if(isset($custom_id))
-                                <a href="{{ $route_path . '/create' }}"
+{{--                            @if(isset($custom_id))--}}
+                                <a href="{{ '/admin/' . $route_path . '/create' }}"
                                    id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
-                            @else
-                                <a href="{{ '/admin/' . $route_name . '/create' }}"
-                                   id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
-                            @endif
+                            {{--@else--}}
+                                {{--<a href="{{ '/admin/' . $route_name . '/create' }}"--}}
+                                   {{--id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>--}}
+                            {{--@endif--}}
                         </p>
                     @endif
 
@@ -93,7 +93,7 @@
 
 
         $(document).ready(function() {
-            var route_name = '{{ $route_name }}';
+            var route_path = '{{ $route_path }}';
             var table = $('#dt_basic').DataTable({
                 "processing": false,
                 "serverSide": true,
@@ -220,15 +220,15 @@
                     }
                 @endif
                 ],
-                @if(isset($custom_id))
+                {{--@if(isset($custom_id))--}}
+                {{--"ajax": {--}}
+                    {{--"url": "{{ $route_path }}" + "/search"--}}
+                {{--}--}}
+                {{--@else--}}
                 "ajax": {
-                    "url": "{{ $route_path }}" + "/search"
+                    "url": "/admin/" + route_path + "/search"
                 }
-                @else
-                "ajax": {
-                    "url": "/admin/" + route_name + "/search"
-                }
-                @endif
+                {{--@endif--}}
 
             });
 
@@ -310,10 +310,10 @@
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
-                        var url = '/admin/' + route_name + '/' + data[0] + '/edit/';
-                        @if(isset($custom_id))
-                        url = '{{ $route_path }}' + '/' + data[0] + '/edit/';
-                        @endif
+                        var url = '/admin/' + route_path + '/' + data[0] + '/edit/';
+                        {{--@if(isset($custom_id))--}}
+                        {{--url = '{{ $route_path }}' + '/' + data[0] + '/edit/';--}}
+                        {{--@endif--}}
                         window.location = url;
                     }
                 });
@@ -330,10 +330,10 @@
                         if (page_info.length == 1 && page_info.page != 0) {
                             page = page - 1;
                         }
-                        var url = '/admin/' + route_name + '/' + data[0];
-                        @if(isset($custom_id))
-                        url = '{{ $route_path }}' + '/' + data[0];
-                        @endif
+                        var url = '/admin/' + route_path + '/' + data[0];
+                        {{--@if(isset($custom_id))--}}
+                        {{--url = '{{ $route_path }}' + '/' + data[0];--}}
+                        {{--@endif--}}
                         if(confirm('删除这条记录?')) {
                             $.ajax({
                                 type: "DELETE",
@@ -396,7 +396,7 @@
                         $("#detail_dialog .modal-title").html('查看详情');
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#detail_dialog");
-                        $(this).attr("data-action", "/admin/" + "{{ $route_name }}/" + data[0]);
+                        $(this).attr("data-action", "/admin/" + "{{ $route_path }}/" + data[0]);
                         $(this).attr("data-id",data[0]);
                     }
                 });

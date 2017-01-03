@@ -48,7 +48,7 @@
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="{{ isset($custom_id) ? $route_path : '/admin/' . $route_name }}" method="post" id="smart-form-register" class="smart-form client-form">
+                                <form action="{{ '/admin/' . $route_path }}" method="post" id="smart-form-register" class="smart-form client-form">
                                     <style>
                                         .btn {
                                             display: inline-block;
@@ -256,7 +256,7 @@
                                                     返回
                                                 </a>
                                             @else
-                                                <a href="{{ route('admin.' . $route_name . '.index') }}" class="btn btn-primary">
+                                                <a href="{{ route('admin.' . $route_path . '.index') }}" class="btn btn-primary">
                                                     返回
                                                 </a>
                                             @endif

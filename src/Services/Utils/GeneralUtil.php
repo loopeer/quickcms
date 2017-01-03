@@ -57,9 +57,9 @@ class GeneralUtil {
     }
 
     public static function filterOperationPermission($request, $permission, $route_name) {
-        $method = $request->method();
-        $path = Route::getCurrentRoute()->getPath();
-        $path = str_replace("/", ".", $path);
+//        $method = $request->method();
+//        $path = Route::getCurrentRoute()->getPath();
+//        $path = str_replace("/", ".", $path);
         $route = Route::currentRouteName();
         $user = Auth::admin()->get();
         if(config('quickcms.permission_switch')) {

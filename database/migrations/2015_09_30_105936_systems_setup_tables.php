@@ -26,12 +26,12 @@ class SystemsSetupTables extends Migration
         Schema::create('feedbacks',function($table){
             $table->bigIncrements('id')->comment('主键');
             $table->bigInteger('account_id')->unsigned()->nullable()->comment('用户id');
-            $table->string('content', 200)->comment('反馈文字内容');
+            $table->string('content', 1000)->comment('反馈文字内容');
             $table->string('contact', 50)->nullable()->comment('联系方式');
-            $table->string('version', 20)->nullable()->comment('版本名称');
+            $table->string('version', 100)->nullable()->comment('版本名称');
             $table->bigInteger('version_code')->nullable()->comment('版本号');
-            $table->string('device_id', 20)->nullable()->comment('设备唯一id号');
-            $table->string('channel_id', 20)->nullable()->comment('渠道编号');
+            $table->string('device_id', 100)->nullable()->comment('设备唯一id号');
+            $table->string('channel_id', 100)->nullable()->comment('渠道编号');
             // timestamp fields
             $table->timestamps();
             $table->softDeletes();
@@ -41,10 +41,10 @@ class SystemsSetupTables extends Migration
         // # versions [版本更新]
         Schema::create('versions',function($table){
             $table->bigIncrements('id')->comment('主键');
-            $table->string('platform', 20)->comment('发表平台');
+            $table->string('platform', 50)->comment('发表平台');
             $table->bigInteger('version_code')->comment('版本号');
-            $table->string('version', 20)->comment('版本名称');
-            $table->string('url', 100)->comment('下载地址');
+            $table->string('version', 50)->comment('版本名称');
+            $table->string('url', 200)->comment('下载地址');
             $table->string('message', 200)->nullable()->comment('消息提示');
             $table->string('description', 255)->nullable()->comment('版本描述');
             $table->tinyInteger('status')->default(1)->comment('版本状态');
@@ -83,8 +83,20 @@ class SystemsSetupTables extends Migration
             $table->bigInteger('account_id')->comment('用户id');
             $table->bigInteger('app_channel_id')->comment('渠道id');
             $table->bigInteger('app_user_id')->comment('应用id');
-            $table->string('platform', 10)->comment('平台');
+            $table->string('platform', 50)->comment('平台');
             $table->tinyInteger('status')->default(0)->comment('状态');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('push_messages', function (Blueprint $table) {
+            $table->bigIncrements('id')->comment('ID');
+            $table->string('content', 255)->nullable()->comment('推送内容');
+            $table->text('account_ids')->nullable()->comment('推送用户id');
+            $table->string('push_type', 20)->default(0)->comment('推送类型');//batch-指定推送、android-安卓、ios-iOS、all-全局推送
+            $table->bigInteger('notice_id')->default(0)->comment('通知业务主键id');
+            $table->tinyInteger('notice_type')->default(0)->comment('通知业务类型');
+            $table->string('notice_url', 255)->nullable()->comment('通知业务跳转链接');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -124,6 +136,7 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('systems');
         Schema::dropIfExists('selectors');
         Schema::dropIfExists('pushes');
+        Schema::dropIfExists('push_messages');
         Schema::dropIfExists('statistics');
         Schema::dropIfExists('documents');
     }

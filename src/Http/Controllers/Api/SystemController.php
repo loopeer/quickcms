@@ -11,6 +11,7 @@
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
 use Input;
+use Loopeer\QuickCms\Models\Document;
 use Loopeer\QuickCms\Models\Version;
 use Request;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
@@ -63,41 +64,48 @@ class SystemController extends BaseController {
         return ApiResponse::responseSuccess($configs);
     }
 
-    public function registerPush() {
-        $account_id = Input::header('account_id');
-        $app_user_id = Input::get('app_user_id');
-        $app_channel_id = Input::get('app_channel_id');
-        $platform = Request::header('platform');
+    /**
+     * 注册推送设备
+     * @param Request $request
+     * @return mixed
+     * @throws \Exception
+     */
+    public function registerPush(Request $request) {
+        $accountId = $request->header('account_id');
+        $data = array(
+            'account_id' => $accountId,
+            'app_user_id' => $request->app_user_id,
+            'app_channel_id' => $request->app_channel_id,
+            'platform' => $request->header('platform'),
+        );
         if (!$this->validation->passes($this->validation->registerPushRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $push = Pushes::where('account_id', $account_id)->first();
-        if (!isset($push)) {
-            $push = new Pushes();
+        $push = Pushes::where('account_id', $accountId)->first();
+        if (isset($push)) {
+            $push->update($data);
+        } else {
+            Pushes::create($data);
         }
-        $push->account_id = $account_id;
-        $push->app_channel_id = $app_channel_id;
-        $push->app_user_id = $app_user_id;
-        $push->platform = $platform;
-        $push->save();
         return ApiResponse::responseSuccess();
     }
 
     /**
-     * POST setting/feedback
-     * return mixed
+     * 反馈
+     * @param $request
+     * @return mixed
      */
-    public function feedback() {
+    public function feedback(Request $request) {
         if (!$this->validation->passes($this->validation->feedbackRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = Input::header('account_id');
-        $content = Input::get('content');
-        $contact = Input::get('contact');
-        $version = Request::header('version');
-        $versionCode = Request::header('build');
-        $deviceId = Request::header('device_id');
-        $channelId = Request::header('channel_id');
+        $account_id = $request->header('account_id');
+        $content = $request->content;
+        $contact = $request->contact;
+        $version = $request->header('version');
+        $versionCode = $request->header('build');
+        $deviceId = $request->header('device_id');
+        $channelId = $request->header('channel_id');
         $feedback = new Feedback;
         $feedback->account_id = $account_id;
         $feedback->content = $content;
@@ -120,9 +128,27 @@ class SystemController extends BaseController {
         }
     }
 
+    /**
+     * 版本信息
+     * @return mixed
+     */
     public function version() {
-        $version = Version::select('id', 'version_code', 'url', 'message', 'description')->where('platform', 0)->where('status', 1)->orderBy('version_code', 'desc')->first();
+        $version = Version::where('platform', 0)->where('status', 1)->orderBy('version_code', 'desc')->first();
         return ApiResponse::responseSuccess($version);
     }
 
+    /**
+     * 文档html
+     * @param $key
+     * @return mixed
+     */
+    public function document($key)
+    {
+        $document = Document::where('document_key', $key)->first();
+        if ($document) {
+            return view('backend::app.document', compact('document'));
+        } else {
+            return abort(404, 'Document not found.');
+        }
+    }
 }
