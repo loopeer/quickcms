@@ -102,7 +102,7 @@ class SystemController extends BaseController {
         $account_id = $request->header('account_id');
         $content = $request->content;
         $contact = $request->contact;
-        $version = $request->header('version');
+        $version = $request->header('version_name');
         $versionCode = $request->header('build');
         $deviceId = $request->header('device_id');
         $channelId = $request->header('channel_id');
