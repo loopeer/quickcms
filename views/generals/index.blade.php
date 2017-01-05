@@ -124,7 +124,7 @@
                 },
                 "columns" : [
                     @foreach($index_column as $index => $column)
-                        @if (count($index_column_name) != $index)
+                        @if ($index < count($index_column_name))
                             @if(isset($table_sort[$column]) && $table_sort[$column])
                             { "orderable" : true },
                             @else
