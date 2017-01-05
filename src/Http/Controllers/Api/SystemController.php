@@ -10,8 +10,8 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use Input;
+use Request;
 use Loopeer\QuickCms\Models\Document;
 use Loopeer\QuickCms\Models\Version;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
@@ -32,7 +32,7 @@ class SystemController extends BaseController {
      * 初始化参数
      * @return mixed
     */
-    public function initialize(Request $request)
+    public function initialize()
     {
         $bucket = config('quickcms.qiniu_bucket');
         $accessKey = config('quickcms.qiniu_access_key');
@@ -43,7 +43,7 @@ class SystemController extends BaseController {
         ];
         $mac = new \Qiniu\Mac($accessKey, $secretKey);
         $upToken = $mac->signWithData(json_encode($policy));
-        $version_code = $request->header('build');
+        $version_code = Request::header('build');
         $appstore_reviewing = false;
         $review_system = Cache::rememberForever('review_system', function () {
             return System::where('system_key', 'app_review')->first();
@@ -66,17 +66,16 @@ class SystemController extends BaseController {
 
     /**
      * 注册推送设备
-     * @param Request $request
      * @return mixed
      * @throws \Exception
      */
-    public function registerPush(Request $request) {
-        $accountId = $request->header('account_id');
+    public function registerPush() {
+        $accountId = Request::header('account_id');
         $data = array(
             'account_id' => $accountId,
-            'app_user_id' => $request->app_user_id,
-            'app_channel_id' => $request->app_channel_id,
-            'platform' => $request->header('platform'),
+            'app_user_id' => Input::get('app_user_id'),
+            'app_channel_id' => Input::get('app_channel_id'),
+            'platform' => Request::header('platform'),
         );
         if (!$this->validation->passes($this->validation->registerPushRules)) {
             return ApiResponse::validation($this->validation);
@@ -92,20 +91,19 @@ class SystemController extends BaseController {
 
     /**
      * 反馈
-     * @param $request
      * @return mixed
      */
-    public function feedback(Request $request) {
+    public function feedback() {
         if (!$this->validation->passes($this->validation->feedbackRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = $request->header('account_id');
-        $content = $request->content;
-        $contact = $request->contact;
-        $version = $request->header('version_name');
-        $versionCode = $request->header('build');
-        $deviceId = $request->header('device_id');
-        $channelId = $request->header('channel_id');
+        $account_id = Request::header('account_id');
+        $content = Input::get('content');
+        $contact = Input::get('contact');
+        $version = Request::header('version_name');
+        $versionCode = Request::header('build');
+        $deviceId = Request::header('device_id');
+        $channelId = Request::header('channel_id');
         $feedback = new Feedback;
         $feedback->account_id = $account_id;
         $feedback->content = $content;
