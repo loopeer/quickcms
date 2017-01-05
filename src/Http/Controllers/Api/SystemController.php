@@ -32,7 +32,7 @@ class SystemController extends BaseController {
      * 初始化参数
      * @return mixed
     */
-    public function initialize()
+    public function initialize(Request $request)
     {
         $bucket = config('quickcms.qiniu_bucket');
         $accessKey = config('quickcms.qiniu_access_key');
@@ -43,7 +43,7 @@ class SystemController extends BaseController {
         ];
         $mac = new \Qiniu\Mac($accessKey, $secretKey);
         $upToken = $mac->signWithData(json_encode($policy));
-        $version_code = Request::header('build');
+        $version_code = $request->header('build');
         $appstore_reviewing = false;
         $review_system = Cache::rememberForever('review_system', function () {
             return System::where('system_key', 'app_review')->first();
