@@ -22,7 +22,7 @@ class ApiValidate
         if (is_null($debug) && config('quickcms.api_sign_validate')) {
             $sign = Input::header('sign');
             $timestamp = Input::header('timestamp');
-            $params = Input::all('sign');
+            $params = Input::all();
             // validate the timestamp
             if (($timestamp < strtotime('-10 minutes') || $timestamp > strtotime('+10 minutes'))) {
                 return Response::json(array(
