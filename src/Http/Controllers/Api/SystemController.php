@@ -10,10 +10,10 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
 use Input;
 use Loopeer\QuickCms\Models\Document;
 use Loopeer\QuickCms\Models\Version;
-use Request;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
 use Loopeer\QuickCms\Models\Pushes;
 use Loopeer\QuickCms\Models\Feedback;

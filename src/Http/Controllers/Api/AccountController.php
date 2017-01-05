@@ -157,13 +157,11 @@ class AccountController extends BaseController {
             $data['im_username'] = date('YmdHis') . rand(100000, 999999);
             $data['im_password'] = md5(rand(100000, 999999));
         }
-        $data = array(
-            'password' => md5($request->password),
-            'token' => $token,
-            'register_platform' => $request->header('platform'),
-            'register_channel' => $request->header('channel_id'),
-            'register_version' => $request->header('build'),
-        );
+        $data['password'] = md5($request->password);
+        $data['token'] = $token;
+        $data['register_platform'] = $request->header('platform');
+        $data['register_channel'] = $request->header('channel_id');
+        $data['register_version'] = $request->header('build');
 
         $account = $this->model->create($data);
         return ApiResponse::responseSuccess($account);
