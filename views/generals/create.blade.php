@@ -233,6 +233,8 @@
                                                                     <br>
                                                                 @endforeach
                                                             @endif
+                                                        @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'password')
+                                                            <input type="password" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
