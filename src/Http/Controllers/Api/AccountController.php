@@ -233,9 +233,8 @@ class AccountController extends BaseController {
                 $sms = new LuoSiMaoSms(config('quickcms.sms_api_key'));
                 $sms->sendSms($phone, $message);
             } else {
-                Mail::raw($captcha, function ($message) use ($email) {
-                    $message->to(config('quickcms.account_send_email'));
-                    $message->to($email);
+                Mail::send(config('quickcms.mail_captcha_view'), ['captcha' => $captcha], function ($m) use ($email) {
+                    $m->to($email)->subject(config('quickcms.mail_captcha_subject'));
                 });
             }
         } else {

@@ -41,6 +41,9 @@ return [
     'sms_api_key' => env('sms_api_key'),
     'sms_api_key_verify' => env('sms_api_key_verify'),
 
+    'mail_captcha_subject' => '',
+    'mail_captcha_view' => '',
+
     // quick api model namespace
     'account_model_class' => \App\Models\Api\Account::class,
     'account_bind_im' => false,
