@@ -77,7 +77,16 @@
                                     @endif
                                     @if(isset($edit_hidden))
                                         @foreach($edit_hidden as $hidden)
-                                            <input type="hidden" name="{{ $hidden['name'] }}" value="{{ $hidden['value'] }}">
+                                            @if(!isset($hidden['action']))
+                                                <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                            @else
+                                                @if($model_data['id'] && $hidden['action'] == 'edit')
+                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                                @endif
+                                                @if(!$model_data['id'] && $hidden['action'] == 'create')
+                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                                @endif
+                                            @endif
                                         @endforeach
                                     @endif
                                     @if(isset($edit_hidden_business_id))
@@ -234,7 +243,10 @@
                                                                 @endforeach
                                                             @endif
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'password')
-                                                            <input type="password" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                            <input type="password" name="{{ $edit_column[$key] }}"
+                                                                   value="{{ $model_data[$edit_column[$key]] }}"
+                                                                    {{ $model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['disabled'])
+                                                                     && $edit_column_detail[$edit_column[$key]]['disabled'] ? 'style=cursor:default!important;opacity:.6!important; disabled' : ''}}>
                                                         @else
                                                             <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
                                                         @endif
