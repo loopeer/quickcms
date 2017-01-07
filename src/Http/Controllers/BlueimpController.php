@@ -27,7 +27,9 @@ class BlueimpController extends BaseController {
         $url = Input::get('url');
         if (strpos($url, config('quickcms.qiniu_url')) !== false) {
             $key = str_replace(config('quickcms.qiniu_url') . '/', '', $url);
-            $key = substr($key, 0, strrpos($key, '?'));
+            if (strrpos($key, '?') !== false) {
+                $key = substr($key, 0, strrpos($key, '?'));
+            }
         } else {
             $key = $url;
         }
@@ -50,6 +52,7 @@ class BlueimpController extends BaseController {
             $success->deleteUrl = route('admin.blueimp.delete', 1);// 处理删除的action
             $success->deleteType = 'GET';
             $success->key = $key;
+            \Log::info($success);
             return Response::json(array('files' => array($success)), 200);
         }
     }
