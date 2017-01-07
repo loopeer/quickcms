@@ -45,7 +45,7 @@ class Authenticate
         ]);
         if ($validator->passes()) {
             $accountModel = Auth::user()->getProvider()->createModel();
-            $account = $accountModel->whereId($accountId)->whereToken($token)->first();
+            $account = $accountModel->whereId($accountId)->whereToken($token)->where('status', 0)->first();
             if (!is_null($account)) {
                 Auth::user()->setUser($account);
                 return $next($request);
