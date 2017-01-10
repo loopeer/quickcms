@@ -62,7 +62,7 @@ class GeneralUtil {
 //        $path = str_replace("/", ".", $path);
         $route = Route::currentRouteName();
         $user = Auth::admin()->get();
-        if(config('quickcms.permission_switch')) {
+        if(config('quickCms.permission_switch')) {
             if($route != 'admin.' . $route_name . '.search' && $route != 'admin.' . $route_name . '.store'  && !$user->can($route)) {
                 App::abort('403');
             }

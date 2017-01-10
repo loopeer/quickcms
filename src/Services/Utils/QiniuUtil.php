@@ -23,16 +23,16 @@ class QiniuUtil {
         if (is_null($key)) {
             return null;
         }
-        return config('quickcms.qiniu_url') . '/' . $key;
+        return config('quickCms.qiniu_url') . '/' . $key;
     }
 
     public static function buildQiniuUrl($key) {
         if (is_null($key)) {
             return null;
         }
-        $url = config('quickcms.qiniu_url') . '/' . $key;
-        if (config('quickcms.qiniu_private')) {
-            $mac = new \Qiniu\Mac(config('quickcms.qiniu_access_key'), config('quickcms.qiniu_secret_key'));
+        $url = config('quickCms.qiniu_url') . '/' . $key;
+        if (config('quickCms.qiniu_private')) {
+            $mac = new \Qiniu\Mac(config('quickCms.qiniu_access_key'), config('quickCms.qiniu_secret_key'));
             $url .= '?e=' . Carbon::now()->addMinutes(10)->timestamp;
             $url .= '&token=' . $mac->sign($url);
         }
@@ -43,12 +43,26 @@ class QiniuUtil {
         if (is_null($key)) {
             return null;
         }
-        $url = config('quickcms.qiniu_url') . '/' . $key . '?imageView2/2/w/200/h/100';
-        if (config('quickcms.qiniu_private')) {
-            $mac = new \Qiniu\Mac(config('quickcms.qiniu_access_key'), config('quickcms.qiniu_secret_key'));
+        $url = config('quickCms.qiniu_url') . '/' . $key . '?imageView2/2/w/200/h/100';
+        if (config('quickCms.qiniu_private')) {
+            $mac = new \Qiniu\Mac(config('quickCms.qiniu_access_key'), config('quickCms.qiniu_secret_key'));
             $url .= '&e=' . Carbon::now()->addMinutes(10)->timestamp;
             $url .= '&token=' . $mac->sign($url);
         }
         return $url;
+    }
+
+    public static function buildUpToken()
+    {
+        $bucket = config('quickCms.qiniu_bucket');
+        $accessKey = config('quickCms.qiniu_access_key');
+        $secretKey = config('quickCms.qiniu_secret_key');
+        $policy = [
+            'scope' => $bucket,
+            'deadline' => time() + 604800, // 7 * 24 * 3600
+        ];
+        $mac = new \Qiniu\Mac($accessKey, $secretKey);
+        $upToken = $mac->signWithData(json_encode($policy));
+        return $upToken;
     }
 }

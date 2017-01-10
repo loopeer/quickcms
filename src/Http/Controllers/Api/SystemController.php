@@ -11,6 +11,7 @@
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
 use Input;
+use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 use Request;
 use Loopeer\QuickCms\Models\Document;
 use Loopeer\QuickCms\Models\Version;
@@ -34,15 +35,7 @@ class SystemController extends BaseController {
     */
     public function initialize()
     {
-        $bucket = config('quickcms.qiniu_bucket');
-        $accessKey = config('quickcms.qiniu_access_key');
-        $secretKey = config('quickcms.qiniu_secret_key');
-        $policy = [
-            'scope' => $bucket,
-            'deadline' => time() + 604800, // 7 * 24 * 3600
-        ];
-        $mac = new \Qiniu\Mac($accessKey, $secretKey);
-        $upToken = $mac->signWithData(json_encode($policy));
+        $upToken = QiniuUtil::buildUpToken();
         $version_code = Request::header('build');
         $appstore_reviewing = false;
         $review_system = Cache::rememberForever('review_system', function () {
@@ -59,7 +52,7 @@ class SystemController extends BaseController {
         $configs = array(
             'up_token' => $upToken,
             'appstore_reviewing' => $appstore_reviewing,
-            'custom_data' => config('quickcms.custom_data', [])
+            'custom_data' => config('quickApi.custom_data', [])
         );
         return ApiResponse::responseSuccess($configs);
     }
@@ -116,10 +109,6 @@ class SystemController extends BaseController {
         }
         $result = $feedback->save();
         if ($result) {
-            $message = config('quickcms.message_feedback_success');
-            if(!empty($message)) {
-                return ApiResponse::responseSuccessWithMessage($message);
-            }
             return ApiResponse::responseSuccess();
         } else {
             return ApiResponse::responseFailure();

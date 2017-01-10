@@ -25,11 +25,11 @@ class BPushService {
     protected $iosPush;
 
     public function __construct() {
-        $this->androidApiKey = config('quickcms.baidu_push_android_api_key');
-        $this->androidSecretKey = config('quickcms.baidu_push_android_secret_key');
-        $this->iosApiKey = config('quickcms.baidu_push_ios_api_key');
-        $this->iosSecretKey = config('quickcms.baidu_push_ios_secret_key');
-        $this->deployStatus = config('quickcms.baidu_push_sdk_deploy_status');
+        $this->androidApiKey = config('quickCms.baidu_push_android_api_key');
+        $this->androidSecretKey = config('quickCms.baidu_push_android_secret_key');
+        $this->iosApiKey = config('quickCms.baidu_push_ios_api_key');
+        $this->iosSecretKey = config('quickCms.baidu_push_ios_secret_key');
+        $this->deployStatus = config('quickCms.baidu_push_sdk_deploy_status');
         self::initBPush();
     }
 

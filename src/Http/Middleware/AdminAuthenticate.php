@@ -52,7 +52,7 @@ class AdminAuthenticate{
         if (Auth::admin()->attempt(['email' => $email, 'password' => $password], true)) {
             ActionLog::create(array(
                 'user_id' => Auth::admin()->get()->id,
-                'content' => config('quickcms.action_log.login'),
+                'content' => config('quickCms.action_log.login'),
                 'client_ip' => $request->ip()
             ));
             // 认证通过...

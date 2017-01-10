@@ -73,10 +73,10 @@ class ApiBaseController extends Controller {
         $page = intval($page);
         $pageSize = intval($pageSize);
         if ($page < 1) {
-            $page = config('quickcms.paginator_default_page');
+            $page = config('quickApi.paginate.default_page');
         }
         if ($pageSize <= 0) {
-            $pageSize = config('quickcms.paginator_default_page_size');
+            $pageSize = config('quickApi.paginate.default_page_size');
         }
     }
 
@@ -88,12 +88,12 @@ class ApiBaseController extends Controller {
      */
     public function responseUserForbidden($user) {
         $ret = array();
-        if ($user->status == config('quickcms.user_status_forbidden')) {
-            $ret['code'] = config('quickcms.code_user_is_forbidden');
-            $ret['message'] = config('quickcms.message_user_is_forbidden');
-        } else if ($user->status == config('quickcms.user_status_disabled')) {
-            $ret['code'] = config('quickcms.code_user_is_disabled');
-            $ret['message'] = config('quickcms.message_user_is_disabled');
+        if ($user->status == config('quickCms.user_status_forbidden')) {
+            $ret['code'] = config('quickCms.code_user_is_forbidden');
+            $ret['message'] = config('quickCms.message_user_is_forbidden');
+        } else if ($user->status == config('quickCms.user_status_disabled')) {
+            $ret['code'] = config('quickCms.code_user_is_disabled');
+            $ret['message'] = config('quickCms.message_user_is_disabled');
         }
         $ret['data'] = NULL;
         return Response::json($ret);
@@ -104,32 +104,15 @@ class ApiBaseController extends Controller {
      * @return mixed
      */
     public function getParameterKeyPage() {
-        return config('quickcms.REQUEST_PARAMETER_PAGE');
+        return config('quickApi.paginate.param_page');
     }
-
 
     /**
      * Get the pagesize parameter key
      * @return mixed
      */
     public function getParameterKeyPageSize() {
-        return config('quickcms.REQUEST_PARAMETER_PAGE_SIZE');
-    }
-
-    /**
-     * Get the UserId parameter key
-     * @return mixed
-     */
-    public function getParameterKeyUserId() {
-        return config('quickcms.REQUEST_PARAMETER_USER_ID');
-    }
-
-    /**
-     * Get the token parameter key
-     * @return mixed
-     */
-    public function getParameterKeyToken() {
-        return config('quickcms.REQUEST_PARAMETER_TOKEN');
+        return config('quickApi.paginate.param_page_size');
     }
 
     /**
@@ -141,7 +124,7 @@ class ApiBaseController extends Controller {
         if (is_null($user)) {
             return false;
         }
-        if ($user->status != config('quickcms.user_status_usable')) {
+        if ($user->status != config('quickApi.account.status_usable')) {
             return true;
         }
         return false;

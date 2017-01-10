@@ -4,8 +4,8 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential.
  *
- * User: YuGang Yang
- * Date: 11/10/14
+ * User: dengyongbin
+ * Date: 16/10/14
  * Time: 16:38
  */
 
@@ -29,7 +29,7 @@ class ApiResponse extends Response {
         if ( !($validator instanceof Validator) ) {
             throw new Exception('Argument is not a Validator instance ('.get_class($validator).' found).');
         }
-        $response = array('validation'=>'Passed!');
+        $response = array('validation' => 'Passed!');
         if ($validator->fails()) {
             $errors = $validator->messages()->toArray();
             if (is_array($errors)) {
@@ -42,8 +42,8 @@ class ApiResponse extends Response {
             }
         }
         return self::json([
-            'code' => $code ? : config('quickcms.code_invalid_parameters'),
-            'message' => $message ? : trans('api::messages.invalid_parameters'),
+            'code' => $code ? : config('quickApi.code.invalid_parameters'),
+            'message' => $message ? : trans('lang::messages.invalid_parameters'),
             'data' => $response
         ]);
     }
@@ -55,8 +55,8 @@ class ApiResponse extends Response {
      */
     public static function responseSuccess($data = NULL) {
         $ret = array(
-            'code' => config('quickcms.code_success'),
-            'message' => trans('api::messages.request_success'),
+            'code' => config('quickApi.code.success'),
+            'message' => trans('lang::messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -70,8 +70,8 @@ class ApiResponse extends Response {
      */
     public static function responseSuccessWithMessage($message = NULL, $data = NULL) {
         $ret = array(
-            'code' => config('quickcms.code_success'),
-            'message' => $message ? : trans('api::messages.request_success'),
+            'code' => config('quickApi.code.success'),
+            'message' => $message ? : trans('lang::messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -84,8 +84,8 @@ class ApiResponse extends Response {
      */
     public static function responseSuccessWithPagination($pagination) {
         $ret = array (
-            'code' => config('quickcms.code_success'),
-            'message' => trans('api::messages.request_success'),
+            'code' => config('quickApi.code.success'),
+            'message' => trans('lang::messages.request_success'),
             'page' => $pagination->currentPage(),
             'page_size' => $pagination->perPage(),
             'total_size' => $pagination->total(),
@@ -102,8 +102,8 @@ class ApiResponse extends Response {
      */
     public static function responseFailure($errorCode = NULL, $errorMessage = NULL) {
         $ret = array (
-            'code' => $errorCode == NULL ? config('quickcms.code_default_error') : $errorCode,
-            'message' => $errorMessage == NULL ? trans('api::messages.default_error') : $errorMessage,
+            'code' => $errorCode == NULL ? config('quickApi.code.failure') : $errorCode,
+            'message' => $errorMessage == NULL ? trans('lang::messages.default_error') : $errorMessage,
             'data' => NULL
         );
         return Response::json($ret);
@@ -114,8 +114,8 @@ class ApiResponse extends Response {
      * @return mixed
      */
     public static function responseFailureInvalidParameters() {
-        return self::responseFailure(config('quickcms.code_invalid_parameters'),
-            trans('api::messages.invalid_parameters'));
+        return self::responseFailure(config('quickApi.code.invalid_parameters'),
+            trans('lang::messages.invalid_parameters'));
     }
 
     /**
@@ -124,8 +124,8 @@ class ApiResponse extends Response {
      */
     public static function errorNoContent($errorMessage = NULL) {
         return self::responseFailure(
-            config('quickcms.code_no_content'),
-            $errorMessage ? : trans('api::messages.content_not_exist')
+            config('quickApi.code.no_content'),
+            $errorMessage ? : trans('lang::messages.content_not_exist')
         );
     }
 
@@ -154,7 +154,7 @@ class ApiResponse extends Response {
 
     public static function errorPreCondition($errorMessage = NULL) {
         return self::responseFailure(
-            config('quickcms.code_precondition_failed'),
+            config('quickApi.code.precondition_failed'),
             $errorMessage ? : 'error for condition'
         );
     }

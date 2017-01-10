@@ -19,15 +19,15 @@ class ApiValidate
     {
         // signature
         $debug = Input::header('debug');
-        if (is_null($debug) && config('quickcms.api_sign_validate')) {
+        if (is_null($debug) && config('quickApi.api_sign_validate')) {
             $sign = Input::header('sign');
             $timestamp = Input::header('timestamp');
             $params = Input::all();
             // validate the timestamp
             if (($timestamp < strtotime('-10 minutes') || $timestamp > strtotime('+10 minutes'))) {
                 return Response::json(array(
-                    'code' => config('api.code_illegal_request'),
-                    'message' => config('api.message_invalid_timestamp'),
+                    'code' => config('quickApi.code.success'),
+                    'message' => trans('lang::messages.request_success'),
                     'data' => NULL
                 ));
             }
@@ -46,8 +46,8 @@ class ApiValidate
             $validateSign = md5(rawurlencode($str . config('app.key')));
             if (strcmp($validateSign, $sign) !== 0) {
                 return Response::json(array(
-                    'code' => config('api.code_illegal_request'),
-                    'message' => config('api.message_illegal_request'),
+                    'code' => config('quickApi.code.success'),
+                    'message' => trans('lang::messages.request_success'),
                     'data' => NULL
                 ));
             }

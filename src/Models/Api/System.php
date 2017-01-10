@@ -10,6 +10,6 @@
  */
 namespace Loopeer\QuickCms\Models\Api;
 
-class System extends BaseModel{
+class System extends ApiBaseModel {
 
 }

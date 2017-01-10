@@ -17,7 +17,7 @@ class SystemsSetupTables extends Migration
             $table->bigIncrements('id')->comment('主键');
             $table->bigInteger('user_id')->comment('用户id');
             $table->string('content')->comment('内容');
-            $table->string('client_ip',20)->comment('客服端ip');
+            $table->string('client_ip', 20)->comment('客服端ip');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,12 +26,12 @@ class SystemsSetupTables extends Migration
         Schema::create('feedbacks',function($table){
             $table->bigIncrements('id')->comment('主键');
             $table->bigInteger('account_id')->unsigned()->nullable()->comment('用户id');
-            $table->string('content', 1000)->comment('反馈文字内容');
-            $table->string('contact', 50)->nullable()->comment('联系方式');
-            $table->string('version', 100)->nullable()->comment('版本名称');
+            $table->string('content', 2000)->comment('反馈文字内容');
+            $table->string('contact', 200)->nullable()->comment('联系方式');
+            $table->string('version', 200)->nullable()->comment('版本名称');
             $table->bigInteger('version_code')->nullable()->comment('版本号');
-            $table->string('device_id', 100)->nullable()->comment('设备唯一id号');
-            $table->string('channel_id', 100)->nullable()->comment('渠道编号');
+            $table->string('device_id', 200)->nullable()->comment('设备唯一id号');
+            $table->string('channel_id', 200)->nullable()->comment('渠道编号');
             // timestamp fields
             $table->timestamps();
             $table->softDeletes();
@@ -41,9 +41,9 @@ class SystemsSetupTables extends Migration
         // # versions [版本更新]
         Schema::create('versions',function($table){
             $table->bigIncrements('id')->comment('主键');
-            $table->string('platform', 50)->comment('发表平台');
+            $table->string('platform', 100)->comment('发表平台');
             $table->bigInteger('version_code')->comment('版本号');
-            $table->string('version', 50)->comment('版本名称');
+            $table->string('version', 100)->comment('版本名称');
             $table->string('url', 200)->comment('下载地址');
             $table->string('message', 200)->nullable()->comment('消息提示');
             $table->string('description', 255)->nullable()->comment('版本描述');
@@ -56,7 +56,7 @@ class SystemsSetupTables extends Migration
 
         // 系统配置表
         Schema::create('systems', function (Blueprint $table) {
-            $table->increments('id')->comment('主键');
+            $table->bigIncrements('id')->comment('主键');
             $table->string('system_key', 50)->comment('系统key');
             $table->string('system_value', 255)->nullable()->comment('系统value');
             $table->string('description', 255)->nullable()->comment('描述');
@@ -66,7 +66,7 @@ class SystemsSetupTables extends Migration
 
         // 下拉枚举表
         Schema::create('selectors', function (Blueprint $table) {
-            $table->increments('id')->comment('主键');
+            $table->bigIncrements('id')->comment('主键');
             $table->string('name')->comment('枚举名称');
             $table->string('enum_key')->comment('枚举key');
             $table->tinyInteger('type')->comment('枚举类型');
@@ -114,10 +114,23 @@ class SystemsSetupTables extends Migration
 
         // 文档表
         Schema::create('documents', function (Blueprint $table) {
-            $table->increments('id')->comment('主键');
+            $table->bigIncrements('id')->comment('主键');
             $table->string('document_key', 255)->comment('key');
             $table->string('title', 255)->comment('标题');
             $table->text('document_content')->nullable()->comment('文档内容');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('adverts', function (Blueprint $table) {
+            $table->bigIncrements('id')->comment('主键');;
+            $table->string('image', 255)->nullable();
+            $table->tinyInteger('rel_type')->default(0)->comment('关联类型(0-xx 1-xx 2-xx)');
+            $table->string('rel_value', 255)->nullable()->comment('关联值');
+            $table->tinyInteger('index')->default(0)->comment('广告位置(0-xx 1-xx)');
+            $table->string('remark', 255)->nullable()->comment('备注');
+            $table->integer('sort')->default(0)->comment('顺序');
+            $table->tinyInteger('status')->default(0)->comment('状态(0-下线 1-上线)');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -139,5 +152,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('push_messages');
         Schema::dropIfExists('statistics');
         Schema::dropIfExists('documents');
+        Schema::dropIfExists('adverts');
     }
 }

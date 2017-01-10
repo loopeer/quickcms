@@ -196,7 +196,7 @@ class GeneralController extends BaseController
             }
         }
         if (isset($this->index_business_where)) {
-            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
             $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
             if (isset($business_user)) {
@@ -395,7 +395,7 @@ class GeneralController extends BaseController
                     $selector_data[$key] = json_decode($selector_json, true);
                 }
                 if ($column_name['type'] == 'language') {
-                    $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                    $reflectionClass = new \ReflectionClass(config('quickCms.language_model_class'));
                     $language_resource = $reflectionClass->newInstance();
                     $language_resource_data = $language_resource::where('key', $data->$key)->get();
                 }
@@ -431,7 +431,7 @@ class GeneralController extends BaseController
             }
         }
         if (isset($data['language_hidden'])) {
-            $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+            $reflectionClass = new \ReflectionClass(config('quickCms.language_model_class'));
             $language_resource = $reflectionClass->newInstance();
         }
         if (isset($data['id'])) {
@@ -439,7 +439,7 @@ class GeneralController extends BaseController
             if (isset($data['language_hidden'])) {
                 $language_hidden = explode(',', $data['language_hidden']);
                 foreach ($language_hidden as $hidden_key => $hidden_value) {
-                    foreach (config('quickcms.language') as $lang_key => $lang_value) {
+                    foreach (config('quickCms.language') as $lang_key => $lang_value) {
                         $language_column = $hidden_value . '_' . $lang_key;
                         $language_resource_data = $language_resource::where('key', $update_model->$hidden_value)->where('language', $lang_key)->first();
                         $language_resource_data->value = $data[$language_column];
@@ -459,7 +459,7 @@ class GeneralController extends BaseController
                 $language_hidden = explode(',', $data['language_hidden']);
                 foreach ($language_hidden as $hidden_key => $hidden_value) {
                     $key = with($model)->getTable() . '_' . $hidden_value . '_' . $time;
-                    foreach (config('quickcms.language') as $lang_key => $lang_value) {
+                    foreach (config('quickCms.language') as $lang_key => $lang_value) {
                         $language_column = $hidden_value . '_' . $lang_key;
                         $language_resource::create(array(
                             'key' => $key,
@@ -500,7 +500,7 @@ class GeneralController extends BaseController
     public function edit($custom_id = null, $id = null) {
         $model = $this->model;
         if (!isset($custom_id) && !isset($id)) {
-            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
             $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
             $id = $business_user->business_id;
@@ -583,12 +583,12 @@ class GeneralController extends BaseController
                 $files[] = $v;
             }
             if ($v['type'] == 'language') {
-                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                $reflectionClass = new \ReflectionClass(config('quickCms.language_model_class'));
                 $language_resource = $reflectionClass->newInstance();
                 $language_resource_data = $language_resource::where('key', $model_data->$k)->get();
             }
             if ($v['type'] == 'editor' && isset($v['language'])) {
-                $reflectionClass = new \ReflectionClass(config('quickcms.language_model_class'));
+                $reflectionClass = new \ReflectionClass(config('quickCms.language_model_class'));
                 $language_resource = $reflectionClass->newInstance();
                 $language_resource_editor_data = $language_resource::where('key', $model_data->$k)->get();
             }
@@ -600,7 +600,7 @@ class GeneralController extends BaseController
 //        $route_path = str_replace('/edit', '', $route_path);
 //        $route_path = str_replace('/{id}', '', $route_path);
         if (isset($this->edit_hidden_business_id)) {
-            $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
             $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
             $this->edit_hidden_business_id['value'] = $business_user->business_id;
@@ -622,7 +622,7 @@ class GeneralController extends BaseController
             'selectors' => $selectors,
             'file_config' => isset($file_config) ? true : false,
             'files' => isset($files) ? $files : null,
-            'language' => config('quickcms.language'),
+            'language' => config('quickCms.language'),
             'language_resource' => isset($language_resource_data) ? $language_resource_data : null,
             'language_resource_editor' => isset($language_resource_editor_data) ? $language_resource_editor_data : null,
             'edit_column_label' => $this->edit_column_label,

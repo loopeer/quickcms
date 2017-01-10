@@ -2,7 +2,7 @@
 <header id="header">
     <div id="logo-group" style="padding: 10px;">
         <img id="logo-img" style="width: 32px;height: 32px;" src="{{ asset('loopeer/quickcms/img/cms_logo.png') }}">
-        <div style="display: inline-block;margin-left: 4px;">{{ config('quickcms.site_title')  }}</div>
+        <div style="display: inline-block;margin-left: 4px;">{{ config('quickCms.site_title')  }}</div>
     </div>
 
     <div class="pull-right">

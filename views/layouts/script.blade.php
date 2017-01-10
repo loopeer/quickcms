@@ -35,10 +35,10 @@
 
     function hideTips() {
         $(".tips").show();
-        $(".tips").delay({{ config('quickcms.hide_tips_time') }}).hide(0);
+        $(".tips").delay({{ config('quickCms.hide_tips_time') }}).hide(0);
     }
 
-    var permission_switch = '{{ config("quickcms.permission_switch") }}';
+    var permission_switch = '{{ config("quickCms.permission_switch") }}';
     function permission() {
         if(permission_switch == '1') {
             @if(isset($is_permission) && $is_permission)

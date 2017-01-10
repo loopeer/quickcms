@@ -10,6 +10,6 @@
  */
 namespace Loopeer\QuickCms\Models\Api;
 
-class Pushes extends BaseModel{
+class Pushes extends ApiBaseModel {
 
 }

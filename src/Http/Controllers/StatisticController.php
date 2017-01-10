@@ -35,7 +35,7 @@ class StatisticController extends BaseController {
     }
 
     private function queryStatistic($statistic_time, $type = 'day') {
-        $statistic_key = config('quickcms.statistic_key');
+        $statistic_key = config('quickCms.statistic_key');
         $statistic_init = [];
         foreach($statistic_key as $key=>$value) {
             if($type == 'day') {

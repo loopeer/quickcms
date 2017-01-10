@@ -23,12 +23,16 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		});
 
 		$this->loadViewsFrom(__DIR__.'/../views', 'backend');
-		$this->loadTranslationsFrom(__DIR__ . '/../lang', 'api');
+		$this->loadTranslationsFrom(__DIR__ . '/../lang', 'lang');
 
 		// Publish config files
 		$this->publishes([
-			__DIR__.'/../config/config.php' => config_path('quickcms.php'),
-		], 'quickcms');
+			__DIR__.'/../config/quickCms.php' => config_path('quickCms.php'),
+		], 'quickCms');
+
+		$this->publishes([
+			__DIR__.'/../config/quickApi.php' => config_path('quickApi.php'),
+		], 'quickApi');
 
 		$this->publishes([
 			__DIR__.'/../config/generals' => config_path('generals'),

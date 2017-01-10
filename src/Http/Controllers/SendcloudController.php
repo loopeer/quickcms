@@ -27,9 +27,9 @@ class SendcloudController extends BaseController
 
     public function __construct() {
         $this->middleware('auth.permission:admin.sendcloud.index');
-        $this->api_key = config('quickcms.sendcloud_api_key');
+        $this->api_key = config('quickCms.sendcloud_api_key');
         if(is_null(Cache::get('sendcloud_api_user'))) {
-            $api_users = config('quickcms.sendcloud_api_users');
+            $api_users = config('quickCms.sendcloud_api_users');
             Cache::forever('sendcloud_api_user', $api_users[0]);
         }
         $this->api_user = Cache::get('sendcloud_api_user');
@@ -118,7 +118,7 @@ class SendcloudController extends BaseController
     }
 
     public function changeApiUser() {
-        $users = config('quickcms.sendcloud_api_users');
+        $users = config('quickCms.sendcloud_api_users');
         return view('backend::sendcloud.user', compact('users'));
     }
 

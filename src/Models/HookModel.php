@@ -34,7 +34,7 @@ class HookModel extends Model
     }
 
     public static function saveStatistic($model, $event) {
-        $model_events = config('quickcms.model_events');
+        $model_events = config('quickCms.model_events');
         foreach($model_events as $model_event) {
             if($model->getTable() == $model_event['table'] && $model_event['event'] == $event
                 && (array_key_exists('where', $model_event) ? $model->$model_event['where']['column'] == $model_event['where']['value'] : true)) {

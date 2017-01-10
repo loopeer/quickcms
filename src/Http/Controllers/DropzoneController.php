@@ -12,9 +12,9 @@ class DropzoneController extends BaseController
 {
     public function upload() {
         $qiniu = \Qiniu\Qiniu::create(array(
-            'access_key' => config('quickcms.qiniu_access_key'),
-            'secret_key' => config('quickcms.qiniu_secret_key'),
-            'bucket' => config('quickcms.qiniu_bucket')
+            'access_key' => config('quickCms.qiniu_access_key'),
+            'secret_key' => config('quickCms.qiniu_secret_key'),
+            'bucket' => config('quickCms.qiniu_bucket')
         ));
 
         try {
@@ -25,7 +25,7 @@ class DropzoneController extends BaseController
             $real_key = $upload_key  . '.' . $extension;
             $upload = $qiniu->uploadFile($file->getRealPath(), $real_key);
             $real_key = $upload->data['key'];
-            $url = config('quickcms.qiniu_url') . '/' . $real_key;
+            $url = config('quickCms.qiniu_url') . '/' . $real_key;
             $ret = ['result' => true, 'key' => $upload_key, 'real_key' => $real_key, 'url' => $url, 'msg' => '上传成功'];
         } catch(Exception $e) {
             $ret = ['result' => false, 'msg' => '上传失败'];

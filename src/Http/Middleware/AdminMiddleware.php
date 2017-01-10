@@ -68,8 +68,8 @@ class AdminMiddleware{
         $menus = Permission::with('menus')->where('parent_id', 0)->orderBy('sort')->get();
         if(isset($user)) {
             $business_id = 0;
-            if (config('quickcms.business_user_model_class')) {
-                $reflectionClass = new \ReflectionClass(config('quickcms.business_user_model_class'));
+            if (config('quickCms.business_user_model_class')) {
+                $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
                 $business_user = $reflectionClass->newInstance();
                 $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
                 $business_id = count($business_user) ? $business_user->business_id : 0;

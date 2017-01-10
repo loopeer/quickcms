@@ -25,8 +25,8 @@ class BlueimpController extends BaseController {
 
     public function getImage() {
         $url = Input::get('url');
-        if (strpos($url, config('quickcms.qiniu_url')) !== false) {
-            $key = str_replace(config('quickcms.qiniu_url') . '/', '', $url);
+        if (strpos($url, config('quickCms.qiniu_url')) !== false) {
+            $key = str_replace(config('quickCms.qiniu_url') . '/', '', $url);
             if (strrpos($key, '?') !== false) {
                 $key = substr($key, 0, strrpos($key, '?'));
             }
@@ -60,9 +60,9 @@ class BlueimpController extends BaseController {
     public function upload() {
 
         $qiniu = \Qiniu\Qiniu::create(array(
-            'access_key' => config('quickcms.qiniu_access_key'),
-            'secret_key' => config('quickcms.qiniu_secret_key'),
-            'bucket' => config('quickcms.qiniu_bucket')
+            'access_key' => config('quickCms.qiniu_access_key'),
+            'secret_key' => config('quickCms.qiniu_secret_key'),
+            'bucket' => config('quickCms.qiniu_bucket')
         ));
 
         $file_name = Input::get('file_name');

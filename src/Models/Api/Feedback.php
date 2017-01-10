@@ -10,6 +10,6 @@
  */
 namespace Loopeer\QuickCms\Models\Api;
 
-class Feedback extends BaseModel{
+class Feedback extends ApiBaseModel {
 
 }

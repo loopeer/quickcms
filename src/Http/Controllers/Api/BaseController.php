@@ -40,8 +40,6 @@ class BaseController extends ApiBaseController {
 	 * 增加查询经纬度
 	 * @param $pagination
 	 * @param $table
-	 * @param $orderColumn
-	 * @param $sort
 	 * @return mixed
 	 */
 	protected function addSelectDistance($pagination, $table) {

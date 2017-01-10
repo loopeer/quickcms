@@ -55,7 +55,7 @@ class IndexController extends BaseController {
         //$this->getMenus($user);
         ActionLog::create(array(
             'user_id' => $user->id,
-            'content' => config('quickcms.action_log.login'),
+            'content' => config('quickCms.action_log.login'),
             'client_ip' => $request->ip()
         ));
 //        return $this->getIndex();
@@ -95,7 +95,7 @@ class IndexController extends BaseController {
         $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
         $str_column = self::setTablePrefix(implode(',', $select_column), ['users','action_logs']);
         self::setCurrentPage();
-        $users = ActionLog::where('content',config('quickcms.action_log.login'))->orderBy('created_at','desc')
+        $users = ActionLog::where('content',config('quickCms.action_log.login'))->orderBy('created_at','desc')
             ->select('users.email as email','action_logs.id','action_logs.client_ip','action_logs.created_at')
             ->leftJoin('users','users.id','=','action_logs.user_id')
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")

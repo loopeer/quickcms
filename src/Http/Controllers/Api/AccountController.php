@@ -25,7 +25,7 @@ class AccountController extends BaseController {
 
     public function __construct(QuickApiValidator $validation) {
         $this->validation = $validation;
-        $reflectionClass = new \ReflectionClass(config('quickcms.account_model_class'));
+        $reflectionClass = new \ReflectionClass(config('quickApi.model_bind.account'));
         $this->model = $reflectionClass->newInstance();
     }
 
@@ -46,15 +46,15 @@ class AccountController extends BaseController {
         }
         $account = $query->first();
         if (is_null($account)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.account_not_exist'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.account_not_exist'));
         }
         // 密码错误
         if (md5($request->password) != $account->password) {
-            return ApiResponse::errorPreCondition(trans('api::messages.password_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.password_error'));
         }
         // 黑名单
-        if ($account->status != 0) {
-            return ApiResponse::responseFailure(config('quickcms.code_black_account'), trans('api::messages.black_account'));
+        if (!self::isUserForbidden($account)) {
+            return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
         }
         // token
         $token = self::generateToken();
@@ -78,7 +78,7 @@ class AccountController extends BaseController {
         $phone = $request->phone;
         // 验证码输入错误
         if(self::checkCaptcha($phone, $request->captcha)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
         }
         // 验证帐号
         $account = $this->model->where('phone', $phone)->first();
@@ -89,8 +89,8 @@ class AccountController extends BaseController {
             $account->phone = $phone;
         } else {
             // 黑名单
-            if($account->status != 0) {
-                return ApiResponse::responseFailure(config('quickcms.code_black_account'), trans('api::messages.black_account'));
+            if(!self::isUserForbidden($account)) {
+                return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
             }
         }
         $account->token = $token;
@@ -145,15 +145,15 @@ class AccountController extends BaseController {
         $account = $query->first();
         // 已被注册
         if (!is_null($account)) {
-            return ApiResponse::errorPreCondition(isset($phone) ? trans('api::messages.phone_is_register') : trans('api::messages.email_is_register'));
+            return ApiResponse::responseFailure(null, isset($phone) ? trans('lang::messages.phone_is_register') : trans('lang::messages.email_is_register'));
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
         }
         $token = self::generateToken();
 
-        if (config('quickcms.account_bind_im')) {
+        if (config('quickApi.account_bind_im')) {
             $data['im_username'] = date('YmdHis') . rand(100000, 999999);
             $data['im_password'] = md5(rand(100000, 999999));
         }
@@ -185,11 +185,11 @@ class AccountController extends BaseController {
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
         }
         $account = $query->first();
         if ($account == null) {
-            return ApiResponse::errorPreCondition(trans('api::messages.account_not_exist'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.account_not_exist'));
         }
         $account->password = md5($request->password);
         $account->save();
@@ -207,7 +207,7 @@ class AccountController extends BaseController {
         }
         $account = Auth::user()->get();
         if ($account->password != md5($request->old_password)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.oldPassword_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.oldPassword_error'));
         }
         $account->password = md5($request->password);
         $account->save();
@@ -225,16 +225,17 @@ class AccountController extends BaseController {
         }
         $phone = $request->phone;
         $email = $request->email;
-        if (config('quickcms.sms_api_switch')) {
+        if (config('quickApi.captcha_switch')) {
             $captcha = rand(1000, 9999);
             // 发送短信至用户
             if (isset($phone)) {
-                $message = sprintf(config('quickcms.sms_captcha'), $captcha);
-                $sms = new LuoSiMaoSms(config('quickcms.sms_api_key'));
+                $message = sprintf(config('quickApi.sms.captcha'), $captcha);
+                $sms = new LuoSiMaoSms(config('quickApi.sms.api_key'));
                 $sms->sendSms($phone, $message);
             } else {
-                Mail::send(config('quickcms.mail_captcha_view'), ['captcha' => $captcha], function ($m) use ($email) {
-                    $m->to($email)->subject(config('quickcms.mail_captcha_subject'));
+                Mail::send(config('quickApi.mail.view'), ['captcha' => $captcha], function ($m) use ($email) {
+                    $m->from(config('quickApi.mail.account'), config('quickApi.mail.name'));
+                    $m->to($email)->subject(config('quickApi.mail.subject'));
                 });
             }
         } else {
@@ -265,11 +266,11 @@ class AccountController extends BaseController {
         }
         $account = $query->first();
         if (!is_null($account)) {
-            return ApiResponse::errorPreCondition(config('api::messages.email_is_register'));
+            return ApiResponse::responseFailure(null, config('lang::messages.email_is_register'));
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::errorPreCondition(trans('api::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
         }
         return ApiResponse::responseSuccess();
     }
@@ -319,9 +320,9 @@ class AccountController extends BaseController {
             return ApiResponse::validation($this->validation);
         }
         $phone = $request->phone;
-        if(config('quickcms.sms_api_switch')) {
+        if(config('quickApi.captcha_switch')) {
             $captcha = rand(1000, 9999);
-            $sms = new LuoSiMaoSms(config('quickcms.sms_api_key_verify'));
+            $sms = new LuoSiMaoSms(config('quickApi.sms.api_key_verify'));
             // 拨打语音电话至用户
             $sms->sendVerify($phone, $captcha);
         } else {
