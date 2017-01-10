@@ -52,7 +52,6 @@ class BlueimpController extends BaseController {
             $success->deleteUrl = route('admin.blueimp.delete', 1);// 处理删除的action
             $success->deleteType = 'GET';
             $success->key = $key;
-            \Log::info($success);
             return Response::json(array('files' => array($success)), 200);
         }
     }
