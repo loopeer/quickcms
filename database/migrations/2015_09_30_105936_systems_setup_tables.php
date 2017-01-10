@@ -123,13 +123,36 @@ class SystemsSetupTables extends Migration
         });
 
         Schema::create('adverts', function (Blueprint $table) {
-            $table->bigIncrements('id')->comment('主键');;
+            $table->bigIncrements('id')->comment('主键');
             $table->string('image', 255)->nullable();
             $table->tinyInteger('rel_type')->default(0)->comment('关联类型(0-xx 1-xx 2-xx)');
             $table->string('rel_value', 255)->nullable()->comment('关联值');
             $table->tinyInteger('index')->default(0)->comment('广告位置(0-xx 1-xx)');
             $table->string('remark', 255)->nullable()->comment('备注');
             $table->integer('sort')->default(0)->comment('顺序');
+            $table->tinyInteger('status')->default(0)->comment('状态(0-下线 1-上线)');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('categories', function(Blueprint $table)
+        {
+            $table->bigIncrements('id')->comment('主键');
+            $table->string('name', 200)->comment('名称');
+            $table->bigInteger('parent_id')->default(0)->comment('父id');
+            $table->tinyInteger('level')->default(0)->comment('级别');
+            $table->integer('sort')->default(0)->comment('排序');
+            $table->tinyInteger('status')->default(0)->comment('状态(0-下线 1-上线)');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('labels', function(Blueprint $table)
+        {
+            $table->bigIncrements('id')->comment('主键');
+            $table->string('name', 200)->comment('名称');
+            $table->tinyInteger('type')->default(0)->comment('类型(0-xx 1-xx)');
+            $table->integer('sort')->default(0)->comment('排序');
             $table->tinyInteger('status')->default(0)->comment('状态(0-下线 1-上线)');
             $table->timestamps();
             $table->softDeletes();
@@ -153,5 +176,7 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('statistics');
         Schema::dropIfExists('documents');
         Schema::dropIfExists('adverts');
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('labels');
     }
 }

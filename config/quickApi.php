@@ -16,6 +16,8 @@ return [
     'model_bind' => [
         'account' => '',
         'advert' => '',
+        'category' => '',
+        'label' => '',
     ],
 
     'account' => [
