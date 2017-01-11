@@ -33,8 +33,8 @@ Route::get('admin/document/search', ['as' => 'admin.document.search', 'uses' => 
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
 Route::get('admin/systems/search', ['as' => 'admin.systems.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/generals/search', ['as' => 'admin.generals.search', 'uses' => 'GeneralController@search']);
-
 Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
+Route::get('admin/label/search', ['as' => 'admin.label.search', 'uses' => 'GeneralController@search']);
 
 Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
@@ -118,5 +118,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
 
    Route::get('pushMsg/search', ['as' => 'admin.pushMsg.search', 'uses' => 'GeneralController@search']);
    Route::resource('pushMsg', 'GeneralController');
+
+   Route::resource('label', 'GeneralController');
 });
 

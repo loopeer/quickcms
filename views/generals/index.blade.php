@@ -1,8 +1,58 @@
 @extends('backend::layouts.master')
 
 @section('content')
-    <!-- MAIN CONTENT -->
     <div id="content">
+        <div class="jarviswidget jarviswidget-sortable jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
+             data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
+             data-widget-colorbutton="false">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-search"></i> </span>
+                <h2>标签查询</h2>
+            </header>
+            <div role="content">
+                <div class="jarviswidget-editbox">
+                </div>
+                <div class="widget-body">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-md-1 control-label">ID</label>
+                                <div class="col-md-2">
+                                    <input class="form-control column_filter" type="text" id="id">
+                                </div>
+                                <label class="col-md-1 control-label">Name</label>
+                                <div class="col-md-2">
+                                    <input class="form-control column_filter" type="text" id="name">
+                                </div>
+                                <label class="col-md-1 control-label">Status</label>
+                                <div class="col-md-2">
+                                    <select class="form-control">
+                                        <option>Amsterdam</option>
+                                        <option>Atlanta</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-undo"></i>
+                                        重置
+                                    </button>
+                                    &nbsp;
+                                    <button id="query" class="btn btn-primary" type="button">
+                                        <i class="fa fa-search"></i>
+                                        查询
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <section id="widget-grid" class="">
             <div class="row tips">
                 @include('backend::layouts.message')
@@ -12,42 +62,6 @@
                     @if(isset($custom_id))
                         <p><a href="{{ $custom_id_back_url }}" class="btn btn-primary">返回</a></p>
                     @endif
-                    @if($curd_action['create'])
-                        <p>
-{{--                            @if(isset($custom_id))--}}
-                                <a href="{{ '/admin/' . $route_path . '/create' }}"
-                                   id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>
-                            {{--@else--}}
-                                {{--<a href="{{ '/admin/' . $route_name . '/create' }}"--}}
-                                   {{--id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>--}}
-                            {{--@endif--}}
-                        </p>
-                    @endif
-
-                        {{--<fieldset>--}}
-                            {{--<div class="row">--}}
-                                {{--<section class="col col-3">--}}
-                                    {{--<label class="input">--}}
-                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col0_filter" data-column="0">--}}
-                                    {{--</label>--}}
-                                {{--</section>--}}
-                                {{--<section class="col col-3">--}}
-                                    {{--<label class="input">--}}
-                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col1_filter" data-column="1">--}}
-                                    {{--</label>--}}
-                                {{--</section>--}}
-                                {{--<section class="col col-3">--}}
-                                    {{--<label class="input">--}}
-                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col2_filter" data-column="2">--}}
-                                    {{--</label>--}}
-                                {{--</section>--}}
-                                {{--<section class="col col-3">--}}
-                                    {{--<label class="input">--}}
-                                        {{--<input type="text" placeholder="3/12" class="column_filter" id="col3_filter" data-column="3">--}}
-                                    {{--</label>--}}
-                                {{--</section>--}}
-                            {{--</div>--}}
-                        {{--</fieldset>--}}
 
                     <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
                          data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
@@ -85,7 +99,6 @@
             </div>
         </section>
     </div>
-    <!-- END MAIN CONTENT -->
 @endsection
 
 @section('script')
@@ -97,7 +110,11 @@
             var table = $('#dt_basic').DataTable({
                 "processing": false,
                 "serverSide": true,
-                "bStateSave": true,
+                "bStateSave": false,
+                "searching": true,
+                buttons: [
+                    'copy', 'excel', 'pdf'
+                ],
                 "language": {
                     "sProcessing": "处理中...",
                     "sLengthMenu": "显示 _MENU_ 项结果",
@@ -126,9 +143,9 @@
                     @foreach($index_column as $index => $column)
                         @if ($index < count($index_column_name))
                             @if(isset($table_sort[$column]) && $table_sort[$column])
-                            { "orderable" : true },
+                            { "orderable" : true, "name": '{{ $column }}' },
                             @else
-                            { "orderable" : false },
+                            { "orderable" : false, "name": '{{ $column }}' },
                             @endif
                         @endif
                     @endforeach
@@ -220,21 +237,22 @@
                     }
                 @endif
                 ],
-                {{--@if(isset($custom_id))--}}
-                {{--"ajax": {--}}
-                    {{--"url": "{{ $route_path }}" + "/search"--}}
-                {{--}--}}
-                {{--@else--}}
                 "ajax": {
                     "url": "/admin/" + route_path + "/search"
                 }
-                {{--@endif--}}
-
             });
 
-            $('input.column_filter').on( 'keyup', function () {
-                var index = $(this).attr('data-column');
-                table.column(index).search($('#col' + index + '_filter').val()).draw();
+            var createButton = '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
+            var excelButton = '<a style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
+            $("div.dt-toolbar div:first").html(createButton + excelButton);
+
+            $('#query').on('click', function () {
+//                var index = $(this).attr('data-column');
+                console.log($('#id').val());
+                table.columns(0).search($('#id').val());
+                table.columns(1).search($('#name').val());
+//                table.column(1).search($('#name').val());
+                table.draw();
                 console.log('draw done');
             } );
 

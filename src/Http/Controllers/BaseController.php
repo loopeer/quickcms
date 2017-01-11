@@ -98,6 +98,45 @@ class BaseController extends Controller
     }
 
     /**
+     * 分页查询封装函数
+     * @param array $show_column ['id','name','email']
+     * @param object $model new Model
+     * @param string $append_column
+     * @param string $str_column
+     * @return array
+     */
+    public function simplePage2($show_column, $model, $append_column = NULL, $str_column = NULL) {
+//        $search = Input::get('search')['value'];
+//        $search = addslashes($search);
+//        $order = Input::get('order')['0'];
+        $length = Input::get('length');
+        self::setCurrentPage($length);
+
+        if ($str_column == NULL) {
+            $str_column = implode(',', $show_column);
+        }
+
+        $query = $model->selectRaw($str_column);
+
+        $columns = Input::get('columns');
+        \Log::info($columns);
+        foreach ($columns as $column) {
+            $value = $column['search']['value'];
+            if ($value) {
+                $query->where($column['name'], 'like', '%' . $value . '%');
+            }
+        }
+
+        $paginate = $query->paginate($length);
+
+        if(isset($append_column)) {
+            $show_column[$append_column] = $append_column;
+        }
+        $ret = self::getPageDate($show_column, $paginate);
+        return $ret;
+    }
+
+    /**
      * 自定义查询分页函数
      * @param array $show_column ['id','name','email']
      * @param array $paginate query sql

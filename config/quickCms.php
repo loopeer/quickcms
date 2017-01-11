@@ -18,7 +18,7 @@ return [
     //加密字符串
     'admin_pwd_salt' => '',
     'sql_log_switch' => env('sql_log_switch', false),
-    'permission_switch' => env('permission_switch', true),
+    'permission_switch' => env('permission_switch', false),
 
     // qiniu config
     'qiniu_access_key' => env('qiniu_access_key'),
