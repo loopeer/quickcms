@@ -66,6 +66,7 @@ class GeneralController extends BaseController
     protected $table_column_width;
     protected $table_order;
     protected $detail_filter_empty;
+    protected $query;
 
     public function __construct(Request $request) {
         try {
@@ -87,6 +88,9 @@ class GeneralController extends BaseController
             if ($is_permission) {
                 GeneralUtil::filterOperationPermission($request, null, $this->route_name);
             }
+
+            $this->query = config($general_name . 'query');
+
             $this->index_column = config($general_name . 'index_column');
             $this->index_column_format = config($general_name . 'index_column_format');
             $this->index_column_name = config($general_name . 'index_column_name');
@@ -228,7 +232,7 @@ class GeneralController extends BaseController
                 ->paginate($length);
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
-            $ret = self::simplePage2($this->index_column, $model);
+            $ret = self::simplePage2($this->index_column, $model, $this->query);
         }
         if($this->index_column_format) {
             foreach($this->index_column_format as $format_key => $format_value) {
@@ -272,15 +276,24 @@ class GeneralController extends BaseController
     {
         $message = Session::get('message');
         $selector_data = [];
-        if(isset($this->index_column_rename)) {
+        if (isset($this->index_column_rename)) {
             foreach ($this->index_column_rename as $key => $column_name) {
                 if ($column_name['type'] == 'selector') {
-                    $selector = Selector::where('enum_key', $column_name['param'])->first();
-                    $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
-                    $selector_data[$key] = $tmp_data;
+//                    $selector = Selector::where('enum_key', $column_name['param'])->first();
+//                    $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
+                    $selector_data[$key] = GeneralUtil::getSelectorData($column_name['param']);;
                 }
             }
         }
+        $query_selector_data = [];
+        if (isset($this->query)) {
+            foreach($this->query as $query_key => $query_value) {
+                if (isset($query_value['type']) && ($query_value['type'] == 'selector' || $query_value['type'] == 'checkbox')) {
+                    $query_selector_data[$query_key] = GeneralUtil::getSelectorData($query_value['param']);
+                }
+            }
+        }
+        \Log::info($query_selector_data);
         if (isset($custom_id)) {
             $back_url = $this->custom_id_back_url;
             if (isset($this->custom_id_relation_column)) {
@@ -313,6 +326,8 @@ class GeneralController extends BaseController
             'table_action_line' => $this->table_action_line,
             'table_column_width' => $this->table_column_width,
             'table_order' => $this->table_order,
+            'query' => $this->query,
+            'query_selector_data' => $query_selector_data,
         );
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;

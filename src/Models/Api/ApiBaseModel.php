@@ -18,7 +18,7 @@ abstract class ApiBaseModel extends Model
     const STATUS_ONLINE = 1;
 
     const STATUS_NORMAL = 0;
-    const STATUS_BAN = 1;
+    const STATUS_DISABLE = 1;
 
     protected $guarded = ['created_at', 'updated_at', 'deleted_at'];
 

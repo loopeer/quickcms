@@ -13,6 +13,7 @@ namespace Loopeer\QuickCms\Services\Utils;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Loopeer\QuickCms\Models\Permission;
+use Loopeer\QuickCms\Models\Selector;
 use Route;
 use App;
 
@@ -74,5 +75,25 @@ class GeneralUtil {
                 }
             }
         }
+    }
+
+    public static function getSelectorData($enum_key) {
+        $selector = Selector::where('enum_key', $enum_key)->first();
+        $value = $selector->enum_value;
+        if ($selector->type == 0) {
+            $tmp_data = DB::select($value);
+            $result = array();
+            foreach ($tmp_data as $k => $data) {
+                $data = (array)$data;
+                $keys = array_keys($data);
+                $result['' . $data[$keys[0]]] = $data[$keys[1]];
+            }
+        } else {
+            $result = $value;
+            if (!is_array($result)) {
+                $result = json_decode($result);
+            }
+        }
+        return json_encode($result);
     }
 }

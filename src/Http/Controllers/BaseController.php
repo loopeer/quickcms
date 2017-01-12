@@ -105,33 +105,56 @@ class BaseController extends Controller
      * @param string $str_column
      * @return array
      */
-    public function simplePage2($show_column, $model, $append_column = NULL, $str_column = NULL) {
+    public function simplePage2($show_column, $model, $query) {
 //        $search = Input::get('search')['value'];
 //        $search = addslashes($search);
 //        $order = Input::get('order')['0'];
         $length = Input::get('length');
         self::setCurrentPage($length);
 
-        if ($str_column == NULL) {
-            $str_column = implode(',', $show_column);
-        }
-
-        $query = $model->selectRaw($str_column);
+        $queryModel = $model->selectRaw(implode(',', $show_column));
 
         $columns = Input::get('columns');
         \Log::info($columns);
-        foreach ($columns as $column) {
-            $value = $column['search']['value'];
-            if ($value) {
-                $query->where($column['name'], 'like', '%' . $value . '%');
+//        foreach ($columns as $column) {
+//            $value = $column['search']['value'];
+//            if ($value) {
+//                $queryModel->where($column['name'], 'like', '%' . $value . '%');
+//            }
+//        }
+
+        foreach ($query as $query_key => $query_value) {
+            $type = 'input';
+            if (isset($query_value['type'])) {
+                $type = $query_value['type'];
+            }
+            $name = $columns[$query_key]['name'];
+            $value = $columns[$query_key]['search']['value'];
+            if ($value != null) {
+                \Log::info($value);
+                switch ($type) {
+                    case 'input':
+                        if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
+                            $queryModel->where($name, 'like', '%' . $value . '%');
+                        } else {
+                            $queryModel->where($name, $value);
+                        }
+                        break;
+                    case 'selector':
+                        $queryModel->where($name, $value);
+                        break;
+                    case 'checkbox':
+                        $queryModel->whereIn($name, explode(',', $value));
+                        break;
+                    case 'date':
+                        $queryModel->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                        break;
+                }
             }
         }
 
-        $paginate = $query->paginate($length);
+        $paginate = $queryModel->paginate($length);
 
-        if(isset($append_column)) {
-            $show_column[$append_column] = $append_column;
-        }
         $ret = self::getPageDate($show_column, $paginate);
         return $ret;
     }

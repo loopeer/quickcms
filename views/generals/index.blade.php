@@ -15,23 +15,39 @@
                 <div class="widget-body">
                     <form class="form-horizontal">
                         <fieldset>
-                            <div class="form-group">
-                                <label class="col-md-1 control-label">ID</label>
+                        @for($i = 0; $i < count($query) / 3; $i++)
+                            <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
+                            @foreach($query as $query_key => $query_value)
+                                @if($query_key >= $i * 3 && $query_key < ($i + 1) * 3)
+                                <label class="col-md-1 control-label">{{ $query_value['name'] }}</label>
                                 <div class="col-md-2">
-                                    <input class="form-control column_filter" type="text" id="id">
+                                    @if(!isset($query_value['type']) || $query_value['type'] == 'input')
+                                        <input class="form-control" type="text" id="{{ $query_value['column'] }}">
+                                    @elseif($query_value['type'] == 'selector')
+                                        <select class="form-control" id="{{ $query_value['column'] }}">
+                                            <option value="">全部</option>
+                                            @foreach(json_decode($query_selector_data[$query_key], true) as $selector_key => $selector_value)
+                                            <option value="{{ $selector_key }}">{{ $selector_value }}</option>
+                                            @endforeach
+                                        </select>
+                                    @elseif($query_value['type'] == 'checkbox')
+                                        @foreach(json_decode($query_selector_data[$query_key], true) as $selector_key => $selector_value)
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" class="checkbox style-0" name="{{ $query_value['column'] }}" value="{{ $selector_key }}">
+                                            <span>{{ $selector_value }}</span>
+                                        </label>
+                                        @endforeach
+                                    @elseif($query_value['type'] == 'date')
+                                        <div class="input-group">
+                                            <input type="text" class="form-control date-format" id="{{ $query_value['column'] }}">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    @endif
                                 </div>
-                                <label class="col-md-1 control-label">Name</label>
-                                <div class="col-md-2">
-                                    <input class="form-control column_filter" type="text" id="name">
-                                </div>
-                                <label class="col-md-1 control-label">Status</label>
-                                <div class="col-md-2">
-                                    <select class="form-control">
-                                        <option>Amsterdam</option>
-                                        <option>Atlanta</option>
-                                    </select>
-                                </div>
+                                @endif
+                            @endforeach
                             </div>
+                        @endfor
                         </fieldset>
                         <div class="form-actions">
                             <div class="row">
@@ -102,9 +118,9 @@
 @endsection
 
 @section('script')
+{{--    <script src="{{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}}"></script>--}}
+    <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
     <script>
-
-
         $(document).ready(function() {
             var route_path = '{{ $route_path }}';
             var table = $('#dt_basic').DataTable({
@@ -247,14 +263,34 @@
             $("div.dt-toolbar div:first").html(createButton + excelButton);
 
             $('#query').on('click', function () {
-//                var index = $(this).attr('data-column');
-                console.log($('#id').val());
-                table.columns(0).search($('#id').val());
-                table.columns(1).search($('#name').val());
-//                table.column(1).search($('#name').val());
+                @foreach($query as $query_key => $query_value)
+                    var value;
+                    @if(isset($query_value['type']) && $query_value['type'] == 'checkbox')
+                        value = $('input[name="{{ $query_value['column']}}"]:checked').map(function () {
+                            return this.value;
+                        }).get();
+                    @else
+                        value = $('#' + '{{ $query_value['column'] }}').val();
+                    @endif
+                    console.log(value);
+                    table.columns({{ $query_key }}).search(value);
+                @endforeach
                 table.draw();
-                console.log('draw done');
             } );
+
+            $("#created_at").datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear:true,
+                numberOfMonths: 1,
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                yearRange: '-20:20',
+                minDate: '',
+                maxDate: '',
+                monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                dayNamesMin: ['日', '一', '二', '三', '四', '五', '六']
+            });
 
             table.on( 'draw.dt', function () {
                 var $data = table.data();
@@ -328,16 +364,12 @@
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
-                        var url = '/admin/' + route_path + '/' + data[0] + '/edit/';
-                        {{--@if(isset($custom_id))--}}
-                        {{--url = '{{ $route_path }}' + '/' + data[0] + '/edit/';--}}
-                        {{--@endif--}}
-                        window.location = url;
+                        window.location = '/admin/' + route_path + '/' + data[0] + '/edit/';
                     }
                 });
             }
 
-            if('{!! $curd_action['delete'] !!}') {
+            if('{!! $curd_action["delete"] !!}') {
                 $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
@@ -387,7 +419,7 @@
                 });
             }
 
-            if('{!! $curd_action['detail'] !!}') {
+            if('{!! $curd_action["detail"] !!}') {
                 $('#content').after(
                         '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
                         '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
