@@ -78,13 +78,13 @@
                                     @if(isset($edit_hidden))
                                         @foreach($edit_hidden as $hidden)
                                             @if(!isset($hidden['action']))
-                                                <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                                <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->email : $hidden['value'] }}">
                                             @else
                                                 @if($model_data['id'] && $hidden['action'] == 'edit')
-                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->email : $hidden['value'] }}">
                                                 @endif
                                                 @if(!$model_data['id'] && $hidden['action'] == 'create')
-                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->id : $hidden['value'] }}">
+                                                    <input type="hidden" name="{{ $hidden['name'] }}" value="{{ isset($hidden['admin_id']) && $hidden['admin_id'] ? Auth::admin()->get()->email : $hidden['value'] }}">
                                                 @endif
                                             @endif
                                         @endforeach
