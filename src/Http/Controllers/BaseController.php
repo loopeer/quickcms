@@ -101,7 +101,7 @@ class BaseController extends Controller
      * 分页查询封装函数
      * @param array $show_column ['id','name','email']
      * @param object $model new Model
-     * @param string $query
+     * @param array $query
      * @return array
      */
     public function page($show_column, $model, $query)
@@ -110,36 +110,46 @@ class BaseController extends Controller
         $columns = Input::get('columns');
         self::setCurrentPage($length);
         if (count($query) > 0) {
-            foreach ($query as $query_key => $query_value) {
-                $type = 'input';
-                if (isset($query_value['type'])) {
-                    $type = $query_value['type'];
-                }
-                $name = $columns[$query_key]['name'];
-                $value = $columns[$query_key]['search']['value'];
+            foreach($columns as $column) {
+                $value = $column['search']['value'];
                 if ($value != null) {
-                    switch ($type) {
-                        case 'input':
-                            if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
-                                $model->where($name, 'like', '%' . $value . '%');
-                            } else {
-                                $model->where($name, $value);
+                    $name = $column['name'];
+                    foreach ($query as $query_key => $query_value) {
+                        if ($name == $query_value['column']) {
+                            $type = 'input';
+                            if (isset($query_value['type'])) {
+                                $type = $query_value['type'];
                             }
-                            break;
-                        case 'selector':
-                            $model->where($name, $value);
-                            break;
-                        case 'checkbox':
-                            $model->whereIn($name, explode(',', $value));
-                            break;
-                        case 'date':
-                            if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
-                                $values = explode(',', $value);
-                                $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
-                            } else {
-                                $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                            if ($value != null) {
+                                switch ($type) {
+                                    case 'input':
+                                        if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
+                                            $model->where($name, 'like', '%' . $value . '%');
+                                        } else {
+                                            $model->where($name, $value);
+                                        }
+                                        break;
+                                    case 'selector':
+                                        $model->where($name, $value);
+                                        break;
+                                    case 'checkbox':
+                                        $model->whereIn($name, explode(',', $value));
+                                        break;
+                                    case 'date':
+                                        if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
+                                            $values = explode(',', $value);
+                                            if ($values[0] != null || $values[1] != null) {
+                                                $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
+                                            }
+                                        } else {
+                                            $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
-                            break;
+                        }
                     }
                 }
             }

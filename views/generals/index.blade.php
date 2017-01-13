@@ -189,9 +189,12 @@
                 }
             });
 
-            var createButton = '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
-            var excelButton = '<a style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
-            $("div.dt-toolbar div:first").html(createButton);
+            var buttons = '';
+            @if($curd_action['create'])
+            buttons += '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
+            @endif
+            //buttons += '<a style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
+            $("div.dt-toolbar div:first").html(buttons);
 
             @if(count($query) > 0)
             $('#query').on('click', function () {
@@ -208,7 +211,7 @@
                         value = $('#' + '{{ $query_value['column'] }}').val();
                     @endif
                     console.log(value);
-                    table.columns({{ $query_key }}).search(value);
+                    table.columns({{ array_search($query_value['column'], $index_column) }}).search(value);
                 @endforeach
                 table.draw();
             });

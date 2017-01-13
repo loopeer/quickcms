@@ -56,7 +56,7 @@
                 <div class="form-actions">
                     <div class="row">
                         <div class="col-md-2">
-                            <button class="btn btn-primary" type="submit">
+                            <button class="btn btn-primary" type="reset">
                                 <i class="fa fa-undo"></i>
                                 重置
                             </button>
