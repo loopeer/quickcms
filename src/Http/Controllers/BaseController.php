@@ -101,60 +101,50 @@ class BaseController extends Controller
      * 分页查询封装函数
      * @param array $show_column ['id','name','email']
      * @param object $model new Model
-     * @param string $append_column
-     * @param string $str_column
+     * @param string $query
      * @return array
      */
-    public function simplePage2($show_column, $model, $query) {
-//        $search = Input::get('search')['value'];
-//        $search = addslashes($search);
-//        $order = Input::get('order')['0'];
+    public function page($show_column, $model, $query)
+    {
         $length = Input::get('length');
-        self::setCurrentPage($length);
-
-        $queryModel = $model->selectRaw(implode(',', $show_column));
-
         $columns = Input::get('columns');
-        \Log::info($columns);
-//        foreach ($columns as $column) {
-//            $value = $column['search']['value'];
-//            if ($value) {
-//                $queryModel->where($column['name'], 'like', '%' . $value . '%');
-//            }
-//        }
-
-        foreach ($query as $query_key => $query_value) {
-            $type = 'input';
-            if (isset($query_value['type'])) {
-                $type = $query_value['type'];
-            }
-            $name = $columns[$query_key]['name'];
-            $value = $columns[$query_key]['search']['value'];
-            if ($value != null) {
-                \Log::info($value);
-                switch ($type) {
-                    case 'input':
-                        if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
-                            $queryModel->where($name, 'like', '%' . $value . '%');
-                        } else {
-                            $queryModel->where($name, $value);
-                        }
-                        break;
-                    case 'selector':
-                        $queryModel->where($name, $value);
-                        break;
-                    case 'checkbox':
-                        $queryModel->whereIn($name, explode(',', $value));
-                        break;
-                    case 'date':
-                        $queryModel->whereRaw('date(' . $name . ') = \'' . $value . '\'');
-                        break;
+        self::setCurrentPage($length);
+        if (count($query) > 0) {
+            foreach ($query as $query_key => $query_value) {
+                $type = 'input';
+                if (isset($query_value['type'])) {
+                    $type = $query_value['type'];
+                }
+                $name = $columns[$query_key]['name'];
+                $value = $columns[$query_key]['search']['value'];
+                if ($value != null) {
+                    switch ($type) {
+                        case 'input':
+                            if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
+                                $model->where($name, 'like', '%' . $value . '%');
+                            } else {
+                                $model->where($name, $value);
+                            }
+                            break;
+                        case 'selector':
+                            $model->where($name, $value);
+                            break;
+                        case 'checkbox':
+                            $model->whereIn($name, explode(',', $value));
+                            break;
+                        case 'date':
+                            if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
+                                $values = explode(',', $value);
+                                $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
+                            } else {
+                                $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                            }
+                            break;
+                    }
                 }
             }
         }
-
-        $paginate = $queryModel->paginate($length);
-
+        $paginate = $model->paginate($length);
         $ret = self::getPageDate($show_column, $paginate);
         return $ret;
     }

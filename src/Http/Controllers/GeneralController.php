@@ -232,7 +232,7 @@ class GeneralController extends BaseController
                 ->paginate($length);
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
-            $ret = self::simplePage2($this->index_column, $model, $this->query);
+            $ret = self::page($this->index_column, $model, $this->query);
         }
         if($this->index_column_format) {
             foreach($this->index_column_format as $format_key => $format_value) {

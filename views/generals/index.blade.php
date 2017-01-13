@@ -2,72 +2,8 @@
 
 @section('content')
     <div id="content">
-        <div class="jarviswidget jarviswidget-sortable jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
-             data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
-             data-widget-colorbutton="false">
-            <header>
-                <span class="widget-icon"> <i class="fa fa-search"></i> </span>
-                <h2>标签查询</h2>
-            </header>
-            <div role="content">
-                <div class="jarviswidget-editbox">
-                </div>
-                <div class="widget-body">
-                    <form class="form-horizontal">
-                        <fieldset>
-                        @for($i = 0; $i < count($query) / 3; $i++)
-                            <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
-                            @foreach($query as $query_key => $query_value)
-                                @if($query_key >= $i * 3 && $query_key < ($i + 1) * 3)
-                                <label class="col-md-1 control-label">{{ $query_value['name'] }}</label>
-                                <div class="col-md-2">
-                                    @if(!isset($query_value['type']) || $query_value['type'] == 'input')
-                                        <input class="form-control" type="text" id="{{ $query_value['column'] }}">
-                                    @elseif($query_value['type'] == 'selector')
-                                        <select class="form-control" id="{{ $query_value['column'] }}">
-                                            <option value="">全部</option>
-                                            @foreach(json_decode($query_selector_data[$query_key], true) as $selector_key => $selector_value)
-                                            <option value="{{ $selector_key }}">{{ $selector_value }}</option>
-                                            @endforeach
-                                        </select>
-                                    @elseif($query_value['type'] == 'checkbox')
-                                        @foreach(json_decode($query_selector_data[$query_key], true) as $selector_key => $selector_value)
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" class="checkbox style-0" name="{{ $query_value['column'] }}" value="{{ $selector_key }}">
-                                            <span>{{ $selector_value }}</span>
-                                        </label>
-                                        @endforeach
-                                    @elseif($query_value['type'] == 'date')
-                                        <div class="input-group">
-                                            <input type="text" class="form-control date-format" id="{{ $query_value['column'] }}">
-                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                        </div>
-                                    @endif
-                                </div>
-                                @endif
-                            @endforeach
-                            </div>
-                        @endfor
-                        </fieldset>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fa fa-undo"></i>
-                                        重置
-                                    </button>
-                                    &nbsp;
-                                    <button id="query" class="btn btn-primary" type="button">
-                                        <i class="fa fa-search"></i>
-                                        查询
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+
+        @include('backend::generals.query')
 
         <section id="widget-grid" class="">
             <div class="row tips">
@@ -118,8 +54,6 @@
 @endsection
 
 @section('script')
-{{--    <script src="{{{ asset('loopeer/quickcms/js/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js') }}}"></script>--}}
-    <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
     <script>
         $(document).ready(function() {
             var route_path = '{{ $route_path }}';
@@ -128,9 +62,6 @@
                 "serverSide": true,
                 "bStateSave": false,
                 "searching": true,
-                buttons: [
-                    'copy', 'excel', 'pdf'
-                ],
                 "language": {
                     "sProcessing": "处理中...",
                     "sLengthMenu": "显示 _MENU_ 项结果",
@@ -260,8 +191,9 @@
 
             var createButton = '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
             var excelButton = '<a style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
-            $("div.dt-toolbar div:first").html(createButton + excelButton);
+            $("div.dt-toolbar div:first").html(createButton);
 
+            @if(count($query) > 0)
             $('#query').on('click', function () {
                 @foreach($query as $query_key => $query_value)
                     var value;
@@ -269,6 +201,9 @@
                         value = $('input[name="{{ $query_value['column']}}"]:checked').map(function () {
                             return this.value;
                         }).get();
+                    @elseif(isset($query_value['operator']) && $query_value['operator'] == 'between')
+                        value[0] = $('#' + '{{ $query_value['column'] }}' + '_from').val();
+                        value[1] = $('#' + '{{ $query_value['column'] }}' + '_to').val();
                     @else
                         value = $('#' + '{{ $query_value['column'] }}').val();
                     @endif
@@ -276,16 +211,17 @@
                     table.columns({{ $query_key }}).search(value);
                 @endforeach
                 table.draw();
-            } );
+            });
+            @endif
 
-            $("#created_at").datepicker({
+            $(".date-format").datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
-                changeYear:true,
+                changeYear: true,
                 numberOfMonths: 1,
                 prevText: '<i class="fa fa-chevron-left"></i>',
                 nextText: '<i class="fa fa-chevron-right"></i>',
-                yearRange: '-20:20',
+//                yearRange: '2000:2020',
                 minDate: '',
                 maxDate: '',
                 monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
