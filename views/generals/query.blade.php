@@ -4,7 +4,7 @@
      data-widget-colorbutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-search"></i> </span>
-        <h2>标签查询</h2>
+        <h2>{{ $model_name }}查询</h2>
     </header>
     <div role="content">
         <div class="jarviswidget-editbox">
