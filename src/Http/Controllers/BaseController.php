@@ -196,6 +196,9 @@ class BaseController extends Controller
             foreach($show_column as $column) {
                 if($item->$column instanceof Carbon) {
                     array_push($obj, $item->$column->format('Y-m-d H:i:s'));
+                } elseif(strstr($column, '.') !== FALSE) {
+                    $table_column = explode('.', $column);
+                    array_push($obj, $item->$table_column[0]->$table_column[1]);
                 } else {
                     array_push($obj, $item->$column);
                 }
