@@ -266,7 +266,7 @@ class AccountController extends BaseController {
         }
         $account = $query->first();
         if (!is_null($account)) {
-            return ApiResponse::responseFailure(null, config('lang::messages.email_is_register'));
+            return ApiResponse::responseFailure(null, trans('lang::messages.email_is_register'));
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
