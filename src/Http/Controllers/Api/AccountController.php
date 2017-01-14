@@ -53,7 +53,7 @@ class AccountController extends BaseController {
             return ApiResponse::responseFailure(null, trans('lang::messages.password_error'));
         }
         // 黑名单
-        if (!self::isUserForbidden($account)) {
+        if (self::isUserForbidden($account)) {
             return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
         }
         // token
@@ -89,7 +89,7 @@ class AccountController extends BaseController {
             $account->phone = $phone;
         } else {
             // 黑名单
-            if(!self::isUserForbidden($account)) {
+            if(self::isUserForbidden($account)) {
                 return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
             }
         }

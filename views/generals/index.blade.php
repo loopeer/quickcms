@@ -193,7 +193,7 @@
             @if($curd_action['create'])
             buttons += '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
             @endif
-            //buttons += '<a style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
+            buttons += '<a href="/admin/excel" style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
             $("div.dt-toolbar div:first").html(buttons);
 
             @if(count($query) > 0)

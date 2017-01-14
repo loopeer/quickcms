@@ -19,6 +19,8 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
 Route::get('admin/login', 'IndexController@getLogin');
 Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
+Route::get('admin/excel', 'ExcelController@export');
+
 Route::get('test/push', 'TestController@push');
 
 Route::get('admin/index/getLoginLog', 'IndexController@getLoginLog');
