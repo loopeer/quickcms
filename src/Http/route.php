@@ -121,6 +121,7 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('pushMsg/search', ['as' => 'admin.pushMsg.search', 'uses' => 'GeneralController@search']);
    Route::resource('pushMsg', 'GeneralController');
 
+   Route::get('label/tableExportExcel', ['as' => 'admin.label.tableExportExcel', 'uses' => 'GeneralController@tableExportExcel']);
    Route::resource('label', 'GeneralController');
 });
 

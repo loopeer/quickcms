@@ -28,7 +28,7 @@ class ExcelController extends BaseController
         $labels = DB::table('labels')->get();
 //        \Log::info($labels);
         return Excel::create('test')->sheet('sheet1', function($sheet) use ($labels) {
-            $sheet->fromArray(json_decode(json_encode($labels)), null, 'A1', true);
+            $sheet->fromArray(collect($labels)->map(function($x){ return (array) $x; })->toArray(), null, 'A1', true);
         })->export('xlsx');
     }
 

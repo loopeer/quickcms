@@ -13,6 +13,7 @@ namespace Loopeer\QuickCms\Http\Controllers;
 
 use Loopeer\QuickCms\Models\Selector;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
+use Maatwebsite\Excel\Facades\Excel;
 use Route;
 use Session;
 use Response;
@@ -23,6 +24,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Log;
+use DB;
 
 class GeneralController extends BaseController
 {
@@ -141,6 +143,7 @@ class GeneralController extends BaseController
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
+
         } catch (Exception $e) {
             Log::info($e->getMessage());
         }
@@ -155,6 +158,7 @@ class GeneralController extends BaseController
     public function search($custom_id = null)
     {
         $model = $this->model;
+        \Log::info($model);
         if(isset($this->where)) {
             foreach($this->where as $value) {
                 switch($value['operator']) {
@@ -182,11 +186,6 @@ class GeneralController extends BaseController
                 }
             }
         }
-//        if(isset($this->sort)) {
-//            foreach ($this->sort as $sort) {
-//                $model = $model->orderBy($sort[0], $sort[1]);
-//            }
-//        }
         if (isset($custom_id)) {
             if (isset($this->custom_id_relation_column)) {
                 $model = $model->where($this->custom_id_relation_column, $custom_id);
@@ -279,8 +278,6 @@ class GeneralController extends BaseController
         if (isset($this->index_column_rename)) {
             foreach ($this->index_column_rename as $key => $column_name) {
                 if ($column_name['type'] == 'selector') {
-//                    $selector = Selector::where('enum_key', $column_name['param'])->first();
-//                    $tmp_data = SelectorController::parseSelector($selector->type, $selector->enum_value);
                     $selector_data[$key] = GeneralUtil::getSelectorData($column_name['param']);;
                 }
             }
@@ -293,7 +290,6 @@ class GeneralController extends BaseController
                 }
             }
         }
-        \Log::info($query_selector_data);
         if (isset($custom_id)) {
             $back_url = $this->custom_id_back_url;
             if (isset($this->custom_id_relation_column)) {
@@ -610,10 +606,6 @@ class GeneralController extends BaseController
         }
         $column_names = GeneralUtil::queryComment($this->model);
         $data['column_names'] = $column_names;
-//        $route_path = str_replace('{custom_id}', $custom_id, Route::getCurrentRoute()->getPath());
-//        $route_path = str_replace('/create', '', $route_path);
-//        $route_path = str_replace('/edit', '', $route_path);
-//        $route_path = str_replace('/{id}', '', $route_path);
         if (isset($this->edit_hidden_business_id)) {
             $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
             $business_user = $reflectionClass->newInstance();
@@ -622,7 +614,6 @@ class GeneralController extends BaseController
         }
         $data = array(
             'route_name' => $this->route_name,
-//            'route_path' => '/' . $route_path,
             'route_path' => $this->route_path,
             'model_name' => $this->model_name,
             'column_names' => $column_names,
@@ -646,5 +637,14 @@ class GeneralController extends BaseController
             'edit_hidden_business_id' => $this->edit_hidden_business_id,
         );
         return $data;
+    }
+
+    public function tableExportExcel()
+    {
+        $table = with($this->model)->getTable();
+        $data = DB::table($table)->get();
+        return Excel::create($table)->sheet($table, function($sheet) use ($data) {
+            $sheet->fromArray(collect($data)->map(function($x){ return (array) $x; })->toArray(), null, 'A1', true);
+        })->export('xlsx');
     }
 }

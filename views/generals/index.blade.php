@@ -193,7 +193,9 @@
             @if($curd_action['create'])
             buttons += '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
             @endif
-            buttons += '<a href="/admin/excel" style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
+            @if($curd_action['table_export_excel'])
+            buttons += '<a href="/admin/{{ $route_path }}/tableExportExcel" style="margin-left: 10px;" class="btn btn-primary">Excel</a>';
+            @endif
             $("div.dt-toolbar div:first").html(buttons);
 
             @if(count($query) > 0)
