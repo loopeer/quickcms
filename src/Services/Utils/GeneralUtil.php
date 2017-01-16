@@ -20,7 +20,7 @@ use App;
 class GeneralUtil {
 
     public static function curdAction($curl_action = array()) {
-        $default_action = array('create' => true, 'edit' => true, 'detail' => true, 'delete' => true);
+        $default_action = array('create' => true, 'edit' => true, 'detail' => true, 'delete' => true, 'table_export_excel' => false);
         if(count($curl_action) > 0) {
             foreach($curl_action as $action_key => $action_val) {
                 if(isset($action_val)) {

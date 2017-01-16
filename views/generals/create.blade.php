@@ -254,7 +254,9 @@
                                                     @endif
                                                 @else
                                                     <label class="input">
-                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}">
+                                                        <input type="text" name="{{ $edit_column[$key] }}" value="{{ $model_data[$edit_column[$key]] }}"
+                                                                {{ $model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['disabled'])
+                                                                     && $edit_column_detail[$edit_column[$key]]['disabled'] ? 'style=cursor:default!important;opacity:.6!important; disabled' : ''}}>
                                                     </label>
                                                 @endif
                                             </section>
@@ -312,9 +314,13 @@
                     '{{$column}}': {
                         @if (isset($edit_column_detail[$column]['validator']))
                         @foreach($edit_column_detail[$column]['validator'] as $k=>$v)
+                        @if($k != 'remote')
                         '{{$k}}': function () {
                             return '{{$v}}' ? true : false;
                         },
+                        @else
+                        '{{ $k }}': '{!! $v !!}',
+                        @endif
                         @endforeach
                         @endif
                     },
@@ -328,7 +334,7 @@
                     '{{$column}}': {
                         @if (isset($edit_column_detail[$column]['message']))
                         @foreach($edit_column_detail[$column]['message'] as $k=>$v)
-                        '{{$k}}': '{{$v}}',
+                        '{{$k}}': '{!! $v !!}',
                         @endforeach
                     @endif
                     },
