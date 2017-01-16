@@ -201,19 +201,16 @@
             @if(count($query) > 0)
             $('#query').on('click', function () {
                 @foreach($query as $query_key => $query_value)
-                    var value;
+                    var index = '{{ array_search($query_value['column'], $index_column) }}';
                     @if(isset($query_value['type']) && $query_value['type'] == 'checkbox')
-                        value = $('input[name="{{ $query_value['column']}}"]:checked').map(function () {
+                        table.columns(index).search($('input[name="{{ $query_value['column']}}"]:checked').map(function () {
                             return this.value;
-                        }).get();
+                        }).get());
                     @elseif(isset($query_value['operator']) && $query_value['operator'] == 'between')
-                        value[0] = $('#' + '{{ $query_value['column'] }}' + '_from').val();
-                        value[1] = $('#' + '{{ $query_value['column'] }}' + '_to').val();
+                        table.columns(index).search([$('#' + '{{ $query_value['column'] }}' + '_from').val(), $('#' + '{{ $query_value['column'] }}' + '_to').val()]);
                     @else
-                        value = $('#' + '{{ $query_value['column'] }}').val();
+                        table.columns(index).search($('#' + '{{ $query_value['column'] }}').val());
                     @endif
-                    console.log(value);
-                    table.columns({{ array_search($query_value['column'], $index_column) }}).search(value);
                 @endforeach
                 table.draw();
             });

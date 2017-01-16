@@ -120,35 +120,34 @@ class BaseController extends Controller
                             if (isset($query_value['type'])) {
                                 $type = $query_value['type'];
                             }
-                            if ($value != null) {
-                                switch ($type) {
-                                    case 'input':
-                                        if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
-                                            $model->where($name, 'like', '%' . $value . '%');
-                                        } else {
-                                            $model->where($name, $value);
-                                        }
-                                        break;
-                                    case 'selector':
+                            switch ($type) {
+                                case 'input':
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
+                                        $model->where($name, 'like', '%' . $value . '%');
+                                    } else {
                                         $model->where($name, $value);
-                                        break;
-                                    case 'checkbox':
-                                        $model->whereIn($name, explode(',', $value));
-                                        break;
-                                    case 'date':
-                                        if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
-                                            $values = explode(',', $value);
-                                            if ($values[0] != null || $values[1] != null) {
-                                                $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
-                                            }
-                                        } else {
-                                            $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                                    }
+                                    break;
+                                case 'selector':
+                                    $model->where($name, $value);
+                                    break;
+                                case 'checkbox':
+                                    $model->whereIn($name, explode(',', $value));
+                                    break;
+                                case 'date':
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
+                                        $values = explode(',', $value);
+                                        if ($values[0] != null || $values[1] != null) {
+                                            $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
                                         }
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                    } else {
+                                        $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
+                            break;
                         }
                     }
                 }
