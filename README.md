@@ -18,10 +18,12 @@ Kbwebs\MultiAuth\PasswordResets\PasswordResetServiceProvider::class,
 Loopeer\QuickCms\QuickCmsServiceProvider::class,
 Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
 Stevenyangecho\UEditor\UEditorServiceProvider::class,
+Maatwebsite\Excel\ExcelServiceProvider::class,
 ```
 in the `providers` array add
 ```
 'Entrust' => Zizaco\Entrust\EntrustFacade::class,
+'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 ```
 use `php artisan vendor:publish` and a `entrust.php` file will be created in app/config directory.
 then update config/entrust.php
