@@ -92,6 +92,8 @@ abstract class ApiBaseModel extends Model
                 return array_map(function ($value) {
                     return QiniuUtil::buildQiniuUrl($value);
                 }, $this->fromJson($value));
+            case 'amount':
+                return $value / 100;
             default:
                 return parent::castAttribute($key, $value);
         }
