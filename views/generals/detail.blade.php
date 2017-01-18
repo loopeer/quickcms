@@ -75,7 +75,11 @@
                                             </label>
                                         @endif
                                     @else
-                                        {{ $data->$column }}
+                                        @if(strpos($column, '.') !== FALSE)
+                                            {{ $data->{explode('.', $column)[0]}->{explode('.', $column)[1]} }}
+                                        @else
+                                            {{ $data->$column }}
+                                        @endif
                                     @endif
                                 @endif
                             </section>
