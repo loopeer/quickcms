@@ -37,12 +37,12 @@
                                         @elseif($query_value['type'] == 'date')
                                             <div class="input-group">
                                                 @if(isset($query_value['operator']) && $query_value['operator'] == 'between')
-                                                    <input type="text" class="form-control date-format" id="{{ $query_value['column'] . '_from' }}">
+                                                    <input type="text" class="form-control date-format between" id="{{ $query_value['column'] . '_from' }}">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                    <input type="text" class="form-control date-format" id="{{ $query_value['column'] . '_to' }}">
+                                                    <input type="text" class="form-control date-format between" id="{{ $query_value['column'] . '_to' }}">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 @else
-                                                    <input type="text" class="form-control date-format" id="{{ $query_value['column'] }}">
+                                                    <input type="text" class="form-control date-format single" id="{{ $query_value['column'] }}">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 @endif
                                             </div>
