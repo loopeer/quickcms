@@ -158,7 +158,6 @@ class GeneralController extends BaseController
     public function search($custom_id = null)
     {
         $model = $this->model;
-        \Log::info($model);
         if(isset($this->where)) {
             foreach($this->where as $value) {
                 switch($value['operator']) {
