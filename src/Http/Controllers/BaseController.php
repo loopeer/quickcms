@@ -191,7 +191,6 @@ class BaseController extends Controller
         $draw = Input::get('draw');
         $data = array();
         foreach($paginate->items() as $item) {
-            \Log::info($item);
             $obj = array();
             foreach($show_column as $column) {
                 if($item->$column instanceof Carbon) {
