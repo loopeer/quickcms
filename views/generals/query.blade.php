@@ -43,7 +43,7 @@
                                                     <span class="input-group-addon"></span>
                                                 @else
                                                     <input type="text" class="form-control date-format single" id="{{ $query_value['column'] }}">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                    <span class="input-group-addon"></span>
                                                 @endif
                                             </div>
                                         @endif
