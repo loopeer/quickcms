@@ -69,6 +69,8 @@ class GeneralController extends BaseController
     protected $table_order;
     protected $detail_filter_empty;
     protected $query;
+    protected $index_select_raw;
+    protected $groupBy;
 
     public function __construct(Request $request) {
         try {
@@ -92,7 +94,8 @@ class GeneralController extends BaseController
             }
 
             $this->query = config($general_name . 'query');
-
+            $this->index_select_raw = config($general_name . 'index_select_raw');
+            $this->groupBy = config($general_name . 'groupBy');
             $this->index_column = config($general_name . 'index_column');
             $this->index_column_format = config($general_name . 'index_column_format');
             $this->index_column_name = config($general_name . 'index_column_name');
@@ -230,6 +233,12 @@ class GeneralController extends BaseController
                 ->paginate($length);
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
+            if ($this->index_select_raw) {
+                $model->selectRaw($this->index_select_raw);
+            }
+            if ($this->groupBy) {
+                $model->groupBy($this->groupBy);
+            }
             $ret = self::page($this->index_column, $model, $this->query);
         }
         if($this->index_column_format) {
