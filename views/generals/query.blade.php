@@ -37,8 +37,8 @@
                                         @elseif($query_value['type'] == 'date')
                                             <div class="input-group">
                                                 @if(isset($query_value['operator']) && $query_value['operator'] == 'between')
-                                                    <input type="text" class="form-control date-format between" id="{{ $query_value['column'] . '_from' }}">
-                                                    <input type="text" class="form-control date-format between" id="{{ $query_value['column'] . '_to' }}">
+                                                    <input type="text" style="width:50%;" class="form-control date-format between" id="{{ $query_value['column'] . '_from' }}">
+                                                    <input type="text" style="width:50%;" class="form-control date-format between" id="{{ $query_value['column'] . '_to' }}">
                                                 @else
                                                     <input type="text" class="form-control date-format single" id="{{ $query_value['column'] }}">
                                                 @endif
