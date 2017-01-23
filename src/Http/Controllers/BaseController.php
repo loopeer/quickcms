@@ -104,7 +104,7 @@ class BaseController extends Controller
      * @param array $query
      * @return array
      */
-    public function page($show_column, $model, $query)
+    public function page($show_column, $model, $query, $has_export)
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
@@ -152,6 +152,12 @@ class BaseController extends Controller
                     }
                 }
             }
+        }
+        //判断是否存在导出excel
+        if ($has_export) {
+            Cache::rememberForever('export_' . Auth::admin()->get()->id, function() use ($model) {
+                return $model->get();
+            });
         }
         $paginate = $model->paginate($length);
         $ret = self::getPageDate($show_column, $paginate);

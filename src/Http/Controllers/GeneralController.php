@@ -25,6 +25,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Log;
 use DB;
+use Cache;
 
 class GeneralController extends BaseController
 {
@@ -71,6 +72,8 @@ class GeneralController extends BaseController
     protected $query;
     protected $index_select_raw;
     protected $groupBy;
+    protected $export_column_rename;
+    protected $has_export;
 
     public function __construct(Request $request) {
         try {
@@ -143,6 +146,9 @@ class GeneralController extends BaseController
             $this->edit_hidden_business_id = config($general_name . 'edit_hidden_business_id');
             $this->index_business_where = config($general_name . 'index_business_where');
             $this->custom_id_relation = config($general_name . 'custom_id_relation');
+
+            $this->export_column_rename = config($general_name . 'export_column_rename');
+            $this->has_export = config($general_name . 'curd_action.table_export_excel') ? true : false;
             //foreach ($middleware as $value) {
             //$this->middleware('auth.permission:' . implode(',', $middleware));
             //}
@@ -228,9 +234,16 @@ class GeneralController extends BaseController
             foreach($joins as $join) {
                 $model = $model->leftJoin($join[0], $join[1], $join[2], $join[3]);
             }
-            $paginate = $model->select($this->index_multi_column)
-                ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-                ->paginate($length);
+            $model = $model->select($this->index_multi_column)
+                ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'");
+            //判断是否存在导出excel
+            if ($this->has_export) {
+                Cache::rememberForever('export_' . Auth::admin()->get()->id, function() use ($model) {
+                    return $model->get();
+                });
+            }
+
+            $paginate = $model->paginate($length);
             $ret = self::queryPage($this->index_column, $paginate);
         } else {
             if ($this->index_select_raw) {
@@ -239,7 +252,7 @@ class GeneralController extends BaseController
             if ($this->groupBy) {
                 $model->groupBy($this->groupBy);
             }
-            $ret = self::page($this->index_column, $model, $this->query);
+            $ret = self::page($this->index_column, $model, $this->query, $this->has_export);
         }
         if($this->index_column_format) {
             foreach($this->index_column_format as $format_key => $format_value) {
@@ -647,12 +660,77 @@ class GeneralController extends BaseController
         return $data;
     }
 
+    /**
+     * 导出Excel
+     * @return mixed
+     */
     public function tableExportExcel()
     {
+        $index_column = $this->index_column;
+        $index_column_name = $this->index_column_name;
+//        $index_column_rename = $this->index_column_rename;
+//        $joins = $this->index_multi_join;
         $table = with($this->model)->getTable();
-        $data = DB::table($table)->get();
-        return Excel::create($table)->sheet($table, function($sheet) use ($data) {
-            $sheet->fromArray(collect($data)->map(function($x){ return (array) $x; })->toArray(), null, 'A1', true);
-        })->export('xlsx');
+//        $index_column_name_flip =  array_flip($index_column_name);
+
+        $index_column_format = $this->index_column_format;
+        $export_column_rename = $this->export_column_rename;
+
+
+        $query = Cache::get('export_' . Auth::admin()->get()->id);
+
+        try {
+            $data = $this->getData($index_column, $query);
+
+            foreach ($data as &$row) {
+                foreach ($row as $key => &$column) {
+                    if (isset($index_column_format)) {
+                        foreach ($index_column_format as $format) {
+                            if ($format['column'] == $key) {
+                                $column = $format['value']($column);
+                            }
+                        }
+                    }
+                    if (isset($export_column_rename)) {
+                        foreach ($export_column_rename as $rename) {
+                            if ($rename['column'] == $key) {
+                                $column = $rename['value']($column);
+                            }
+                        }
+                    }
+                }
+            }
+            array_unshift($data, $index_column_name);
+            Excel::create($table)->sheet($table, function($sheet) use ($data) {
+                $sheet->rows($data);
+                Cache::forget('export_' . Auth::admin()->get()->id);
+            })->export('xlsx');
+        } catch (Exception $e) {
+            Cache::forget('export_' . Auth::admin()->get()->id);
+            Log::info($e->getMessage());
+            $message = ['result' => false, 'content' => '导出失败，请重试'];
+            return Redirect::back()->with('message', $message);
+        }
+    }
+
+    private function getData($show_column, $collection)
+    {
+        $data = array();
+        foreach($collection as $item) {
+            $obj = array();
+            foreach($show_column as $column) {
+                if($item->$column instanceof Carbon) {
+                    array_push($obj, $item->$column->format('Y-m-d H:i:s'));
+                } elseif (strstr($column, '.') !== FALSE) {
+                    $table_column = explode('.', $column);
+                    array_push($obj, $item->{$table_column[0]}->{$table_column[1]});
+                } else {
+                    array_push($obj, $item->$column);
+                }
+            }
+            array_push($data, $obj);
+        }
+
+        return $data;
     }
 }
