@@ -96,7 +96,7 @@ class SystemController extends BaseController {
         $version = Request::header('version_name');
         $versionCode = Request::header('build');
         $deviceId = Request::header('device_id');
-        $channelId = Request::header('channel_id');
+        $channelId = Request::header('channel_id', 'iOS');
         $feedback = new Feedback;
         $feedback->account_id = $account_id;
         $feedback->content = $content;
