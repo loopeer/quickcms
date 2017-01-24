@@ -694,7 +694,12 @@ class GeneralController extends BaseController
                     if (isset($export_column_rename)) {
                         foreach ($export_column_rename as $rename) {
                             if ($rename['column'] == $key) {
-                                $column = $rename['value']($column);
+                                if ($rename['type'] != 'selector') {
+                                    $column = $rename['value']($column);
+                                } else {
+                                    $selector = json_decode(GeneralUtil::getSelectorData($rename['value']));
+                                    $column = $selector->$column;
+                                }
                             }
                         }
                     }
