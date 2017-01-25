@@ -153,6 +153,10 @@ class BaseController extends Controller
                 }
             }
         }
+        //清除之前缓存
+        if (Cache::has('export_' . Auth::admin()->get()->id)) {
+            Cache::forget('export_' . Auth::admin()->get()->id);
+        }
         //判断是否存在导出excel
         if ($has_export) {
             Cache::rememberForever('export_' . Auth::admin()->get()->id, function() use ($model) {
@@ -203,7 +207,7 @@ class BaseController extends Controller
                     array_push($obj, $item->$column->format('Y-m-d H:i:s'));
                 } elseif(strstr($column, '.') !== FALSE) {
                     $table_column = explode('.', $column);
-                    array_push($obj, $item->$table_column[0]->$table_column[1]);
+                    array_push($obj, $item->{$table_column[0]}->{$table_column[1]});
                 } else {
                     array_push($obj, $item->$column);
                 }
