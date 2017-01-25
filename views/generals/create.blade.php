@@ -314,7 +314,7 @@
                     '{{$column}}': {
                         @if (isset($edit_column_detail[$column]['validator']))
                         @foreach($edit_column_detail[$column]['validator'] as $k=>$v)
-                        @if($k != 'remote')
+                        @if($k != 'remote' && $k != 'maxlength')
                         '{{$k}}': function () {
                             return '{{$v}}' ? true : false;
                         },
