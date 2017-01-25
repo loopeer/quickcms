@@ -319,7 +319,7 @@
                             return '{{$v}}' ? true : false;
                         },
                         @else
-                        '{{ $k }}': '{!! $v !!}',
+                        '{{ $k }}': {!! $v !!},
                         @endif
                         @endforeach
                         @endif
