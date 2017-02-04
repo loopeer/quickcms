@@ -743,4 +743,19 @@ class GeneralController extends BaseController
 
         return $data;
     }
+
+    /**
+     * 全表导出
+     * @return mixed
+     */
+    public function databaseExportExcel()
+    {
+        $table = with($this->model)->getTable();
+        $data = DB::table($table)->get();
+        return Excel::create($table)->sheet($table, function($sheet) use ($data) {
+            $sheet->fromArray(collect($data)->map(function ($x) {
+                return (array)$x;
+            })->toArray(), null, 'A1', true);
+        })->export('xlsx');
+    }
 }

@@ -193,8 +193,11 @@
             @if($curd_action['create'])
             buttons += '<a href="{{ '/admin/' . $route_path . '/create' }}" id="create_btn" class="btn btn-primary" permission="admin.{{ $route_name }}.create">新增{{ $model_name }}</a>';
             @endif
-            @if($curd_action['table_export_excel'])
+            @if(isset($curd_action['table_export_excel']) && $curd_action['table_export_excel'])
             buttons += '<a href="/admin/{{ $route_path }}/tableExportExcel" style="margin-left: 10px;" class="btn btn-primary" target="_blank">Excel</a>';
+            @endif
+            @if(isset($curd_action['database_export_excel']) && $curd_action['database_export_excel'])
+            buttons += '<a href="/admin/{{ $route_path }}/databaseExportExcel" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
             @endif
             $("div.dt-toolbar div:first").html(buttons);
 
