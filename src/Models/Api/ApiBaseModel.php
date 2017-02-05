@@ -107,6 +107,6 @@ abstract class ApiBaseModel extends Model
 
     public function account()
     {
-        return $this->belongsTo('model_bind.account');
+        return $this->belongsTo(config('quickApi.model_bind.account'));
     }
 }
