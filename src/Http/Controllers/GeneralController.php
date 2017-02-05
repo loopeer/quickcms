@@ -236,6 +236,11 @@ class GeneralController extends BaseController
             }
             $model = $model->select($this->index_multi_column)
                 ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'");
+
+            //清除之前缓存
+            if (Cache::has('export_' . Auth::admin()->get()->id)) {
+                Cache::forget('export_' . Auth::admin()->get()->id);
+            }
             //判断是否存在导出excel
             if ($this->has_export) {
                 Cache::rememberForever('export_' . Auth::admin()->get()->id, function() use ($model) {
@@ -737,5 +742,20 @@ class GeneralController extends BaseController
         }
 
         return $data;
+    }
+
+    /**
+     * 全表导出
+     * @return mixed
+     */
+    public function databaseExportExcel()
+    {
+        $table = with($this->model)->getTable();
+        $data = DB::table($table)->get();
+        return Excel::create($table)->sheet($table, function($sheet) use ($data) {
+            $sheet->fromArray(collect($data)->map(function ($x) {
+                return (array)$x;
+            })->toArray(), null, 'A1', true);
+        })->export('xlsx');
     }
 }
