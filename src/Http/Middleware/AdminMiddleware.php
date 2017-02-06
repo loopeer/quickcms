@@ -11,8 +11,10 @@
 namespace Loopeer\QuickCms\Http\Middleware;
 
 use Auth;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Facades\Log;
 use Input;
 use Loopeer\QuickCms\Models\Permission;
 use Validator;
@@ -51,6 +53,16 @@ class AdminMiddleware{
     {
         if (!Auth::admin()->check()) {
             return redirect('/admin/login');
+        } else {
+            $last_activity_time = $request->session()->get('LAST_ACTIVITY', Carbon::now());
+            //判断登录是否失效
+            if (time() - strtotime($last_activity_time) > config('quickcms.login_lifetime', 10) * 60) {
+                Auth::admin()->logout();
+                Session::forget('menu');
+                Session::forget('permissions');
+                Session::forget('business_id');
+                return redirect('/admin/login');
+            }
         }
         if ($_SERVER['REQUEST_URI'] == '/admin/logs') {
             if (!Auth::admin()->get()->can('admin.logs')) {
@@ -61,6 +73,8 @@ class AdminMiddleware{
             $user = Auth::admin()->get();
             $this->getMenus($user);
         }
+        //设置最后操作时间
+        $request->session()->put('LAST_ACTIVITY', Carbon::now());
         return $next($request);
     }
 

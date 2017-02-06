@@ -11,6 +11,7 @@
 namespace Loopeer\QuickCms\Http\Middleware;
 
 use Auth;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Input;
@@ -55,6 +56,9 @@ class AdminAuthenticate{
                 'content' => config('quickCms.action_log.login'),
                 'client_ip' => $request->ip()
             ));
+            User::where('email', $email)->update(['last_login' => Carbon::now()]);
+            //设置最后操作时间
+            $request->session()->put('LAST_ACTIVITY', Carbon::now());
             // 认证通过...
             return redirect('/admin/index');
         } else {
