@@ -8,7 +8,8 @@
             <div class="row">
                 <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <p><a href="{{route('admin.permissions.create')}}" class="btn btn-primary">新增权限</a></p>
-                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false">
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
+                         data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                             <h2>权限列表</h2>
