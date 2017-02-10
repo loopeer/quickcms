@@ -108,6 +108,7 @@ class BaseController extends Controller
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
+
         self::setCurrentPage($length);
         if (count($query) > 0) {
             foreach($columns as $column) {
@@ -123,9 +124,23 @@ class BaseController extends Controller
                             switch ($type) {
                                 case 'input':
                                     if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
-                                        $model->where($name, 'like', '%' . $value . '%');
+                                        if(strstr($name, '.') !== FALSE) {
+                                            $table_column = explode('.', $name);
+                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
+                                                $query->where($table_column[1], 'like', '%' . $value . '%');
+                                            });
+                                        } else {
+                                            $model->where($name, 'like', '%' . $value . '%');
+                                        }
                                     } else {
-                                        $model->where($name, $value);
+                                        if(strstr($name, '.') !== FALSE) {
+                                            $table_column = explode('.', $name);
+                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
+                                                $query->where($table_column[1], $value);
+                                            });
+                                        } else {
+                                            $model->where($name, $value);
+                                        }
                                     }
                                     break;
                                 case 'selector':

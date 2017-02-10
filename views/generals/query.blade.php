@@ -19,7 +19,7 @@
                                     <label class="col-md-1 control-label">{{ $query_value['name'] }}</label>
                                     <div class="col-md-2">
                                         @if(!isset($query_value['type']) || $query_value['type'] == 'input')
-                                            <input class="form-control" type="text" id="{{ $query_value['column'] }}">
+                                            <input class="form-control" type="text" id="@if(strstr($query_value['column'], '.') !== FALSE){{ str_replace('.', '-', $query_value['column']) }}@else{{ $query_value['column'] }}@endif">
                                         @elseif($query_value['type'] == 'selector')
                                             <select class="form-control" id="{{ $query_value['column'] }}">
                                                 <option value="">全部</option>

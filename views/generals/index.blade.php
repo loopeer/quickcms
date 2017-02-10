@@ -202,21 +202,25 @@
             $("div.dt-toolbar div:first").html(buttons);
 
             @if(count($query) > 0)
-                $('#query').on('click', function () {
-                    @foreach($query as $query_key => $query_value)
-                        var index = '{{ array_search($query_value['column'], $index_column) }}';
-                        @if(isset($query_value['type']) && $query_value['type'] == 'checkbox')
-                            table.columns(index).search($('input[name="{{ $query_value['column']}}"]:checked').map(function () {
-                                return this.value;
-                            }).get());
-                        @elseif(isset($query_value['operator']) && $query_value['operator'] == 'between')
-                            table.columns(index).search([$('#' + '{{ $query_value['column'] }}' + '_from').val(), $('#' + '{{ $query_value['column'] }}' + '_to').val()]);
-                        @else
-                            table.columns(index).search($('#' + '{{ $query_value['column'] }}').val());
-                        @endif
-                    @endforeach
-                    table.draw();
-                });
+            $('#query').on('click', function () {
+                @foreach($query as $query_key => $query_value)
+                var index = '{{ array_search($query_value['column'], $index_column) }}';
+                @if(isset($query_value['type']) && $query_value['type'] == 'checkbox')
+                table.columns(index).search($('input[name="{{ $query_value['column']}}"]:checked').map(function () {
+                    return this.value;
+                }).get());
+                @elseif(isset($query_value['operator']) && $query_value['operator'] == 'between')
+                table.columns(index).search([$('#' + '{{ $query_value['column'] }}' + '_from').val(), $('#' + '{{ $query_value['column'] }}' + '_to').val()]);
+                @else
+                @if(strstr($query_value['column'], '.') !== FALSE)
+                table.columns(index).search($('#' + '{{ str_replace('.', '-', $query_value['column']) }}').val());
+                @else
+                 table.columns(index).search($('#' + '{{ $query_value['column'] }}').val());
+                @endif
+                @endif
+                @endforeach
+                table.draw();
+            });
 
                 @foreach($query as $query_value)
                     @if(isset($query_value['type']) && $query_value['type'] == 'date')
