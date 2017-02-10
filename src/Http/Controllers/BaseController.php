@@ -104,7 +104,7 @@ class BaseController extends Controller
      * @param array $query
      * @return array
      */
-    public function page($show_column, $model, $query, $has_export, $order_by_appends = false, $appends = [])
+    public function page($show_column, $model, $query, $has_export, $appends = [])
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
@@ -165,7 +165,7 @@ class BaseController extends Controller
         }
         $paginate = $model->paginate($length);
 
-        $ret = self::getPageDate($show_column, $paginate, $order_by_appends, $appends);
+        $ret = self::getPageDate($show_column, $paginate, $appends);
         return $ret;
     }
 
@@ -175,8 +175,8 @@ class BaseController extends Controller
      * @param array $paginate query sql
      * @return array
      */
-    public function queryPage($show_column, $paginate, $order_by_appends = false, $appends = []) {
-        $ret = self::getPageDate($show_column, $paginate, $order_by_appends, $appends);
+    public function queryPage($show_column, $paginate, $appends = []) {
+        $ret = self::getPageDate($show_column, $paginate, $appends);
         return $ret;
     }
 
@@ -198,10 +198,10 @@ class BaseController extends Controller
      * @param array $paginate query sql
      * @return array
      */
-    private function getPageDate($show_column, $paginate, $order_by_appends = false, $appends = []) {
+    private function getPageDate($show_column, $paginate, $appends = []) {
         $draw = Input::get('draw');
         $data = array();
-        if ($order_by_appends) {
+        if (!empty($appends)) {
             //按自定义字段排序
             if ($appends['dir'] == 'asc') {
                 $paginate_data = $paginate->sortBy($appends['column']);
