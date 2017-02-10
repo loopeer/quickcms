@@ -104,7 +104,7 @@ class BaseController extends Controller
      * @param array $query
      * @return array
      */
-    public function page($show_column, $model, $query, $has_export)
+    public function page($show_column, $model, $query, $has_export, $order_by_appends = false, $appends = [])
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
@@ -164,7 +164,8 @@ class BaseController extends Controller
             });
         }
         $paginate = $model->paginate($length);
-        $ret = self::getPageDate($show_column, $paginate);
+
+        $ret = self::getPageDate($show_column, $paginate, $order_by_appends, $appends);
         return $ret;
     }
 
@@ -174,8 +175,8 @@ class BaseController extends Controller
      * @param array $paginate query sql
      * @return array
      */
-    public function queryPage($show_column, $paginate) {
-        $ret = self::getPageDate($show_column, $paginate);
+    public function queryPage($show_column, $paginate, $order_by_appends = false, $appends = []) {
+        $ret = self::getPageDate($show_column, $paginate, $order_by_appends, $appends);
         return $ret;
     }
 
@@ -197,10 +198,23 @@ class BaseController extends Controller
      * @param array $paginate query sql
      * @return array
      */
-    private function getPageDate($show_column, $paginate) {
+    private function getPageDate($show_column, $paginate, $order_by_appends = false, $appends = []) {
         $draw = Input::get('draw');
         $data = array();
-        foreach($paginate->items() as $item) {
+        if ($order_by_appends) {
+            //按自定义字段排序
+            if ($appends['dir'] == 'asc') {
+                $paginate_data = $paginate->sortBy($appends['column']);
+            } elseif ($appends['dir'] == 'desc') {
+                $paginate_data = $paginate->sortByDesc($appends['column']);
+            } else {
+                $paginate_data = $paginate->items();
+            }
+        } else {
+            $paginate_data = $paginate->items();
+        }
+
+        foreach($paginate_data as $item) {
             $obj = array();
             foreach($show_column as $column) {
                 if($item->$column instanceof Carbon) {

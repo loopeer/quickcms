@@ -215,8 +215,18 @@ class GeneralController extends BaseController
             }
         }
         $order = Input::get('order')['0'];
-        $order_sql = $this->index_column[$order['column']] . ' ' . $order['dir'];
-        $model = $model->orderByRaw($order_sql);
+        $order_by_appends = false;
+        $appends = [];
+        if (in_array($this->index_column[$order['column']], $this->model['appends'])) {
+            //按自定义字段排序
+            $order_by_appends = true;
+            $appends['column'] = $this->index_column[$order['column']];
+            $appends['dir'] = $order['dir'];
+        } else {
+            //按数据表字段排序
+            $order_sql = $this->index_column[$order['column']] . ' ' . $order['dir'];
+            $model = $model->orderByRaw($order_sql);
+        }
         if(isset($this->index_multi_column)) {
             $search = Input::get('search')['value'];
             $length = Input::get('length');
@@ -249,7 +259,7 @@ class GeneralController extends BaseController
             }
 
             $paginate = $model->paginate($length);
-            $ret = self::queryPage($this->index_column, $paginate);
+            $ret = self::queryPage($this->index_column, $paginate, $order_by_appends, $appends);
         } else {
             if ($this->index_select_raw) {
                 $model->selectRaw($this->index_select_raw);
@@ -257,7 +267,7 @@ class GeneralController extends BaseController
             if ($this->groupBy) {
                 $model->groupBy($this->groupBy);
             }
-            $ret = self::page($this->index_column, $model, $this->query, $this->has_export);
+            $ret = self::page($this->index_column, $model, $this->query, $this->has_export, $order_by_appends, $appends);
         }
         if($this->index_column_format) {
             foreach($this->index_column_format as $format_key => $format_value) {
