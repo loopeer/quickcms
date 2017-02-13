@@ -144,7 +144,11 @@ class BaseController extends Controller
                                     }
                                     break;
                                 case 'selector':
-                                    $model->where($name, $value);
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'scope') {
+                                        $model->$name($value);
+                                    } else {
+                                        $model->where($name, $value);
+                                    }
                                     break;
                                 case 'checkbox':
                                     $model->whereIn($name, explode(',', $value));
