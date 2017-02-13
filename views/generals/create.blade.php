@@ -121,6 +121,13 @@
                                                             </div>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'time')
                                                             <input type="text" class="time" name="{{ $edit_column[$key] }}"  value="{{ $model_data[$edit_column[$key]] }}">
+                                                        @elseif ($edit_column_detail[$edit_column[$key]]['type'] == 'datetime')
+                                                            <div class="input-group">
+                                                                <input type="text" class="date-format" id="{{ $edit_column[$key] }}" name="{{ $edit_column[$key] }}"
+                                                                       value="{{ (!$model_data['id'] && isset($edit_column_detail[$edit_column[$key]]['default_value'])) ? date('Y-m-d', time()) : date('Y-m-d', strtotime($model_data[$edit_column[$key]])) }}">
+                                                                <input type="text" class="time" name="{{ $edit_column[$key] }}-time"  value="{{ date('H:i', strtotime($model_data[$edit_column[$key]])) }}">
+                                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                            </div>
                                                         @elseif($edit_column_detail[$edit_column[$key]]['type'] == 'selector')
                                                             <select class="{{ $edit_column_detail[$edit_column[$key]]['style'] or 'select' }}" name="{{$edit_column[$key]}}" id="select2">
                                                                 @foreach($selector_data[$edit_column_detail[$edit_column[$key]]['selector_key']] as $k=>$v)
@@ -352,7 +359,7 @@
             });
 
             @foreach($edit_column_detail as $edit_key => $edit_column)
-            @if(isset($edit_column['type']) && $edit_column['type'] == 'date')
+            @if(isset($edit_column['type']) && ($edit_column['type'] == 'date' || $edit_column['type'] == 'datetime'))
             $("#" + '{!! $edit_key !!}').datepicker({
                 dateFormat: '{{ (isset($edit_column['date_picker']['dateFormat']) && $edit_column['date_picker']['dateFormat']) ? $edit_column['date_picker']['dateFormat'] : 'yy-mm-dd' }}',
                 changeMonth: true,

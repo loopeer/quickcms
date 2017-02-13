@@ -460,11 +460,6 @@ class GeneralController extends BaseController
      */
     public function store($custom_id = null) {
         $data = Input::all();
-        foreach($data as $key => $value) {
-            if (is_array($value)) {
-                $data[$key] = implode(',', $value);
-            }
-        }
         if (isset($data['_token'])) {
             unset($data['_token']);
         }
@@ -473,6 +468,10 @@ class GeneralController extends BaseController
         foreach($data as $key => $value) {
             if(is_array($value)) {
                 $data[$key] = implode(',', $value);
+            }
+            if ($datetime = strstr($key, '-time', true)) {
+                $data[$datetime] = $data[$datetime] . ' ' . $value;
+                unset($data[$key]);
             }
         }
         if (isset($data['language_hidden'])) {
