@@ -5,7 +5,8 @@
             <div class="row">
                 <article class="col-sm-12 col-md-12 col-lg-6">
                     @include('backend::layouts.message')
-                    <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
+                    <div class="jarviswidget" id="wid-id-4" data-widget-hidden="false" data-widget-togglebutton="false"
+                         data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false"
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
                             <h2>用户管理 </h2>

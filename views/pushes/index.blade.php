@@ -13,9 +13,10 @@
                 <a href="javascript:void(0);" class="btn btn-primary" id="push_batch" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">推送消息</a>
                 <a href="javascript:void(0);" class="btn btn-primary" id="push_all" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">全局推送</a>
                 <a href="javascript:void(0);" class="btn btn-primary" id="push_android" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">Android推送</a>
-                <a href="javascript:void(0);" class="btn btn-primary" id="push_ios" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">Ios推送</a>
+                <a href="javascript:void(0);" class="btn btn-primary" id="push_ios" data-target="#push_btn" data-toggle="modal" data-action="/admin/pushes/batch">iOS推送</a>
             </p>
-            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false">
+            <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
+                 data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                 <header>
                     <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                     <h2>推送设备列表</h2>
@@ -60,7 +61,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="submitPush"><i class="fa fa-check"></i>提交</button>
+                    <button type="button" class="btn btn-primary" id="submitPush">提交</button>
                 </div>
             </div>
         </div>
