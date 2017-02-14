@@ -76,5 +76,5 @@ return [
     'hide_tips_time' => 3000,
 
     //登录失效时间，单位分钟
-    'login_lifetime' => 10,
+    'login_lifetime' => 60,
 ];

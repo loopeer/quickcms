@@ -56,7 +56,7 @@ class AdminMiddleware{
         } else {
             $last_activity_time = $request->session()->get('LAST_ACTIVITY');
             //判断登录是否失效
-            if (time() - strtotime($last_activity_time) > config('quickcms.login_lifetime', 10) * 60) {
+            if (time() - strtotime($last_activity_time) > config('quickCms.login_lifetime', 10) * 60) {
                 Auth::admin()->logout();
                 Session::forget('menu');
                 Session::forget('permissions');
