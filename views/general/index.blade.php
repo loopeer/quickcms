@@ -5,13 +5,17 @@
     div.dataTables_info {
         font-style: normal;
     }
+    .index-image {
+        width: 50px;
+        height: 50px;
+    }
 </style>
 @endsection
 
 @section('content')
     <div id="content">
 
-        {{--@include('backend::generals.query')--}}
+        @include('backend::general.query')
 
         <section id="widget-grid" class="">
             <div class="row tips">
@@ -36,10 +40,10 @@
                                 <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                     <tr>
-                                        @foreach($indexColumnNames as $columnName)
+                                        @foreach($model->indexColumnNames as $columnName)
                                         <th>{{ $columnName }}</th>
                                         @endforeach
-                                        @if($buttons['edit'] || $buttons['delete'] || $buttons['show'] || $actions)
+                                        @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['show'] || $model->actions)
                                         <th>操作</th>
                                         @endif
                                     </tr>
@@ -58,7 +62,6 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            var routeName = '{{ $routeName }}';
             // table start
             var table = $('#dt_basic').DataTable({
                 "processing": false,
@@ -90,22 +93,22 @@
                     }
                 },
                 "columns" : [
-                    @foreach($indexColumns as $index => $column)
-                        @if ($index < count($indexColumnNames))
-                            @if(isset($orderAbles[$column]) && $orderAbles[$column])
+                    @foreach($model->indexColumns as $index => $column)
+                        @if ($index < count($model->indexColumnNames))
+                            @if(isset($model->orderAbles[$column]) && $model->orderAbles[$column])
                                 { "orderable" : true, "name": '{{ $column }}' },
                             @else
                                 { "orderable" : false, "name": '{{ $column }}' },
                             @endif
                         @endif
                     @endforeach
-                    @if($actions || $buttons['edit'] || $buttons['delete'] || $buttons['show'])
+                    @if($model->actions || $model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['show'])
                         { "orderable" : false },
                     @endif
                 ],
-                @if(isset($orderSorts))
+                @if(isset($model->orderSorts))
                 "order": [
-                    @foreach($orderSorts as $sortKey => $sortValue)
+                    @foreach($model->orderSorts as $sortKey => $sortValue)
                         [{{ $sortKey }}, '{{ $sortValue }}'],
                     @endforeach
                 ],
@@ -113,43 +116,43 @@
                 "lengthMenu": [10, 25, 50, 100],
                 "pageLength": 25,
                 "columnDefs": [
-                    @foreach($widths as $widthKey => $widthValue)
+                    @foreach($model->widths as $widthKey => $widthValue)
                         {
                             "targets": "{{ $widthKey }}",
                             "width": "{{ $widthValue }}"
                         },
                     @endforeach
-                    @if($buttons['edit'] || $buttons['delete'] || $buttons['show'] || $actions)
+                    @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['show'] || $model->actions)
                         {
                         "targets": -1,
                         "data": null,
                         "defaultContent": ''
-                            @if($operateStyle)
-                                @if($buttons['edit'])
-                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $routeName }}.edit">编辑</a>&nbsp;'
+                            @if($model->operateStyle)
+                                @if($model->buttons['edit'])
+                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.edit">编辑</a>&nbsp;'
                                 @endif
-                                @if($buttons['delete'])
-                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $routeName }}.delete">删除</a>&nbsp;'
+                                @if($model->buttons['delete'])
+                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.delete">删除</a>&nbsp;'
                                 @endif
-                                @if($buttons['show'])
-                                + '<a name="show_btn" class="btn btn-primary" permission="admin.{{ $routeName }}.show">详情</a>&nbsp;'
+                                @if($model->buttons['show'])
+                                + '<a name="show_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.show">详情</a>&nbsp;'
                                 @endif
-                                @foreach($actions as $action)
+                                @foreach($model->actions as $action)
                                 + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>&nbsp;'
                                 @endforeach
                             @else
-                                @if($buttons['edit'] || $buttons['delete'] || $buttons['show'] || $actions)
+                                @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['show'] || $model->actions)
                                 + '<div class="btn-group"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作<span class="caret"></span></button><ul class="dropdown-menu">'
-                                    @if($buttons['edit'])
-                                    + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $routeName }}.edit">编辑</a></li><li class="divider"></li>'
+                                    @if($model->buttons['edit'])
+                                    + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $model->routeName }}.edit">编辑</a></li><li class="divider"></li>'
                                     @endif
-                                    @if($buttons['delete'])
-                                    + '<li class="delete_btn"><a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $routeName }}.delete">删除</a></li><li class="divider"></li>'
+                                    @if($model->buttons['delete'])
+                                    + '<li class="delete_btn"><a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $model->routeName }}.delete">删除</a></li><li class="divider"></li>'
                                     @endif
-                                    @if($buttons['show'])
-                                    + '<li class="show_btn"><a href="javascript:void(0);" name="show_btn" permission="admin.{{ $routeName }}.show">详情</a></li><li class="divider"></li>'
+                                    @if($model->buttons['show'])
+                                    + '<li class="show_btn"><a href="javascript:void(0);" name="show_btn" permission="admin.{{ $model->routeName }}.show">详情</a></li><li class="divider"></li>'
                                     @endif
-                                    @foreach($actions as $action)
+                                    @foreach($model->actions as $action)
                                     + '<li class="{{ $action['name'] }}"><a href="javascript:void(0);" name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}">{{ $action['text'] }}</a></li><li class="divider"></li>'
                                     @endforeach
                                 + '</ul></div>'
@@ -159,22 +162,115 @@
                     @endif
                 ],
                 "ajax": {
-                    "url": "/admin/{{ $routeName }}/search"
+                    "url": "/admin/{{ $model->routeName }}/search"
                 }
             });
             // table end
 
             var buttons = '';
-            @if($buttons['create'])
-                buttons += '<a href="admin/{{ $routeName }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $routeName }}.create">新增</a>';
+            @if($model->buttons['create'])
+                buttons += '<a href="admin/{{ $model->routeName }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.create">新增</a>';
             @endif
-            @if($buttons['queryExport'])
-                buttons += '<a href="/admin/{{ $routeName }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
+            @if($model->buttons['queryExport'])
+                buttons += '<a href="/admin/{{ $model->routeName }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
             @endif
-            @if($buttons['dbExport'])
-                buttons += '<a href="/admin/{{ $routeName }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
+            @if($model->buttons['dbExport'])
+                buttons += '<a href="/admin/{{ $model->routeName }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
             @endif
             $("div.dt-toolbar div:first").html(buttons);
-	    });
+
+            @if(count($model->query) > 0)
+                $('#query').on('click', function () {
+                    @foreach($model->query as $qv)
+                        var index = '{{ array_search($qv['column'], $model->indexColumns) }}';
+                        @if(isset($qv['type']) && $qv['type'] == 'checkbox')
+                            table.columns(index).search($('input[name="{{ $qv['column']}}"]:checked').map(function () {
+                                return this.value;
+                            }).get());
+                        @elseif(isset($qv['operator']) && $qv['operator'] == 'between')
+                            table.columns(index).search([$('#' + '{{ $qv['column'] }}' + '_from').val(), $('#' + '{{ $qv['column'] }}' + '_to').val()]);
+                        @elseif(strstr($qv['column'], '.') !== FALSE)
+                            table.columns(index).search($('#' + '{{ str_replace('.', '-', $qv['column']) }}').val());
+                        @else
+                            table.columns(index).search($('#' + '{{ $qv['column'] }}').val());
+                        @endif
+                    @endforeach
+                    table.draw();
+                });
+
+                @foreach($model->query as $qv)
+                    @if(isset($qv['type']) && $qv['type'] == 'date')
+                        @if(isset($qv['operator']) && $qv['operator'] == 'between')
+                        $('{{ isset($qv['operator']) && $qv['operator'] == 'between' ? '.between' : '.single' }}').datepicker({
+                            dateFormat: 'yy-mm-dd',
+                            changeMonth: true,
+                            changeYear: true,
+                            numberOfMonths: 1,
+                            prevText: '<i class="fa fa-chevron-left"></i>',
+                            nextText: '<i class="fa fa-chevron-right"></i>',
+                            yearRange: '{{ isset($qv['format']['yearRange']) ? $qv['format']['yearRange'] : 'c-10:c+10' }}',
+                            minDate: '',
+                            maxDate: '',
+                            monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                            dayNamesMin: ['日', '一', '二', '三', '四', '五', '六']
+                        });
+                        @endif
+                    @endif
+                @endforeach
+            @endif
+
+            table.on( 'draw.dt', function () {
+                var data = table.data();
+                for (var i = 0; i < data.length; i++) {
+                    @foreach($model->actions as $action)
+                        @if($action['type'] == 'confirm' || $action['type'] == 'dialog')
+                            @if(isset($action['where']))
+                                @foreach($action['where'] as $wk => $wv)
+                                    {{ $list_td = array_flip($model->indexColumns)[$wk]}}
+                                    var flag = false;
+                                    @foreach($wv as $val)
+                                    if(data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {
+                                        flag = true;
+                                    }
+                                    @endforeach
+                                    if(!flag) {
+                                        $('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();
+                                        $('tr:eq('+(i+1)+') '+'.divider:last').hide();
+                                    }
+                                @endforeach
+                            @endif
+                        @endif
+                    @endforeach
+
+                    @foreach($model->indexColumnRenames as $rek => $rev)
+                        {{$column_no = array_flip($model->indexColumns)[$rek]}}
+                        var tr = $('tr').eq(i+1).children('td').eq(parseInt('{{$column_no}}'));
+                        var value = data[i][parseInt('{{$column_no}}')];
+                        @if($rev['type'] == 'normal')
+                            @foreach($rev['param'] as $key => $value)
+                            tr.html('{!! $value !!}');
+                            @endforeach
+                        @elseif($rev['type'] == 'dialog')
+                            tr.html('<a href="javascript:void(0);" name="{{$rev['param']['name']}}">' + value + '</a>');
+                        @elseif($rev['type'] == 'html')
+                            tr.html(sprintf('{!! $rev["param"] !!}', 1, value));
+                        @elseif($rev['type'] == 'image')
+                            tr.html('<a href="' + value + '" target="_blank"><img class="index-image" src="' + value + '"></a>');
+                        @elseif($rev['type'] == 'images')
+                            var images = '';
+                            value.forEach(function (item) {
+                                images += '<a href="' + item + '" target="_blank"><img class="index-image" src="' + item + '"></a>&nbsp;';
+                            });
+                            tr.html(images);
+                        @elseif($rev['type'] == 'selector')
+                            tr.html(JSON.parse('{!! json_encode(${$rev["param"]}) !!}')[tr.html()]);
+                        @elseif($rev['type'] == 'limit')
+                            tr.html(tr.html().slice(0, parseInt('{{ $rev['param'] }}')));
+                        @endif
+                    @endforeach
+                }
+                permission();
+            });
+        });
     </script>
 @endsection

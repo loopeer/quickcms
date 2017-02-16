@@ -12,5 +12,6 @@ namespace Loopeer\QuickCms\Models;
 
 class Selector extends BaseModel
 {
-    //
+    const SQL = 0;
+    const JSON = 1;
 }

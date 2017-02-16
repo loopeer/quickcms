@@ -1,6 +1,7 @@
 <?php namespace Loopeer\QuickCms;
 
 use Illuminate\Support\ServiceProvider;
+use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 
 class QuickCmsServiceProvider extends ServiceProvider {
 
@@ -45,6 +46,10 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/../database/migrations' => database_path('migrations'),
 		], 'migrations');
+
+		foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
+			view()->share($sk, $sv);
+		}
 	}
 
 	/**

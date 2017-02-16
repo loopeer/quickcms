@@ -33,6 +33,7 @@ class BaseController extends Controller
 {
 
     protected $systemConfig;
+
     public function __construct()
     {
         //$route_url = '/' . Route::getCurrentRoute()->getPath();
@@ -185,6 +186,79 @@ class BaseController extends Controller
         $paginate = $model->paginate($length);
 
         $ret = self::getPageDate($show_column, $paginate, $appends);
+        return $ret;
+    }
+
+    public function generalQuery($model)
+    {
+        $length = Input::get('length');
+        $columns = Input::get('columns');
+        \Log::info($columns);
+        self::setCurrentPage($length);
+        if (count($model->query) > 0) {
+            foreach($columns as $column) {
+                $value = $column['search']['value'];
+                if ($value != null) {
+                    $name = $column['name'];
+                    foreach ($model->query as $query_key => $query_value) {
+                        if ($name == $query_value['column']) {
+                            $type = 'input';
+                            if (isset($query_value['type'])) {
+                                $type = $query_value['type'];
+                            }
+                            switch ($type) {
+                                case 'input':
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
+                                        if(strstr($name, '.') !== FALSE) {
+                                            $table_column = explode('.', $name);
+                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
+                                                $query->where($table_column[1], 'like', '%' . $value . '%');
+                                            });
+                                        } else {
+                                            $model->where($name, 'like', '%' . $value . '%');
+                                        }
+                                    } else {
+                                        if(strstr($name, '.') !== FALSE) {
+                                            $table_column = explode('.', $name);
+                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
+                                                $query->where($table_column[1], $value);
+                                            });
+                                        } else {
+                                            $model->where($name, $value);
+                                        }
+                                    }
+                                    break;
+                                case 'selector':
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'scope') {
+                                        $model->$name($value);
+                                    } else {
+                                        $model->where($name, $value);
+                                    }
+                                    break;
+                                case 'checkbox':
+                                    $model->whereIn($name, explode(',', $value));
+                                    break;
+                                case 'date':
+                                    if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
+                                        $values = explode(',', $value);
+                                        if ($values[0] != null || $values[1] != null) {
+                                            $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
+                                        }
+                                    } else {
+                                        $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $paginate = $model->paginate($length);
+        $ret = self::getPageDate($model->indexColumns, $paginate);
         return $ret;
     }
 

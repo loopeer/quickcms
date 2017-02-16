@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers\General;
 
 use App\Models\Test;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Loopeer\QuickCms\Http\Controllers\BaseController;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
 class Controller extends BaseController
 {
 
-    protected $routeName;
+//    protected $routeName;
     protected $model;
 
     public function __construct(Request $request) {
@@ -30,43 +31,29 @@ class Controller extends BaseController
             $routePath = str_replace('{custom_id}', Route::getCurrentRoute()->parameter('custom_id'), $routePath);
 
             if (is_null(Route::getCurrentRoute()->getName())) {
-                $this->routeName = preg_replace('/(\/\d*\/)|(\/)/', '.', $routePath);
+                $routePath = preg_replace('/(\/\d*\/)|(\/)/', '.', $routePath);
             } else {
-                $this->routeName = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
+                $routePath = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
             }
-            \Log::info(config('quickCms.general_model_class.' . $this->routeName));
-            $reflectionClass = new \ReflectionClass(config('quickCms.general_model_class.' . $this->routeName));
+            $reflectionClass = new \ReflectionClass(config('quickCms.general_model_class.' . $routePath));
             $this->model = $reflectionClass->newInstance();
+            $this->model->routeName = $routePath;
         } catch (Exception $e) {
-            Log::info($e->getMessage());
+            \Log::info($e->getMessage());
         }
         parent::__construct();
     }
 
     public function search(Request $request)
     {
-        $length = $request->input('length');
-        self::setCurrentPage();
-        $paginate = $this->model->paginate($length);
-        $ret = self::queryPage($this->model->getIndexColumns(), $paginate);
+        $ret = self::generalQuery($this->model);
         return response()->json($ret);
     }
 
     public function index()
     {
-        \Log::info($this->model->getButtons());
-        $data = [
-            'buttons' => $this->model->getButtons(),
-            'operateStyle' => $this->model->getOperateStyle(),
-            'actions' => $this->model->getActions(),
-            'indexColumnNames' => $this->model->getIndexColumnNames(),
-            'indexColumns' => $this->model->getIndexColumns(),
-            'orderAbles' => $this->model->getOrderAbles(),
-            'orderSorts' => $this->model->getOrderSorts(),
-            'widths' => $this->model->getWidths(),
-            'routeName' => $this->routeName
-        ];
-        return view('backend::general.index', $data);
+        $model = $this->model;
+        return view('backend::general.index', compact('model'));
     }
 
     public function store()

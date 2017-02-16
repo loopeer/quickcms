@@ -96,4 +96,18 @@ class GeneralUtil {
         }
         return json_encode($result);
     }
+
+    public static function allSelectorData()
+    {
+        $result = [];
+        foreach(Selector::all() as $selector) {
+            if ($selector->type == Selector::SQL) {
+                $sqlData = DB::select($selector->enum_value);
+                $result[$selector->enum_key] = $sqlData;
+            } else {
+                $result[$selector->enum_key] = json_decode($selector->enum_value, true);
+            }
+        }
+        return $result;
+    }
 }
