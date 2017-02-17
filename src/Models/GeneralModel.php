@@ -2,10 +2,9 @@
 
 namespace Loopeer\QuickCms\Models;
 
+//use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\Model;
-
-class GeneralModel extends Model
+class GeneralModel extends BaseModel
 {
 
     protected $buttons;
@@ -22,6 +21,8 @@ class GeneralModel extends Model
     protected $routeName;
 
     protected $query;
+
+    protected $create;
 
     public function buttons()
     {
@@ -68,6 +69,8 @@ class GeneralModel extends Model
                 return $this->routeName;
             case 'query':
                 return $this->query;
+            case 'create':
+                return $this->create;
             default:
                 return parent::__get($key);
         }

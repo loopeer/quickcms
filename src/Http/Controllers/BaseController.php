@@ -193,74 +193,26 @@ class BaseController extends Controller
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
-        \Log::info($columns);
         self::setCurrentPage($length);
+        $builder = $model;
         if (count($model->query) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];
                 if ($value != null) {
                     $name = $column['name'];
-                    foreach ($model->query as $query_key => $query_value) {
-                        if ($name == $query_value['column']) {
-                            $type = 'input';
-                            if (isset($query_value['type'])) {
-                                $type = $query_value['type'];
-                            }
-                            switch ($type) {
-                                case 'input':
-                                    if (isset($query_value['operator']) && $query_value['operator'] == 'like') {
-                                        if(strstr($name, '.') !== FALSE) {
-                                            $table_column = explode('.', $name);
-                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
-                                                $query->where($table_column[1], 'like', '%' . $value . '%');
-                                            });
-                                        } else {
-                                            $model->where($name, 'like', '%' . $value . '%');
-                                        }
-                                    } else {
-                                        if(strstr($name, '.') !== FALSE) {
-                                            $table_column = explode('.', $name);
-                                            $model->whereHas($table_column[0], function($query) use ($table_column, $value) {
-                                                $query->where($table_column[1], $value);
-                                            });
-                                        } else {
-                                            $model->where($name, $value);
-                                        }
-                                    }
-                                    break;
-                                case 'selector':
-                                    if (isset($query_value['operator']) && $query_value['operator'] == 'scope') {
-                                        $model->$name($value);
-                                    } else {
-                                        $model->where($name, $value);
-                                    }
-                                    break;
-                                case 'checkbox':
-                                    $model->whereIn($name, explode(',', $value));
-                                    break;
-                                case 'date':
-                                    if (isset($query_value['operator']) && $query_value['operator'] == 'between') {
-                                        $values = explode(',', $value);
-                                        if ($values[0] != null || $values[1] != null) {
-                                            $model->whereRaw("date(" . $name . ") between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
-                                        }
-                                    } else {
-                                        $model->whereRaw('date(' . $name . ') = \'' . $value . '\'');
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
+                    foreach ($model->query as $qv) {
+                        if ($name == $qv['column']) {
+                            $type = isset($qv['type']) ? $qv['type'] : 'input';
+                            $builder = self::queryBuilder($builder, $type, $name, $value, isset($qv['operator']));
                             break;
                         }
                     }
                 }
             }
         }
-        $paginate = $model->paginate($length);
-        $ret = self::getPageDate($model->indexColumns, $paginate);
-        return $ret;
+        return self::getPageDate($model->indexColumns, $builder->paginate($length));
     }
+
 
     /**
      * 自定义查询分页函数
@@ -372,5 +324,61 @@ class BaseController extends Controller
         $collection = $this->systemConfig;
         $filtered = $collection->where('system_key', $key);
         return $filtered->first()['system_value'];
+    }
+
+    private function queryBuilder($builder, $type, $name, $value, $operator)
+    {
+        switch ($type) {
+            case 'input':
+                $builder = self::queryInput($builder, $name, $value, $operator);
+                break;
+            case 'selector':
+                $builder = self::querySelector($builder, $name, $value, $operator);
+                break;
+            case 'checkbox':
+                $builder = self::queryCheckbox($builder, $name, $value);
+                break;
+            case 'date':
+                $builder = self::queryDate($builder, $name, $value, $operator);
+                break;
+            default:
+                break;
+        }
+        return $builder;
+    }
+
+    private function queryInput($builder, $name, $value, $operator)
+    {
+        if (strstr($name, '.') !== FALSE) {
+            $table_column = explode('.', $name);
+            return $builder->whereHas($table_column[0], function ($query) use ($table_column, $value, $operator) {
+                $query->where($table_column[1], $operator ? 'like' : '=', $operator ? "%$value%" : $value);
+            });
+        }
+        return $builder->where($name, $operator ? 'like' : '=', $operator ? "%$value%" : $value);
+    }
+
+    private function querySelector($builder, $name, $value, $operator)
+    {
+        if ($operator && $operator == 'scope') {
+            return $builder->$name($value);
+        }
+        return $builder->where($name, $value);
+    }
+
+    private function queryCheckbox($builder, $name, $value)
+    {
+        return $builder->whereIn($name, explode(',', $value));
+    }
+
+    private function queryDate($builder, $name, $value, $operator)
+    {
+        if ($operator && $operator == 'between') {
+            $values = explode(',', $value);
+            if ($values[0] != null || $values[1] != null) {
+                return $builder->whereRaw("date($name) between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
+            }
+        }
+        return $builder->whereRaw("date($name) = '" . $value . "'");
     }
 }

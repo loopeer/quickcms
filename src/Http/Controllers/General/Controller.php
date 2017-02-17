@@ -20,8 +20,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
-
-//    protected $routeName;
     protected $model;
 
     public function __construct(Request $request) {
@@ -46,8 +44,7 @@ class Controller extends BaseController
 
     public function search(Request $request)
     {
-        $ret = self::generalQuery($this->model);
-        return response()->json($ret);
+        return response()->json(self::generalQuery($this->model));
     }
 
     public function index()
@@ -56,24 +53,36 @@ class Controller extends BaseController
         return view('backend::general.index', compact('model'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
-
+        $data = $request->all();
+        $model = $this->model;
+        if ($data['id']) {
+            $model::find($data['id'])->update($data);
+        } else {
+            $model::create($data);
+        }
+        return redirect()->to('admin/' . $model->routeName);
     }
 
     public function create()
     {
-
+        $model = $this->model;
+        $data = new $this->model;
+        return view('backend::general.create', compact('model', 'data'));
     }
 
     public function edit($id)
     {
-
+        $model = $this->model;
+        $data = $model::find($id);
+        return view('backend::general.create', compact('model', 'data'));
     }
 
     public function destroy($id)
     {
-
+        $model = $this->model;
+        return response()->json($model::destroy($id));
     }
 
     public function show($id)

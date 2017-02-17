@@ -162,20 +162,20 @@
                     @endif
                 ],
                 "ajax": {
-                    "url": "/admin/{{ $model->routeName }}/search"
+                    "url": "{{ $model->routeName }}/search"
                 }
             });
             // table end
 
             var buttons = '';
             @if($model->buttons['create'])
-                buttons += '<a href="admin/{{ $model->routeName }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.create">新增</a>';
+                buttons += '<a href="{{ $model->routeName }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.create">新增</a>';
             @endif
             @if($model->buttons['queryExport'])
-                buttons += '<a href="/admin/{{ $model->routeName }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
+                buttons += '<a href="{{ $model->routeName }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
             @endif
             @if($model->buttons['dbExport'])
-                buttons += '<a href="/admin/{{ $model->routeName }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
+                buttons += '<a href="{{ $model->routeName }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
             @endif
             $("div.dt-toolbar div:first").html(buttons);
 
@@ -271,6 +271,59 @@
                 }
                 permission();
             });
+
+            @if($model->buttons['edit'])
+                $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
+                    if(isDisabled($(this))) {
+                        var data = table.row($(this).parents('tr')).data();
+                        window.location = '{{ $model->routeName }}/' + data[0] + '/edit/';
+                    }
+                });
+            @endif
+
+            @if($model->buttons['delete'])
+                $('#dt_basic tbody').on('click', 'a[name=delete_btn]', function () {
+                    if(isDisabled($(this))) {
+                        var page_info = table.page.info();
+                        var page = page_info.page;
+                        if (page_info.length == 1 && page != 0) {
+                            page = page - 1;
+                        }
+                        var url = '{{ $model->routeName }}/' + table.row($(this).parents('tr')).data()[0];
+                        if(confirm('删除这条记录?')) {
+                            $.ajax({
+                                type: "DELETE",
+                                data: { '_token' : $('#delete_token').val() },
+                                url: url,
+                                success: function(result) {
+                                    if (result == 1) {
+                                        $('#dt_basic').dataTable().fnPageChange(page);
+                                        $(".tips").html('<div class="alert alert-success fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-check"></i>'
+                                        + '<strong>成功</strong>' + ' ' + '删除成功。'
+                                        + '</div>');
+                                    } else {
+                                        $(".tips").html('<div class="alert alert-danger fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-warning"></i>'
+                                        + '<strong>失败</strong>' + ' ' + '删除失败。'
+                                        + '</div>');
+                                    }
+                                },
+                                error: function() {
+                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                    + '</div>');
+                                }
+                            });
+                            hideTips();
+                        }
+                    }
+                });
+            @endif
         });
     </script>
 @endsection

@@ -1,5 +1,6 @@
 <script src="{{ asset('loopeer/quickcms/js/libs/jquery-2.1.1.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/libs/jquery-ui-1.10.3.min.js') }}"></script>
+<script src="{{ asset('loopeer/quickcms/js/libs/datepicker-zh-CN.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/app.config.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/bootstrap/bootstrap.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/notification/SmartNotification.min.js') }}"></script>
@@ -15,9 +16,13 @@
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatables/dataTables.tableTools.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatable-responsive/datatables.responsive.min.js') }}"></script>
+<script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         pageSetUp();
+
+        $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
+
         $(function() {
             var route = $('#current_route').val()+'/';
             $("nav a").each(function () {
