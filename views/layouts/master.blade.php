@@ -7,6 +7,7 @@
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     @include('backend::layouts.link')
+    @include('UEditor::head')
     @yield('style')
 </head>
 <body class="{{ config('quickCms.admin_body_layout') }}">

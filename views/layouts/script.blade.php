@@ -1,6 +1,5 @@
 <script src="{{ asset('loopeer/quickcms/js/libs/jquery-2.1.1.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/libs/jquery-ui-1.10.3.min.js') }}"></script>
-<script src="{{ asset('loopeer/quickcms/js/libs/datepicker-zh-CN.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/app.config.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/bootstrap/bootstrap.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/notification/SmartNotification.min.js') }}"></script>
@@ -17,25 +16,12 @@
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/datatable-responsive/datatables.responsive.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js') }}"></script>
+<script src="{{ asset('loopeer/quickcms/js/datetimepicker/bootstrap-datetimepicker.min.js')}}" charset="UTF-8"></script>
+<script src="{{ asset('loopeer/quickcms/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js') }}" charset="UTF-8"></script>
+
 <script>
     $(document).ready(function() {
         pageSetUp();
-
-        $.datepicker.setDefaults( $.datepicker.regional[ "zh-CN" ] );
-
-        $(function() {
-            var route = $('#current_route').val()+'/';
-            $("nav a").each(function () {
-                if(route.indexOf($(this).attr('href')+'/') != -1) {
-                    $(this).parent().attr('class', 'active');
-                    $(this).parent().parent().attr('style', 'display: block;');
-                    if($(this).parent().parent().parent()[0].tagName != 'NAV') {
-                        $(this).parent().parent().parent().attr('class', 'open active');
-                        $(this).parent().parent().parent().find('em').attr('class', 'fa fa-minus-square-o');
-                    }
-                }
-            });
-        });
     });
 
     function hideTips() {

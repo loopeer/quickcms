@@ -41,7 +41,7 @@
                                                 <div class="inline-group">
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $cbk => $cbv)
                                                     <label class="checkbox">
-                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ in_array($cbk, $data->$item['column']) ? 'checked' : '' }}>
+                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ isset($data->$item['column']) && in_array($cbk, $data->$item['column']) ? 'checked' : '' }}>
                                                         <i></i>{{ $cbv }}</label>
                                                     @endforeach
                                                 </div>
@@ -57,10 +57,28 @@
                                                 <input class="form-control tagsinput" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}" data-role="tagsinput">
                                                 <div class="note">每输入一个标签后请按回车键确认</div>
                                             @elseif($item['type'] == 'date')
-                                                <div class="input-group">
-                                                    <input type="text" name="{{ $item['column'] }}" class="form-control datepicker" data-dateformat="yy-mm-dd">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
+                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                                 </div>
+                                            @elseif($item['type'] == 'datetime')
+                                                <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                                </div>
+                                            @elseif($item['type'] == 'time')
+                                                <div class="input-group date form_time" data-date-format="hh:ii">
+                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                                </div>
+                                            @elseif($item['type'] == 'editor')
+                                                <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! $data->$item['column'] !!}</script>
+                                                <script type="text/javascript">var ue = UE.getEditor("{{ $item['column'] }}-container");</script>
+                                            @elseif($item['type'] == 'image')
+                                                @include('backend::image.upload', ['image_name' => $item['column']])
                                             @endif
                                         </section>
                                     @endforeach
@@ -83,12 +101,48 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{{ asset('loopeer/quickcms/js/plugin/clockpicker/clockpicker.min.js') }}}"></script>
+
+    @include('backend::image.script')
+
+    @foreach($model->create as $itemImage)
+        @if(isset($itemImage['type']) && $itemImage['type'] == 'image')
+            @include('backend::image.action', ['image' => $itemImage, 'image_data' => $data->$itemImage['column']])
+        @endif
+    @endforeach
 
     <script>
-        $( ".datepicker" ).datepicker({
-            changeYear: true,
-            changeMonth: true
+        $('.form_datetime').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $('.form_date').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+
+        $('.form_time').datetimepicker({
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 1,
+            minView: 0,
+            maxView: 1,
+            forceParse: 0
         });
     </script>
 @endsection
