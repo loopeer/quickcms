@@ -87,6 +87,8 @@ class Controller extends BaseController
 
     public function show($id)
     {
-
+        $model = $this->model;
+        $data = $model::find($id);
+        return view('backend::general.detail', compact('model', 'data'));
     }
 }

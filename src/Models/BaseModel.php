@@ -30,4 +30,10 @@ class BaseModel extends HookModel
                 return parent::castAttribute($key, $value);
         }
     }
+
+    protected function isJsonCastable($key)
+    {
+        return $this->hasCast($key) &&
+        in_array($this->getCastType($key), ['array', 'json', 'object', 'collection', 'qiniu_array'], true);
+    }
 }

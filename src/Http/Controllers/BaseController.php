@@ -193,24 +193,25 @@ class BaseController extends Controller
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
+        \Log::info($columns);
         self::setCurrentPage($length);
         $builder = $model;
-        if (count($model->query) > 0) {
+        if (count($query = array_column($model->index, 'query')) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];
                 if ($value != null) {
                     $name = $column['name'];
-                    foreach ($model->query as $qv) {
-                        if ($name == $qv['column']) {
-                            $type = isset($qv['type']) ? $qv['type'] : 'input';
-                            $builder = self::queryBuilder($builder, $type, $name, $value, isset($qv['operator']));
+                    foreach ($model->index as $qk => $qv) {
+                        if ($name == $model->index[$qk]['column']) {
+//                            $type = isset($model->index[$qk]['type']) ? $model->index[$qk]['type'] : 'input';
+                            $builder = self::queryBuilder($builder, $model->index[$qk], $value);
                             break;
                         }
                     }
                 }
             }
         }
-        return self::getPageDate($model->indexColumns, $builder->paginate($length));
+        return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
     }
 
 
@@ -326,20 +327,21 @@ class BaseController extends Controller
         return $filtered->first()['system_value'];
     }
 
-    private function queryBuilder($builder, $type, $name, $value, $operator)
+    private function queryBuilder($builder, $item, $value)
     {
+        $type = isset($item['type']) ? $item['type'] : 'input';
         switch ($type) {
             case 'input':
-                $builder = self::queryInput($builder, $name, $value, $operator);
+                $builder = self::queryInput($builder, $item['column'], $value, $item['query']);
                 break;
-            case 'selector':
-                $builder = self::querySelector($builder, $name, $value, $operator);
+            case 'select':
+                $builder = self::querySelector($builder, $item['column'], $value, $item['query']);
                 break;
             case 'checkbox':
-                $builder = self::queryCheckbox($builder, $name, $value);
+                $builder = self::queryCheckbox($builder, $item['column'], $value);
                 break;
             case 'date':
-                $builder = self::queryDate($builder, $name, $value, $operator);
+                $builder = self::queryDate($builder, $item['column'], $value, $item['query']);
                 break;
             default:
                 break;
@@ -352,10 +354,10 @@ class BaseController extends Controller
         if (strstr($name, '.') !== FALSE) {
             $table_column = explode('.', $name);
             return $builder->whereHas($table_column[0], function ($query) use ($table_column, $value, $operator) {
-                $query->where($table_column[1], $operator ? 'like' : '=', $operator ? "%$value%" : $value);
+                $query->where($table_column[1], $operator, $operator == 'like' ? "%$value%" : $value);
             });
         }
-        return $builder->where($name, $operator ? 'like' : '=', $operator ? "%$value%" : $value);
+        return $builder->where($name, $operator, $operator == 'like' ? "%$value%" : $value);
     }
 
     private function querySelector($builder, $name, $value, $operator)

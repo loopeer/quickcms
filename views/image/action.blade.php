@@ -22,7 +22,7 @@
         @foreach(is_array($image_data) ? $image_data : [$image_data] as $data)
             $('#' + '{{$image['column']}}').addClass('fileupload-processing');
             $.ajax({
-                url: "{{{ route('admin.blueimp.index', array('url' => $image_data)) }}}",
+                url: "{{{ route('admin.blueimp.index', array('url' => $data)) }}}",
                 dataType: 'json',
                 context: $('#' + '{{$image['column']}}')
             }).always(function () {

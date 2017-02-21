@@ -17,6 +17,11 @@
                             <div class="widget-body no-padding">
                                 <form action="/admin/{{ $model->routeName }}" method="post" id="smart-form-register" class="smart-form client-form">
                                     <input type="hidden" name="id" value="{{ $data->id }}">
+                                    @foreach($model->createHidden as $hidden)
+                                        @if(!isset($hidden['action']) || ($hidden['action'] == 'create' && !isset($data->id)) || ($hidden['action'] == 'edit' && isset($data->id)))
+                                            <input type="hidden" name="{{ $hidden['column'] }}" value="{{ $hidden['value'] == 'admin' ? Auth::admin()->get()->email : $hidden['value'] }}">
+                                        @endif
+                                    @endforeach
                                     <fieldset>
                                     @foreach($model->create as $item)
                                         <section>
@@ -78,7 +83,7 @@
                                                 <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! $data->$item['column'] !!}</script>
                                                 <script type="text/javascript">var ue = UE.getEditor("{{ $item['column'] }}-container");</script>
                                             @elseif($item['type'] == 'image')
-                                                @include('backend::image.upload', ['image_name' => $item['column']])
+                                                @include('backend::image.upload', ['image' => $item, 'image_name' => $item['column']])
                                             @endif
                                         </section>
                                     @endforeach

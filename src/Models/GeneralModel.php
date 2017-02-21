@@ -12,21 +12,18 @@ class GeneralModel extends BaseModel
     // default operate button style is down
     protected $operateStyle = true;
     protected $actions;
-    protected $indexColumnNames;
-    protected $indexColumnRenames;
-    protected $indexColumns;
-    protected $orderAbles;
-    protected $orderSorts;
-    protected $widths;
+
+    protected $index;
     protected $routeName;
 
-    protected $query;
-
     protected $create;
+    protected $createHidden;
+
+    protected $detail;
 
     public function buttons()
     {
-        $buttons = ['create' => true, 'edit' => true, 'show' => true, 'delete' => true, 'dbExport' => false, 'queryExport' => false];
+        $buttons = ['create' => true, 'edit' => true, 'detail' => true, 'delete' => true, 'dbExport' => false, 'queryExport' => false];
         if (!isset($this->buttons)) {
             return $buttons;
         }
@@ -45,12 +42,8 @@ class GeneralModel extends BaseModel
     public function __get($key)
     {
         switch($key) {
-            case 'indexColumnNames':
-                return $this->indexColumnNames;
-            case 'indexColumnRenames':
-                return $this->indexColumnRenames;
-            case 'indexColumns':
-                return $this->indexColumns;
+            case 'index':
+                return $this->index;
             case 'buttons':
                 return $this->buttons();
             case 'operate':
@@ -59,18 +52,14 @@ class GeneralModel extends BaseModel
                 return $this->operateStyle;
             case 'actions':
                 return $this->actions;
-            case 'widths':
-                return $this->widths;
-            case 'orderSorts':
-                return $this->orderSorts;
-            case 'orderAbles':
-                return $this->orderAbles;
             case 'routeName':
                 return $this->routeName;
-            case 'query':
-                return $this->query;
             case 'create':
                 return $this->create;
+            case 'createHidden':
+                return $this->createHidden;
+            case 'detail':
+                return $this->detail;
             default:
                 return parent::__get($key);
         }
