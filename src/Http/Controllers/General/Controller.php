@@ -11,9 +11,9 @@
 
 namespace Loopeer\QuickCms\Http\Controllers\General;
 
-use App\Models\Test;
+use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Loopeer\QuickCms\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +22,7 @@ class Controller extends BaseController
 {
     protected $model;
 
-    public function __construct(Request $request) {
+    public function __construct() {
         try {
             $routePath = preg_replace('/(admin\/)|(\/create)|(\/search)|(\/edit)|(\/changeStatus)|(\/detail)|\/{(?!custom_id).*?}/', '',
                 Route::getCurrentRoute()->getPath());
@@ -42,7 +42,7 @@ class Controller extends BaseController
         parent::__construct();
     }
 
-    public function search(Request $request)
+    public function search()
     {
         return response()->json(self::generalQuery($this->model));
     }
@@ -53,9 +53,9 @@ class Controller extends BaseController
         return view('backend::general.index', compact('model'));
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $data = $request->all();
+        $data = Input::all();
         $model = $this->model;
         if ($data['id']) {
             $model::find($data['id'])->update($data);
@@ -90,5 +90,26 @@ class Controller extends BaseController
         $model = $this->model;
         $data = $model::find($id);
         return view('backend::general.detail', compact('model', 'data'));
+    }
+
+    public function change($id)
+    {
+        $model = $this->model;
+        $data = $model::find($id);
+        $param = Input::all();
+        foreach ($param as $key => $value) {
+            switch($value) {
+                case 'now':
+                    $value = Carbon::now();
+                    break;
+                case 'admin':
+                    $value = Auth::admin()->get()->email;
+                    break;
+                default:
+                    break;
+            }
+            $data->$key = $value;
+        }
+        return response()->json($data->save());
     }
 }

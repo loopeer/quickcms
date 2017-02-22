@@ -5,6 +5,7 @@
 <script src="{{ asset('loopeer/quickcms/js/notification/SmartNotification.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/smartwidgets/jarvis.widget.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/jquery-validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('loopeer/quickcms/js/plugin/jquery-validate/jquery.validate.messages_zh.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/masked-input/jquery.maskedinput.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/select2/select2.min.js') }}"></script>
 <script src="{{ asset('loopeer/quickcms/js/plugin/bootstrap-slider/bootstrap-slider.min.js') }}"></script>

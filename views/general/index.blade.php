@@ -39,7 +39,7 @@
                                         @foreach($model->index as $item)
                                         <th>{{ $item['name'] }}</th>
                                         @endforeach
-                                        @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->actions)
+                                        @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
                                         <th>操作</th>
                                         @endif
                                     </tr>
@@ -111,12 +111,12 @@
                         { "targets": "{{ $widthKey }}", "width": "{{ $widthItem['width'] }}" },
                         @endif
                     @endforeach
-                    @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->actions)
+                    @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
                         {
                         "targets": -1,
                         "data": null,
                         "defaultContent": ''
-                            @if($model->operateStyle)
+                            @if($model->buttons['style'])
                                 @if($model->buttons['edit'])
                                 + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.edit">编辑</a>&nbsp;'
                                 @endif
@@ -126,11 +126,11 @@
                                 @if($model->buttons['detail'])
                                 + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.show">详情</a>&nbsp;'
                                 @endif
-                                @foreach($model->actions as $action)
+                                @foreach($model->buttons['actions'] as $action)
                                 + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>&nbsp;'
                                 @endforeach
                             @else
-                                @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->actions)
+                                @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
                                 + '<div class="btn-group"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作<span class="caret"></span></button><ul class="dropdown-menu">'
                                     @if($model->buttons['edit'])
                                     + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $model->routeName }}.edit">编辑</a></li><li class="divider"></li>'
@@ -141,7 +141,7 @@
                                     @if($model->buttons['detail'])
                                     + '<li class="detail_btn"><a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $model->routeName }}.show">详情</a></li><li class="divider"></li>'
                                     @endif
-                                    @foreach($model->actions as $action)
+                                    @foreach($model->buttons['actions'] as $action)
                                     + '<li class="{{ $action['name'] }}"><a href="javascript:void(0);" name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}">{{ $action['text'] }}</a></li><li class="divider"></li>'
                                     @endforeach
                                 + '</ul></div>'
@@ -176,7 +176,7 @@
                                 table.columns({{ $qk }}).search($('input[name="{{ $qv['column']}}"]:checked').map(function () {
                                     return this.value;
                                 }).get());
-                            @elseif(isset($qv['operator']) && $qv['operator'] == 'between')
+                            @elseif($qv['query'] == 'between')
                                 table.columns({{ $qk }}).search([$('#' + '{{ $qv['column'] }}' + '_from').val(), $('#' + '{{ $qv['column'] }}' + '_to').val()]);
                             @elseif(strstr($qv['column'], '.') !== FALSE)
                                 table.columns({{ $qk }}).search($('#' + '{{ str_replace('.', '-', $qv['column']) }}').val());
@@ -187,50 +187,50 @@
                     @endforeach
                     table.draw();
                 });
-
-                @foreach($model->index as $qv)
-                    @if(isset($model->index['query']) && isset($qv['type']) && $qv['type'] == 'date')
-                        @if(isset($qv['operator']) && $qv['operator'] == 'between')
-                        $('{{ isset($qv['operator']) && $qv['operator'] == 'between' ? '.between' : '.single' }}').datepicker({
-                            dateFormat: 'yy-mm-dd',
-                            changeMonth: true,
-                            changeYear: true,
-                            numberOfMonths: 1,
-                            prevText: '<i class="fa fa-chevron-left"></i>',
-                            nextText: '<i class="fa fa-chevron-right"></i>',
-                            yearRange: '{{ isset($qv['format']['yearRange']) ? $qv['format']['yearRange'] : 'c-10:c+10' }}',
-                            minDate: '',
-                            maxDate: '',
-                            monthNamesShort:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-                            dayNamesMin: ['日', '一', '二', '三', '四', '五', '六']
-                        });
-                        @endif
-                    @endif
-                @endforeach
             @endif
+
+            $('.form_datetime').datetimepicker({
+                language:  'zh-CN',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1
+            });
+
+            $('.form_date').datetimepicker({
+                language:  'zh-CN',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            });
 
             table.on( 'draw.dt', function () {
                 var data = table.data();
                 for (var i = 0; i < data.length; i++) {
-                    {{--@foreach($model->actions as $action)--}}
-                        {{--@if($action['type'] == 'confirm' || $action['type'] == 'dialog')--}}
-                            {{--@if(isset($action['where']))--}}
-                                {{--@foreach($action['where'] as $wk => $wv)--}}
-                                    {{--{{ $list_td = array_flip($model->indexColumns)[$wk]}}--}}
-                                    {{--var flag = false;--}}
-                                    {{--@foreach($wv as $val)--}}
-                                    {{--if(data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {--}}
-                                        {{--flag = true;--}}
-                                    {{--}--}}
-                                    {{--@endforeach--}}
-                                    {{--if(!flag) {--}}
-                                        {{--$('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();--}}
-                                        {{--$('tr:eq('+(i+1)+') '+'.divider:last').hide();--}}
-                                    {{--}--}}
-                                {{--@endforeach--}}
-                            {{--@endif--}}
-                        {{--@endif--}}
-                    {{--@endforeach--}}
+                    @foreach($model->buttons['actions'] as $action)
+                        @if(($action['type'] == 'confirm' || $action['type'] == 'dialog') && isset($action['where']))
+                            @foreach($action['where'] as $wk => $wv)
+                                {{ $list_td = array_flip(array_column($model->index, 'column'))[$wk] }}
+                                var flag = false;
+                                @foreach($wv as $val)
+                                if(data[i][parseInt('{{ $list_td }}')] == parseInt('{{ $val }}')) {
+                                    flag = true;
+                                }
+                                @endforeach
+                                if(!flag) {
+                                    $('tr:eq('+(i+1)+') '+'a[name={{ $action['name'] }}]').hide();
+                                    $('tr:eq('+(i+1)+') '+'.divider:last').hide();
+                                }
+                            @endforeach
+                        @endif
+                    @endforeach
 
                     @foreach($model->index as $renameKey => $renameItem)
                         @if(isset($renameItem['type']))
@@ -349,7 +349,7 @@
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#detail_dialog");
                         $(this).attr("data-action", "/admin/{{ $model->routeName }}/" + data[0]);
-                        $(this).attr("data-id",data[0]);
+                        $(this).attr("data-id", data[0]);
                     }
                 });
 
@@ -360,6 +360,56 @@
                 });
             }
             @endif
+
+            @foreach($model->buttons['actions'] as $action)
+                @if($action['type'] == 'confirm')
+                $('#dt_basic tbody').on('click', 'a[name=' + '{{ $action['name'] }}' + ']', function () {
+                    if(isDisabled($(this))) {
+                        var data = table.row($(this).parents('tr')).data();
+                        var page_info = table.page.info();
+                        var page = page_info.page;
+                        var data_table = $('#dt_basic').dataTable();
+                        if (page_info.end - page_info.start == 1) {
+                            page -= 1;
+                        }
+                        if (confirm('{{{ $action['confirm_msg'] or '是否继续操作?' }}}')) {
+                            $.ajax({
+                                type: 'post',
+                                data: {
+                                    @foreach($action['data'] as $dataKey => $dataValue)
+                                    '{{ $dataKey }}' : '{{ $dataValue }}',
+                                    @endforeach
+                                },
+                                url: '{{ $action['url'] }}' + '/' + data[0],
+                                success: function(result) {
+                                    if (result) {
+                                        data_table.fnPageChange(page);
+                                        $(".tips").html('<div class="alert alert-success fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-check"></i>'
+                                        + '<strong>操作成功</strong></div>');
+
+                                    } else {
+                                        $(".tips").html('<div class="alert alert-danger fade in">'
+                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                        + '<i class="fa-fw fa fa-warning"></i>'
+                                        + '<strong>操作失败</strong></div>');
+                                    }
+                                },
+                                error: function() {
+                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                    + '</div>');
+                                }
+                            });
+                            hideTips();
+                        }
+                    }
+                });
+                @endif
+            @endforeach
 
             function sprintf() {
                 var arg = arguments,

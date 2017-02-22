@@ -193,17 +193,15 @@ class BaseController extends Controller
     {
         $length = Input::get('length');
         $columns = Input::get('columns');
-        \Log::info($columns);
         self::setCurrentPage($length);
         $builder = $model;
         if (count($query = array_column($model->index, 'query')) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];
-                if ($value != null) {
+                if ($value != null && $value != ',') {
                     $name = $column['name'];
                     foreach ($model->index as $qk => $qv) {
                         if ($name == $model->index[$qk]['column']) {
-//                            $type = isset($model->index[$qk]['type']) ? $model->index[$qk]['type'] : 'input';
                             $builder = self::queryBuilder($builder, $model->index[$qk], $value);
                             break;
                         }

@@ -8,22 +8,15 @@ class GeneralModel extends BaseModel
 {
 
     protected $buttons;
-    protected $operate;
-    // default operate button style is down
-    protected $operateStyle = true;
-    protected $actions;
-
     protected $index;
     protected $routeName;
-
     protected $create;
     protected $createHidden;
-
     protected $detail;
 
     public function buttons()
     {
-        $buttons = ['create' => true, 'edit' => true, 'detail' => true, 'delete' => true, 'dbExport' => false, 'queryExport' => false];
+        $buttons = ['create' => true, 'dbExport' => false, 'queryExport' => false, 'edit' => true, 'detail' => true, 'delete' => true, 'actions' => [], 'style' => true];
         if (!isset($this->buttons)) {
             return $buttons;
         }
@@ -46,12 +39,6 @@ class GeneralModel extends BaseModel
                 return $this->index;
             case 'buttons':
                 return $this->buttons();
-            case 'operate':
-                return $this->operate;
-            case 'operateStyle':
-                return $this->operateStyle;
-            case 'actions':
-                return $this->actions;
             case 'routeName':
                 return $this->routeName;
             case 'create':

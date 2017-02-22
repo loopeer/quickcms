@@ -12,42 +12,50 @@
         <div class="widget-body">
             <form class="form-horizontal">
                 <fieldset>
-                    @for($i = 0; $i < count($query) / 3; $i++)
-                        <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
-                            @foreach($query as $qk => $qv)
-                                @if($qk >= $i * 3 && $qk < ($i + 1) * 3)
-                                    <label class="col-md-1 control-label">{{ $model->index[$qk]['name'] }}</label>
-                                    <div class="col-md-2">
-                                        @if(!isset($model->index[$qk]['type']) || $model->index[$qk]['type'] == 'input')
-                                            <input class="form-control" type="text" id="@if(strstr($model->index[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $model->index[$qk]['column']) }}@else{{ $model->index[$qk]['column'] }}@endif">
-                                        @elseif($model->index[$qk]['type'] == 'selector')
-                                            <select class="form-control" id="{{ $model->index[$qk]['column'] }}">
-                                                <option value="">全部</option>
-                                                @foreach(${$model->index[$qk]['param']} as $sk => $sv)
-                                                    <option value="{{ $sk }}">{{ $sv }}</option>
-                                                @endforeach
-                                            </select>
-                                        @elseif($model->index[$qk]['type'] == 'checkbox')
+                    @for($qk = 0, $count = 0; $qk < count($model->index); $qk++)
+                        @if(isset($model->index[$qk]['query']) && $count++ >= 0)
+                            @if($count == 1 || $count == 4 || $count == 7)
+                            <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
+                            @endif
+                                <label class="col-md-1 control-label">{{ $model->index[$qk]['name'] }}</label>
+                                <div class="col-md-2">
+                                    @if(!isset($model->index[$qk]['type']) || $model->index[$qk]['type'] == 'input')
+                                        <input class="form-control" type="text" id="@if(strstr($model->index[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $model->index[$qk]['column']) }}@else{{ $model->index[$qk]['column'] }}@endif">
+                                    @elseif($model->index[$qk]['type'] == 'select')
+                                        <select class="form-control" id="{{ $model->index[$qk]['column'] }}">
+                                            <option value="">全部</option>
                                             @foreach(${$model->index[$qk]['param']} as $sk => $sv)
-                                                <label class="checkbox-inline">
-                                                    <input type="checkbox" class="checkbox style-0" name="{{ $model->index[$qk]['column'] }}" value="{{ $sk }}">
-                                                    <span>{{ $sv }}</span>
-                                                </label>
+                                                <option value="{{ $sk }}">{{ $sv }}</option>
                                             @endforeach
-                                        @elseif($model->index[$qk]['type'] == 'date')
-                                            <div class="input-group">
-                                                @if(isset($model->index[$qk]['operator']) && $model->index[$qk]['operator'] == 'between')
-                                                    <input type="text" style="width:50%;" class="form-control date-format between" id="{{ $model->index[$qk]['column'] . '_from' }}">
-                                                    <input type="text" style="width:50%;" class="form-control date-format between" id="{{ $model->index[$qk]['column'] . '_to' }}">
-                                                @else
-                                                    <input type="text" class="form-control date-format single" id="{{ $model->index[$qk]['column'] }}">
-                                                @endif
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
+                                        </select>
+                                    @elseif($model->index[$qk]['type'] == 'checkbox')
+                                        @foreach(${$model->index[$qk]['param']} as $sk => $sv)
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" class="checkbox style-0" name="{{ $model->index[$qk]['column'] }}" value="{{ $sk }}">
+                                                <span>{{ $sv }}</span>
+                                            </label>
+                                        @endforeach
+                                    @elseif($model->index[$qk]['type'] == 'date' || $model->index[$qk]['type'] == 'datetime')
+                                        <div class="input-group date">
+                                            @if($model->index[$qk]['query'] == 'between')
+                                                <input class="form-control {{ $model->index[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                       data-date-format="{{ $model->index[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                       style="width: 50%;" type="text" id="{{ $model->index[$qk]['column'] . '_from' }}">
+                                                <input class="form-control {{ $model->index[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                       data-date-format="{{ $model->index[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                       style="width: 50%;" type="text" id="{{ $model->index[$qk]['column'] . '_to' }}">
+                                            @else
+                                                <input class="form-control {{ $model->index[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                       data-date-format="{{ $model->index[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                       style="width: 50%;" type="text" id="{{ $model->index[$qk]['column'] }}">
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                            @if($count == 3 || $count == 6 || $count == 9 || $count == $query)
+                            </div>
+                            @endif
+                        @endif
                     @endfor
                 </fieldset>
                 <div class="form-actions">

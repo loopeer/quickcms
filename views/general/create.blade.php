@@ -15,7 +15,7 @@
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="/admin/{{ $model->routeName }}" method="post" id="smart-form-register" class="smart-form client-form">
+                                <form action="/admin/{{ $model->routeName }}" method="post" id="create-form" class="smart-form client-form">
                                     <input type="hidden" name="id" value="{{ $data->id }}">
                                     @foreach($model->createHidden as $hidden)
                                         @if(!isset($hidden['action']) || ($hidden['action'] == 'create' && !isset($data->id)) || ($hidden['action'] == 'edit' && isset($data->id)))
@@ -28,11 +28,11 @@
                                             <label class="label">{{ $item['name'] }}</label>
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
-                                                    <input type="text" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}" maxlength="10">
+                                                    <input type="text" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}">
                                                 </label>
                                             @elseif($item['type'] == 'password')
                                                 <label class="input">
-                                                    <input type="password" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}" maxlength="10">
+                                                    <input type="password" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}">
                                                 </label>
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
@@ -116,38 +116,64 @@
     @endforeach
 
     <script>
-        $('.form_datetime').datetimepicker({
-            language:  'zh-CN',
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0,
-            showMeridian: 1
-        });
+        $(document).ready(function() {
 
-        $('.form_date').datetimepicker({
-            language:  'zh-CN',
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0
-        });
+            pageSetUp();
 
-        $('.form_time').datetimepicker({
-            language:  'zh-CN',
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 1,
-            minView: 0,
-            maxView: 1,
-            forceParse: 0
+            $('#create-form').validate({
+                // Rules for form validation
+                rules: {
+                    @foreach($model->create as $ruleItem)
+                        @if(isset($ruleItem['rules']))
+                        '{{ $ruleItem['column'] }}': {
+                            @foreach($ruleItem['rules'] as $ruleKey => $ruleValue)
+                            '{!! $ruleKey !!}' : '{!! $ruleValue !!}',
+                            @endforeach
+                        },
+                        @endif
+                    @endforeach
+                },
+
+                // Do not change code below
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent());
+                }
+            });
+
+            $('.form_datetime').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1
+            });
+
+            $('.form_date').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            });
+
+            $('.form_time').datetimepicker({
+                language: 'zh-CN',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 1,
+                minView: 0,
+                maxView: 1,
+                forceParse: 0
+            });
+
         });
     </script>
 @endsection

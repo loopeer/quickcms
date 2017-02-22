@@ -17,6 +17,7 @@ use Loopeer\Lib\Sms\LuoSiMaoSms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Loopeer\QuickCms\Services\Validators\QuickApiValidator;
+use Looopeer\Lib\Sendcloud\SendcloudService;
 
 class AccountController extends BaseController {
 
@@ -233,10 +234,21 @@ class AccountController extends BaseController {
                 $sms = new LuoSiMaoSms(config('quickApi.sms.api_key'));
                 $sms->sendSms($phone, $message);
             } else {
-                Mail::send(config('quickApi.mail.view'), ['captcha' => $captcha, 'email' => $email], function ($m) use ($email) {
-                    $m->from(config('quickApi.mail.account'), config('quickApi.mail.name'));
-                    $m->to($email)->subject(config('quickApi.mail.subject'));
-                });
+                if(stripos($email, '@qq.com') > 0) {
+                    $send = new SendcloudService(config('quickCms.sendcloud_api_key'), config('quickCms.sendcloud_api_users')[0]);
+                    $data = [
+                        'from' => config('quickApi.mail.account'),
+                        'to' => $email,
+                        'subject' => config('quickApi.mail.subject'),
+                        'html' => view(config('quickApi.mail.view'), compact('captcha', 'email')),
+                    ];
+                    $send->send($data);
+                } else {
+                    Mail::send(config('quickApi.mail.view'), ['captcha' => $captcha, 'email' => $email], function ($m) use ($email) {
+                        $m->from(config('quickApi.mail.account'), config('quickApi.mail.name'));
+                        $m->to($email)->subject(config('quickApi.mail.subject'));
+                    });
+                }
             }
         } else {
             $captcha = '1234';
