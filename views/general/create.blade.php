@@ -125,9 +125,9 @@
                 rules: {
                     @foreach($model->create as $ruleItem)
                         @if(isset($ruleItem['rules']))
-                        '{{ $ruleItem['column'] }}': {
+                        {{ $ruleItem['column'] }}: {
                             @foreach($ruleItem['rules'] as $ruleKey => $ruleValue)
-                            '{!! $ruleKey !!}' : '{!! $ruleValue !!}',
+                            {{ $ruleKey . ':' . $ruleValue }},
                             @endforeach
                         },
                         @endif
@@ -137,6 +137,10 @@
                 // Do not change code below
                 errorPlacement: function (error, element) {
                     error.insertAfter(element.parent());
+                },
+                submitHandler: function(form) {
+                    $('#submit_btn').attr('disabled', true);
+                    form.submit();
                 }
             });
 
