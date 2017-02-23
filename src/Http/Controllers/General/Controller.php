@@ -12,7 +12,6 @@
 namespace Loopeer\QuickCms\Http\Controllers\General;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Loopeer\QuickCms\Http\Controllers\BaseController;
@@ -23,22 +22,10 @@ class Controller extends BaseController
     protected $model;
 
     public function __construct() {
-        try {
-            $routePath = preg_replace('/(admin\/)|(\/create)|(\/search)|(\/edit)|(\/changeStatus)|(\/detail)|\/{(?!custom_id).*?}/', '',
-                Route::getCurrentRoute()->getPath());
-            $routePath = str_replace('{custom_id}', Route::getCurrentRoute()->parameter('custom_id'), $routePath);
-
-            if (is_null(Route::getCurrentRoute()->getName())) {
-                $routePath = preg_replace('/(\/\d*\/)|(\/)/', '.', $routePath);
-            } else {
-                $routePath = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
-            }
-            $reflectionClass = new \ReflectionClass(config('quickCms.general_model_class.' . $routePath));
-            $this->model = $reflectionClass->newInstance();
-            $this->model->routeName = $routePath;
-        } catch (Exception $e) {
-            \Log::info($e->getMessage());
-        }
+        $route = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
+        $reflectionClass = new \ReflectionClass(config('quickCms.general_model_class.' . $route));
+        $this->model = $reflectionClass->newInstance();
+        $this->model->route = $route;
         parent::__construct();
     }
 
@@ -62,7 +49,7 @@ class Controller extends BaseController
         } else {
             $model::create($data);
         }
-        return redirect()->to('admin/' . $model->routeName);
+        return redirect()->to('admin/' . $model->route);
     }
 
     public function create()

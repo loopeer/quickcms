@@ -15,7 +15,7 @@
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="/admin/{{ $model->routeName }}" method="post" id="create-form" class="smart-form client-form">
+                                <form action="/admin/{{ $model->route }}" method="post" id="create-form" class="smart-form client-form">
                                     <input type="hidden" name="id" value="{{ $data->id }}">
                                     @foreach($model->createHidden as $hidden)
                                         @if(!isset($hidden['action']) || ($hidden['action'] == 'create' && !isset($data->id)) || ($hidden['action'] == 'edit' && isset($data->id)))

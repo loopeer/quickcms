@@ -118,13 +118,13 @@
                         "defaultContent": ''
                             @if($model->buttons['style'])
                                 @if($model->buttons['edit'])
-                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.edit">编辑</a>&nbsp;'
+                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.edit">编辑</a>&nbsp;'
                                 @endif
                                 @if($model->buttons['delete'])
-                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.delete">删除</a>&nbsp;'
+                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.delete">删除</a>&nbsp;'
                                 @endif
                                 @if($model->buttons['detail'])
-                                + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.show">详情</a>&nbsp;'
+                                + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.show">详情</a>&nbsp;'
                                 @endif
                                 @foreach($model->buttons['actions'] as $action)
                                 + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>&nbsp;'
@@ -133,13 +133,13 @@
                                 @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
                                 + '<div class="btn-group"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作<span class="caret"></span></button><ul class="dropdown-menu">'
                                     @if($model->buttons['edit'])
-                                    + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $model->routeName }}.edit">编辑</a></li><li class="divider"></li>'
+                                    + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $model->route }}.edit">编辑</a></li><li class="divider"></li>'
                                     @endif
                                     @if($model->buttons['delete'])
-                                    + '<li class="delete_btn"><a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $model->routeName }}.delete">删除</a></li><li class="divider"></li>'
+                                    + '<li class="delete_btn"><a href="javascript:void(0);" name="delete_btn" permission="admin.{{ $model->route }}.delete">删除</a></li><li class="divider"></li>'
                                     @endif
                                     @if($model->buttons['detail'])
-                                    + '<li class="detail_btn"><a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $model->routeName }}.show">详情</a></li><li class="divider"></li>'
+                                    + '<li class="detail_btn"><a href="javascript:void(0);" name="detail_btn" permission="admin.{{ $model->route }}.show">详情</a></li><li class="divider"></li>'
                                     @endif
                                     @foreach($model->buttons['actions'] as $action)
                                     + '<li class="{{ $action['name'] }}"><a href="javascript:void(0);" name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}">{{ $action['text'] }}</a></li><li class="divider"></li>'
@@ -151,20 +151,20 @@
                     @endif
                 ],
                 "ajax": {
-                    "url": "{{ $model->routeName }}/search"
+                    "url": "{{ $model->route }}/search"
                 }
             });
             // table end
 
             var buttons = '';
             @if($model->buttons['create'])
-                buttons += '<a href="{{ $model->routeName }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->routeName }}.create">新增</a>';
+                buttons += '<a href="{{ $model->route }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.create">新增</a>';
             @endif
             @if($model->buttons['queryExport'])
-                buttons += '<a href="{{ $model->routeName }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
+                buttons += '<a href="{{ $model->route }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
             @endif
             @if($model->buttons['dbExport'])
-                buttons += '<a href="{{ $model->routeName }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
+                buttons += '<a href="{{ $model->route }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
             @endif
             $("div.dt-toolbar div:first").html(buttons);
 
@@ -273,7 +273,7 @@
                 $('#dt_basic tbody').on('click', 'a[name=edit_btn]', function () {
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
-                        window.location = '{{ $model->routeName }}/' + data[0] + '/edit/';
+                        window.location = '{{ $model->route }}/' + data[0] + '/edit/';
                     }
                 });
             @endif
@@ -286,7 +286,7 @@
                         if (page_info.length == 1 && page != 0) {
                             page = page - 1;
                         }
-                        var url = '{{ $model->routeName }}/' + table.row($(this).parents('tr')).data()[0];
+                        var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0];
                         if(confirm('删除这条记录?')) {
                             $.ajax({
                                 type: "DELETE",
@@ -348,7 +348,7 @@
                         $("#detail_dialog .modal-title").html('查看详情');
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#detail_dialog");
-                        $(this).attr("data-action", "/admin/{{ $model->routeName }}/" + data[0]);
+                        $(this).attr("data-action", "/admin/{{ $model->route }}/" + data[0]);
                         $(this).attr("data-id", data[0]);
                     }
                 });

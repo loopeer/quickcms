@@ -9,7 +9,7 @@ class GeneralModel extends BaseModel
 
     protected $buttons;
     protected $index;
-    protected $routeName;
+    protected $route;
     protected $create;
     protected $createHidden;
     protected $detail;
@@ -39,8 +39,8 @@ class GeneralModel extends BaseModel
                 return $this->index;
             case 'buttons':
                 return $this->buttons();
-            case 'routeName':
-                return $this->routeName;
+            case 'route':
+                return $this->route;
             case 'create':
                 return $this->create;
             case 'createHidden':
