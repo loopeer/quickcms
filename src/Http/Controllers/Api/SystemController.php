@@ -120,7 +120,7 @@ class SystemController extends BaseController {
      * @return mixed
      */
     public function version() {
-        $version = Version::where('platform', 0)->where('status', 1)->orderBy('version_code', 'desc')->first();
+        $version = Version::where('platform', 0)->where('status', Version::PUBLISH_STATUS)->orderBy('version_code', 'desc')->first();
         return ApiResponse::responseSuccess($version);
     }
 

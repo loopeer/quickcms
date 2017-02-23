@@ -39,7 +39,7 @@
                                         @foreach($model->index as $item)
                                         <th>{{ $item['name'] }}</th>
                                         @endforeach
-                                        @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
+                                        @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || count($model->buttons['actions']) > 0)
                                         <th>操作</th>
                                         @endif
                                     </tr>
@@ -108,7 +108,7 @@
                 "columnDefs": [
                     @foreach($model->index as $widthKey => $widthItem)
                         @if(isset($widthItem['width']))
-                        { "targets": "{{ $widthKey }}", "width": "{{ $widthItem['width'] }}" },
+                        { "targets": parseInt('{{ $widthKey }}'), "width": "{{ $widthItem['width'] }}" },
                         @endif
                     @endforeach
                     @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])

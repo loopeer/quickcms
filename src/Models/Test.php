@@ -13,7 +13,7 @@ namespace Loopeer\QuickCms\Models;
 
 use App\User;
 
-class Test extends GeneralModel {
+class Test extends FastModel {
 
     protected $buttons = [
         'actions' => [

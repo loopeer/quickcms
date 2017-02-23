@@ -9,15 +9,14 @@
  * Time: 下午5:54
  */
 
-namespace Loopeer\QuickCms\Http\Controllers\General;
+namespace Loopeer\QuickCms\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
-use Loopeer\QuickCms\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Auth;
 
-class Controller extends BaseController
+class FastController extends BaseController
 {
     protected $model;
 

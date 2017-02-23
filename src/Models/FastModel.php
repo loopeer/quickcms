@@ -2,21 +2,20 @@
 
 namespace Loopeer\QuickCms\Models;
 
-//use Illuminate\Database\Eloquent\Model;
-
-class GeneralModel extends BaseModel
+class FastModel extends BaseModel
 {
 
     protected $buttons;
     protected $index;
     protected $route;
     protected $create;
-    protected $createHidden;
+    protected $createHidden = [];
     protected $detail;
 
     public function buttons()
     {
-        $buttons = ['create' => true, 'dbExport' => false, 'queryExport' => false, 'edit' => true, 'detail' => true, 'delete' => true, 'actions' => [], 'style' => true];
+        $buttons = ['create' => true, 'dbExport' => false, 'queryExport' => false, 'edit' => true, 'detail' => true,
+            'delete' => true, 'actions' => [], 'style' => true];
         if (!isset($this->buttons)) {
             return $buttons;
         }

@@ -28,8 +28,8 @@ Route::get('admin/users/search', ['as' => 'admin.users.search', 'uses' => 'Gener
 Route::get('admin/roles/search', ['as' => 'admin.roles.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
 Route::get('admin/actionLogs/search', ['as' => 'admin.actionLogs.search', 'uses' => 'LogController@search']);
-Route::get('admin/versions/search', ['as' => 'admin.versions.search', 'uses' => 'GeneralController@search']);
-Route::get('admin/feedbacks/search', ['as' => 'admin.feedbacks.search', 'uses' => 'GeneralController@search']);
+Route::get('admin/version/search', ['as' => 'admin.version.search', 'uses' => 'FastController@search']);
+Route::get('admin/feedback/search', ['as' => 'admin.feedback.search', 'uses' => 'FastController@search']);
 Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
 Route::get('admin/document/search', ['as' => 'admin.document.search', 'uses' => 'DocumentController@search']);
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
@@ -89,10 +89,11 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('actionLogs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
    Route::resource('actionLogs', 'LogController');
 
-   Route::resource('feedbacks', 'GeneralController');
+   Route::resource('feedback', 'FastController');
 
-   Route::post('versions/changeStatus/{id}', 'GeneralController@changeStatus');
-   Route::resource('versions', 'GeneralController');
+
+   Route::post('version/change/{id}', 'FastController@change');
+   Route::resource('version', 'FastController');
 
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');
