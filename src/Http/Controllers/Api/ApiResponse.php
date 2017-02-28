@@ -43,7 +43,7 @@ class ApiResponse extends Response {
         }
         return self::json([
             'code' => $code ? : config('quickApi.code.invalid_parameters'),
-            'message' => $message ? : trans('lang::messages.invalid_parameters'),
+            'message' => $message ? : trans('messages.invalid_parameters'),
             'data' => $response
         ]);
     }
@@ -56,7 +56,7 @@ class ApiResponse extends Response {
     public static function responseSuccess($data = NULL) {
         $ret = array(
             'code' => config('quickApi.code.success'),
-            'message' => trans('lang::messages.request_success'),
+            'message' => trans('messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -71,7 +71,7 @@ class ApiResponse extends Response {
     public static function responseSuccessWithMessage($message = NULL, $data = NULL) {
         $ret = array(
             'code' => config('quickApi.code.success'),
-            'message' => $message ? : trans('lang::messages.request_success'),
+            'message' => $message ? : trans('messages.request_success'),
             'data' => $data
         );
         return Response::json($ret);
@@ -85,7 +85,7 @@ class ApiResponse extends Response {
     public static function responseSuccessWithPagination($pagination) {
         $ret = array (
             'code' => config('quickApi.code.success'),
-            'message' => trans('lang::messages.request_success'),
+            'message' => trans('messages.request_success'),
             'page' => $pagination->currentPage(),
             'page_size' => $pagination->perPage(),
             'total_size' => $pagination->total(),
@@ -103,7 +103,7 @@ class ApiResponse extends Response {
     public static function responseFailure($errorCode = NULL, $errorMessage = NULL) {
         $ret = array (
             'code' => $errorCode == NULL ? config('quickApi.code.failure') : $errorCode,
-            'message' => $errorMessage == NULL ? trans('lang::messages.default_error') : $errorMessage,
+            'message' => $errorMessage == NULL ? trans('messages.default_error') : $errorMessage,
             'data' => NULL
         );
         return Response::json($ret);
@@ -115,7 +115,7 @@ class ApiResponse extends Response {
      */
     public static function responseFailureInvalidParameters() {
         return self::responseFailure(config('quickApi.code.invalid_parameters'),
-            trans('lang::messages.invalid_parameters'));
+            trans('messages.invalid_parameters'));
     }
 
     /**
@@ -125,7 +125,7 @@ class ApiResponse extends Response {
     public static function errorNoContent($errorMessage = NULL) {
         return self::responseFailure(
             config('quickApi.code.no_content'),
-            $errorMessage ? : trans('lang::messages.content_not_exist')
+            $errorMessage ? : trans('messages.content_not_exist')
         );
     }
 

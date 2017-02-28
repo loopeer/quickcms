@@ -6,7 +6,7 @@
                     @foreach($model->detail as $detail)
                     <section>
                         <label class="control-label">
-                            <strong>{{ $detail['name'] }}</strong>
+                            <strong>{{ trans('fasts.' . $model->route . '.' . $detail['column']) }}</strong>
                             @if(strpos($detail['column'], '.') !== FALSE && is_array($value = explode('.', $detail['column'])))
                                 @if(!isset($detail['type']))
                                     @if(isset($detail['param']))

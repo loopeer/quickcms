@@ -9,7 +9,13 @@
                          data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"><i class="fa fa-edit"></i></span>
-                            <h2>新增</h2>
+                            <h2>
+                                @if(isset($data->id))
+                                    {{ Lang::has('fasts.' . $model->route . '.edit') ? trans('fasts.' . $model->route . '.edit') : '编辑' }}
+                                @else
+                                    {{ has('fasts.' . $model->route . '.create') ? trans('fasts.' . $model->route . '.create') : '新增' }}
+                                @endif
+                            </h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -25,7 +31,7 @@
                                     <fieldset>
                                     @foreach($model->create as $item)
                                         <section>
-                                            <label class="label">{{ $item['name'] }}</label>
+                                            <label class="label">{{ trans('fasts.' . $model->route . '.' . $item['column']) }}</label>
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
                                                     <input type="text" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}">

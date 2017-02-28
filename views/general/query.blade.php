@@ -4,7 +4,7 @@
      data-widget-colorbutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-search"></i> </span>
-        <h2>查询</h2>
+        <h2>{{ Lang::has('fasts.' . $model->route . '.query') ? trans('fasts.' . $model->route . '.query') : '查询' }}</h2>
     </header>
     <div role="content">
         <div class="jarviswidget-editbox">
@@ -17,7 +17,7 @@
                             @if($count == 1 || $count == 4 || $count == 7)
                             <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
                             @endif
-                                <label class="col-md-1 control-label">{{ $model->index[$qk]['name'] }}</label>
+                                <label class="col-md-1 control-label">{{ trans('fasts.' . $model->route . '.' . $model->index[$qk]['column']) }}</label>
                                 <div class="col-md-2">
                                     @if(!isset($model->index[$qk]['type']) || $model->index[$qk]['type'] == 'input')
                                         <input class="form-control" type="text" id="@if(strstr($model->index[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $model->index[$qk]['column']) }}@else{{ $model->index[$qk]['column'] }}@endif">

@@ -3,6 +3,7 @@
 use Illuminate\Routing\ResourceRegistrar;
 use Illuminate\Support\ServiceProvider;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
+use Symfony\Component\Process\Process;
 
 class QuickCmsServiceProvider extends ServiceProvider {
 
@@ -25,7 +26,6 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		});
 
 		$this->loadViewsFrom(__DIR__.'/../views', 'backend');
-		$this->loadTranslationsFrom(__DIR__ . '/../lang', 'lang');
 
 		// Publish config files
 		$this->publishes([
@@ -47,6 +47,15 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__.'/../database/migrations' => database_path('migrations'),
 		], 'migrations');
+
+		$langFiles = __DIR__ . '/../lang/*';
+		$targetPath = base_path('resources/lang/');
+		$process = new Process("cp -r $langFiles $targetPath");
+		$process->run(function ($type, $buffer) {
+			if (Process::ERR === $type) {
+				return $this->error(trim($buffer));
+			}
+		});
 
 		foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
 			view()->share($sk, $sv);

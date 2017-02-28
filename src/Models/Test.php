@@ -29,32 +29,32 @@ class Test extends FastModel {
     ];
 
     protected $index = [
-        ['name' => 'ID', 'column' => 'id', 'order' => 'desc', 'width' => '20%', 'query' => '='],
-        ['name' => '名称', 'column' => 'name', 'width' => '40%', 'query' => 'like'],
-        ['name' => '标题', 'column' => 'title', 'type' => 'limit', 'param' => '9'],
-        ['name' => '创建时间', 'column' => 'created_at', 'order' => 'asc', 'type' => 'date', 'query' => 'between'],
-        ['name' => '状态', 'column' => 'status', 'type' => 'select', 'param' => 'online_offline_status', 'query' => '='],
-        ['name' => '单图片', 'column' => 'image', 'type' => 'image'],
-        ['name' => '多图片', 'column' => 'images', 'type' => 'images'],
-        ['name' => '隐藏类型', 'column' => 'hidden_type', 'type' => 'normal', 'param' => ['<span class="label label-default">未启用</span>', '<span class="label label-success">已启用</span>']],
-        ['name' => '链接', 'column' => 'url', 'type' => 'html', 'param' => '<a href="%s" target="_blank" title="%s">点击查看</a>'],
-        ['name' => '用户名称', 'column' => 'user.name', 'query' => 'like']
+        ['column' => 'id', 'order' => 'desc', 'width' => '20%', 'query' => '='],
+        ['column' => 'name', 'width' => '40%', 'query' => 'like'],
+        ['column' => 'title', 'type' => 'limit', 'param' => '9'],
+        ['column' => 'created_at', 'order' => 'asc', 'type' => 'date', 'query' => 'between'],
+        ['column' => 'status', 'type' => 'select', 'param' => 'online_offline_status', 'query' => '='],
+        ['column' => 'image', 'type' => 'image'],
+        ['column' => 'images', 'type' => 'images'],
+        ['column' => 'hidden_type', 'type' => 'normal', 'param' => ['<span class="label label-default">未启用</span>', '<span class="label label-success">已启用</span>']],
+        ['column' => 'url', 'type' => 'html', 'param' => '<a href="%s" target="_blank" title="%s">点击查看</a>'],
+        ['column' => 'user.name', 'query' => 'like']
     ];
 
     protected $create = [
-        ['name' => '名称', 'column' => 'name', 'type' => 'text', 'rules' => ['required' => true, 'email' => true]],
-        ['name' => '标题', 'column' => 'title', 'type' => 'password', 'rules' => ['required' => true, 'minlength' => 5]],
-        ['name' => '状态', 'column' => 'status', 'type' => 'select', 'param' => 'online_offline_status'],
-        ['name' => '类型', 'column' => 'type', 'type' => 'checkbox', 'param' => ['a', 'b', 'c']],
-        ['name' => '年龄', 'column' => 'age', 'type' => 'radio', 'param' => [0 => '0-11', 1 => '12-30', 2 => '31-40']],
-        ['name' => '标签', 'column' => 'labels', 'type' => 'tags'],
-        ['name' => '开始时间', 'column' => 'start_time', 'type' => 'date'],
-        ['name' => '结束时间', 'column' => 'end_time', 'type' => 'datetime'],
-        ['name' => '发布时间', 'column' => 'pay_time', 'type' => 'time'],
-        ['name' => '内容', 'column' => 'content', 'type' => 'editor'],
-        ['name' => '备注', 'column' => 'remark', 'type' => 'editor'],
-        ['name' => '单图片', 'column' => 'image', 'type' => 'image', 'min' => 0],
-        ['name' => '多图片', 'column' => 'images', 'type' => 'image', 'min' => 0, 'max' => 2],
+        ['column' => 'name', 'type' => 'text', 'rules' => ['required' => true, 'email' => true]],
+        ['column' => 'title', 'type' => 'password', 'rules' => ['required' => true, 'minlength' => 5]],
+        ['column' => 'status', 'type' => 'select', 'param' => 'online_offline_status'],
+        ['column' => 'type', 'type' => 'checkbox', 'param' => ['a', 'b', 'c']],
+        ['column' => 'age', 'type' => 'radio', 'param' => [0 => '0-11', 1 => '12-30', 2 => '31-40']],
+        ['column' => 'labels', 'type' => 'tags'],
+        ['column' => 'start_time', 'type' => 'date'],
+        ['column' => 'end_time', 'type' => 'datetime'],
+        ['column' => 'pay_time', 'type' => 'time'],
+        ['column' => 'content', 'type' => 'editor'],
+        ['column' => 'remark', 'type' => 'editor'],
+        ['column' => 'image', 'type' => 'image', 'min' => 0],
+        ['column' => 'images', 'type' => 'image', 'min' => 0, 'max' => 2],
     ];
     protected $createHidden = [
         ['column' => 'created_by', 'value' => 'admin', 'action' => 'create'],
@@ -63,17 +63,17 @@ class Test extends FastModel {
     ];
 
     protected $detail = [
-        ['name' => 'ID', 'column' => 'id'],
-        ['name' => '标题', 'column' => 'title'],
-        ['name' => '状态', 'column' => 'status', 'param' => 'online_offline_status'],
-        ['name' => '类型', 'column' => 'type'],
-        ['name' => '年龄', 'column' => 'age'],
-        ['name' => '标签', 'column' => 'labels'],
-        ['name' => '开始时间', 'column' => 'id'],
-        ['name' => '内容', 'column' => 'content', 'type' => 'html'],
-        ['name' => '单图片', 'column' => 'image', 'type' => 'image'],
-        ['name' => '多图片', 'column' => 'images', 'type' => 'image'],
-        ['name' => '用户名称', 'column' => 'user.name']
+        ['column' => 'id'],
+        ['column' => 'title'],
+        ['column' => 'status', 'param' => 'online_offline_status'],
+        ['column' => 'type'],
+        ['column' => 'age'],
+        ['column' => 'labels'],
+        ['column' => 'id'],
+        ['column' => 'content', 'type' => 'html'],
+        ['column' => 'image', 'type' => 'image'],
+        ['column' => 'images', 'type' => 'image'],
+        ['column' => 'user.name']
     ];
 
     protected $casts = [

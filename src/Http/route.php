@@ -28,6 +28,8 @@ Route::get('admin/users/search', ['as' => 'admin.users.search', 'uses' => 'Gener
 Route::get('admin/roles/search', ['as' => 'admin.roles.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
 Route::get('admin/actionLogs/search', ['as' => 'admin.actionLogs.search', 'uses' => 'LogController@search']);
+Route::get('admin/versions/search', ['as' => 'admin.versions.search', 'uses' => 'FastController@search']);
+Route::get('admin/feedbacks/search', ['as' => 'admin.feedbacks.search', 'uses' => 'FastController@search']);
 Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
 Route::get('admin/document/search', ['as' => 'admin.document.search', 'uses' => 'DocumentController@search']);
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);

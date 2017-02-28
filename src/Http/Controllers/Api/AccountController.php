@@ -47,15 +47,15 @@ class AccountController extends BaseController {
         }
         $account = $query->first();
         if (is_null($account)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.account_not_exist'));
+            return ApiResponse::responseFailure(null, trans('messages.account_not_exist'));
         }
         // 密码错误
         if (md5($request->password) != $account->password) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.password_error'));
+            return ApiResponse::responseFailure(null, trans('messages.password_error'));
         }
         // 黑名单
         if (self::isUserForbidden($account)) {
-            return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
+            return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('messages.black_account'));
         }
         // token
         $token = self::generateToken();
@@ -79,7 +79,7 @@ class AccountController extends BaseController {
         $phone = $request->phone;
         // 验证码输入错误
         if(self::checkCaptcha($phone, $request->captcha)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('messages.captcha_error'));
         }
         // 验证帐号
         $account = $this->model->where('phone', $phone)->first();
@@ -91,7 +91,7 @@ class AccountController extends BaseController {
         } else {
             // 黑名单
             if(self::isUserForbidden($account)) {
-                return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('lang::messages.black_account'));
+                return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('messages.black_account'));
             }
         }
         $account->token = $token;
@@ -146,11 +146,11 @@ class AccountController extends BaseController {
         $account = $query->first();
         // 已被注册
         if (!is_null($account)) {
-            return ApiResponse::responseFailure(null, isset($phone) ? trans('lang::messages.phone_is_register') : trans('lang::messages.email_is_register'));
+            return ApiResponse::responseFailure(null, isset($phone) ? trans('messages.phone_is_register') : trans('messages.email_is_register'));
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('messages.captcha_error'));
         }
         $token = self::generateToken();
 
@@ -186,11 +186,11 @@ class AccountController extends BaseController {
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('messages.captcha_error'));
         }
         $account = $query->first();
         if ($account == null) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.account_not_exist'));
+            return ApiResponse::responseFailure(null, trans('messages.account_not_exist'));
         }
         $account->password = md5($request->password);
         $account->save();
@@ -208,7 +208,7 @@ class AccountController extends BaseController {
         }
         $account = Auth::user()->get();
         if ($account->password != md5($request->old_password)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.oldPassword_error'));
+            return ApiResponse::responseFailure(null, trans('messages.oldPassword_error'));
         }
         $account->password = md5($request->password);
         $account->save();
@@ -278,11 +278,11 @@ class AccountController extends BaseController {
         }
         $account = $query->first();
         if (!is_null($account)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.email_is_register'));
+            return ApiResponse::responseFailure(null, trans('messages.email_is_register'));
         }
         // 验证码输入错误
         if (self::checkCaptcha(isset($phone) ? $phone : $email, $request->captcha)) {
-            return ApiResponse::responseFailure(null, trans('lang::messages.captcha_error'));
+            return ApiResponse::responseFailure(null, trans('messages.captcha_error'));
         }
         return ApiResponse::responseSuccess();
     }

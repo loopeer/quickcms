@@ -27,7 +27,7 @@
                          data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>列表</h2>
+                            <h2>{{ Lang::has('fasts.' . $model->route . '.index') ? trans('fasts.' . $model->route . '.index') : '列表' }}</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -37,7 +37,7 @@
                                     <thead>
                                     <tr>
                                         @foreach($model->index as $item)
-                                        <th>{{ $item['name'] }}</th>
+                                        <th>{{ trans('fasts.' . $model->route . '.' . $item['column']) }}</th>
                                         @endforeach
                                         @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || count($model->buttons['actions']) > 0)
                                         <th>操作</th>
