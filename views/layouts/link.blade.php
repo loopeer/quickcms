@@ -47,4 +47,14 @@
     .ui-icon.ui-icon-circle-triangle-e {
         width: 40px;
     }
+    div.dataTables_info {
+        font-style: normal;
+    }
+    .index-image {
+        width: 50px;
+        height: 50px;
+    }
+    .btn.btn-primary {
+        margin-right: 2px;
+    }
 </style>

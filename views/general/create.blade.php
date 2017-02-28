@@ -11,9 +11,9 @@
                             <span class="widget-icon"><i class="fa fa-edit"></i></span>
                             <h2>
                                 @if(isset($data->id))
-                                    {{ Lang::has('fasts.' . $model->route . '.edit') ? trans('fasts.' . $model->route . '.edit') : '编辑' }}
+                                    {{ Lang::has('fasts.' . $model->route . '.edit_form') ? trans('fasts.' . $model->route . '.edit_form') : '编辑' }}
                                 @else
-                                    {{ has('fasts.' . $model->route . '.create') ? trans('fasts.' . $model->route . '.create') : '新增' }}
+                                    {{ Lang::has('fasts.' . $model->route . '.create_form') ? trans('fasts.' . $model->route . '.create_form') : '新增' }}
                                 @endif
                             </h2>
                         </header>

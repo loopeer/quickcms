@@ -33,7 +33,9 @@ class GeneralUtil {
 
     public static function queryComment($model) {
         try{
-            $results = DB::connection('mysql_system')->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?', [env('DB_DATABASE'), with($model)->getTable()]);
+            $results = DB::connection('mysql_system')
+                ->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?',
+                [env('DB_DATABASE'), with($model)->getTable()]);
         } catch(\Exception $ex) {
             return [];
         }
@@ -58,9 +60,6 @@ class GeneralUtil {
     }
 
     public static function filterOperationPermission($request, $permission, $route_name) {
-//        $method = $request->method();
-//        $path = Route::getCurrentRoute()->getPath();
-//        $path = str_replace("/", ".", $path);
         $route = Route::currentRouteName();
         $user = Auth::admin()->get();
         if(config('quickCms.permission_switch')) {
@@ -103,7 +102,13 @@ class GeneralUtil {
         foreach(Selector::all() as $selector) {
             if ($selector->type == Selector::SQL) {
                 $sqlData = DB::select($selector->enum_value);
-                $result[$selector->enum_key] = $sqlData;
+                $sqlResult = array();
+                foreach ($sqlData as $k => $data) {
+                    $data = (array)$data;
+                    $keys = array_keys($data);
+                    $sqlResult['' . $data[$keys[0]]] = $data[$keys[1]];
+                }
+                $result[$selector->enum_key] = $sqlResult;
             } else {
                 $result[$selector->enum_key] = json_decode($selector->enum_value, true);
             }

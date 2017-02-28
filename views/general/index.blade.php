@@ -1,17 +1,4 @@
 @extends('backend::layouts.master')
-
-@section('style')
-<style>
-    div.dataTables_info {
-        font-style: normal;
-    }
-    .index-image {
-        width: 50px;
-        height: 50px;
-    }
-</style>
-@endsection
-
 @section('content')
     <div id="content">
 
@@ -27,7 +14,7 @@
                          data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>{{ Lang::has('fasts.' . $model->route . '.index') ? trans('fasts.' . $model->route . '.index') : '列表' }}</h2>
+                            <h2>{{ Lang::has('fasts.' . $model->route . '.index_form') ? trans('fasts.' . $model->route . '.index_form') : '列表' }}</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -118,16 +105,16 @@
                         "defaultContent": ''
                             @if($model->buttons['style'])
                                 @if($model->buttons['edit'])
-                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.edit">编辑</a>&nbsp;'
+                                + '<a name="edit_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.edit">编辑</a>'
                                 @endif
                                 @if($model->buttons['delete'])
-                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.delete">删除</a>&nbsp;'
+                                + '<a name="delete_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.delete">删除</a>'
                                 @endif
                                 @if($model->buttons['detail'])
-                                + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.show">详情</a>&nbsp;'
+                                + '<a name="detail_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.show">详情</a>'
                                 @endif
                                 @foreach($model->buttons['actions'] as $action)
-                                + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>&nbsp;'
+                                + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>'
                                 @endforeach
                             @else
                                 @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
@@ -374,7 +361,7 @@
                         }
                         if (confirm('{{{ $action['confirm_msg'] or '是否继续操作?' }}}')) {
                             $.ajax({
-                                type: 'post',
+                                type: 'put',
                                 data: {
                                     @foreach($action['data'] as $dataKey => $dataValue)
                                     '{{ $dataKey }}' : '{{ $dataValue }}',

@@ -11,6 +11,7 @@
 namespace Loopeer\QuickCms\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 use Loopeer\QuickCms\Models\Permission;
 use Carbon\Carbon;
 use Input;
@@ -36,13 +37,6 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        //$route_url = '/' . Route::getCurrentRoute()->getPath();
-        /*if(!Session::has($route_url)){
-            $permission = Permission::with('parent')->select('id','route', 'name','display_name','parent_id')
-                ->where('route', $route_url)
-                ->first();
-            Session::push($route_url, $permission);
-        }*/
         if(!Session::has('permissions')) {
             $roles = Auth::admin()->get()->roles()->first();
             $permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
@@ -65,30 +59,14 @@ class BaseController extends Controller
     public function simplePage($show_column, $model, $append_column = NULL, $str_column = NULL) {
         $search = Input::get('search')['value'];
         $search = addslashes($search);
-//        $order = Input::get('order')['0'];
         $length = Input::get('length');
         self::setCurrentPage($length);
-//        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
         if ($str_column == NULL) {
             $str_column = implode(',', $show_column);
         }
 
-//        $query = $model->selectRaw($str_column);
-
-//        $columns = Input::get('columns');
-//        foreach ($columns as $column) {
-//            $value = $column['search']['value'];
-//            if ($value) {
-//                $query->where($show_column[$column['data']], 'like', '%' . $value . '%');
-//            }
-//        }
-
-//        $paginate = $query->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'");
-//        $query->orderByRaw($order_sql)->paginate($length);
-
         $paginate = $model->selectRaw($str_column)
             ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
-//            ->orderByRaw($order_sql)
             ->paginate($length);
 
         if(isset($append_column)) {
@@ -251,18 +229,6 @@ class BaseController extends Controller
     private function getPageDate($show_column, $paginate, $appends = []) {
         $draw = Input::get('draw');
         $data = array();
-//        if (!empty($appends)) {
-//            //按自定义字段排序
-//            if ($appends['dir'] == 'asc') {
-//                $paginate_data = $paginate->sortBy($appends['column']);
-//            } elseif ($appends['dir'] == 'desc') {
-//                $paginate_data = $paginate->sortByDesc($appends['column']);
-//            } else {
-//                $paginate_data = $paginate->items();
-//            }
-//        } else {
-//            $paginate_data = $paginate->items();
-//        }
 
         foreach($paginate->items() as $item) {
             $obj = array();
@@ -271,7 +237,7 @@ class BaseController extends Controller
                     array_push($obj, $item->$column->format('Y-m-d H:i:s'));
                 } elseif(strstr($column, '.') !== FALSE) {
                     $table_column = explode('.', $column);
-                    array_push($obj, $item->{$table_column[0]}->{$table_column[1]});
+                    array_push($obj, $item->{$table_column[0]} instanceof Collection ? $item->{$table_column[0]}->first()->{$table_column[1]} : $item->{$table_column[0]}->{$table_column[1]});
                 } else {
                     array_push($obj, $item->$column);
                 }

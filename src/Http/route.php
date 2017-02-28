@@ -24,17 +24,12 @@ Route::get('admin/excel', 'ExcelController@export');
 Route::get('test/push', 'TestController@push');
 
 Route::get('admin/index/getLoginLog', 'IndexController@getLoginLog');
-Route::get('admin/users/search', ['as' => 'admin.users.search', 'uses' => 'GeneralController@search']);
+//Route::get('admin/users/search', ['as' => 'admin.users.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/roles/search', ['as' => 'admin.roles.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
 Route::get('admin/actionLogs/search', ['as' => 'admin.actionLogs.search', 'uses' => 'LogController@search']);
-Route::get('admin/versions/search', ['as' => 'admin.versions.search', 'uses' => 'FastController@search']);
-Route::get('admin/feedbacks/search', ['as' => 'admin.feedbacks.search', 'uses' => 'FastController@search']);
 Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
-Route::get('admin/document/search', ['as' => 'admin.document.search', 'uses' => 'DocumentController@search']);
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
-Route::get('admin/systems/search', ['as' => 'admin.systems.search', 'uses' => 'GeneralController@search']);
-Route::get('admin/generals/search', ['as' => 'admin.generals.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
 Route::get('admin/label/search', ['as' => 'admin.label.search', 'uses' => 'GeneralController@search']);
 
@@ -48,8 +43,6 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
 
-   Route::resource('generals', 'GeneralController@index');
-
    // 图片上传
    Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
    Route::get('blueimp/{id}', array('as'=>'admin.blueimp.delete', 'uses'=>'BlueimpController@destroy'));
@@ -59,15 +52,15 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::post('dropzone/upload', 'DropzoneController@upload');
    Route::get('dropzone/fileList/{id}', 'DropzoneController@fileList');
 
-   Route::get('users', 'GeneralController@index');
-   Route::get('users/edit/{id}', 'UserController@edit');
-   Route::get('users/changeStatus/{id}', 'UserController@changeStatus');
-   Route::get('users/role/{id}', 'UserController@getRole');
-   Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
-   Route::get('users/checkEmail', 'UserController@checkEmail');
-   Route::get('users/update', 'UserController@update');
-   Route::post('users/update', 'UserController@profile');
-   Route::resource('users', 'UserController');
+//   Route::get('users', 'GeneralController@index');
+//   Route::get('users/edit/{id}', 'UserController@edit');
+//   Route::get('users/changeStatus/{id}', 'UserController@changeStatus');
+//   Route::get('users/role/{id}', 'UserController@getRole');
+//   Route::post('users/role', array('as'=>'admin.users.role','uses'=>'UserController@saveRole'));
+//   Route::get('users/checkEmail', 'UserController@checkEmail');
+//   Route::get('users/update', 'UserController@update');
+//   Route::post('users/update', 'UserController@profile');
+//   Route::resource('users', 'UserController');
 
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
@@ -90,8 +83,11 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::resource('actionLogs', 'LogController');
 
    Route::resource('feedbacks', 'FastController', ['model' => \Loopeer\QuickCms\Models\Feedback::class]);
-
    Route::resource('versions', 'FastController', ['model' => \Loopeer\QuickCms\Models\Version::class]);
+   Route::resource('systems', 'FastController', ['model' => \Loopeer\QuickCms\Models\System::class]);
+   Route::resource('documents', 'FastController', ['model' => \Loopeer\QuickCms\Models\Document::class]);
+   Route::resource('users', 'FastController', ['model' => \Loopeer\QuickCms\Models\User::class]);
+   Route::post('users', 'UserController@storeUser');
 
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');
@@ -101,14 +97,10 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::get('statistics/chartDays', 'StatisticController@chartDays');
    Route::get('statistics/chartMonths', 'StatisticController@chartMonths');
 
-   Route::resource('document', 'DocumentController');
-
    //pushes
    Route::get('pushes/batch', 'PushesController@batch');
    Route::post('pushes/save', 'PushesController@save');
    Route::resource('pushes', 'PushesController');
-
-   Route::resource('systems', 'SystemController');
 
    Route::get('sendcloud/template', 'SendcloudController@template');
 //   Route::get('sendcloud/normal', 'SendcloudController@normal');

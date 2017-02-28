@@ -5,7 +5,7 @@
  * Proprietary and confidential.
  *
  * User: DengYongBin
- * Date: 15/12/15
+ * Date: 17/02/15
  * Time: 下午5:54
  */
 
@@ -19,83 +19,63 @@ use Illuminate\Support\Facades\Auth;
 
 class FastController extends BaseController
 {
-    protected $model;
 
-    public function __construct(Model $model) {
-        $route = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
-        $this->model = $model;
-        $this->model->route = $route;
-        parent::__construct();
+    public function search(Model $model)
+    {
+        return response()->json(self::generalQuery($model));
     }
 
-    public function search()
+    public function index(Model $model)
     {
-        return response()->json(self::generalQuery($this->model));
-    }
-
-    public function index()
-    {
-        $model = $this->model;
         return view('backend::general.index', compact('model'));
     }
 
-    public function store()
+    public function create(Model $model)
+    {
+        $data = new $model;
+        return view('backend::general.create', compact('model', 'data'));
+    }
+
+    public function store(Model $model = null)
     {
         $data = Input::all();
-        $model = $this->model;
-        if ($data['id']) {
-            $model::find($data['id'])->update($data);
-        } else {
-            $model::create($data);
-        }
+        $data['id'] ? $model::find($data['id'])->update($data) : $model::create($data);
         return redirect()->to('admin/' . $model->route);
     }
 
-    public function create()
+    public function show(Model $model, $id)
     {
-        $model = $this->model;
-        $data = new $this->model;
-        return view('backend::general.create', compact('model', 'data'));
-    }
-
-    public function edit($id)
-    {
-        $model = $this->model;
-        $data = $model::find($id);
-        return view('backend::general.create', compact('model', 'data'));
-    }
-
-    public function destroy($id)
-    {
-        $model = $this->model;
-        return response()->json($model::destroy($id));
-    }
-
-    public function show($id)
-    {
-        $model = $this->model;
         $data = $model::find($id);
         return view('backend::general.detail', compact('model', 'data'));
     }
 
-    public function change($id)
+    public function edit(Model $model, $id)
     {
-        $model = $this->model;
         $data = $model::find($id);
+        return view('backend::general.create', compact('model', 'data'));
+    }
+
+    public function update(Model $model, $id)
+    {
         $param = Input::all();
         foreach ($param as $key => $value) {
             switch($value) {
                 case 'now':
-                    $value = Carbon::now();
+                    $param[$key] = Carbon::now();
                     break;
                 case 'admin':
-                    $value = Auth::admin()->get()->email;
+                    $param[$key] = Auth::admin()->get()->email;
                     break;
                 default:
                     break;
             }
-            $data->$key = $value;
         }
-        return response()->json($data->save());
+        return response()->json($model::find($id)->update($param));
     }
+
+    public function destroy(Model $model, $id)
+    {
+        return response()->json($model::destroy($id));
+    }
+
 }

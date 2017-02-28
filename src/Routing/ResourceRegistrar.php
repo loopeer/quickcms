@@ -8,7 +8,6 @@
 
 namespace Loopeer\QuickCms\Routing;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\ResourceRegistrar as BaseResourceRegistrar;
 use Illuminate\Routing\Router;
@@ -31,7 +30,7 @@ class ResourceRegistrar extends BaseResourceRegistrar
             }
         });
 
-        $this->resourceDefaults = array_merge(['search', 'change'], $this->resourceDefaults);
+        $this->resourceDefaults = array_merge(['search'], $this->resourceDefaults);
     }
 
     protected function getResourceAction($resource, $controller, $method, $options)
@@ -53,14 +52,5 @@ class ResourceRegistrar extends BaseResourceRegistrar
         $action = $this->getResourceAction($name, $controller, 'search', $options);
 
         return $this->router->get($uri, $action);
-    }
-
-    protected function addResourceChange($name, $base, $controller, $options)
-    {
-        $uri = $this->getResourceUri($name).'/change/{'.$base.'}';
-
-        $action = $this->getResourceAction($name, $controller, 'change', $options);
-
-        return $this->router->put($uri, $action);
     }
 }

@@ -57,8 +57,8 @@ class SystemsSetupTables extends Migration
         // 系统配置表
         Schema::create('systems', function (Blueprint $table) {
             $table->bigIncrements('id')->comment('主键');
-            $table->string('system_key', 50)->comment('系统key');
-            $table->string('system_value', 255)->nullable()->comment('系统value');
+            $table->string('key', 50)->comment('系统key');
+            $table->string('value', 255)->nullable()->comment('系统value');
             $table->string('description', 255)->nullable()->comment('描述');
             $table->timestamps();
             $table->softDeletes();
@@ -115,9 +115,9 @@ class SystemsSetupTables extends Migration
         // 文档表
         Schema::create('documents', function (Blueprint $table) {
             $table->bigIncrements('id')->comment('主键');
-            $table->string('document_key', 255)->comment('key');
+            $table->string('key', 255)->comment('key');
             $table->string('title', 255)->comment('标题');
-            $table->text('document_content')->nullable()->comment('文档内容');
+            $table->text('content')->nullable()->comment('文档内容');
             $table->timestamps();
             $table->softDeletes();
         });

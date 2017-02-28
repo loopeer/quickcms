@@ -68,11 +68,6 @@ return [
     'sendcloud_api_key' => env('SENDCLOUD_API_KEY'),
     'sendcloud_api_users' => explode(',', env('SENDCLOUD_API_USER')),
 
-    'language' => array(
-        'en' => '英文',
-        'zh' => '中文',
-    ),
-
     'hide_tips_time' => 3000,
 
     //登录失效时间，单位分钟

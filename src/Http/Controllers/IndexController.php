@@ -29,7 +29,6 @@ class IndexController extends BaseController {
 
     public function __construct(){
         $this->middleware('auth.permission:admin.index',['only' => ['index','getLoginLog']]);
-        //parent::__construct();
     }
 
     public function index() {
@@ -52,19 +51,16 @@ class IndexController extends BaseController {
         Auth::admin()->login($user,$remember);
         $user->last_login = date('Y-m-d H:i:s');
         $user->save();
-        //$this->getMenus($user);
         ActionLog::create(array(
             'user_id' => $user->id,
             'content' => config('quickCms.action_log.login'),
             'client_ip' => $request->ip()
         ));
-//        return $this->getIndex();
         return redirect('/admin/index')->with('user', $user);
     }
 
     public function logout(){
         Auth::admin()->logout();
-        //Session::flush();
         Session::forget('menu');
         Session::forget('permissions');
         Session::forget('business_id');
