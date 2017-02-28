@@ -28,8 +28,6 @@ Route::get('admin/users/search', ['as' => 'admin.users.search', 'uses' => 'Gener
 Route::get('admin/roles/search', ['as' => 'admin.roles.search', 'uses' => 'GeneralController@search']);
 Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
 Route::get('admin/actionLogs/search', ['as' => 'admin.actionLogs.search', 'uses' => 'LogController@search']);
-Route::get('admin/version/search', ['as' => 'admin.version.search', 'uses' => 'FastController@search']);
-Route::get('admin/feedback/search', ['as' => 'admin.feedback.search', 'uses' => 'FastController@search']);
 Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
 Route::get('admin/document/search', ['as' => 'admin.document.search', 'uses' => 'DocumentController@search']);
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
@@ -38,7 +36,7 @@ Route::get('admin/generals/search', ['as' => 'admin.generals.search', 'uses' => 
 Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
 Route::get('admin/label/search', ['as' => 'admin.label.search', 'uses' => 'GeneralController@search']);
 
-Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function () {
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function () {
    if(env('APP_ENV') == 'local'){
       Route::resource('build', 'AutoBuildController');
       Route::get('getColumns', 'AutoBuildController@getColumns');
@@ -89,11 +87,9 @@ Route::group(array('prefix' => 'admin','middleware' => 'auth.admin'), function (
    Route::get('actionLogs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
    Route::resource('actionLogs', 'LogController');
 
-   Route::resource('feedback', 'FastController');
+   Route::resource('feedbacks', 'FastController', ['model' => \Loopeer\QuickCms\Models\Feedback::class]);
 
-
-   Route::post('version/change/{id}', 'FastController@change');
-   Route::resource('version', 'FastController');
+   Route::resource('versions', 'FastController', ['model' => \Loopeer\QuickCms\Models\Version::class]);
 
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');

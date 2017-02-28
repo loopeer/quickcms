@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,9 @@ class FastController extends BaseController
 {
     protected $model;
 
-    public function __construct() {
+    public function __construct(Model $model) {
         $route = preg_replace('/(admin.)|(.\w*$)/', '', Route::getCurrentRoute()->getName());
-        $reflectionClass = new \ReflectionClass(config('quickCms.general_model_class.' . $route));
-        $this->model = $reflectionClass->newInstance();
+        $this->model = $model;
         $this->model->route = $route;
         parent::__construct();
     }

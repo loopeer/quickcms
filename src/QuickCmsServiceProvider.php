@@ -1,5 +1,6 @@
 <?php namespace Loopeer\QuickCms;
 
+use Illuminate\Routing\ResourceRegistrar;
 use Illuminate\Support\ServiceProvider;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 
@@ -61,6 +62,8 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->commands(['Loopeer\QuickCms\Console\Commands\InstallCommand']);
 		$this->commands(['Loopeer\QuickCms\Console\Commands\CreateBackendUser']);
 		$this->commands(['Loopeer\QuickCms\Console\Commands\InitOperationPermission']);
+
+        $this->app->bind(ResourceRegistrar::class, Routing\ResourceRegistrar::class);
     }
 
 }
