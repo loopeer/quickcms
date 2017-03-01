@@ -14,12 +14,13 @@
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <form action="/admin/users/update" method="post" id="smart-form-register" class="smart-form">
+                                <form action="/admin/users/profile" method="post" id="smart-form-register" class="smart-form">
                                     {!! csrf_field() !!}
                                     <fieldset>
-<section>
-               <label class="label">图片</label>
-              @include('backend::image.upload', ['image_name' => 'image'])         </section>
+                                    <section>
+                                        <label class="label">图片</label>
+                                        @include('backend::image.upload', ['image_name' => 'image'])
+                                    </section>
                                         <section>
                                             <label class="input"> <i class="icon-append fa fa-lock"></i>
                                                 <input type="password" name="password" placeholder="密码" id="password">
@@ -40,9 +41,6 @@
                                         <button type="submit" class="btn btn-primary">
                                             保存
                                         </button>
-                                        <a href="/admin/users" class="btn btn-primary">
-                                            返回
-                                        </a>
                                     </footer>
                                 </form>
                             </div>

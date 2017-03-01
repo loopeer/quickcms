@@ -40,6 +40,20 @@
             </div>
         </section>
     </div>
+
+    <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body custom-scroll terms-body">
+                    <div id="left"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -310,40 +324,15 @@
             @endif
 
             @if($model->buttons['detail']) {
-                $('#content').after(
-                        '<div class="modal fade" id="detail_dialog' + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
-                        '<div class="modal-dialog" style="{{ isset($detail_style['width']) ? "width:" . $detail_style['width'] : ''}};">' +
-                        '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">' +
-                        '&times;' +
-                        '</button>' +
-                        '<h4 class="modal-title"></h4>' +
-                        '</div>' +
-                        '<div class="modal-body custom-scroll terms-body" style="{{ isset($detail_style['height']) ? "max-height:" . $detail_style['height'] : ''}}">' +
-                        '<div id="left">' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>'
-                );
-
                 $('#dt_basic tbody').on('click', 'a[name=detail_btn]', function () {
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
-                        $("#detail_dialog .modal-title").html('查看详情');
+                        $("#dialog .modal-title").html('查看详情');
                         $(this).attr("data-toggle", "modal");
-                        $(this).attr("data-target", "#detail_dialog");
+                        $(this).attr("data-target", "#dialog");
                         $(this).attr("data-action", "/admin/{{ $model->route }}/" + data[0]);
                         $(this).attr("data-id", data[0]);
                     }
-                });
-
-                $('#detail_dialog').on('show.bs.modal', function(e) {
-                    var action = $(e.relatedTarget).data('action');
-                    //populate the div
-                    loadURL(action, $('#detail_dialog' + ' .modal-content .modal-body #left'));
                 });
             }
             @endif
@@ -396,7 +385,82 @@
                     }
                 });
                 @endif
+                @if($action['type'] == 'dialog')
+                    $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
+                        if(isDisabled($(this))) {
+                            var data = table.row($(this).parents('tr')).data();
+                            $("#dialog .modal-title").html('{{$action['dialog_title']}}');
+                            $(this).attr("data-toggle", "modal");
+                            $(this).attr("data-target", "#dialog");
+                            $(this).attr("data-action", "{{$action['url']}}" + data[0]);
+                            $(this).attr("data-id", data[0]);
+                        }
+                    });
+
+                    @if(!empty($action['form']))
+                    $("#dialog .modal-body").after(
+                            '<div class="modal-footer">' +
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+                            '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
+                            '</div>'
+                    );
+                    $('#' + '{{$action['form']['submit_id']}}').click(function(){
+                        var $form = $("#" + '{{$action['form']['form_id']}}');
+                        var page_info = table.page.info();
+                        var page = page_info.page;
+                        var data_table = $('#dt_basic').dataTable();
+                        $('#' + '{{$action['form']['submit_id']}}').text("提交");
+                        $('#dialog').modal('hide');
+                        $($form).submit(function(event) {
+                            var form = $(this);
+                            $.ajax({
+                                type: form.attr('method'),
+                                url: form.attr('action'),
+                                data: form.serialize()
+                            }).done(function(result) {
+                                var html = '';
+                                if (result == 1 || result.result == true) {
+                                    data_table.fnPageChange(page);
+                                    html = '<div class="alert alert-success fade in">'
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-check"></i>';
+                                    if (isObject(result)) {
+                                        html += '<strong>成功</strong>'+' '+ result.content +'。'
+                                    } else {
+                                        html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                    }
+                                    html += '</div>';
+                                    $(".tips").html(html);
+                                } else {
+                                    html = '<div class="alert alert-danger fade in">'
+                                    +'<button class="close" data-dismiss="alert">×</button>'
+                                    +'<i class="fa-fw fa fa-warning"></i>';
+                                    if (isObject(result)) {
+                                        html += '<strong>失败</strong>'+' '+ result.content +'。'
+                                    } else {
+                                        html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                    }
+                                    $(".tips").html(html);
+                                    $(".tips").html(html);
+                                }
+                                $form[0].reset();
+                                hideTips();
+                            });
+                            event.preventDefault(); // Prevent the form from submitting via the browser.
+                        });
+                        function isObject(obj){
+                            return (typeof obj=='object')&&obj.constructor==Object;
+                        }
+                        $form.trigger('submit'); // trigger form submit
+                    });
+                    @endif
+                @endif
             @endforeach
+
+            $('#dialog').on('show.bs.modal', function(e) {
+                var action = $(e.relatedTarget).data('action');
+                loadURL(action, $('#dialog .modal-content .modal-body #left'));
+            });
 
             function sprintf() {
                 var arg = arguments,

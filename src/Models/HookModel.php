@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HookModel extends Model
 {
     use SoftDeletes;
+    protected $guarded = ['deleted_at'];
 
     public static function boot() {
         parent::boot();

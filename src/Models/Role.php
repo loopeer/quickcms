@@ -9,13 +9,49 @@
  * Time: 上午11:38
  */
 namespace Loopeer\QuickCms\Models;
-use Zizaco\Entrust\EntrustRole;
+use Zizaco\Entrust\Contracts\EntrustRoleInterface;
+use Zizaco\Entrust\Traits\EntrustRoleTrait;
 
-class Role extends EntrustRole
+class Role extends FastModel implements EntrustRoleInterface
 {
-    protected $fillable = ['id', 'name', 'display_name','description'];
+    use EntrustRoleTrait;
 
-    public function users(){
+    protected $buttons = ['detail' => false, 'delete' => false,
+        'actions' => [
+            [
+                'type' => 'dialog',
+                'name' => 'edit_permission',
+                'target' => 'edit_permission',
+                'method' => 'get',
+                'permission' => 'admin.roles.permissions',
+                'dialog_title' => '分配权限',
+                'text' => '分配权限',
+                'url' => '/admin/roles/permissions/',
+                'form' => [
+                    'form_id' => 'smart-form-permissions',
+                    'submit_id' => 'confirmPermission',
+                    'success_msg' => '分配权限成功，重新登陆后即可更新左侧菜单栏',
+                    'failure_msg' => '分配失败'
+                ],
+            ],
+        ]
+    ];
+    protected $index = [
+        ['column' => 'id'],
+        ['column' => 'name'],
+        ['column' => 'display_name'],
+        ['column' => 'description'],
+        ['column' => 'created_at'],
+    ];
+
+    protected $create = [
+        ['column' => 'name', 'rules' => ['required' => true]],
+        ['column' => 'display_name', 'rules' => ['required' => true]],
+        ['column' => 'description'],
+    ];
+
+    public function users()
+    {
         return $this->belongsToMany(config('auth.multi-auth.admin.model'),config('entrust.role_user_table'));
     }
 }

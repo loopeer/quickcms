@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 
-class User extends FastModel  implements AuthenticatableContract, CanResetPasswordContract
+class User extends FastModel implements AuthenticatableContract, CanResetPasswordContract
 {
     use Authenticatable, CanResetPassword, EntrustUserTrait;
 
@@ -51,8 +51,10 @@ class User extends FastModel  implements AuthenticatableContract, CanResetPasswo
         ['column' => 'name', 'rules' => ['required' => true]],
         ['column' => 'email', 'rules' => ['required' => true]],
         ['column' => 'password', 'type' => 'password', 'rules' => ['required' => true]],
-        ['column' => 'role_id', 'type' => 'select', 'param' => 'role_group'],
+        ['column' => 'roles.id', 'type' => 'select', 'param' => 'role_group'],
     ];
+
+    protected $casts = ['avatar' => 'qiniu'];
 
     public function roles()
     {

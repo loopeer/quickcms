@@ -20,7 +20,7 @@
                     </li>
                     <li class="divider"></li>
 		    <li>
-			<a href="/admin/users/update" class="padding-10 padding-top-0 padding-bottom-0" data-action="userProfile"><i class="fa fa-child"></i>&nbsp;个人</a>
+			<a href="/admin/users/profile" class="padding-10 padding-top-0 padding-bottom-0" data-action="userProfile"><i class="fa fa-child"></i>&nbsp;个人</a>
 		    </li>
                     <li class="divider"></li>
                     <li>
@@ -35,10 +35,6 @@
         <div id="fullscreen" class="btn-header transparent pull-right">
             <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
         </div>
-
-
-
-
     </div>
 <div class="pull-right" style="padding-top:15px">
 	<span>欢迎你，{{ Auth::admin()->get()->name }}</span>

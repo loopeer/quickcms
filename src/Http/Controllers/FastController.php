@@ -13,6 +13,7 @@ namespace Loopeer\QuickCms\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -39,8 +40,15 @@ class FastController extends BaseController
     public function store(Model $model = null)
     {
         $data = Input::all();
-        $data['id'] ? $model::find($data['id'])->update($data) : $model::create($data);
-        return redirect()->to('admin/' . $model->route);
+        $message['result'] = true;
+        try {
+            $data['id'] ? $model::find($data['id'])->update($data) : $model::create($data);
+        } catch (QueryException $ex) {
+            $message['content'] = '数据库中已存在相同的数据，请修改你的数据。';
+            return back()->with('message', $message)->withInput($data);
+        }
+        $message['content'] = '数据保存成功。';
+        return redirect()->to('admin/' . $model->route)->with('message', $message);
     }
 
     public function show(Model $model, $id)

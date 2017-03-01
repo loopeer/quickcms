@@ -34,17 +34,26 @@
                                             <label class="label">{{ trans('fasts.' . $model->route . '.' . $item['column']) }}</label>
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
-                                                    <input type="text" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}">
+                                                    <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}">
                                                 </label>
                                             @elseif($item['type'] == 'password')
                                                 <label class="input">
-                                                    <input type="password" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}">
+                                                    <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}">
                                                 </label>
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
                                                     <select name="{{ $item['column'] }}">
                                                     @foreach(${$item['param']} as $sk => $sv)
-                                                        <option value="{{ $sk }}">{{ $sv }}</option>
+                                                        @if($sk == old($item['column']))
+                                                            <option value="{{ $sk }}" selected>{{ $sv }}</option>
+                                                        @else
+                                                            @if(strstr($item['column'], '.') !== FALSE)
+                                                            <option value="{{ $sk }}" {{ $sk == ($data->{explode('.', $item['column'])[0]} instanceof \Illuminate\Database\Eloquent\Collection ?
+                                                            $data->{explode('.', $item['column'])[0]}->first()->{explode('.', $item['column'])[1]} : $data->{explode('.', $item['column'])[0]}->{explode('.', $item['column'])[1]}) ? 'selected' : '' }}>{{ $sv }}</option>
+                                                            @else
+                                                            <option value="{{ $sk }}" {{ $sk == $data->$item['column'] ? 'selected' : '' }}>{{ $sv }}</option>
+                                                            @endif
+                                                        @endif
                                                     @endforeach
                                                     </select><i></i>
                                                 </label>
@@ -67,26 +76,20 @@
                                             @elseif($item['type'] == 'tags')
                                                 <input class="form-control tagsinput" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}" data-role="tagsinput">
                                                 <div class="note">每输入一个标签后请按回车键确认</div>
-                                            @elseif($item['type'] == 'date')
-                                                <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
-                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                                                </div>
-                                            @elseif($item['type'] == 'datetime')
-                                                <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
-                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                                                </div>
-                                            @elseif($item['type'] == 'time')
-                                                <div class="input-group date form_time" data-date-format="hh:ii">
-                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="" readonly>
+                                            @elseif($item['type'] == 'date' || $item['type'] == 'datetime' || $item['type'] == 'time')
+                                                @if($item['type'] == 'date')
+                                                    <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
+                                                @elseif($item['type'] == 'datetime')
+                                                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                                                @else
+                                                    <div class="input-group date form_time" data-date-format="hh:ii">
+                                                @endif
+                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}" readonly>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                                 </div>
                                             @elseif($item['type'] == 'editor')
-                                                <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! $data->$item['column'] !!}</script>
+                                                <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! old($item['column']) ?: $data->$item['column'] !!}</script>
                                                 <script type="text/javascript">var ue = UE.getEditor("{{ $item['column'] }}-container");</script>
                                             @elseif($item['type'] == 'image')
                                                 @include('backend::image.upload', ['image' => $item, 'image_name' => $item['column']])
