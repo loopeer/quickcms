@@ -16,13 +16,16 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
    }
 });
 
-Route::get('admin/login', 'IndexController@getLogin');
-Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
-Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
-Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
-Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
-Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
+Route::group(array('namespace' => 'Backend'), function () {
+    Route::get('admin/login', 'IndexController@getLogin');
+    Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
+
+    Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
+    Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
+    Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
+    Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
+});
 
 Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace' => 'Backend'), function () {
    Route::get('/', 'IndexController@getIndex');

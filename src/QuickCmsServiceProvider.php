@@ -1,6 +1,7 @@
 <?php namespace Loopeer\QuickCms;
 
 use Illuminate\Routing\ResourceRegistrar;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Symfony\Component\Process\Process;
@@ -57,9 +58,11 @@ class QuickCmsServiceProvider extends ServiceProvider {
 			}
 		});
 
-		foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
-			view()->share($sk, $sv);
-		}
+		if (Schema::hasTable('selectors')) {
+            foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
+                view()->share($sk, $sv);
+            }
+        }
 	}
 
 	/**

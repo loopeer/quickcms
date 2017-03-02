@@ -21,6 +21,7 @@ class EntrustSetupTables extends Migration
             $table->tinyInteger('status')->default(1);
             $table->timestamp('last_login')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
         // Create table for storing roles
         Schema::create('roles', function (Blueprint $table) {
@@ -29,6 +30,7 @@ class EntrustSetupTables extends Migration
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Create table for associating roles to users (Many-to-Many)
@@ -57,6 +59,7 @@ class EntrustSetupTables extends Migration
             $table->integer('sort');
             $table->tinyInteger('type')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // Create table for associating permissions to roles (Many-to-Many)
