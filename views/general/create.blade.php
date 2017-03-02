@@ -34,11 +34,11 @@
                                             <label class="label">{{ trans('fasts.' . $model->route . '.' . $item['column']) }}</label>
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
-                                                    <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}">
+                                                    <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
                                                 </label>
                                             @elseif($item['type'] == 'password')
                                                 <label class="input">
-                                                    <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}">
+                                                    <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
                                                 </label>
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
