@@ -49,7 +49,8 @@
                                                         @else
                                                             @if(strstr($item['column'], '.') !== FALSE)
                                                             <option value="{{ $sk }}" {{ $sk == ($data->{explode('.', $item['column'])[0]} instanceof \Illuminate\Database\Eloquent\Collection ?
-                                                            $data->{explode('.', $item['column'])[0]}->first()->{explode('.', $item['column'])[1]} : $data->{explode('.', $item['column'])[0]}->{explode('.', $item['column'])[1]}) ? 'selected' : '' }}>{{ $sv }}</option>
+                                                            $data->{explode('.', $item['column'])[0]}->first()[explode('.', $item['column'])[1]] :
+                                                            $data->{explode('.', $item['column'])[0]}->{explode('.', $item['column'])[1]}) ? 'selected' : '' }}>{{ $sv }}</option>
                                                             @else
                                                             <option value="{{ $sk }}" {{ $sk == $data->$item['column'] ? 'selected' : '' }}>{{ $sv }}</option>
                                                             @endif

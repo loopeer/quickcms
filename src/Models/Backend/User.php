@@ -55,6 +55,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
     ];
 
     protected $casts = ['avatar' => 'qiniu'];
+    protected $with = ['roles'];
 
     public function roles()
     {
