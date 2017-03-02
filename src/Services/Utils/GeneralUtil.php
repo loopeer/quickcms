@@ -12,8 +12,8 @@ namespace Loopeer\QuickCms\Services\Utils;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
-use Loopeer\QuickCms\Models\Permission;
-use Loopeer\QuickCms\Models\Selector;
+use Loopeer\QuickCms\Models\Backend\Permission;
+use Loopeer\QuickCms\Models\Backend\Selector;
 use Route;
 use App;
 

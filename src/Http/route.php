@@ -19,24 +19,12 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
 Route::get('admin/login', 'IndexController@getLogin');
 Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
 
-Route::get('admin/excel', 'ExcelController@export');
-
-Route::get('test/push', 'TestController@push');
-
-Route::get('admin/index/getLoginLog', 'IndexController@getLoginLog');
 Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
-Route::get('admin/actionLogs/search', ['as' => 'admin.actionLogs.search', 'uses' => 'LogController@search']);
 Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
 Route::get('admin/pushes/search', ['as' => 'admin.pushes.search', 'uses' => 'PushesController@search']);
 Route::get('admin/permissions/{id}/searchPermission', 'OperationPermissionController@search');
-Route::get('admin/label/search', ['as' => 'admin.label.search', 'uses' => 'GeneralController@search']);
 
-Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function () {
-   if(env('APP_ENV') == 'local'){
-      Route::resource('build', 'AutoBuildController');
-      Route::get('getColumns', 'AutoBuildController@getColumns');
-   }
-
+Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace' => 'Backend'), function () {
    Route::get('/', 'IndexController@getIndex');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
@@ -60,25 +48,19 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::get('permissions/{id}/initPermission', 'OperationPermissionController@init');
    Route::resource('permissions', 'PermissionController');
 
-   Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
-
-   //运维管理
-   Route::get('actionLogs/emptyLogs', array('as'=>'admin.logs.emptyLogs', 'uses'=>'LogController@emptyLogs'));
-   Route::resource('actionLogs', 'LogController');
-
-   Route::resource('feedbacks', 'FastController', ['model' => \Loopeer\QuickCms\Models\Feedback::class]);
-   Route::resource('versions', 'FastController', ['model' => \Loopeer\QuickCms\Models\Version::class]);
-   Route::resource('systems', 'FastController', ['model' => \Loopeer\QuickCms\Models\System::class]);
-   Route::resource('documents', 'FastController', ['model' => \Loopeer\QuickCms\Models\Document::class]);
+   Route::resource('feedbacks', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Feedback::class]);
+   Route::resource('versions', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Version::class]);
+   Route::resource('systems', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\System::class]);
+   Route::resource('documents', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Document::class]);
 
    Route::get('users/profile', 'UserController@getProfile');
    Route::post('users/profile', 'UserController@saveProfile');
-   Route::resource('users', 'FastController', ['model' => \Loopeer\QuickCms\Models\User::class]);
+   Route::resource('users', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\User::class]);
    Route::post('users', 'UserController@storeUser');
 
    Route::get('roles/permissions/{id}', array('as' => 'admin.roles.permissions','uses' => 'RoleController@permissions'));
    Route::post('roles/permissions/{id}', array('as' => 'admin.roles.savePermissions','uses' => 'RoleController@savePermissions'));
-   Route::resource('roles', 'FastController', ['model' => \Loopeer\QuickCms\Models\Role::class]);
+   Route::resource('roles', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Role::class]);
 
    Route::get('selector/preview', 'SelectorController@preview');
    Route::get('selector/checkKey', 'SelectorController@checkKey');
@@ -98,11 +80,5 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin'), function 
    Route::post('sendcloud/apiuser', 'SendcloudController@saveApiUser');
    Route::resource('sendcloud', 'SendcloudController');
    Route::get('sendcloud/{invokeName}/review', 'SendcloudController@review');
-
-   Route::get('pushMsg/search', ['as' => 'admin.pushMsg.search', 'uses' => 'GeneralController@search']);
-   Route::resource('pushMsg', 'GeneralController');
-
-   Route::get('label/tableExportExcel', ['as' => 'admin.label.tableExportExcel', 'uses' => 'GeneralController@tableExportExcel']);
-   Route::resource('label', 'GeneralController');
 });
 

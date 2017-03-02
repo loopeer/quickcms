@@ -16,13 +16,11 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Log;
 use Input;
-use Loopeer\QuickCms\Models\Permission;
+use Loopeer\QuickCms\Models\Backend\Permission;
 use Validator;
 use Session;
-use Loopeer\QuickCms\Http\Controllers\IndexController;
 use Cache;
 use Redirect;
-use Loopeer\QuickCms\Models\System;
 
 class AdminMiddleware{
     /**

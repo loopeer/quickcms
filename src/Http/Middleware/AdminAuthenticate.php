@@ -15,9 +15,8 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Input;
-use Loopeer\QuickCms\Models\ActionLog;
 use Validator;
-use Loopeer\QuickCms\Models\User;
+use Loopeer\QuickCms\Models\Backend\User;
 
 class AdminAuthenticate{
     /**
@@ -48,11 +47,6 @@ class AdminAuthenticate{
         $email = Input::get('email');
         $password = Input::get('password');
         if (Auth::admin()->attempt(['email' => $email, 'password' => $password], true)) {
-            ActionLog::create(array(
-                'user_id' => Auth::admin()->get()->id,
-                'content' => config('quickCms.action_log.login'),
-                'client_ip' => $request->ip()
-            ));
             User::where('email', $email)->update(['last_login' => Carbon::now()]);
             //设置最后操作时间
             $request->session()->put('LAST_ACTIVITY', Carbon::now());
