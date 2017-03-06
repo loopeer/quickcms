@@ -93,7 +93,7 @@
                     @foreach($model->index as $item)
                         { "orderable" : '{{ isset($item['order']) ? true : false }}', "name": '{{ $item['column'] }}' },
                     @endforeach
-                    @if($model->actions || $model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'])
+                    @if(count($model->buttons['actions']) > 0 || $model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'])
                         { "orderable" : false },
                     @endif
                 ],
@@ -112,7 +112,7 @@
                         { "targets": parseInt('{{ $widthKey }}'), "width": "{{ $widthItem['width'] }}" },
                         @endif
                     @endforeach
-                    @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
+                    @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || count($model->buttons['actions']) > 0)
                         {
                         "targets": -1,
                         "data": null,
@@ -131,7 +131,7 @@
                                 + '<a name="{{ $action['name'] }}" permission="{{ $action['permission'] or '' }}" class="btn btn-primary">{{ $action['text'] }}</a>'
                                 @endforeach
                             @else
-                                @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || $model->buttons['actions'])
+                                @if($model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'] || count($model->buttons['actions']) > 0)
                                 + '<div class="btn-group"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作<span class="caret"></span></button><ul class="dropdown-menu">'
                                     @if($model->buttons['edit'])
                                     + '<li class="edit_btn"><a href="javascript:void(0);" name="edit_btn" permission="admin.{{ $model->route }}.edit">编辑</a></li><li class="divider"></li>'
