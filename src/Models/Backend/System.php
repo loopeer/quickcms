@@ -17,4 +17,5 @@ class System extends FastModel
         ['column' => 'value', 'rules' => ['required' => true]],
         ['column' => 'description', 'rules' => ['required' => true]],
     ];
+    protected $module = '系统设置';
 }

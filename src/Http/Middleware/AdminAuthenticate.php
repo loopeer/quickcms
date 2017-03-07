@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Input;
+use Loopeer\QuickCms\Models\Backend\ActionLog;
+use Loopeer\QuickCms\Services\Utils\ClientUtil;
 use Validator;
 use Loopeer\QuickCms\Models\Backend\User;
 
@@ -51,6 +53,18 @@ class AdminAuthenticate{
             //设置最后操作时间
             $request->session()->put('LAST_ACTIVITY', Carbon::now());
             // 认证通过...
+            $client = new ClientUtil();
+            ActionLog::create(array(
+                'user_id' => Auth::admin()->get()->id,
+                'user_name' => Auth::admin()->get()->email,
+                'system' => $client->getPlatForm($_SERVER['HTTP_USER_AGENT'], true),
+                'browser' => $client->getBrowser($_SERVER['HTTP_USER_AGENT'], true),
+                'url' => request()->getRequestUri(),
+                'ip' => request()->getClientIp(),
+                'type' => ActionLog::LOGIN_TYPE,
+                'primary_key' => Auth::admin()->get()->getKey(),
+                'module_name' => Auth::admin()->get()->module,
+            ));
             return redirect('/admin/index');
         } else {
             $message = array('result' => false,'content' => '邮箱或密码错误');

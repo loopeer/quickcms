@@ -75,6 +75,7 @@ class Test extends FastModel {
         ['column' => 'images', 'type' => 'image'],
         ['column' => 'user.name']
     ];
+    protected $module = '测试';
 
     protected $casts = [
         'type' => 'array',

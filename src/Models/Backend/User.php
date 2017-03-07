@@ -53,6 +53,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
         ['column' => 'password', 'type' => 'password', 'rules' => ['required' => true]],
         ['column' => 'roles.id', 'type' => 'select', 'param' => 'role_group'],
     ];
+    protected $module = '用户';
 
     protected $casts = ['avatar' => 'qiniu'];
     protected $with = ['roles'];

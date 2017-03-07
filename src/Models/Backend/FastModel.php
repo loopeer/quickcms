@@ -2,17 +2,15 @@
 
 namespace Loopeer\QuickCms\Models\Backend;
 
-use Illuminate\Support\Str;
-
 class FastModel extends BaseModel
 {
-
     protected $buttons;
     protected $index;
-    protected $route;
     protected $create;
     protected $createHidden = [];
     protected $detail;
+    protected $route;
+    protected $module;
 
     public function buttons()
     {
@@ -33,12 +31,12 @@ class FastModel extends BaseModel
         if (isset($this->route)) {
             return $this->route;
         }
-        return str_replace('\\', '', Str::snake(Str::plural(class_basename($this))));
+        return str_replace('\\', '', camel_case(str_plural(class_basename($this))));
     }
 
-    public function __set($key, $value)
+    public function getModule()
     {
-        $this->$key = $value;
+        return $this->module ?: $this->getRoute();
     }
 
     public function __get($key)
@@ -48,14 +46,16 @@ class FastModel extends BaseModel
                 return $this->index;
             case 'buttons':
                 return $this->buttons();
-            case 'route':
-                return $this->getRoute();
             case 'create':
                 return $this->create;
             case 'createHidden':
                 return $this->createHidden;
             case 'detail':
                 return $this->detail;
+            case 'route':
+                return $this->getRoute();
+            case 'module':
+                return $this->getModule();
             default:
                 return parent::__get($key);
         }

@@ -34,4 +34,5 @@ class Document extends FastModel
         ['column' => 'created_at'],
         ['column' => 'updated_at'],
     ];
+    protected $module = '文档';
 }

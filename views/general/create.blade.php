@@ -10,11 +10,7 @@
                         <header>
                             <span class="widget-icon"><i class="fa fa-edit"></i></span>
                             <h2>
-                                @if(isset($data->id))
-                                    {{ Lang::has('fasts.' . $model->route . '.edit_form') ? trans('fasts.' . $model->route . '.edit_form') : '编辑' }}
-                                @else
-                                    {{ Lang::has('fasts.' . $model->route . '.create_form') ? trans('fasts.' . $model->route . '.create_form') : '新增' }}
-                                @endif
+                                {{ $model->module . (isset($data->id) ? '编辑' : '新增') }}
                             </h2>
                         </header>
                         <div>

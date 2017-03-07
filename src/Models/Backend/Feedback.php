@@ -16,4 +16,5 @@ class Feedback extends FastModel
         ['column' => 'channel_id'],
         ['column' => 'created_at', 'order' => 'desc'],
     ];
+    protected $module = '反馈';
 }

@@ -12,6 +12,8 @@ namespace Loopeer\QuickCms\Models\Backend;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Loopeer\QuickCms\Services\Utils\ClientUtil;
 
 class HookModel extends Model
 {
@@ -23,12 +25,38 @@ class HookModel extends Model
         static::created(function($model)
         {
             self::saveStatistic($model, 'created');
+            self::createActionLog($model, ActionLog::CREATE_TYPE);
         });
 
         static::updated(function($model)
         {
             self::saveStatistic($model, 'updated');
+            self::createActionLog($model, ActionLog::UPDATE_TYPE);
         });
+
+        static::deleted(function($model) {
+            self::createActionLog($model, ActionLog::DELETE_TYPE);
+        });
+    }
+
+    public static function createActionLog($model, $type)
+    {
+        if ($model instanceof ActionLog or $model instanceof Statistic or $model instanceof User) {
+            return;
+        }
+        $client = new ClientUtil();
+        ActionLog::create(array(
+            'user_id' => Auth::admin()->get()->id,
+            'user_name' => Auth::admin()->get()->email,
+            'system' => $client->getPlatForm($_SERVER['HTTP_USER_AGENT'], true),
+            'browser' => $client->getBrowser($_SERVER['HTTP_USER_AGENT'], true),
+            'content' => $model instanceof User ? NULL : json_encode($model),
+            'url' => request()->getRequestUri(),
+            'ip' => request()->getClientIp(),
+            'type' => $type,
+            'primary_key' => $model->getKey(),
+            'module_name' => $model->module,
+        ));
     }
 
     public static function saveStatistic($model, $event) {

@@ -43,12 +43,12 @@ class Role extends FastModel implements EntrustRoleInterface
         ['column' => 'description'],
         ['column' => 'created_at'],
     ];
-
     protected $create = [
         ['column' => 'name', 'rules' => ['required' => true]],
         ['column' => 'display_name', 'rules' => ['required' => true]],
         ['column' => 'description'],
     ];
+    protected $module = '角色';
 
     public function users()
     {

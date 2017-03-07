@@ -12,13 +12,10 @@ namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
 use Loopeer\QuickCms\Models\Backend\Permission;
 use Loopeer\QuickCms\Models\Backend\User;
-use View;
 use Input;
 use Log;
 use Session;
 use DB;
-use Redirect;
-use Response;
 use Auth;
 use Cache;
 use Illuminate\Http\Request;

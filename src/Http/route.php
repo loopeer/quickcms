@@ -55,6 +55,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace
    Route::resource('versions', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Version::class]);
    Route::resource('systems', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\System::class]);
    Route::resource('documents', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Document::class]);
+   Route::resource('actionLogs', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\ActionLog::class]);
 
    Route::get('users/profile', 'UserController@getProfile');
    Route::post('users/profile', 'UserController@saveProfile');

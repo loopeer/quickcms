@@ -4,7 +4,7 @@
      data-widget-colorbutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-search"></i> </span>
-        <h2>{{ Lang::has('fasts.' . $model->route . '.query_form') ? trans('fasts.' . $model->route . '.query_form') : '查询' }}</h2>
+        <h2>{{ $model->module . '查询' }}</h2>
     </header>
     <div role="content">
         <div class="jarviswidget-editbox">

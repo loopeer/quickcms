@@ -20,6 +20,7 @@ class Version extends FastModel
         ['column' => 'message'],
         ['column' => 'description'],
     ];
+    protected $module = '版本';
 
     const CREATE_STATUS = 0;
     const PUBLISH_STATUS = 1;

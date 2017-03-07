@@ -42,9 +42,18 @@ class FastController extends BaseController
         $data = Input::all();
         $message['result'] = true;
         try {
-            $data['id'] ? $model::find($data['id'])->update($data) : $model::create($data);
+            if ($data['id']) {
+                $builder = $model::find($data['id']);
+                foreach($data as $k => $v) {
+                    $builder->$k = $v;
+                }
+                $builder->save();
+            } else {
+                $model::create($data);
+            }
         } catch (QueryException $ex) {
             $message['content'] = '数据库中已存在相同的数据，请修改你的数据。';
+            \Log::info($ex->getMessage());
             return back()->with('message', $message)->withInput($data);
         }
         $message['content'] = '数据保存成功。';

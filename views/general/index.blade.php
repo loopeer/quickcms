@@ -14,7 +14,7 @@
                          data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>{{ Lang::has('fasts.' . $model->route . '.index_form') ? trans('fasts.' . $model->route . '.index_form') : '列表' }}</h2>
+                            <h2>{{ $model->module . '列表' }}</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
