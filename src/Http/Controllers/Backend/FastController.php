@@ -17,6 +17,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use DB;
+use App;
 
 class FastController extends BaseController
 {
@@ -28,7 +31,14 @@ class FastController extends BaseController
 
     public function index(Model $model)
     {
-        return view('backend::general.index', compact('model'));
+        $index = $model->index;
+        $queries = [];
+        foreach ($index as $column) {
+            if (isset($column['query'])) {
+                $queries[] = $column;
+            }
+        }
+        return view('backend::general.index', compact('model', 'queries'));
     }
 
     public function create(Model $model)
@@ -95,4 +105,27 @@ class FastController extends BaseController
         return response()->json($model::destroy($id));
     }
 
+    public function dbExport(Model $model)
+    {
+        if ($model->buttons['dbExport']) {
+            $table = with($model)->getTable();
+            $data = DB::table($table)->get();
+            return Excel::create($table)->sheet($table, function($sheet) use ($data) {
+                $sheet->fromArray(collect($data)->map(function ($x) {
+                    return (array)$x;
+                })->toArray(), null, 'A1', true);
+            })->export('xlsx');
+        } else {
+            App::abort('403');
+        }
+    }
+
+    public function queryExport(Model $model)
+    {
+        if ($model->buttons['queryExport']) {
+
+        } else {
+
+        }
+    }
 }

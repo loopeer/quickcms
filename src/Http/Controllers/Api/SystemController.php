@@ -11,14 +11,14 @@
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
 use Input;
+use Loopeer\QuickCms\Models\Api\Feedback;
+use Loopeer\QuickCms\Models\Api\Pushes;
+use Loopeer\QuickCms\Models\Api\System;
+use Loopeer\QuickCms\Models\Backend\Document;
+use Loopeer\QuickCms\Models\Backend\Version;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
 use Request;
-use Loopeer\QuickCms\Models\Document;
-use Loopeer\QuickCms\Models\Version;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
-use Loopeer\QuickCms\Models\Pushes;
-use Loopeer\QuickCms\Models\Feedback;
-use Loopeer\QuickCms\Models\System;
 use Cache;
 
 class SystemController extends BaseController {
@@ -39,10 +39,10 @@ class SystemController extends BaseController {
         $version_code = Request::header('build');
         $appstore_reviewing = false;
         $review_system = Cache::rememberForever('review_system', function () {
-            return System::where('system_key', 'app_review')->first();
+            return System::where('key', 'app_review')->first();
         });
         $build_system = Cache::rememberForever('build_system', function () {
-            return System::where('system_key', 'build')->first();
+            return System::where('key', 'build')->first();
         });
         if (count($review_system) > 0 && $review_system->system_value == 1) {
             if (count($build_system) > 0 && $build_system->system_value == $version_code) {

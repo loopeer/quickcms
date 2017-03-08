@@ -4,7 +4,7 @@ namespace Loopeer\QuickCms\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB;
-use Loopeer\QuickCms\Models\Permission;
+use Loopeer\QuickCms\Models\Backend\Permission;
 
 class InitOperationPermission extends Command
 {
