@@ -73,7 +73,7 @@ class BaseController extends Controller
         return $ret;
     }
 
-    public function generalQuery($model)
+    public function fastQuery($model)
     {
         $length = Input::get('length');
         $columns = Input::get('columns');

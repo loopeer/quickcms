@@ -77,4 +77,13 @@ return [
         'created_at' => '创建时间',
         'index_form' => '操作日志列表',
     ],
+    'exceptionLogs' => [
+        'id' => 'ID',
+        'message' => '异常内容',
+        'file' => '异常文件',
+        'line' => '异常行',
+        'code' => '异常码',
+        'data' => '异常详细',
+        'created_at' => '异常时间'
+    ],
 ];

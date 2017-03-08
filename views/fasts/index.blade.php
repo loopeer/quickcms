@@ -2,7 +2,7 @@
 @section('content')
     <div id="content">
 
-        @include('backend::general.query')
+        @include('backend::fasts.query')
 
         <section id="widget-grid" class="">
             <div class="row tips">

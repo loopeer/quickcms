@@ -23,18 +23,18 @@ class FastController extends BaseController
 
     public function search(Model $model)
     {
-        return response()->json(self::generalQuery($model));
+        return response()->json(self::fastQuery($model));
     }
 
     public function index(Model $model)
     {
-        return view('backend::general.index', compact('model'));
+        return view('backend::fasts.index', compact('model'));
     }
 
     public function create(Model $model)
     {
         $data = new $model;
-        return view('backend::general.create', compact('model', 'data'));
+        return view('backend::fasts.create', compact('model', 'data'));
     }
 
     public function store(Model $model = null)
@@ -63,13 +63,13 @@ class FastController extends BaseController
     public function show(Model $model, $id)
     {
         $data = $model::find($id);
-        return view('backend::general.detail', compact('model', 'data'));
+        return view('backend::fasts.detail', compact('model', 'data'));
     }
 
     public function edit(Model $model, $id)
     {
         $data = $model::find($id);
-        return view('backend::general.create', compact('model', 'data'));
+        return view('backend::fasts.create', compact('model', 'data'));
     }
 
     public function update(Model $model, $id)

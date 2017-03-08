@@ -12,7 +12,7 @@ class SystemsSetupTables extends Migration
      */
     public function up()
     {
-        //操作日志
+        // 操作日志
         if(! Schema::hasTable('action_log')) {
             Schema::create('action_logs', function ($table) {
                 $table->bigIncrements('id')->comment('主键');
@@ -23,6 +23,20 @@ class SystemsSetupTables extends Migration
                 $table->string("url", 150)->comment('url');
                 $table->string('ip', 50)->comment('ip');
                 $table->text('content')->comment('内容');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
+
+        // 异常日志
+        if(! Schema::hasTable('exception_logs')) {
+            Schema::create('exception_logs', function ($table) {
+                $table->bigIncrements('id')->comment('主键');
+                $table->string('message', 1000)->comment('消息');
+                $table->string('code', 50)->comment('异常码');
+                $table->string("file", 255)->comment('异常文件');
+                $table->string("line", 50)->comment('异常行');
+                $table->text("data")->comment('内容');
                 $table->timestamps();
                 $table->softDeletes();
             });
