@@ -13,7 +13,7 @@ class SystemsSetupTables extends Migration
     public function up()
     {
         // 操作日志
-        if(! Schema::hasTable('action_log')) {
+        if(! Schema::hasTable('action_logs')) {
             Schema::create('action_logs', function ($table) {
                 $table->bigIncrements('id')->comment('主键');
                 $table->bigInteger('user_id')->comment('用户id');
@@ -22,6 +22,9 @@ class SystemsSetupTables extends Migration
                 $table->string("system", 150)->comment("操作系统");
                 $table->string("url", 150)->comment('url');
                 $table->string('ip', 50)->comment('ip');
+                $table->string('primary_key', 100)->nullable()->comment('业务主键');
+                $table->string('module_name', 100)->nullable()->comment('模块名称');
+                $table->tinyInteger('type')->default(0)->comment('类型0-创建 1-修改 2-删除 3-登录');
                 $table->text('content')->comment('内容');
                 $table->timestamps();
                 $table->softDeletes();
