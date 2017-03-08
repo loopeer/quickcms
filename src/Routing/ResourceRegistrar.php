@@ -30,7 +30,7 @@ class ResourceRegistrar extends BaseResourceRegistrar
             }
         });
 
-        $this->resourceDefaults = array_merge(['search'], $this->resourceDefaults);
+        $this->resourceDefaults = array_merge(['search', 'dbExport', 'queryExport'], $this->resourceDefaults);
     }
 
     protected function getResourceAction($resource, $controller, $method, $options)
@@ -50,6 +50,24 @@ class ResourceRegistrar extends BaseResourceRegistrar
         $uri = $this->getResourceUri($name).'/search';
 
         $action = $this->getResourceAction($name, $controller, 'search', $options);
+
+        return $this->router->get($uri, $action);
+    }
+
+    protected function addResourceDbExport($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/dbExport';
+
+        $action = $this->getResourceAction($name, $controller, 'dbExport', $options);
+
+        return $this->router->get($uri, $action);
+    }
+
+    protected function addResourceQueryExport($name, $base, $controller, $options)
+    {
+        $uri = $this->getResourceUri($name).'/queryExport';
+
+        $action = $this->getResourceAction($name, $controller, 'queryExport', $options);
 
         return $this->router->get($uri, $action);
     }
