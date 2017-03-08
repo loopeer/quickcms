@@ -79,8 +79,19 @@ class BaseController extends Controller
         $columns = Input::get('columns');
         $orders = Input::get('order');
         self::setCurrentPage($length);
+        $query = array_column($model->index, 'query');
+        //缓存列表和排序参数
+        $expiresAt = Carbon::now()->addMinutes(config('quickCms.login_lifetime', 60));
+        Cache::put('export_columns_' . Auth::admin()->get()->id, $columns, $expiresAt);
+        Cache::put('export_orders_' . Auth::admin()->get()->id, $orders, $expiresAt);
+
+        return self::getQueryData($model, $columns, $orders, $query, $length);
+    }
+
+    protected function getQueryData($model, $columns, $orders, $query, $length = null)
+    {
         $builder = $model;
-        if (count($query = array_column($model->index, 'query')) > 0) {
+        if (count($query) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];
                 if ($value != null && $value != ',') {
@@ -99,7 +110,31 @@ class BaseController extends Controller
                 $builder = $builder->orderBy($model->index[$order['column']]['column'], $order['dir']);
             }
         }
-        return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
+        if (isset($length)) {
+            return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
+        } else {
+            return self::getAllData(array_column($model->index, 'column'), $builder->get());
+        }
+    }
+
+    private function getAllData($columns, $collection)
+    {
+        $data = array();
+        foreach($collection as $item) {
+            $obj = array();
+            foreach($columns as $column) {
+                if($item->$column instanceof Carbon) {
+                    array_push($obj, $item->$column->format('Y-m-d H:i:s'));
+                } elseif (strstr($column, '.') !== FALSE) {
+                    $table_column = explode('.', $column);
+                    array_push($obj, $item->{$table_column[0]}->{$table_column[1]});
+                } else {
+                    array_push($obj, $item->$column);
+                }
+            }
+            array_push($data, $obj);
+        }
+        return $data;
     }
 
 
@@ -199,8 +234,8 @@ class BaseController extends Controller
     public function getSystemValue($key)
     {
         $collection = $this->systemConfig;
-        $filtered = $collection->where('system_key', $key);
-        return $filtered->first()['system_value'];
+        $filtered = $collection->where('key', $key);
+        return $filtered->first()['value'];
     }
 
     private function queryBuilder($builder, $item, $value)
