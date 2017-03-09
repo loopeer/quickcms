@@ -73,23 +73,24 @@ class BaseController extends Controller
         return $ret;
     }
 
-    public function fastQuery($model)
+    public function fastQuery($model, $queryType = 'paginate')
     {
-        $length = Input::get('length');
-        $columns = Input::get('columns');
-        $orders = Input::get('order');
-        self::setCurrentPage($length);
+        if ($queryType == 'all') {
+            $columns = Cache::get('export_columns_' . Auth::admin()->get()->id);
+            $orders = Cache::get('export_orders_' . Auth::admin()->get()->id);
+        } else {
+            $length = Input::get('length');
+            $columns = Input::get('columns');
+            $orders = Input::get('order');
+            self::setCurrentPage($length);
+            //缓存列表和排序参数
+            if ($model->buttons['queryExport']) {
+                $expiresAt = Carbon::now()->addMinutes(config('quickCms.login_lifetime', 60));
+                Cache::put('export_columns_' . Auth::admin()->get()->id, $columns, $expiresAt);
+                Cache::put('export_orders_' . Auth::admin()->get()->id, $orders, $expiresAt);
+            }
+        }
         $query = array_column($model->index, 'query');
-        //缓存列表和排序参数
-        $expiresAt = Carbon::now()->addMinutes(config('quickCms.login_lifetime', 60));
-        Cache::put('export_columns_' . Auth::admin()->get()->id, $columns, $expiresAt);
-        Cache::put('export_orders_' . Auth::admin()->get()->id, $orders, $expiresAt);
-
-        return self::getQueryData($model, $columns, $orders, $query, $length);
-    }
-
-    protected function getQueryData($model, $columns, $orders, $query, $length = null)
-    {
         $builder = $model;
         if (count($query) > 0) {
             foreach($columns as $column) {
@@ -110,10 +111,10 @@ class BaseController extends Controller
                 $builder = $builder->orderBy($model->index[$order['column']]['column'], $order['dir']);
             }
         }
-        if (isset($length)) {
-            return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
-        } else {
+        if ($queryType == 'all') {
             return self::getAllData(array_column($model->index, 'column'), $builder->get());
+        } else {
+            return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
         }
     }
 

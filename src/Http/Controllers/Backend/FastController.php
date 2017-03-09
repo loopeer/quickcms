@@ -138,12 +138,8 @@ class FastController extends BaseController
     public function queryExport(Model $model)
     {
         if ($model->buttons['queryExport']) {
-            //获取列表和排序缓存
-            $columns = Cache::get('export_columns_' . Auth::admin()->get()->id);
-            $orders = Cache::get('export_orders_' . Auth::admin()->get()->id);
-            $query = array_column($model->index, 'query');
             //查询数据
-            $data = self::getQueryData($model, $columns, $orders, $query);
+            $data = self::fastQuery($model, 'all');
             $column_name = [];
             $table = $model->getTable();
             $index_columns = array_column($model->index, 'column');
