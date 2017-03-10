@@ -57,4 +57,11 @@
     .btn.btn-primary {
         margin-right: 2px;
     }
+    #detail .form-control {
+        width: 96%;
+        height: auto;
+    }
+    .detail-html {
+        padding: 6px 0;
+    }
 </style>
