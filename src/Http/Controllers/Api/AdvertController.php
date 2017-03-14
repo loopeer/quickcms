@@ -12,7 +12,7 @@ namespace Loopeer\QuickCms\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 
-class AdvertisementController extends BaseController {
+class AdvertController extends BaseController {
 
     protected $model;
 

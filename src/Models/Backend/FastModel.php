@@ -11,6 +11,8 @@ class FastModel extends BaseModel
     protected $detail;
     protected $route;
     protected $module;
+    protected $redirect_column;
+    protected $redirect_back_route;
 
     public function buttons()
     {
@@ -32,6 +34,7 @@ class FastModel extends BaseModel
             return $this->route;
         }
         return str_replace('\\', '', camel_case(str_plural(class_basename($this))));
+
     }
 
     public function getModule()
@@ -56,6 +59,10 @@ class FastModel extends BaseModel
                 return $this->getRoute();
             case 'module':
                 return $this->getModule();
+            case 'redirect_column':
+                return $this->redirect_column;
+            case 'redirect_back_route':
+                return $this->redirect_back_route;
             default:
                 return parent::__get($key);
         }

@@ -73,7 +73,7 @@ class BaseController extends Controller
         return $ret;
     }
 
-    public function fastQuery($model, $queryType = 'paginate')
+    public function fastQuery($model, $queryType = 'paginate', $redirect_value = null)
     {
         if ($queryType == 'all') {
             $columns = Cache::get('export_columns_' . Auth::admin()->get()->id);
@@ -92,6 +92,9 @@ class BaseController extends Controller
         }
         $query = array_column($model->index, 'query');
         $builder = $model;
+        if ($model->redirect_column !== null) {
+            $builder = $builder->where($model->redirect_column, $redirect_value);
+        }
         if (count($query) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];

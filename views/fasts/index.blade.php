@@ -153,17 +153,28 @@
                     @endif
                 ],
                 "ajax": {
+                    @if($model->redirect_column !== null)
+                    "url": "{{ $model->route }}/{{ $model->redirect_value }}/" + "search"
+                    @else
                     "url": "{{ $model->route }}/search"
+                    @endif
                 }
             });
             // table end
 
             var buttons = '';
+            @if($model->redirect_back_route !== null)
+                buttons += '<a href="{{ $model->redirect_back_route }}" style="margin-left: 10px;" class="btn btn-primary">返回</a>';
+            @endif
             @if($model->buttons['create'])
-                buttons += '<a href="{{ $model->route }}/create" id="create_btn" class="btn btn-primary" permission="admin.{{ $model->route }}.create">新增</a>';
+                buttons += '<a href="{{ $model->route }}/create" id="create_btn" style="margin-left: 10px;" class="btn btn-primary" permission="admin.{{ $model->route }}.create">新增</a>';
             @endif
             @if($model->buttons['queryExport'])
+            @if($model->redirect_column !== null)
+                buttons += '<a href="{{ $model->route }}/{{ $model->redirect_value }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
+            @else
                 buttons += '<a href="{{ $model->route }}/queryExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">列表导出</a>';
+            @endif
             @endif
             @if($model->buttons['dbExport'])
                 buttons += '<a href="{{ $model->route }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
@@ -217,7 +228,7 @@
                 var data = table.data();
                 for (var i = 0; i < data.length; i++) {
                     @foreach($model->buttons['actions'] as $action)
-                        @if(($action['type'] == 'confirm' || $action['type'] == 'dialog') && isset($action['where']))
+                        @if(($action['type'] == 'confirm' || $action['type'] == 'dialog' || $action['type'] == 'redirect') && isset($action['where']))
                             @foreach($action['where'] as $wk => $wv)
                                 {{ $list_td = array_flip(array_column($model->index, 'column'))[$wk] }}
                                 var flag = false;
@@ -386,6 +397,20 @@
                     }
                 });
                 @endif
+
+                @if($action['type'] == 'redirect')
+                $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
+                     @if(isset($action['redirect_column']))
+                    var redirect_key = '{{ array_search($action['redirect_column'],  array_column($model->index, 'column')) }}';
+                    var data = table.row($(this).parents('tr')).data();
+                    var redirect_value = data[parseInt(redirect_key)];
+                    @else
+                    var redirect_value = '';
+                    @endif
+                    window.location.href = '{{$action['url']}}' + '/' + redirect_value;
+                });
+                @endif
+
                 @if($action['type'] == 'dialog')
                     $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
                         if(isDisabled($(this))) {

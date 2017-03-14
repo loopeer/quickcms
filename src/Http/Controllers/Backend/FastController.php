@@ -31,19 +31,21 @@ class FastController extends BaseController
 
     public function search(Model $model)
     {
-        return response()->json(self::fastQuery($model));
+        $redirect_value = isset($model->redirect_value) ? $model->redirect_value : null;
+        return response()->json(self::fastQuery($model, 'paginate', $redirect_value));
     }
 
     public function index(Model $model)
     {
         $index = $model->index;
+        $redirect_value = isset($model->redirect_value) ? $model->redirect_value : null;
         $queries = [];
         foreach ($index as $column) {
             if (isset($column['query'])) {
                 $queries[] = $column;
             }
         }
-        return view('backend::fasts.index', compact('model', 'queries'));
+        return view('backend::fasts.index', compact('model', 'queries', 'redirect_value'));
     }
 
     public function create(Model $model)
@@ -138,8 +140,9 @@ class FastController extends BaseController
     public function queryExport(Model $model)
     {
         if ($model->buttons['queryExport']) {
+            $redirect_value = isset($model->redirect_value) ? $model->redirect_value : null;
             //查询数据
-            $data = self::fastQuery($model, 'all');
+            $data = self::fastQuery($model, 'all', $redirect_value);
             $column_name = [];
             $table = $model->getTable();
             $index_columns = array_column($model->index, 'column');
