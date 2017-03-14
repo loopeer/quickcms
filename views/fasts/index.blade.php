@@ -177,7 +177,11 @@
             @endif
             @endif
             @if($model->buttons['dbExport'])
+                @if($model->redirect_column !== null)
+                buttons += '<a href="{{ $model->route }}/{{ $model->redirect_value }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
+                @else
                 buttons += '<a href="{{ $model->route }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
+                @endif
             @endif
             $("div.dt-toolbar div:first").html(buttons);
 
