@@ -39,11 +39,32 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        $path = $request->path();
         $exception = FlattenException::create($e);
         $statusCode = $exception->getStatusCode($exception);
+        //API
+        if (strstr($path, 'api/') !== false) {
+            $response = [
+                'code' => $statusCode,
+                'message' => trans('messages.default_error'),
+                'data' => null
+            ];
+            if (config('app.debug')) {
+                $response['debug'] = [
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile(),
+                    'class' => get_class($e),
+                    'trace' => explode("\n", $e->getTraceAsString()),
+                ];
+            }
+            return response()->json($response, $statusCode);
+        }
+        //Backend
         if(view()->exists('backend::errors.error') && !config('app.debug')) {
             return response()->view('backend::errors.error', ['code' => $statusCode], $statusCode);
         }
+
         return parent::render($request, $e);
     }
 }
