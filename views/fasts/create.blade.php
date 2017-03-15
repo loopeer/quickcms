@@ -90,6 +90,10 @@
                                                 <script type="text/javascript">var ue = UE.getEditor("{{ $item['column'] }}-container");</script>
                                             @elseif($item['type'] == 'image')
                                                 @include('backend::image.upload', ['image' => $item, 'image_name' => $item['column']])
+                                            @elseif($item['type'] == 'map')
+                                                   <label class="input">
+                                                       <input type="text" id="{{ $item['column'] }}" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" readonly>
+                                                   </label>
                                             @endif
                                         </section>
                                     @endforeach
@@ -107,6 +111,62 @@
                         </div>
                     </div>
                 </article>
+
+                @if(in_array('map', $types))
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="jarviswidget" id="wid-id-4" data-widget-hidden="false" data-widget-togglebutton="false"
+                         data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
+                            <h2>百度地图</h2>
+                        </header>
+                        <div>
+                            <style>
+                                .BMapLabel{
+                                    max-width: none;
+                                }
+                            </style>
+                            <div class="smart-form">
+                                <fieldset style="padding: 25px 14px 25px;">
+                                    <div class="row">
+                                        <section class="col col-5">
+                                            <label class="input"> <i class="icon-append fa fa-home"></i>
+                                                <input type="text" name="map-address" id="map-address" placeholder="请输入要查询的地址">
+                                            </label>
+                                        </section>
+                                        <section class="col col-5">
+                                            <label class="input"> <i class="icon-append fa fa-map-marker"></i>
+                                                <input type="text" name="map-result" id="map-result" placeholder="查询结果(经纬度)" readonly>
+                                            </label>
+                                        </section>
+                                        <div class="col col-2">
+                                            <button id="map-search" class="btn btn-primary" style="margin: inherit;padding: 6px 12px;">
+                                                查询
+                                            </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div>
+                                <div class="jarviswidget-editbox">
+                                    <!-- This area used as dropdown edit box -->
+
+                                </div>
+                                <div class="widget-body no-padding">
+
+                                    <div id="container" class="google_maps" style="height: 600px"></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+                @endif
             </div>
         </section>
     </div>
@@ -120,6 +180,112 @@
             @include('backend::image.action', ['image' => $itemImage, 'image_data' => $data->$itemImage['column']])
         @endif
     @endforeach
+
+    @if(in_array('map', $types))
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=pwlLr6dpGrWK9PNjzFHzur3V"></script>
+
+        <script>
+            var map = new BMap.Map("container");
+
+            @if(isset($data->id))
+            var longitude = '116.403963';
+            var latitude = '39.915119';
+
+             @foreach($model->create as $itemColumn)
+                @if(isset($itemColumn['type']) && $itemColumn['type'] == 'map')
+                 @if($itemColumn['param'] == 'all' && !empty($data->{$itemColumn['column']}))
+
+                 longitude = '{{ explode(',', $data->{$itemColumn['column']})[0] }}';
+                 latitude = '{{ explode(',', $data->{$itemColumn['column']})[1] }}';
+
+                 @elseif($itemColumn['param'] == 'longitude' && !empty($data->{$itemColumn['column']}))
+                     longitude = "{{ $data->{$itemColumn['column']} }}";
+                 @elseif($itemColumn['param'] == 'latitude' && !empty($data->{$itemColumn['column']}))
+                     latitude = "{{ $data->{$itemColumn['column']} }}";
+                 @endif
+                @endif
+             @endforeach
+
+            var default_point = new BMap.Point(longitude,latitude);
+            var default_label = new BMap.Label(longitude + "," + latitude,{offset:new BMap.Size(20,-10)});
+             map.centerAndZoom(default_point, 15);
+            addMarker(default_point,default_label);
+            $("#map-result").val(longitude + "," +  latitude);
+            @else
+            map.centerAndZoom("北京", 12);
+            @endif
+
+
+            map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+            map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+            map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+            map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+            map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+            var localSearch = new BMap.LocalSearch(map);
+            localSearch.enableAutoViewport(); //允许自动调节窗体大小
+
+            map.addEventListener("click",function(e){
+                // alert(e.point.lng + "," + e.point.lat);
+                var allOverlay = map.getOverlays();
+                if (allOverlay.length > 0) {
+                    map.clearOverlays();
+                }
+                var marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat));
+                map.addOverlay(marker);//增加点
+                var point = new BMap.Point(e.point.lng, e.point.lat);
+                var label = new BMap.Label(e.point.lng+","+ e.point.lat,{offset:new BMap.Size(20,-10)});
+                addMarker(point,label);
+                $("#map-result").val(e.point.lng + "," +  e.point.lat);
+                @foreach($model->create as $itemColumn)
+                @if(isset($itemColumn['type']) && $itemColumn['type'] == 'map')
+                    @if($itemColumn['param'] == 'all')
+                    $("#{{ $itemColumn['column'] }}").val(e.point.lng + "," +  e.point.lat);
+                @elseif($itemColumn['param'] == 'longitude')
+                    $("#{{ $itemColumn['column'] }}").val(e.point.lng);
+                @elseif($itemColumn['param'] == 'latitude')
+                    $("#{{ $itemColumn['column'] }}").val(e.point.lat);
+                @endif
+                @endif
+                @endforeach
+            });
+
+            function addMarker(point,label){
+                var marker = new BMap.Marker(point);
+                map.addOverlay(marker);
+                marker.setLabel(label);
+            }
+
+            $('#map-search').on('click', function() {
+                map.clearOverlays();//清空原来的标注
+                var keyword = $('#map-address').val();
+                localSearch.setSearchCompleteCallback(function (searchResult) {
+                    var poi = searchResult.getPoi(0);
+                    $('#map-result').val(poi.point.lng + "," + poi.point.lat);
+                    map.centerAndZoom(poi.point, 13);
+                    var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+                    map.addOverlay(marker);
+                    var content = $('#map-address').val() + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+                    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                    marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+                    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                    $("#map-result").val(poi.point.lng + "," +  poi.point.lat);
+                    @foreach($model->create as $itemColumn)
+                   @if(isset($itemColumn['type']) && $itemColumn['type'] == 'map')
+                       @if($itemColumn['param'] == 'all')
+                       $("#{{ $itemColumn['column'] }}").val(poi.point.lng + "," +  poi.point.lat);
+                    @elseif($itemColumn['param'] == 'longitude')
+                        $("#{{ $itemColumn['column'] }}").val(poi.point.lng);
+                    @elseif($itemColumn['param'] == 'latitude')
+                        $("#{{ $itemColumn['column'] }}").val(poi.point.lat);
+                    @endif
+                    @endif
+                    @endforeach
+                });
+                localSearch.search(keyword);
+            });
+
+        </script>
+    @endif
 
     <script>
         $(document).ready(function() {

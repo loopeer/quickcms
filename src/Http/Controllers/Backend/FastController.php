@@ -51,7 +51,8 @@ class FastController extends BaseController
     public function create(Model $model)
     {
         $data = new $model;
-        return view('backend::fasts.create', compact('model', 'data'));
+        $types = array_column($model->create, 'type');
+        return view('backend::fasts.create', compact('model', 'data', 'types'));
     }
 
     public function store(Model $model = null)
@@ -86,7 +87,8 @@ class FastController extends BaseController
     public function edit(Model $model, $id)
     {
         $data = $model::find($id);
-        return view('backend::fasts.create', compact('model', 'data'));
+        $types = array_column($model->create, 'type');
+        return view('backend::fasts.create', compact('model', 'data', 'types'));
     }
 
     public function update(Model $model, $id)
