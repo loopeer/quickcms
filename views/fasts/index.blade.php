@@ -261,6 +261,16 @@
                                 @endforeach
                             @elseif($renameItem['type'] == 'dialog')
                                 tr.html('<a href="javascript:void(0);" name="{{$renameItem['param']['name']}}">' + value + '</a>');
+                                $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($renameItem['param']['name']) ? $renameItem['param']['name'] : $action['name']}}' + ']', function () {
+                                    if(isDisabled($(this))) {
+                                        var data = table.row($(this).parents('tr')).data();
+                                        $("#dialog .modal-title").html('{{ $renameItem['param']['dialog_title'] }}');
+                                        $(this).attr("data-toggle", "modal");
+                                        $(this).attr("data-target", "#dialog");
+                                        $(this).attr("data-action", "{{$renameItem['param']['url']}}" + data[0]);
+                                        $(this).attr("data-id", data[0]);
+                                    }
+                                });
                             @elseif($renameItem['type'] == 'html')
                                 tr.html(sprintf('{!! $renameItem["param"] !!}', 1, value));
                             @elseif($renameItem['type'] == 'image')
