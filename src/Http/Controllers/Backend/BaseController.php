@@ -272,6 +272,13 @@ class BaseController extends Controller
                 $query->where($table_column[1], $operator, $operator == 'like' ? "%$value%" : $value);
             });
         }
+        if($operator == 'between')
+        {
+            $values = explode(',', $value);
+            if ($values[0] != null && $values[1] != null) {
+                return $builder->whereRaw("$name between '" . ($values[0]) . "' and '" . ($values[1]) . "'");
+            }
+        }
         return $builder->where($name, $operator, $operator == 'like' ? "%$value%" : $value);
     }
 

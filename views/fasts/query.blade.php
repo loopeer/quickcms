@@ -20,7 +20,11 @@
                                 <label class="col-md-1 control-label">{{ trans('fasts.' . $model->route . '.' . $queries[$qk]['column']) }}</label>
                                 <div class="col-md-2">
                                     @if(!isset($queries[$qk]['type']) || $queries[$qk]['type'] == 'input')
-                                        <input class="form-control" type="text" id="@if(strstr($queries[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $queries[$qk]['column']) }}@else{{ $queries[$qk]['column'] }}@endif">
+                                        @if($queries[$qk]['query'] == 'between')
+                                            <input type="text" class="form-control" style="width:50%;float:left" id = "{{ $queries[$qk]['column']."_from" }}"> <input type="text" class="form-control" style="width:50%;float:left" id = "{{ $queries[$qk]['column']."_to" }}">
+                                        @else
+                                            <input class="form-control" type="text" id="@if(strstr($queries[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $queries[$qk]['column']) }}@else{{ $queries[$qk]['column'] }}@endif">
+                                        @endif
                                     @elseif($queries[$qk]['type'] == 'select')
                                         <select class="form-control" id="{{ $queries[$qk]['column'] }}">
                                             <option value="">全部</option>
