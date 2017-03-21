@@ -5,7 +5,7 @@
 </head>
 <body>
 <div>
-    {!! $document->document_content !!}
+    {!! $document->content !!}
 </div>
 </body>
 </html>
