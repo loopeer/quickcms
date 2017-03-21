@@ -131,7 +131,7 @@ class SystemController extends BaseController {
      */
     public function document($key)
     {
-        $document = Document::where('document_key', $key)->first();
+        $document = Document::where('key', $key)->first();
         if ($document) {
             return view('backend::app.document', compact('document'));
         } else {
