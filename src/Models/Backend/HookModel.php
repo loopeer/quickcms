@@ -41,7 +41,7 @@ class HookModel extends Model
 
     public static function createActionLog($model, $type)
     {
-        if ($model instanceof ActionLog or $model instanceof Statistic or $model instanceof User) {
+        if ($model instanceof ActionLog or $model instanceof Statistic or $model instanceof User or !isset(Auth::admin()->get())) {
             return;
         }
         $client = new ClientUtil();
