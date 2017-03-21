@@ -38,10 +38,6 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		], 'quickApi');
 
 		$this->publishes([
-			__DIR__.'/../config/generals' => config_path('generals'),
-		], 'general');
-
-		$this->publishes([
 			__DIR__.'/../public/backend' => public_path('loopeer/quickcms'),
 		], 'public');
 
