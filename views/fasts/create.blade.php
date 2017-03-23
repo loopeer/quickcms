@@ -32,6 +32,10 @@
                                                 <label class="input">
                                                     <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
                                                 </label>
+                                            @elseif($item['type'] == 'textarea')
+                                                <label class="textarea textarea-resizable">
+                                                    <textarea rows="3" class="custom-scroll" name="{{ $item['column'] }}">{{ old($item['column']) ?: $data->{$item['column']} }}</textarea>
+                                                </label>
                                             @elseif($item['type'] == 'password')
                                                 <label class="input">
                                                     <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
