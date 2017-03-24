@@ -60,15 +60,26 @@ class FastController extends BaseController
         $data = Input::all();
         $message['result'] = true;
         try {
-            if ($data['id']) {
-                $builder = $model::find($data['id']);
-                foreach($data as $k => $v) {
-                    $builder->$k = $v;
+            $columnArray = [];
+            foreach($data as $k => $v) {
+                if (is_array($v)) {
+                    $columnArray[$k] = $v;
+                    unset($data[$k]);
                 }
-                $builder->save();
-            } else {
-                $model::create($data);
             }
+
+            if ($data['id']) {
+                $saveModel = $model::find($data['id']);
+                foreach($data as $k => $v) {
+                    $saveModel->$k = $v;
+                }
+                $saveModel->save();
+            } else {
+                $saveModel = $model::create($data);
+            }
+
+            self::relationModelSave($columnArray, $model, $saveModel, $data);
+
         } catch (QueryException $ex) {
             $message['content'] = '数据库中已存在相同的数据，请修改你的数据。';
             Log::info($ex->getMessage());
@@ -184,6 +195,28 @@ class FastController extends BaseController
 
         } else {
             App::abort('403');
+        }
+    }
+
+    public function relationModelSave($columnArray, $model, $saveModel, $data)
+    {
+        if (count($columnArray) > 0) {
+            foreach ($model->create as $create) {
+                if (isset($create['relation'])) {
+                    $relationModel = new $create['relation']['model'];
+                    $relationData = [];
+                    foreach ($columnArray[$create['column']] as $column) {
+                        $relationDataTemp = [];
+                        $relationDataTemp[$create['relation']['foreign_key']] = $column;
+                        $relationDataTemp[$create['relation']['local_key']] = $saveModel->id;
+                        $relationData[] = $relationDataTemp;
+                    }
+                    if ($data['id']) {
+                        $relationModel->where($create['relation']['local_key'], $saveModel->id)->forceDelete();
+                    }
+                    $relationModel->insert($relationData);
+                }
+            }
         }
     }
 }

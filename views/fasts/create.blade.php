@@ -62,7 +62,7 @@
                                                 <div class="inline-group">
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $cbk => $cbv)
                                                     <label class="checkbox">
-                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ isset($data->$item['column']) && in_array($cbk, $data->$item['column']) ? 'checked' : '' }}>
+                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ in_array($cbk, $data->{$item['relation']['foreign_key']}) ? 'checked' : '' }}>
                                                         <i></i>{{ $cbv }}</label>
                                                     @endforeach
                                                 </div>
