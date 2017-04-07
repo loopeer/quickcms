@@ -46,7 +46,7 @@ class SystemController extends BaseController {
         $build_system = Cache::rememberForever('build_system', function () {
             return System::where('key', 'build')->first();
         });
-        if (count($review_system) > 0 && $review_system->value) {
+        if (count($review_system) > 0 && $review_system->value == 'true') {
             if (count($build_system) > 0 && $build_system->value == $version_code) {
                 $appstore_reviewing = true;
             }
