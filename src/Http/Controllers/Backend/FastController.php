@@ -21,10 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
-use App;
-use Cache;
 use Log;
-use Redirect;
 
 class FastController extends BaseController
 {
@@ -141,7 +138,7 @@ class FastController extends BaseController
                 })->toArray(), null, 'A1', true);
             })->export('xlsx');
         } else {
-            App::abort('403');
+            app()->abort('403');
         }
     }
 
@@ -190,11 +187,11 @@ class FastController extends BaseController
             } catch (Exception $e) {
                 Log::info($e->getMessage());
                 $message = ['result' => false, 'content' => '导出失败，请重试'];
-                return Redirect::back()->with('message', $message);
+                return redirect()->back()->with('message', $message);
             }
 
         } else {
-            App::abort('403');
+            app()->abort('403');
         }
     }
 

@@ -4,7 +4,6 @@ use Illuminate\Routing\ResourceRegistrar;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
-use Symfony\Component\Process\Process;
 
 class QuickCmsServiceProvider extends ServiceProvider {
 
@@ -28,31 +27,25 @@ class QuickCmsServiceProvider extends ServiceProvider {
 
 		$this->loadViewsFrom(__DIR__.'/../views', 'backend');
 
-		// Publish config files
 		$this->publishes([
-			__DIR__.'/../config/quickCms.php' => config_path('quickCms.php'),
+			__DIR__ . '/../config/quickCms.php' => config_path('quickCms.php'),
 		], 'quickCms');
 
 		$this->publishes([
-			__DIR__.'/../config/quickApi.php' => config_path('quickApi.php'),
+			__DIR__ . '/../config/quickApi.php' => config_path('quickApi.php'),
 		], 'quickApi');
 
 		$this->publishes([
-			__DIR__.'/../public/backend' => public_path('loopeer/quickcms'),
+			__DIR__ . '/../public/backend' => public_path('loopeer/quickcms'),
 		], 'public');
 
 		$this->publishes([
-			__DIR__.'/../database/migrations' => database_path('migrations'),
+			__DIR__ . '/../database/migrations' => database_path('migrations'),
 		], 'migrations');
 
-		$langFiles = __DIR__ . '/../lang/*';
-		$targetPath = base_path('resources/lang/');
-		$process = new Process("cp -r $langFiles $targetPath");
-		$process->run(function ($type, $buffer) {
-			if (Process::ERR === $type) {
-				return $this->error(trim($buffer));
-			}
-		});
+		$this->publishes([
+			__DIR__ . '/../lang' => base_path('resources/lang'),
+		]);
 
 		if (Schema::hasTable('selectors')) {
             foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
