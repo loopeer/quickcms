@@ -185,6 +185,13 @@
             @endif
             $("div.dt-toolbar div:first").html(buttons);
 
+            $("#reset").on('click', function (e) {
+                $('#query-form').find('input:text').val('');
+                $('input:checkbox').removeAttr('checked');
+                $('#query-form option:selected').removeAttr('selected');
+                $("#query").trigger("click");
+            });
+
             @if(count($query = array_column($model->index, 'query')) > 0)
                 $('#query').on('click', function () {
                     @foreach($model->index as $qk => $qv)

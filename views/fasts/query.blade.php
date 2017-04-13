@@ -10,7 +10,7 @@
         <div class="jarviswidget-editbox">
         </div>
         <div class="widget-body">
-            <form class="form-horizontal">
+            <form id="query-form" class="form-horizontal">
                 <fieldset>
                     @for($qk = 0, $count = 0; $qk < count($queries); $qk++)
                         @if(isset($queries[$qk]['query']) && $count++ >= 0)
@@ -65,7 +65,7 @@
                 <div class="form-actions">
                     <div class="row">
                         <div class="col-md-2">
-                            <button class="btn btn-primary" type="reset">
+                            <button id="reset" class="btn btn-primary" type="button">
                                 <i class="fa fa-undo"></i>
                                 重置
                             </button>

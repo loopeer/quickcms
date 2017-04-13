@@ -99,6 +99,10 @@
                                                        <input type="text" id="{{ $item['column'] }}" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" readonly>
                                                    </label>
                                             @endif
+
+                                            @if(isset($item['note']))
+                                                <div class="note">{{ $item['note'] }}</div>
+                                            @endif
                                         </section>
                                     @endforeach
                                     </fieldset>
