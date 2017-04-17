@@ -35,7 +35,7 @@ class ActionLog extends FastModel
         ['column' => 'id'],
         ['column' => 'user_id'],
         ['column' => 'user_name'],
-        ['column' => 'type', 'type' => 'select', 'param' => 'action_log_type'],
+        ['column' => 'type', 'param' => 'action_log_type'],
         ['column' => 'module_name'],
         ['column' => 'primary_key'],
         ['column' => 'url'],
