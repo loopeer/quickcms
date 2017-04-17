@@ -162,12 +162,25 @@
             });
             // table end
 
+            var str = window.location.href;
+            var arr = str.split("/");
+            var num = arr[arr.length - 1];
+            var route ="{{ $model->route }}";
+            var route_arr = route.split("/");
+            var ro = route_arr[route_arr.length - 1];
+            if(num == ro)
+            {
+                var href = "{{ $model->route }}" + "/create/";
+            }else{
+                var href = "{{ $model->route }}" + "/create/" + num;
+            }
+
             var buttons = '';
             @if($model->redirect_back_route !== null)
                 buttons += '<a href="{{ $model->redirect_back_route }}" style="margin-left: 10px;" class="btn btn-primary">返回</a>';
             @endif
             @if($model->buttons['create'])
-                buttons += '<a href="{{ $model->route }}/create" id="create_btn" style="margin-left: 10px;" class="btn btn-primary" permission="admin.{{ $model->route }}.create">新增</a>';
+                    buttons += '<a href="'+ href +'" id="create_btn"  style="margin-left: 10px;" class="btn btn-primary" permission="admin.{{ $model->route }}.create">新增</a>';
             @endif
             @if($model->buttons['queryExport'])
             @if($model->redirect_column !== null)
@@ -320,7 +333,19 @@
                         if (page_info.length == 1 && page != 0) {
                             page = page - 1;
                         }
-                        var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0];
+                        var str = window.location.href;
+                        var arr = str.split("/");
+                        var num = arr[arr.length - 1];
+                        var route ="{{ $model->route }}";
+                        var route_arr = route.split("/");
+                        var ro = route_arr[route_arr.length - 1];
+                        if(num == ro)
+                        {
+                            var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0];
+                        }else{
+                            var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0] + '/delete';
+                        }
+                        //var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0];
                         if(confirm('删除这条记录?')) {
                             $.ajax({
                                 type: "DELETE",

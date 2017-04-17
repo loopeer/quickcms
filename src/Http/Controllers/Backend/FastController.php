@@ -68,6 +68,10 @@ class FastController extends BaseController
             if ($data['id']) {
                 $saveModel = $model::find($data['id']);
                 foreach($data as $k => $v) {
+                    if($k == 'password')
+                    {
+                        break;
+                    }
                     $saveModel->$k = $v;
                 }
                 $saveModel->save();

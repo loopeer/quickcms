@@ -38,7 +38,7 @@
                                                 </label>
                                             @elseif($item['type'] == 'password')
                                                 <label class="input">
-                                                    <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
+                                                    <input type="password" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" @if(isset($item['disabled']) && isset($data->id))) disabled @endif>
                                                 </label>
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
