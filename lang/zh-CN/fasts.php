@@ -68,7 +68,7 @@ return [
         'user_name' => '管理员名称',
         'type' => '操作类型',
         'module_name' => '业务模块',
-        'primary_key' => '业务主键',
+        'primary_key' => '业务ID',
         'content' => '业务内容',
         'system' => '系统',
         'browser' => '浏览器',
