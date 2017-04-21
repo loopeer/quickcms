@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Auth;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
-use Log;
 
 class FastController extends BaseController
 {
@@ -83,7 +82,6 @@ class FastController extends BaseController
 
         } catch (QueryException $ex) {
             $message['content'] = '数据库中已存在相同的数据，请修改你的数据。';
-            Log::info($ex->getMessage());
             return back()->with('message', $message)->withInput($data);
         }
         $message['content'] = '数据保存成功。';
@@ -189,7 +187,6 @@ class FastController extends BaseController
                 })->export('xlsx');
 
             } catch (Exception $e) {
-                Log::info($e->getMessage());
                 $message = ['result' => false, 'content' => '导出失败，请重试'];
                 return redirect()->back()->with('message', $message);
             }

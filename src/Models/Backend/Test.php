@@ -11,8 +11,6 @@
 
 namespace Loopeer\QuickCms\Models\Backend;
 
-use App\User;
-
 class Test extends FastModel {
 
     protected $buttons = [
@@ -38,7 +36,6 @@ class Test extends FastModel {
         ['column' => 'images', 'type' => 'images'],
         ['column' => 'hidden_type', 'type' => 'normal', 'param' => ['<span class="label label-default">未启用</span>', '<span class="label label-success">已启用</span>']],
         ['column' => 'url', 'type' => 'html', 'param' => '<a href="%s" target="_blank" title="%s">点击查看</a>'],
-        ['column' => 'user.name', 'query' => 'like']
     ];
 
     protected $create = [
@@ -73,7 +70,6 @@ class Test extends FastModel {
         ['column' => 'content', 'type' => 'html'],
         ['column' => 'image', 'type' => 'image'],
         ['column' => 'images', 'type' => 'image'],
-        ['column' => 'user.name']
     ];
     protected $module = '测试';
 
@@ -82,9 +78,4 @@ class Test extends FastModel {
         'image' => 'qiniu',
         'images' => 'qiniu_array',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

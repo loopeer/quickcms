@@ -1,4 +1,4 @@
-@if(count($query = $queries) > 0)
+@if(count($queries) > 0)
 <div class="jarviswidget jarviswidget-sortable jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
      data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false"
      data-widget-colorbutton="false">
@@ -12,55 +12,53 @@
         <div class="widget-body">
             <form id="query-form" class="form-horizontal">
                 <fieldset>
-                    @for($qk = 0, $count = 0; $qk < count($queries); $qk++)
-                        @if(isset($queries[$qk]['query']) && $count++ >= 0)
-                            @if($count == 1 || $count == 4 || $count == 7)
-                            <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
-                            @endif
-                                <label class="col-md-1 control-label">{{ trans('fasts.' . $model->route . '.' . $queries[$qk]['column']) }}</label>
-                                <div class="col-md-2">
-                                    @if(!isset($queries[$qk]['type']) || $queries[$qk]['type'] == 'input')
-                                        @if($queries[$qk]['query'] == 'between')
-                                            <input type="text" class="form-control" style="width:50%;float:left" id = "{{ $queries[$qk]['column']."_from" }}"> <input type="text" class="form-control" style="width:50%;float:left" id = "{{ $queries[$qk]['column']."_to" }}">
-                                        @else
-                                            <input class="form-control" type="text" id="@if(strstr($queries[$qk]['column'], '.') !== FALSE){{ str_replace('.', '-', $queries[$qk]['column']) }}@else{{ $queries[$qk]['column'] }}@endif">
-                                        @endif
-                                    @elseif($queries[$qk]['type'] == 'select')
-                                        <select class="form-control" id="{{ $queries[$qk]['column'] }}">
-                                            <option value="">全部</option>
-                                            @foreach(${$queries[$qk]['param']} as $sk => $sv)
-                                                <option value="{{ $sk }}">{{ $sv }}</option>
-                                            @endforeach
-                                        </select>
-                                    @elseif($queries[$qk]['type'] == 'checkbox')
-                                        @foreach(${$queries[$qk]['param']} as $sk => $sv)
-                                            <label class="checkbox-inline">
-                                                <input type="checkbox" class="checkbox style-0" name="{{ $queries[$qk]['column'] }}" value="{{ $sk }}">
-                                                <span>{{ $sv }}</span>
-                                            </label>
-                                        @endforeach
-                                    @elseif($queries[$qk]['type'] == 'date' || $queries[$qk]['type'] == 'datetime')
-                                        <div class="input-group date">
-                                            @if($queries[$qk]['query'] == 'between')
-                                                <input class="form-control {{ $queries[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
-                                                       data-date-format="{{ $queries[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                       style="width: 50%;" type="text" id="{{ $queries[$qk]['column'] . '_from' }}">
-                                                <input class="form-control {{ $queries[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
-                                                       data-date-format="{{ $queries[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                       style="width: 50%;" type="text" id="{{ $queries[$qk]['column'] . '_to' }}">
-                                            @else
-                                                <input class="form-control {{ $queries[$qk]['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
-                                                       data-date-format="{{ $queries[$qk]['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                       style="width: 50%;" type="text" id="{{ $queries[$qk]['column'] }}">
-                                            @endif
-                                        </div>
+                    @foreach(collect($queries)->chunk(3) as $chunk)
+                        <div class="form-group" style="margin-bottom: 0;margin-top: 10px;">
+                            @foreach($chunk as $query)
+                            <label class="col-md-1 control-label">{{ trans('fasts.' . $model->route . '.' . $query['column']) }}</label>
+                            <div class="col-md-2">
+                                @if(!isset($query['type']) || $query['type'] == 'input')
+                                    @if($query['query'] == 'between')
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_from" }}">
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_to" }}">
+                                    @else
+                                        <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE)
+                                        {{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
                                     @endif
-                                </div>
-                            @if($count == 3 || $count == 6 || $count == 9 || $count == $query)
+                                @elseif($query['type'] == 'select')
+                                    <select class="form-control" id="{{ $query['column'] }}">
+                                        <option value="">全部</option>
+                                        @foreach(${$query['param']} as $sk => $sv)
+                                            <option value="{{ $sk }}">{{ $sv }}</option>
+                                        @endforeach
+                                    </select>
+                                @elseif($query['type'] == 'checkbox')
+                                    @foreach(${$query['param']} as $sk => $sv)
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" class="checkbox style-0" name="{{ $query['column'] }}" value="{{ $sk }}">
+                                            <span>{{ $sv }}</span>
+                                        </label>
+                                    @endforeach
+                                @elseif($query['type'] == 'date' || $query['type'] == 'datetime')
+                                    <div class="input-group date">
+                                        @if($query['query'] == 'between')
+                                            <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                   data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_from' }}">
+                                            <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                   data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_to' }}">
+                                        @else
+                                            <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
+                                                   data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] }}">
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
-                            @endif
-                        @endif
-                    @endfor
+                            @endforeach
+                        </div>
+                    @endforeach
                 </fieldset>
                 <div class="form-actions">
                     <div class="row">
