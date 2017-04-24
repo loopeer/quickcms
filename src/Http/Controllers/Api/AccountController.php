@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Loopeer\Lib\Sms\LuoSiMaoSms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Loopeer\QuickCms\Models\Api\System;
 use Loopeer\QuickCms\Services\Validators\QuickApiValidator;
 use Looopeer\Lib\Sendcloud\SendcloudService;
 
@@ -299,12 +300,15 @@ class AccountController extends BaseController {
     
     /**
      * 验证码是否一致
-     * @param string $key
+     * @param string $phone
      * @param string $captcha 验证码
      * @return bool
      */
-    private function checkCaptcha($key, $captcha) {
-        $captcha_service = Cache::get($key);
+    private function checkCaptcha($phone, $captcha) {
+        if ($this->isReviewing() && $phone == env('test_phone') && $captcha == '1234') {
+            return false;
+        }
+        $captcha_service = Cache::get($phone);
         if ($captcha != $captcha_service) {
             return true;
         }
@@ -380,6 +384,28 @@ class AccountController extends BaseController {
         $account = Auth::user()->get();
         $myList = $account->{str_plural($type)}()->latest()->get();
         return ApiResponse::responseSuccess($myList);
+    }
+
+    /**
+     * 是否正在审核 （iOS平台使用）
+     *
+     * @return bool
+     */
+    private function isReviewing() {
+        $version_code = \Request::header('build');
+        $appstore_reviewing = false;
+        $review_system = Cache::rememberForever('review_system', function () {
+            return System::where('system_key', 'app_review')->first();
+        });
+        $build_system = Cache::rememberForever('build_system', function () {
+            return System::where('system_key', 'build')->first();
+        });
+        if (count($review_system) > 0 && $review_system->system_value == 1) {
+            if (count($build_system) > 0 && $build_system->system_value == $version_code) {
+                $appstore_reviewing = true;
+            }
+        }
+        return $appstore_reviewing;
     }
 }
 
