@@ -395,13 +395,13 @@ class AccountController extends BaseController {
         $version_code = \Request::header('build');
         $appstore_reviewing = false;
         $review_system = Cache::rememberForever('review_system', function () {
-            return System::where('system_key', 'app_review')->first();
+            return System::where('key', 'app_review')->first();
         });
         $build_system = Cache::rememberForever('build_system', function () {
-            return System::where('system_key', 'build')->first();
+            return System::where('key', 'build')->first();
         });
-        if (count($review_system) > 0 && $review_system->system_value == 1) {
-            if (count($build_system) > 0 && $build_system->system_value == $version_code) {
+        if (count($review_system) > 0 && $review_system->value == 1) {
+            if (count($build_system) > 0 && $build_system->value == $version_code) {
                 $appstore_reviewing = true;
             }
         }
