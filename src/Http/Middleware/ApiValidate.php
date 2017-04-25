@@ -27,7 +27,7 @@ class ApiValidate
             if (($timestamp < strtotime('-10 minutes') || $timestamp > strtotime('+10 minutes'))) {
                 return Response::json(array(
                     'code' => config('quickApi.code.success'),
-                    'message' => trans('lang::messages.request_success'),
+                    'message' => trans('messages.request_success'),
                     'data' => NULL
                 ));
             }
@@ -47,7 +47,7 @@ class ApiValidate
             if (strcmp($validateSign, $sign) !== 0) {
                 return Response::json(array(
                     'code' => config('quickApi.code.success'),
-                    'message' => trans('lang::messages.request_success'),
+                    'message' => trans('messages.request_success'),
                     'data' => NULL
                 ));
             }
