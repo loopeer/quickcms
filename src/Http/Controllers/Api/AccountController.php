@@ -89,6 +89,9 @@ class AccountController extends BaseController {
         if(is_null($account)) {
             $account = new $this->model;
             $account->phone = $phone;
+            $account->register_platform = $request->header('platform');
+            $account->register_channel = $request->header('channel_id');
+            $account->register_version = $request->header('build');
         } else {
             // 黑名单
             if(self::isUserForbidden($account)) {
@@ -120,6 +123,9 @@ class AccountController extends BaseController {
             $account->save();
         } else {
             $data['token'] = $token;
+            $data['register_platform'] = $request->header('platform');
+            $data['register_channel'] = $request->header('channel_id');
+            $data['register_version'] = $request->header('build');
             $account = $this->model->create($data);
         }
         Auth::user()->setUser($account);
