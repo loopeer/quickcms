@@ -168,9 +168,13 @@ class FastController extends BaseController
                             }
                             //select
                             if (isset($index['param']) && isset($index['type']) && $index['type'] == 'select' && $k == $key) {
-                                $selector_key = strip_tags($index['param']);
-                                $selector_value = json_decode(GeneralUtil::getSelectorData($selector_key));
-                                $value = $selector_value->$value;
+                                if (is_array($index['param'])) {
+                                    $value = $index['param'][$value];
+                                } else {
+                                    $selector_key = strip_tags($index['param']);
+                                    $selector_value = json_decode(GeneralUtil::getSelectorData($selector_key));
+                                    $value = $selector_value->$value;
+                                }
                             }
                         }
                     }
@@ -213,6 +217,8 @@ class FastController extends BaseController
                         $relationModel->where($create['relation']['local_key'], $saveModel->id)->forceDelete();
                     }
                     $relationModel->insert($relationData);
+                } else if (isset($columnArray[$create['column']])) {
+                    $saveModel->$create['column'] = $columnArray[$create['column']];
                 }
             }
         }

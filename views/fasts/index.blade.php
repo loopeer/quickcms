@@ -306,7 +306,7 @@
                                     tr.html(images);
                                 }
                             @elseif($renameItem['type'] == 'select')
-                                tr.html(JSON.parse('{!! json_encode(${$renameItem["param"]}) !!}')[tr.html()]);
+                                tr.html(JSON.parse('{!! json_encode(is_array($renameItem["param"]) ? $renameItem["param"] : ${$renameItem["param"]}) !!}')[tr.html()]);
                             @elseif($renameItem['type'] == 'limit')
                                 tr.html(tr.html().slice(0, parseInt('{{ $renameItem['param'] }}')));
                             @endif

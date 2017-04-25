@@ -28,7 +28,7 @@
                                 @elseif($query['type'] == 'select')
                                     <select class="form-control" id="{{ $query['column'] }}">
                                         <option value="">全部</option>
-                                        @foreach(${$query['param']} as $sk => $sv)
+                                        @foreach(is_array($query['param']) ? $query['param'] : ${$query['param']} as $sk => $sv)
                                             <option value="{{ $sk }}">{{ $sv }}</option>
                                         @endforeach
                                     </select>

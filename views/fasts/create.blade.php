@@ -43,7 +43,7 @@
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
                                                     <select name="{{ $item['column'] }}">
-                                                    @foreach(${$item['param']} as $sk => $sv)
+                                                    @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $sk => $sv)
                                                         @if($sk == old($item['column']))
                                                             <option value="{{ $sk }}" selected>{{ $sv }}</option>
                                                         @else
@@ -62,7 +62,7 @@
                                                 <div class="inline-group">
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $cbk => $cbv)
                                                     <label class="checkbox">
-                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ in_array($cbk, $data->{$item['relation']['foreign_key']}) ? 'checked' : '' }}>
+                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ in_array($cbk, isset($item['relation']) ? $data->{$item['relation']['foreign_key']} : $data->{$item['column']}) ? 'checked' : '' }}>
                                                         <i></i>{{ $cbv }}</label>
                                                     @endforeach
                                                 </div>
