@@ -12,4 +12,14 @@ namespace Loopeer\QuickCms\Models\Api;
 
 class System extends ApiBaseModel {
 
+    protected static $systems;
+
+    public static function getValue($key)
+    {
+        if (!self::$systems) {
+            self::$systems = self::all()->pluck('value', 'key');
+        }
+
+        return self::$systems[$key];
+    }
 }
