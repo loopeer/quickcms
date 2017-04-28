@@ -4,6 +4,7 @@ namespace Loopeer\QuickCms\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Loopeer\QuickCms\Models\Backend\ExceptionLog;
 use Symfony\Component\Debug\Exception\FlattenException;
 
 class Handler extends ExceptionHandler
@@ -27,6 +28,14 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        ExceptionLog::create(array(
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'code' => $e->getCode(),
+            'line' => $e->getLine(),
+            'data' => $e,
+        ));
+
         return parent::report($e);
     }
 
