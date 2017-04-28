@@ -13,6 +13,7 @@ class FastModel extends BaseModel
     protected $module;
     protected $redirect_column;
     protected $redirect_back_route;
+    protected $state_save = false;
 
     public function buttons()
     {
@@ -63,6 +64,8 @@ class FastModel extends BaseModel
                 return $this->redirect_column;
             case 'redirect_back_route':
                 return $this->redirect_back_route;
+            case 'state_save':
+                return $this->state_save;
             default:
                 return parent::__get($key);
         }

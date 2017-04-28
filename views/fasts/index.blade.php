@@ -64,7 +64,7 @@
             var table = $('#dt_basic').DataTable({
                 "processing": false,
                 "serverSide": true,
-                "bStateSave": false,
+                "bStateSave": {{ $model->state_save ? 1 : 0 }},
                 "searching": true,
                 "language": {
                     "sProcessing": "处理中...",
