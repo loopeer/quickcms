@@ -55,11 +55,23 @@
             </div>
         </div>
     </div>
+
+    <div id="confirm-dialog"></div>
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function() {
+            $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+                _title: function (title) {
+                    if (!this.options.title) {
+                        title.html(" ");
+                    } else {
+                        title.html(this.options.title);
+                    }
+                }
+            }));
+
             // table start
             var table = $('#dt_basic').DataTable({
                 "processing": false,
@@ -346,37 +358,62 @@
                             var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0] + '/delete';
                         }
                         //var url = '{{ $model->route }}/' + table.row($(this).parents('tr')).data()[0];
-                        if(confirm('删除这条记录?')) {
-                            $.ajax({
-                                type: "DELETE",
-                                data: { '_token' : $('#delete_token').val() },
-                                url: url,
-                                success: function(result) {
-                                    if (result == 1) {
-                                        $('#dt_basic').dataTable().fnPageChange(page);
-                                        $(".tips").html('<div class="alert alert-success fade in">'
-                                        + '<button class="close" data-dismiss="alert">×</button>'
-                                        + '<i class="fa-fw fa fa-check"></i>'
-                                        + '<strong>成功</strong>' + ' ' + '删除成功。'
-                                        + '</div>');
-                                    } else {
-                                        $(".tips").html('<div class="alert alert-danger fade in">'
-                                        + '<button class="close" data-dismiss="alert">×</button>'
-                                        + '<i class="fa-fw fa fa-warning"></i>'
-                                        + '<strong>失败</strong>' + ' ' + '删除失败。'
-                                        + '</div>');
+
+                        $('#confirm-dialog').html('删除这条记录?');
+                        $('#confirm-dialog').dialog({
+                            autoOpen: false,
+                            width: 400,
+                            resizable: false,
+                            modal: true,
+                            title: "提示",
+                            draggable: false,
+                            buttons: [
+                                {
+                                    html: "<i class='fa fa-times'></i>  取消",
+                                    "class": "btn btn-danger",
+                                    click: function () {
+                                        $(this).dialog("close");
                                     }
                                 },
-                                error: function() {
-                                    $(".tips").html('<div class="alert alert-danger fade in">'
-                                    + '<button class="close" data-dismiss="alert">×</button>'
-                                    + '<i class="fa-fw fa fa-warning"></i>'
-                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
-                                    + '</div>');
+                                {
+                                    html: "<i class='fa fa-check'></i>  确定",
+                                    "class": "btn btn-success",
+                                    click: function () {
+                                        $.ajax({
+                                            type: "DELETE",
+                                            data: { '_token' : $('#delete_token').val() },
+                                            url: url,
+                                            success: function(result) {
+                                                if (result == 1) {
+                                                    $('#dt_basic').dataTable().fnPageChange(page);
+                                                    $(".tips").html('<div class="alert alert-success fade in">'
+                                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                                        + '<i class="fa-fw fa fa-check"></i>'
+                                                        + '<strong>成功</strong>' + ' ' + '删除成功。'
+                                                        + '</div>');
+                                                } else {
+                                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                                        + '<i class="fa-fw fa fa-warning"></i>'
+                                                        + '<strong>失败</strong>' + ' ' + '删除失败。'
+                                                        + '</div>');
+                                                }
+                                            },
+                                            error: function() {
+                                                $(".tips").html('<div class="alert alert-danger fade in">'
+                                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                                    + '</div>');
+                                            }
+                                        });
+                                        hideTips();
+                                        $(this).dialog("close");
+                                    }
                                 }
-                            });
-                            hideTips();
-                        }
+                            ]
+                        });
+                        $('#confirm-dialog').dialog('open');
                     }
                 });
             @endif
@@ -406,40 +443,64 @@
                         if (page_info.end - page_info.start == 1) {
                             page -= 1;
                         }
-                        if (confirm('{{{ $action['confirm_msg'] or '是否继续操作?' }}}')) {
-                            $.ajax({
-                                type: 'put',
-                                data: {
-                                    @foreach($action['data'] as $dataKey => $dataValue)
-                                    '{{ $dataKey }}' : '{{ $dataValue }}',
-                                    @endforeach
-                                },
-                                url: '{{ $action['url'] }}' + '/' + data[0],
-                                success: function(result) {
-                                    if (result) {
-                                        data_table.fnPageChange(page);
-                                        $(".tips").html('<div class="alert alert-success fade in">'
-                                        + '<button class="close" data-dismiss="alert">×</button>'
-                                        + '<i class="fa-fw fa fa-check"></i>'
-                                        + '<strong>操作成功</strong></div>');
-
-                                    } else {
-                                        $(".tips").html('<div class="alert alert-danger fade in">'
-                                        + '<button class="close" data-dismiss="alert">×</button>'
-                                        + '<i class="fa-fw fa fa-warning"></i>'
-                                        + '<strong>操作失败</strong></div>');
+                        $('#confirm-dialog').html('{{ $action['confirm_msg'] or '是否继续操作?' }}');
+                        $('#confirm-dialog').dialog({
+                            autoOpen: false,
+                            width: 400,
+                            resizable: false,
+                            modal: true,
+                            title: "提示",
+                            draggable: false,
+                            buttons: [
+                                {
+                                    html: "<i class='fa fa-times'></i>  取消",
+                                    "class": "btn btn-danger",
+                                    click: function () {
+                                        $(this).dialog("close");
                                     }
                                 },
-                                error: function() {
-                                    $(".tips").html('<div class="alert alert-danger fade in">'
-                                    + '<button class="close" data-dismiss="alert">×</button>'
-                                    + '<i class="fa-fw fa fa-warning"></i>'
-                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
-                                    + '</div>');
+                                {
+                                    html: "<i class='fa fa-check'></i>  确定",
+                                    "class": "btn btn-success",
+                                    click: function () {
+                                        $.ajax({
+                                            type: 'put',
+                                            data: {
+                                                @foreach($action['data'] as $dataKey => $dataValue)
+                                                '{{ $dataKey }}' : '{{ $dataValue }}',
+                                                @endforeach
+                                            },
+                                            url: '{{ $action['url'] }}' + '/' + data[0],
+                                            success: function(result) {
+                                                if (result) {
+                                                    data_table.fnPageChange(page);
+                                                    $(".tips").html('<div class="alert alert-success fade in">'
+                                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                                        + '<i class="fa-fw fa fa-check"></i>'
+                                                        + '<strong>操作成功</strong></div>');
+
+                                                } else {
+                                                    $(".tips").html('<div class="alert alert-danger fade in">'
+                                                        + '<button class="close" data-dismiss="alert">×</button>'
+                                                        + '<i class="fa-fw fa fa-warning"></i>'
+                                                        + '<strong>操作失败</strong></div>');
+                                                }
+                                            },
+                                            error: function() {
+                                                $(".tips").html('<div class="alert alert-danger fade in">'
+                                                    + '<button class="close" data-dismiss="alert">×</button>'
+                                                    + '<i class="fa-fw fa fa-warning"></i>'
+                                                    + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                                    + '</div>');
+                                            }
+                                        });
+                                        hideTips();
+                                        $(this).dialog("close");
+                                    }
                                 }
-                            });
-                            hideTips();
-                        }
+                            ]
+                        });
+                        $('#confirm-dialog').dialog('open');
                     }
                 });
                 @endif
