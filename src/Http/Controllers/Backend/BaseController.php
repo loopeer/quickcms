@@ -95,6 +95,13 @@ class BaseController extends Controller
         if ($model->redirect_column !== null) {
             $builder = $builder->where($model->redirect_column, $redirect_value);
         }
+        if(isset($model->where))
+        {
+            foreach ($model->where as $key => $value)
+            {
+                $builder = $builder->where($key, $value);
+            }
+        }
         if (count($query) > 0) {
             foreach($columns as $column) {
                 $value = $column['search']['value'];
