@@ -92,7 +92,7 @@
                 },
                 "columns" : [
                     @foreach($model->index as $item)
-                        { "orderable" : '{{ isset($item['order']) ? true : false }}', "name": '{{ $item['column'] }}' },
+                        { "orderable" : Boolean('{{ isset($item['order']) }}'), "name": '{{ $item['column'] }}' },
                     @endforeach
                     @if(count($model->buttons['actions']) > 0 || $model->buttons['edit'] || $model->buttons['delete'] || $model->buttons['detail'])
                         { "orderable" : false },
