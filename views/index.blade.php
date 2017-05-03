@@ -65,4 +65,51 @@
             </div>
         </div>
     </div>
+
+    <div id="content">
+        <section id="widget-grid" class="">
+            <div class="row">
+                <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-hidden="false" data-widget-togglebutton="false"
+                         data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
+                        <header>
+                            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                            <h2>后台用户登陆日志</h2>
+                        </header>
+                        <div>
+                            <div class="jarviswidget-editbox">
+                            </div>
+                            <div class="widget-body no-padding">
+                                <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>登陆时间</th>
+                                        <th>登陆邮箱</th>
+                                        <th>登陆IP</th>
+                                        <th>系统</th>
+                                        <th>浏览器</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+@endsection
+@section('script')
+    <script>
+        var table;
+        $(document).ready(function() {
+            table = $('#dt_basic').DataTable({
+                "processing": false,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/admin/index/getLoginLog"
+                }
+            });
+        });
+    </script>
 @endsection

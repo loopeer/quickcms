@@ -10,6 +10,8 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
+use Illuminate\Support\Facades\Response;
+use Loopeer\QuickCms\Models\Backend\ActionLog;
 use Loopeer\QuickCms\Models\Backend\Permission;
 use Loopeer\QuickCms\Models\Backend\User;
 use Input;
@@ -78,5 +80,24 @@ class IndexController extends BaseController
             }
         }
         return redirect('/admin/index');
+    }
+
+    public function getLoginLog()
+    {
+        $search = trim(Input::get('search')['value']);
+        $order = Input::get('order')['0'];
+        $length = Input::get('length');
+        $select_column = ['created_at','user_name','ip' ,'system', 'browser'];
+        $show_column = ['created_at','user_name','ip' ,'system', 'browser'];
+        $order_sql = $show_column[$order['column']] . ' ' . $order['dir'];
+        $str_column = self::setTablePrefix(implode(',', $select_column));
+        self::setCurrentPage();
+        $users = ActionLog::where('type', ActionLog::LOGIN_TYPE)->orderBy('created_at','desc')
+            ->select('created_at','user_name','ip' ,'system', 'browser')
+            ->whereRaw("concat_ws(" . $str_column . ") like '%" . $search . "%'")
+            ->orderByRaw($order_sql)
+            ->paginate($length);
+        $ret = self::queryPage($show_column, $users);
+        return Response::json($ret);
     }
 }

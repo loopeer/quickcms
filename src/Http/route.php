@@ -32,6 +32,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace
    Route::get('/', 'IndexController@getIndex');
    Route::get('logout',array('as' => 'admin.logout','uses' => 'IndexController@logout'));
    Route::get('index', 'IndexController@index');
+   Route::get('index/getLoginLog', 'IndexController@getLoginLog');
 
    // 图片上传
    Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
