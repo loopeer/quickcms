@@ -342,7 +342,7 @@
                     if(isDisabled($(this))) {
                         var page_info = table.page.info();
                         var page = page_info.page;
-                        if (page_info.length == 1 && page != 0) {
+                        if (page_info.end - page_info.start == 1 && page != 0) {
                             page = page - 1;
                         }
                         var str = window.location.href;
@@ -440,9 +440,9 @@
                         var page_info = table.page.info();
                         var page = page_info.page;
                         var data_table = $('#dt_basic').dataTable();
-                        if (page_info.end - page_info.start == 1) {
-                            page -= 1;
-                        }
+//                        if (page_info.end - page_info.start == 1) {
+//                            page -= 1;
+//                        }
                         $('#confirm-dialog').html('{{ $action['confirm_msg'] or '是否继续操作?' }}');
                         $('#confirm-dialog').dialog({
                             autoOpen: false,

@@ -42,6 +42,7 @@
             <input type="hidden" id="delete_token" value="{{ csrf_token() }}"/>
         </section>
     </div>
+    <div id="confirm-dialog"></div>
 @endsection
 @section('script')
     <script>
@@ -112,31 +113,68 @@
             $('#dt_basic tbody').on('click', 'button[name=delete_permission]', function () {
                 var data = table.row($(this).parents('tr')).data();
                 var delete_token = $('#delete_token').val();
-                if(confirm('确定要删除此权限吗?')) {
-                    $.ajax({
-                        type: "DELETE",
-                        data: { '_token' : delete_token },
-                        url: '/admin/permissions/' + data[0], //resource
-                        success: function(result) {
-                            if (result.result){
-                                var nRow = $($(this).data('id')).closest("tr").get(0);
-                                var table = $('#dt_basic').dataTable();
-                                table.fnDeleteRow( nRow, null, true );
-                                $(".tips").html('<div class="alert alert-success fade in">'
-                                +'<button class="close" data-dismiss="alert">×</button>'
-                                +'<i class="fa-fw fa fa-check"></i>'
-                                +'<strong>成功</strong>'+' '+result.content+'。'
-                                +'</div>');
-                            }else{
-                                $(".tips").html('<div class="alert alert-danger fade in">'
-                                +'<button class="close" data-dismiss="alert">×</button>'
-                                +'<i class="fa-fw fa fa-warning"></i>'
-                                +'<strong>失败</strong>'+' '+result.content+'。'
-                                +'</div>');
+
+                var page_info = table.page.info();
+                var page = page_info.page;
+                if ((page_info.end - page_info.start) == 1 && page != 0) {
+                    page = page - 1;
+                }
+
+                $('#confirm-dialog').html('确定要删除此权限吗?');
+                $('#confirm-dialog').dialog({
+                    autoOpen: false,
+                    width: 400,
+                    resizable: false,
+                    modal: true,
+                    title: "提示",
+                    draggable: false,
+                    buttons: [
+                        {
+                            html: "<i class='fa fa-times'></i>  取消",
+                            "class": "btn btn-danger",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        {
+                            html: "<i class='fa fa-check'></i>  确定",
+                            "class": "btn btn-success",
+                            click: function () {
+                                $.ajax({
+                                    type: "DELETE",
+                                    data: { '_token' : delete_token },
+                                    url: '/admin/permissions/' + data[0],
+                                    success: function(result) {
+                                        if (result.result == 1) {
+                                            $('#dt_basic').dataTable().fnPageChange(page);
+                                            $(".tips").html('<div class="alert alert-success fade in">'
+                                                + '<button class="close" data-dismiss="alert">×</button>'
+                                                + '<i class="fa-fw fa fa-check"></i>'
+                                                + '<strong>成功</strong>' +' ' + result.content + '。'
+                                                + '</div>');
+                                        } else {
+                                            $(".tips").html('<div class="alert alert-danger fade in">'
+                                                + '<button class="close" data-dismiss="alert">×</button>'
+                                                + '<i class="fa-fw fa fa-warning"></i>'
+                                                + '<strong>失败</strong>' +' ' + result.content + '。'
+                                                + '</div>');
+                                        }
+                                    },
+                                    error: function() {
+                                        $(".tips").html('<div class="alert alert-danger fade in">'
+                                            + '<button class="close" data-dismiss="alert">×</button>'
+                                            + '<i class="fa-fw fa fa-warning"></i>'
+                                            + '<strong>失败</strong>' + ' ' + '请求失败，请稍后再试。'
+                                            + '</div>');
+                                    }
+                                });
+                                hideTips();
+                                $(this).dialog("close");
                             }
                         }
-                    });
-                }
+                    ]
+                });
+                $('#confirm-dialog').dialog('open');
             });
         });
     </script>
