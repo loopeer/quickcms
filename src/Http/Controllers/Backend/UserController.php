@@ -10,14 +10,15 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Loopeer\QuickCms\Models\Backend\RoleUser;
 use Loopeer\QuickCms\Models\Backend\User;
 
-class UserController extends FastController {
-
+class UserController extends FastController
+{
     public function storeUser()
     {
         $data = Input::all();
@@ -36,7 +37,8 @@ class UserController extends FastController {
         return redirect()->to('admin/users');
     }
 
-    public function getProfile() {
+    public function getProfile()
+    {
         $user = Auth::admin()->get();
         $image = array(
             'column' => 'image',
@@ -48,7 +50,8 @@ class UserController extends FastController {
         return view('backend::users.update', compact('user', 'image'));
     }
 
-    public function saveProfile() {
+    public function saveProfile()
+    {
         $data = Input::all();
         $data['avatar'] = $data['image'];
         unset($data['image']);
@@ -56,5 +59,23 @@ class UserController extends FastController {
         User::find(Auth::admin()->get()->id)->update($data);
         $message = array('result' => true, 'content' => '保存成功');
         return redirect('admin/users/profile')->with('message', $message);
+    }
+
+    public function register(Request $request)
+    {
+        $email = $request->input('email');
+        $name = $request->input('name');
+        $password = $request->input('password');
+        $user = User::firstOrNew(['email' => $email]);
+        if (!$user->exists) {
+            $user->name = $name;
+            $user->password = $password;
+            $user->status = User::STATUS_FORBIDDEN;
+            $user->save();
+            $result = ['result' => true, 'content' => '申请成功，请等待后台管理员审核'];
+        } else {
+            $result = ['result' => false, 'content' => '申请失败，此邮箱已存在'];
+        }
+        return $result;
     }
 }

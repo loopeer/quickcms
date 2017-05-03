@@ -49,6 +49,12 @@ class AdminAuthenticate{
         $email = Input::get('email');
         $password = Input::get('password');
         if (Auth::admin()->attempt(['email' => $email, 'password' => $password], true)) {
+            //判断用户状态
+            if (Auth::admin()->get()->status == User::STATUS_FORBIDDEN) {
+                $message = array('result' => false,'content' => '此用户已被禁用');
+                return redirect('/admin/login')->with('message', $message);
+            }
+
             User::where('email', $email)->update(['last_login' => Carbon::now()]);
             //设置最后操作时间
             $request->session()->put('LAST_ACTIVITY', Carbon::now());

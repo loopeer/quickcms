@@ -34,7 +34,7 @@ class BaseController extends Controller
 
     public function __construct()
     {
-        if(!Session::has('permissions')) {
+        if(!Session::has('permissions') && Auth::admin()->get()->roles()->first() !== null) {
             $roles = Auth::admin()->get()->roles()->first();
             $permission_ids = PermissionRole::where('role_id', $roles->pivot->role_id)->lists('permission_id');
             $permissions = Permission::where('type', 1)->whereIn('id', $permission_ids)->get();

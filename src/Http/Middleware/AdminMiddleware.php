@@ -17,6 +17,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Log;
 use Input;
 use Loopeer\QuickCms\Models\Backend\Permission;
+use Loopeer\QuickCms\Models\Backend\User;
 use Validator;
 use Session;
 use Cache;
@@ -52,6 +53,12 @@ class AdminMiddleware{
         if (!Auth::admin()->check()) {
             return redirect('/admin/login');
         } else {
+            //判断用户状态
+            if (Auth::admin()->get()->status == User::STATUS_FORBIDDEN) {
+                $message = array('result' => false,'content' => '此用户已被禁用');
+                return redirect('/admin/login')->with('message', $message);
+            }
+
             $last_activity_time = $request->session()->get('LAST_ACTIVITY');
             //判断登录是否失效
             if (time() - strtotime($last_activity_time) > config('quickCms.login_lifetime', 10) * 60) {

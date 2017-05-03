@@ -23,6 +23,9 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
 {
     use Authenticatable, CanResetPassword, EntrustUserTrait;
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_FORBIDDEN = 0;
+
     protected $fillable = ['name', 'email', 'password', 'remember_token', 'status', 'last_login'];
 
     protected $buttons = ['detail' => false, 'delete' => false, 'actions' => [

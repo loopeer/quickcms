@@ -23,6 +23,15 @@
         white-space: nowrap;
         vertical-align: baseline;
     }
+
+    #logo-group img {
+        height: 32px !important;
+    }
+
+    #logo-group {
+        width: 80% !important;
+    }
+
     .ui-datepicker {
          width: 20em;
     }

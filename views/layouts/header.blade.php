@@ -1,8 +1,8 @@
 <!-- HEADER -->
 <header id="header">
     <div id="logo-group" style="padding: 10px;">
-        <img id="logo-img" style="width: 32px;height: 32px;" src="{{ asset('loopeer/quickcms/img/cms_logo.png') }}">
-        <div style="display: inline-block;margin-left: 4px;">{{ config('quickCms.site_title')  }}</div>
+        <img id="logo-img" style="width: 32px;height: 32px;" src="{{ isset($system_logo) ? $system_logo : asset('loopeer/quickcms/img/cms_logo.png') }}" alt="{{ isset($system_title) ? $system_title : config('quickCms.site_title') }}" onerror="this.src='{{ asset('loopeer/quickcms/img/cms_logo.png') }}'">
+        <div style="display: inline-block;margin-left: 4px;">{{ isset($system_title) ? $system_title : config('quickCms.site_title') }}</div>
     </div>
 
     <div class="pull-right">

@@ -20,6 +20,7 @@ Event::listen('illuminate.query', function($query, $params, $time, $conn) {
 Route::group(array('namespace' => 'Backend'), function () {
     Route::get('admin/login', 'IndexController@getLogin');
     Route::post('admin/login',array('middleware' => 'auth.login','as' => 'admin.login','uses' => 'IndexController@postLogin'));
+    Route::post('admin/register', 'UserController@register');
 
     Route::get('admin/permissions/search', ['as' => 'admin.permissions.search', 'uses' => 'PermissionController@search']);
     Route::get('admin/selector/search', ['as' => 'admin.selector.search', 'uses' => 'SelectorController@search']);
