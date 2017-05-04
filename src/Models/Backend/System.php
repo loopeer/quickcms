@@ -4,7 +4,9 @@ namespace Loopeer\QuickCms\Models\Backend;
 
 class System extends FastModel
 {
-    protected $buttons = ['detail' => false];
+    protected $buttons = ['detail' => false, 'customs' => [
+        ['route' => '/admin/systems/setting', 'name' => '基本设置']
+    ]];
     protected $index = [
         ['column' => 'id'],
         ['column' => 'key'],

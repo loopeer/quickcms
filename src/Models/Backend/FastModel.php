@@ -18,7 +18,7 @@ class FastModel extends BaseModel
     public function buttons()
     {
         $buttons = ['create' => true, 'dbExport' => false, 'queryExport' => false, 'edit' => true, 'detail' => true,
-            'delete' => true, 'actions' => [], 'style' => true];
+            'delete' => true, 'actions' => [], 'style' => true, 'customs' => []];
         if (!isset($this->buttons)) {
             return $buttons;
         }

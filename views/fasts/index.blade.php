@@ -208,6 +208,9 @@
                 buttons += '<a href="{{ $model->route }}/dbExport" style="margin-left: 10px;" class="btn btn-primary" target="_blank">全表导出</a>';
                 @endif
             @endif
+            @foreach($model->buttons['customs'] as $custom)
+                    buttons += '<a href="{{ $custom['route'] }}" style="margin-left: 10px;" class="btn btn-primary">{{ $custom['name'] }}</a>';
+            @endforeach
             $("div.dt-toolbar div:first").html(buttons);
 
             $("#reset").on('click', function (e) {

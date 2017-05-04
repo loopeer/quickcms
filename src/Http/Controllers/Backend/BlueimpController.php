@@ -12,6 +12,7 @@
 namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
 use Config;
+use Illuminate\Support\Facades\File;
 use Input;
 use Log;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
@@ -21,9 +22,10 @@ use Redirect;
 use Response;
 use Exception;
 
-class BlueimpController extends BaseController {
-
-    public function getImage() {
+class BlueimpController extends BaseController
+{
+    public function getImage()
+    {
         $url = Input::get('url');
         if (strpos($url, config('quickCms.qiniu_url')) !== false) {
             $key = str_replace(config('quickCms.qiniu_url') . '/', '', $url);
@@ -56,7 +58,8 @@ class BlueimpController extends BaseController {
         }
     }
 
-    public function upload() {
+    public function upload()
+    {
 
         $qiniu = \Qiniu\Qiniu::create(array(
             'access_key' => config('quickCms.qiniu_access_key'),
@@ -101,9 +104,29 @@ class BlueimpController extends BaseController {
 
     }
 
-    public function destroy() {
+    public function destroy()
+    {
         $success = new \stdClass();
         return Response::json(array('files'=> array($success)), 200);
+    }
+
+    public function upload4Local()
+    {
+        $file_name = Input::get('file_name');
+        try {
+            $file = Input::file($file_name);
+            $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+            $upload_name = $file_name . '_' . date('YmdHis', time()) . rand(1,9999) . '.' . $extension;
+            $path = public_path() . '/loopeer/upload';
+            if (!File::exists($path)) {
+                File::makeDirectory($path, $mode = 0777, true, true);
+            }
+            $file->move($path, $upload_name);
+            $result = ['result' => true, 'path' => '/loopeer/upload/' . $upload_name, 'url' => url() . '/loopeer/upload/' . $upload_name];
+        } catch (Exception $e) {
+            $result = ['result' => false];
+        }
+        return $result;
     }
 
 } 
