@@ -57,6 +57,9 @@
                             <br>
                             <strong>最后更新时间：</strong>{{ $user->updated_at }}
                             <br>
+                            <br>
+                            <strong>版本号：</strong>{{ isset($version) ? $version :null }}（commit {{ isset($commit) ? $commit : null }}）
+                            <br>
                         </address>
                     </div>
                     <br>
@@ -106,6 +109,30 @@
             table = $('#dt_basic').DataTable({
                 "processing": false,
                 "serverSide": true,
+                "language": {
+                    "sProcessing": "处理中...",
+                    "sLengthMenu": "显示 _MENU_ 条数据",
+                    "sZeroRecords": "没有匹配结果",
+                    "sInfo": "显示第 _START_ 至 _END_ 条数据，共 _TOTAL_ 条",
+                    "sInfoEmpty": "显示第 0 至 0 条数据，共 0 条",
+                    "sInfoFiltered": "(由 _MAX_ 条结果过滤)",
+                    "sInfoPostFix": "",
+                    "sSearch": "搜索: ",
+                    "sUrl": "",
+                    "sEmptyTable": "表中数据为空",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上一页",
+                        "sNext": "下一页",
+                        "sLast": "末页"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": 以升序排列此列",
+                        "sSortDescending": ": 以降序排列此列"
+                    }
+                },
                 "ajax": {
                     "url": "/admin/index/getLoginLog"
                 }

@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    <div id="register-dialog" title="<div class='widget-header'><h4><i class='fa fa-plus'></i> 申请账号</h4></div>" style="display: none">
+    <div id="register-dialog" title="<div class='widget-header'><h4><i class='fa fa-user'></i> 申请账号</h4></div>" style="display: none">
         <form action="/admin/register" method="post" id="register-form" class="smart-form client-form">
             <fieldset>
                 <section>
