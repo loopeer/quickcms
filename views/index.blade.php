@@ -37,6 +37,9 @@
                             <br>
                             <strong>系统用户数：</strong>{{ $count_user }}
                             <br>
+                            <br>
+                            <strong>版本号：</strong>{{ isset($version) ? $version :null }}（commit {{ isset($commit) ? $commit : null }}）
+                            <br>
                         </address>
                     </div>
                     <div class="pull-left" style="margin-left: 15%;">
@@ -56,9 +59,6 @@
                             <br>
                             <br>
                             <strong>最后更新时间：</strong>{{ $user->updated_at }}
-                            <br>
-                            <br>
-                            <strong>版本号：</strong>{{ isset($version) ? $version :null }}（commit {{ isset($commit) ? $commit : null }}）
                             <br>
                         </address>
                     </div>

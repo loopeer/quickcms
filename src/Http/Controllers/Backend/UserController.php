@@ -23,18 +23,32 @@ class UserController extends FastController
     {
         $data = Input::all();
         if ($data['id']) {
-            User::find($data['id'])->update($data);
-            $roleUser = RoleUser::where('user_id', $data['id'])->first();
-            $roleUser->role_id = $data['roles_id'];
-            $roleUser->save();
+            $exist_user = User::whereNotIn('id', [$data['id']])->where('email', $data['email'])->first();
+            if (isset($exist_user)) {
+                $message = ['result' => false, 'content' => '编辑用户失败，此邮箱已存在'];
+            } else {
+                User::find($data['id'])->update($data);
+                $roleUser = RoleUser::firstOrNew(['user_id' => $data['id']]);
+                $roleUser->role_id = $data['roles_id'];
+                $roleUser->save();
+                $message = ['result' => true, 'content' => '编辑用户成功'];
+            }
         } else {
-            $user = User::create($data);
-            RoleUser::create(array(
-                'user_id' => $user->id,
-                'role_id' => $data['roles_id']
-            ));
+            $user = User::firstOrNew(['email' => $data['email']]);
+            if (!$user->exists) {
+                $user->name = $data['name'];
+                $user->password =  $data['password'];
+                $user->save();
+                RoleUser::create(array(
+                    'user_id' => $user->id,
+                    'role_id' => $data['roles_id']
+                ));
+                $message = ['result' => true, 'content' => '创建用户成功'];
+            } else {
+                $message = ['result' => false, 'content' => '创建用户失败，此邮箱已存在'];
+            }
         }
-        return redirect()->to('admin/users');
+        return redirect()->to('admin/users')->with('message', $message);
     }
 
     public function getProfile()

@@ -31,29 +31,29 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
     protected $buttons = ['detail' => false, 'delete' => false, 'actions' => [
             [
                 'type' => 'confirm', 'name' => 'enabled_btn', 'text' => '启用',
-                'url' => '/admin/users', 'data' => ['status' => 0], 'where' => ['status' => [1]]
+                'url' => '/admin/users', 'data' => ['status' => 1], 'where' => ['status' => [0]]
             ],
             [
                 'type' => 'confirm', 'name' => 'unabled_btn', 'text' => '禁用',
-                'url' => '/admin/users', 'data' => ['status' => 1], 'where' => ['status' => [0]]
+                'url' => '/admin/users', 'data' => ['status' => 0], 'where' => ['status' => [1]]
             ]
         ]
     ];
     protected $index = [
-        ['column' => 'id'],
-        ['column' => 'name'],
-        ['column' => 'email'],
+        ['column' => 'id', 'order' => 'desc'],
+        ['column' => 'name', 'query' => 'like'],
+        ['column' => 'email', 'query' => 'like'],
         ['column' => 'roles.display_name'],
         ['column' => 'avatar'],
         ['column' => 'last_login'],
-        ['column' => 'status', 'type' => 'normal', 'param' => ['<span class="label label-success">正常</span>', '<span class="label label-default">禁用</span>']],
-        ['column' => 'created_at'],
+        ['column' => 'status', 'order' => 'desc', 'type' => 'normal', 'param' => ['<span class="label label-default">禁用</span>', '<span class="label label-success">正常</span>']],
+        ['column' => 'created_at', 'order' => 'desc'],
     ];
 
     protected $create = [
         ['column' => 'name', 'rules' => ['required' => true]],
         ['column' => 'email', 'rules' => ['required' => true]],
-        ['column' => 'password', 'type' => 'password', 'rules' => ['required' => true]],
+        ['column' => 'password', 'type' => 'password'],
         ['column' => 'roles.id', 'type' => 'select', 'param' => 'role_group'],
     ];
     protected $module = '用户';
@@ -68,6 +68,12 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
 
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value);
+        if (!empty(trim($value))) {
+            $this->attributes['password'] = Hash::make($value);
+        } else {
+            if (empty($this->attributes['password'])) {
+                $this->attributes['password'] = Hash::make(config('quickCms.default_pwd'));
+            }
+        }
     }
 }

@@ -37,11 +37,11 @@ class Role extends FastModel implements EntrustRoleInterface
         ]
     ];
     protected $index = [
-        ['column' => 'id'],
-        ['column' => 'name'],
-        ['column' => 'display_name'],
-        ['column' => 'description'],
-        ['column' => 'created_at'],
+        ['column' => 'id', 'order' => 'desc'],
+        ['column' => 'name', 'query' => 'like'],
+        ['column' => 'display_name', 'query' => 'like'],
+        ['column' => 'description', 'query' => 'like'],
+        ['column' => 'created_at', 'order' => 'desc'],
     ];
     protected $create = [
         ['column' => 'name', 'rules' => ['required' => true]],

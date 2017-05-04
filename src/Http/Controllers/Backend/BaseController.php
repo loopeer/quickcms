@@ -189,7 +189,11 @@ class BaseController extends Controller
                     array_push($obj, $item->$column->format('Y-m-d H:i:s'));
                 } elseif(strstr($column, '.') !== FALSE) {
                     $table_column = explode('.', $column);
-                    array_push($obj, $item->{$table_column[0]} instanceof Collection ? $item->{$table_column[0]}->first()->{$table_column[1]} : $item->{$table_column[0]}->{$table_column[1]});
+                    if(count($item->{$table_column[0]}) > 0) {
+                        array_push($obj, $item->{$table_column[0]} instanceof Collection ? $item->{$table_column[0]}->first()->{$table_column[1]} : $item->{$table_column[0]}->{$table_column[1]});
+                    } else {
+                        array_push($obj, null);
+                    }
                 } else {
                     array_push($obj, $item->$column);
                 }

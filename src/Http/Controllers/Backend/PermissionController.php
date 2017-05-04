@@ -31,6 +31,7 @@ class PermissionController extends BaseController {
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
         $tables = ['menus', 'parents'];
         $permissions = DB::table('permissions as menus')->leftJoin('permissions as parents','parents.id','=','menus.parent_id')
+            ->orderby('menus.id', 'desc')
             ->where('menus.type', 0)
             ->select('menus.id as menu_id','menus.name as menu_name','menus.display_name as menu_display_name','menus.route as menu_route',
                 'parents.display_name as parent_display_name','menus.sort as menu_sort','menus.icon as menu_icon','menus.description as menu_description');
