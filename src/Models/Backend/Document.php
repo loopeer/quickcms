@@ -13,10 +13,10 @@ namespace Loopeer\QuickCms\Models\Backend;
 class Document extends FastModel
 {
     protected $index = [
-        ['column' => 'id'],
+        ['column' => 'id', 'order' => 'desc'],
         ['column' => 'key'],
         ['column' => 'title'],
-        ['column' => 'created_at'],
+        ['column' => 'created_at', 'order' => 'desc'],
         ['column' => 'updated_at'],
     ];
 

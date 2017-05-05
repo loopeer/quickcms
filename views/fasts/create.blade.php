@@ -113,7 +113,7 @@
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                                 </div>
                                             @elseif($item['type'] == 'editor')
-                                                <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! old($item['column']) ?: $data->$item['column'] !!}</script>
+                                                <script id="{{ $item['column'] }}-container" name="{{ $item['column'] }}" type="text/plain">{!! old($item['column']) ?: $data->{$item['column']} !!}</script>
                                                 <script type="text/javascript">
                                                     var ue = UE.getEditor("{{ $item['column'] }}-container", {
                                                         initialFrameHeight: '{{ isset($item['param']['initialFrameHeight']) ? $item['param']['initialFrameHeight'] : 320 }}'

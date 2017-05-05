@@ -15,6 +15,8 @@ return [
     ),
     'site_title' => env('site_title', '后台管理系统'),
 
+    'default_pwd' => env('default_pwd', 'loopeer'),
+
     //加密字符串
     'admin_pwd_salt' => '',
     'sql_log_switch' => env('sql_log_switch', false),
@@ -71,5 +73,5 @@ return [
     'hide_tips_time' => 3000,
 
     //登录失效时间，单位分钟
-    'login_lifetime' => 60,
+    'login_lifetime' => env('login_lifetime', 60),
 ];

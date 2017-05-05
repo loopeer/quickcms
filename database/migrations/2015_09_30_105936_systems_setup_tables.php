@@ -73,7 +73,7 @@ class SystemsSetupTables extends Migration
                 $table->string('url', 200)->comment('下载地址');
                 $table->string('message', 200)->nullable()->comment('消息提示');
                 $table->string('description', 255)->nullable()->comment('版本描述');
-                $table->tinyInteger('status')->default(1)->comment('版本状态');
+                $table->tinyInteger('status')->default(0)->comment('版本状态');
                 // timestamp fields
                 $table->timestamp('published_at')->nullable();
                 $table->timestamps();

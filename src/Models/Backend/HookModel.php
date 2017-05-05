@@ -63,12 +63,12 @@ class HookModel extends Model
         $model_events = config('quickCms.model_events');
         foreach($model_events as $model_event) {
             if($model->getTable() == $model_event['table'] && $model_event['event'] == $event
-                && (array_key_exists('where', $model_event) ? $model->$model_event['where']['column'] == $model_event['where']['value'] : true)) {
+                && (array_key_exists('where', $model_event) ? $model->{$model_event['where']['column']} == $model_event['where']['value'] : true)) {
                 $statistic = Statistic::select('id', 'statistic_value')
                     ->where('statistic_key', $model_event['statistic_key'])
                     ->whereRaw("statistic_time=date_format(now(),'%Y-%m-%d')")
                     ->first();
-                $statistic_value = $model_event['statistic_value'] == 1 ? 1 : $model->$model_event['statistic_value'];
+                $statistic_value = $model_event['statistic_value'] == 1 ? 1 : $model->{$model_event['statistic_value']};
                 if(!isset($statistic)) {
                     $statistic = new Statistic();
                     $statistic->statistic_value += $statistic_value;
