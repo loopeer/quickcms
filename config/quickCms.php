@@ -72,6 +72,6 @@ return [
 
     'hide_tips_time' => 3000,
 
-    //登录失效时间，单位分钟
-    'login_lifetime' => env('login_lifetime', 60),
+    //登录失效时间，单位分钟(默认30天)
+    'login_lifetime' => env('login_lifetime', 43200),
 ];

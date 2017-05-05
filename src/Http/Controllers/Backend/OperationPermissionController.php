@@ -10,6 +10,8 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
+use Carbon\Carbon;
+use Exception;
 use Input;
 use Log;
 use Session;
@@ -28,7 +30,7 @@ class OperationPermissionController extends BaseController {
         $length = Input::get("length");
         //$ret = self::simplePage(['id', 'name', 'display_name', 'route', 'description'], new Permission());
         self::setCurrentPage();
-        $paginate = Permission::where('parent_id', $id)->paginate($length);
+        $paginate = Permission::where('parent_id', $id)->orderBy('id', 'desc')->paginate($length);
         $ret = self::queryPage(['id', 'name', 'display_name', 'route', 'description'], $paginate);
         return Response::json($ret);
     }
@@ -88,10 +90,17 @@ class OperationPermissionController extends BaseController {
                 'route' => $permission->route . '/' . $operation_key,
                 'type' => 1,
                 'parent_id' => $permission->id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             );
         }
-        DB::table('permissions')->insert($permissions);
-        return Redirect::to('/admin/permission/' . $id . '/indexPermission');
+        try {
+            DB::table('permissions')->insert($permissions);
+            $message = ['result' => true, 'content' => '初始化权限成功'];
+        } catch (Exception $e) {
+            $message = ['result' => false, 'content' => '初始化权限失败'];
+        }
+        return Redirect::to('/admin/permissions/' . $id . '/indexPermission')->with('message', $message);
     }
 
     public function edit($id, $permission_id) {
