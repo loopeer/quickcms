@@ -86,7 +86,7 @@
     }, "不允许包含特殊符号!");
 
     jQuery.validator.addMethod("english", function(value, element) {
-        var english = /^[a-zA-Z]+$/;
+        var english = /^[a-zA-Z_]+$/;
         return this.optional(element) || (english.test(value));
     }, "不允许输入非英文字符");
 
