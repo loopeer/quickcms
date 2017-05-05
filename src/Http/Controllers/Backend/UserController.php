@@ -56,11 +56,8 @@ class UserController extends FastController
     {
         $user = Auth::admin()->get();
         $image = array(
-            'column' => 'image',
-            'min' => 1,
-            'max' => 1,
-            'min_error_msg' => '至少上传%s张图片',
-            'max_error_msg' => '最多只允许上传%s张图片',
+            'name' => 'avatar',
+            'file' => $user->avatar
         );
         return view('backend::users.update', compact('user', 'image'));
     }
@@ -68,9 +65,6 @@ class UserController extends FastController
     public function saveProfile()
     {
         $data = Input::all();
-        $data['avatar'] = $data['image'];
-        unset($data['image']);
-        unset($data['passwordConfirm']);
         User::find(Auth::admin()->get()->id)->update($data);
         $message = array('result' => true, 'content' => '保存成功');
         return redirect('admin/users/profile')->with('message', $message);

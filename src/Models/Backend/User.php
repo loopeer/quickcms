@@ -69,7 +69,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
 
     public function getAvatarAttribute()
     {
-        return $this->attributes['avatar'];
+        return isset($this->attributes['avatar']) ? $this->attributes['avatar'] : null;
     }
 
     public function setPasswordAttribute($value)

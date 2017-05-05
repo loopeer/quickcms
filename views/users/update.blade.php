@@ -5,7 +5,9 @@
             <div class="row">
                 <article class="col-sm-12 col-md-12 col-lg-6">
                     @include('backend::layouts.message')
-                    <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-custombutton="false">
+                    <div class="jarviswidget" id="wid-id-4" data-widget-hidden="false" data-widget-togglebutton="false"
+                         data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false"
+                         data-widget-fullscreenbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
                             <h2>个人资料 </h2>
@@ -15,12 +17,34 @@
                             </div>
                             <div class="widget-body no-padding">
                                 <form action="/admin/users/profile" method="post" id="smart-form-register" class="smart-form">
+                                    <style>
+                                        .btn {
+                                            display: inline-block;
+                                            margin-bottom: 0;
+                                            font-weight: 400;
+                                            text-align: center;
+                                            vertical-align: middle;
+                                            touch-action: manipulation;
+                                            cursor: pointer;
+                                            background-logo: none;
+                                            border: 1px solid transparent;
+                                            white-space: nowrap;
+                                            padding: 6px 12px;
+                                            font-size: 13px;
+                                            line-height: 1.42857143;
+                                            border-radius: 2px;
+                                            -webkit-user-select: none;
+                                            -moz-user-select: none;
+                                            -ms-user-select: none;
+                                            user-select: none;
+                                        }
+                                    </style>
                                     {!! csrf_field() !!}
                                     <fieldset>
-                                    <section>
-                                        <label class="label">图片</label>
-                                        @include('backend::image.upload', ['image_name' => 'image'])
-                                    </section>
+                                        <section id="{{ $image['name'] }}_section">
+                                            <label class="label">头像</label>
+                                            @include('backend::localImage.upload', ['image' => $image])
+                                        </section>
                                         <section>
                                             <label class="input"> <i class="icon-append fa fa-lock"></i>
                                                 <input type="password" name="password" placeholder="密码" id="password">
@@ -53,11 +77,10 @@
 @endsection
 
 @section('script')
-@include('backend::image.script')
-@include('backend::image.action', ['image' => $image, 'image_data' => $user->avatar])
+    @include('backend::localImage.script', ['image' => $image])
 <script>
     $(document).ready(function() {
-        var $registerForm = $("#smart-form-register").validate({
+        $("#smart-form-register").validate({
             // Rules for form validation
             rules: {
                 email: {
@@ -65,32 +88,43 @@
                     email: true
                 },
                 password: {
-                    minlength: 3,
+                    required: true,
+                    minlength: 6,
                     maxlength: 20
                 },
-
-                // Messages for form validation
-                messages: {
-                    email: {
-                        required: '请输入您的邮箱',
-                        email: '请输入有效的邮箱'
-                    },
-                    password: {
-                        required: '请输入您的密码'
-                    },
-                    passwordConfirm: {
-                        required: '请输入您的密码',
-                        equalTo: '请输入相同的密码'
-                    },
-                    name: {
-                        required: '请输入的名称'
-                    }
-                },
-
-                // Do not change code below
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element.parent());
+                passwordConfirm: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20,
+                    equalTo: '#password'
                 }
+            },
+
+            // Messages for form validation
+            messages: {
+                email: {
+                    required: '请输入您的邮箱',
+                    email: '请输入有效的邮箱'
+                },
+                password: {
+                    required : '请输入密码',
+                    minlength: '密码至少输入6位',
+                    maxlength: '密码不能超过20位'
+                },
+                passwordConfirm : {
+                    required : '请确认密码',
+                    equalTo : '两次输入的密码不一致',
+                    minlength: '密码至少输入6位',
+                    maxlength: '密码不能超过20位'
+                },
+                name: {
+                    required: '请输入的名称'
+                }
+            },
+
+            // Do not change code below
+            errorPlacement : function(error, element) {
+                error.insertAfter(element.parent());
             }
         });
     });
