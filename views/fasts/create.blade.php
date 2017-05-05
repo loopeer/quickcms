@@ -19,6 +19,28 @@
                             </div>
                             <div class="widget-body no-padding">
                                 <form action="/admin/{{ $model->route }}" method="post" id="create-form" class="smart-form client-form">
+                                    <style>
+                                        .btn {
+                                            display: inline-block;
+                                            margin-bottom: 0;
+                                            font-weight: 400;
+                                            text-align: center;
+                                            vertical-align: middle;
+                                            touch-action: manipulation;
+                                            cursor: pointer;
+                                            background-logo: none;
+                                            border: 1px solid transparent;
+                                            white-space: nowrap;
+                                            padding: 6px 12px;
+                                            font-size: 13px;
+                                            line-height: 1.42857143;
+                                            border-radius: 2px;
+                                            -webkit-user-select: none;
+                                            -moz-user-select: none;
+                                            -ms-user-select: none;
+                                            user-select: none;
+                                        }
+                                    </style>
                                     <input type="hidden" name="id" value="{{ $data->id }}">
                                     @foreach($model->createHidden as $hidden)
                                         @if(!isset($hidden['action']) || ($hidden['action'] == 'create' && !isset($data->id)) || ($hidden['action'] == 'edit' && isset($data->id)))
@@ -27,7 +49,7 @@
                                     @endforeach
                                     <fieldset>
                                     @foreach($model->create as $item)
-                                        <section>
+                                        <section id="{{ str_replace('.', '_', $item['column']) }}_section">
                                             <label class="label">{{ trans('fasts.' . $model->route . '.' . $item['column']) }}</label>
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
@@ -103,6 +125,8 @@
                                                    <label class="input">
                                                        <input type="text" id="{{ $item['column'] }}" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" readonly>
                                                    </label>
+                                             @elseif($item['type'] == 'local_image')
+                                                @include('backend::localImage.upload', ['image' => ['name' => $item['column']]])
                                             @endif
 
                                             @if(isset($item['note']))
@@ -190,7 +214,9 @@
 
     @foreach($model->create as $itemImage)
         @if(isset($itemImage['type']) && $itemImage['type'] == 'image')
-            @include('backend::image.action', ['image' => $itemImage, 'image_data' => $data->$itemImage['column']])
+            @include('backend::image.action', ['image' => $itemImage, 'image_data' => $data->{$itemImage['column']}])
+        @elseif(isset($itemImage['type']) && $itemImage['type'] == 'local_image')
+            @include('backend::localImage.script', ['image' => ['name' => $itemImage['column'], 'file' => $data->{$itemImage['column']}]])
         @endif
     @endforeach
 

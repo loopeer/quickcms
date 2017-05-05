@@ -38,6 +38,9 @@
                                             -ms-user-select: none;
                                             user-select: none;
                                         }
+                                        #logo {
+                                            width: 100% !important;
+                                        }
                                     </style>
                                     {!! csrf_field() !!}
                                     <fieldset>
@@ -69,16 +72,9 @@
                                                 <i> </i>
                                             </label>
                                         </section>
-                                        <section id="logo_section">
-                                            <label class="label">网站Logo</label>
-                                            {{--                                            @include('backend::image.upload', ['image_name' => 'image'])--}}
-                                            <span class="btn btn-success fileinput-button">
-                                                <i class="icon-plus icon-white"></i>
-                                                <span id="mark">上传图片</span>
-                                                <input type="file" id="image_file">
-                                            </span>
-                                            <div class="row image_content"></div>
-                                            <div class="error_content"></div>
+                                        <section id="{{ $logo_upload['name'] }}_section">
+                                            <label class="label">网站logo</label>
+                                            @include('backend::localImage.upload', ['image' => $logo_upload])
                                         </section>
                                     </fieldset>
                                     <footer>
@@ -100,77 +96,9 @@
 @endsection
 
 @section('script')
-    <link rel="stylesheet" type="text/css" href="{{{ asset('loopeer/quickcms/js/blueimp/css/jquery.fileupload-ui.css') }}}">
-    <link rel="stylesheet" type="text/css" href="{{{ asset('loopeer/quickcms/js/blueimp/css/blueimp-gallery.min.css') }}}">
+    @include('backend::localImage.script', ['image' => $logo_upload])
     <script>
         $(document).ready(function() {
-            @if(!empty($logo->value))
-               $("#logo_section .image_content").html('<table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"><tr class="template-download fade success in">' +
-                '<td width="100%">' +
-                '<span class="preview">' +
-                '<img id="image" src="{{ url() . $logo->value }}" style="max-width:100%;">' +
-                '<input type="hidden" value="{{  $logo->value }}" name="logo">' +
-                '</span>' +
-                '</td>' +
-                '<td style="vertical-align:middle;text-align:left;">' +
-                '<button class="btn btn-danger delete" type="button" onclick="$(this).parent().parent().remove();">' +
-                '<i class="icon-trash icon-white"></i>' +
-                '<span>删除</span>' +
-                '</button>' +
-                '</td>' +
-                '</tr></tbody></table>');
-            @endif
-
-            $('#image_file').on('change', function() {
-                var image = this.files[0];
-                if($("#logo_section .image_content .table tr").length > 0){
-                    alert('只允许上传1张图片');
-                    return false;
-                }
-
-                if(/.(gif|jpg|jpeg|png|bmp)$/.test(image.name)) {
-                    $('#logo_section #mark').html('正在上传...');
-                    var formData = new FormData();
-                    formData.append('logo', image);
-                    formData.append('file_name', 'logo');
-
-                    $.ajax({
-                        url: "/admin/blueimp/upload4Local",
-                        type: "POST",
-                        data: formData,
-                        processData: false,  // tell jQuery not to process the data
-                        contentType: false   // tell jQuery not to set contentType
-                    }).done(function(result) {
-                        if(result.result) {
-                            $("#logo_section .image_content").html('<table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"><tr class="template-download fade success in">' +
-                                '<td width="100%">' +
-                                '<span class="preview">' +
-                                '<img id="image" src="' + result.url + '" style="max-width:100%;">' +
-                                '<input type="hidden" value="' + result.path + '" name="logo">' +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align:middle;text-align:left;">' +
-                                '<button class="btn btn-danger delete" type="button" onclick="$(this).parent().parent().remove();">' +
-                                '<i class="icon-trash icon-white"></i>' +
-                                '<span>删除</span>' +
-                                '</button>' +
-                                '</td>' +
-                                '</tr></tbody></table>');
-                        } else {
-                            $("#logo_section .error_content").html('<div class="alert alert-danger fade in">' +
-                                '<button class="close" data-dismiss="alert">×</button><i class="fa-fw fa fa-times"></i>' +
-                                '<strong>失败!</strong>' + result.msg + '</div>');
-                        }
-                        $('#logo_section #mark').html('上传图片');
-                    });
-
-                } else {
-                    alert('只允许上传图片');
-                    return false;
-                }
-            });
-
-
 
             $("#smart-form-register").validate({
                 // Rules for form validation

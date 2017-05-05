@@ -12,7 +12,6 @@ namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Loopeer\QuickCms\Models\Backend\RoleUser;
 use Loopeer\QuickCms\Models\Backend\User;
@@ -22,6 +21,7 @@ class UserController extends FastController
     public function storeUser()
     {
         $data = Input::all();
+        $data['avatar'] = isset($data['avatar']) ? $data['avatar'] : null;
         if ($data['id']) {
             $exist_user = User::whereNotIn('id', [$data['id']])->where('email', $data['email'])->first();
             if (isset($exist_user)) {
@@ -38,6 +38,7 @@ class UserController extends FastController
             if (!$user->exists) {
                 $user->name = $data['name'];
                 $user->password =  $data['password'];
+                $user->avatar = $data['avatar'];
                 $user->save();
                 RoleUser::create(array(
                     'user_id' => $user->id,

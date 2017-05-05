@@ -26,7 +26,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
     const STATUS_ACTIVE = 1;
     const STATUS_FORBIDDEN = 0;
 
-    protected $fillable = ['name', 'email', 'password', 'remember_token', 'status', 'last_login'];
+    protected $fillable = ['name', 'email', 'password', 'remember_token', 'avatar', 'status', 'last_login'];
 
     protected $buttons = ['detail' => false, 'delete' => false, 'actions' => [
             [
@@ -44,7 +44,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
         ['column' => 'name', 'query' => 'like'],
         ['column' => 'email', 'query' => 'like'],
         ['column' => 'roles.display_name'],
-        ['column' => 'avatar'],
+        ['column' => 'avatar', 'type' => 'image'],
         ['column' => 'last_login'],
         ['column' => 'status', 'order' => 'desc', 'type' => 'normal', 'param' => ['<span class="label label-default">禁用</span>', '<span class="label label-success">正常</span>']],
         ['column' => 'created_at', 'order' => 'desc'],
@@ -55,6 +55,7 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
         ['column' => 'email', 'rules' => ['required' => true]],
         ['column' => 'password', 'type' => 'password'],
         ['column' => 'roles.id', 'type' => 'select', 'param' => 'role_group'],
+        ['column' => 'avatar', 'type' => 'local_image'],
     ];
     protected $module = '用户';
 
@@ -64,6 +65,11 @@ class User extends FastModel implements AuthenticatableContract, CanResetPasswor
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function getAvatarAttribute()
+    {
+        return $this->attributes['avatar'];
     }
 
     public function setPasswordAttribute($value)

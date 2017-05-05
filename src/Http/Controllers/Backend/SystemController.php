@@ -14,8 +14,12 @@ class SystemController extends BaseController
         $app_review = System::firstOrCreate(['key' => 'app_review']);
         $android_download = System::firstOrCreate(['key' => 'android_download']);
         $logo = System::firstOrCreate(['key' => 'logo']);
+        $logo_upload = [
+            'name' => 'logo',
+            'file' => $logo->value
+        ];
         return view('backend::system.setting', compact('title', 'build', 'app_review',
-            'android_download', 'logo'));
+            'android_download', 'logo', 'logo_upload'));
     }
 
     public function saveSetting(Request $request)
