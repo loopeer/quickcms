@@ -99,7 +99,12 @@ class BaseController extends Controller
         {
             foreach ($model->where as $key => $value)
             {
-                $builder = $builder->where($key, $value);
+                if($value == 'admin') {
+                    $builder = $builder->where($key, Auth::admin()->get()->email);
+                }else{
+                    $builder = $builder->where($key, $value);
+                }
+
             }
         }
         if (count($query) > 0) {
