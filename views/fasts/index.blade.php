@@ -306,7 +306,7 @@
                                         @endif
                                          @if(isset($renameItem['style']['width']))
                                          $("#dialog .modal-dialog .modal-content").css('width','{{ $renameItem['style']['width'] }}');
-                                        $("#dialog").css('right', '{{ (int)$renameItem['style']['width'] / 2 . 'px' }}');
+                                        <!--$("#dialog").css('right', '{{ (int)$renameItem['style']['width'] / 2 . 'px' }}');-->
                                         @endif
                                         $(this).attr("data-toggle", "modal");
                                         $(this).attr("data-target", "#dialog");
@@ -439,7 +439,7 @@
                         @endif
                          @if(isset($detail['style']['width']))
                          $("#dialog .modal-dialog .modal-content").css('width','{{ $detail['style']['width'] }}');
-                         $("#dialog").css('right', '{{ (int)$model->detail['style']['width'] / 2 . 'px' }}');
+                         <!--$("#dialog").css('right', '{{ (int)$model->detail['style']['width'] / 2 . 'px' }}');-->
                         @endif
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#dialog");
@@ -547,7 +547,7 @@
                             @endif
                              @if(isset($action['style']['width']))
                              $("#dialog .modal-dialog .modal-content").css('width','{{ $action['style']['width'] }}');
-                             $("#dialog").css('right', '{{ (int)$action['style']['width'] / 2 . 'px' }}');
+                             <!--$("#dialog").css('right', '{{ (int)$action['style']['width'] / 2 . 'px' }}');-->
                             @endif
 
 $(this).attr("data-toggle", "modal");
