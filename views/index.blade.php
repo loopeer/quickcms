@@ -55,7 +55,7 @@
                             <strong>登陆IP：</strong>{{ Request::getClientIp() }}
                             <br>
                             <br>
-                            <strong>最近登陆时间：</strong>{{ $user->last_login }}
+                            <strong>最近登陆时间：</strong>{{ isset($last_login_log) ? $last_login_log->created_at : $user->last_login }}
                             <br>
                             <br>
                             <strong>最后更新时间：</strong>{{ $user->updated_at }}

@@ -41,7 +41,8 @@ class FastController extends BaseController
                 $queries[] = $column;
             }
         }
-        return view('backend::fasts.index', compact('model', 'queries', 'redirect_value'));
+        $detail = $model->detail;
+        return view('backend::fasts.index', compact('model', 'queries', 'redirect_value', 'detail'));
     }
 
     public function create(Model $model)

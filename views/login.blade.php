@@ -10,8 +10,21 @@
     <style>
         html {
             background: #f4f4f4!important;
+            height: 100% !important;
         }
-        #wrap{min-height:100%}
+        body {
+            height: 100% !important;
+            background: #FFFFFF;
+        }
+        #main {
+            min-height: 100%;
+            padding-top: 80px!important;
+        }
+        .ui-widget-overlay {
+            opacity: .7 !important;
+        }
+
+        /*#wrap{min-height:100%}*/
         #background-full-screen {
             /*position: absolute;*/
             /*transition: bottom .3s ease-out 1.7s;*/
@@ -23,6 +36,15 @@
             /*background-position: 50% 50%;*/
             /*height:100%;*/
         }
+
+        #footer {
+            position:absolute;
+            bottom:0;
+            width:100%;
+            height:71px;
+            background-color: #f4f4f4;
+        }
+
         #main {
             color: rgba(255,255,255,.5);
             height: 100%;!important;
@@ -104,6 +126,7 @@
             </div>
         </div>
     </div>
+    <footer id="footer"></footer>
 
     <div id="register-dialog" title="<div class='widget-header'><h4><i class='fa fa-user'></i> 申请账号</h4></div>" style="display: none">
         <form action="/admin/register" method="post" id="register-form" class="smart-form client-form">
@@ -111,25 +134,25 @@
                 <section>
                     <label class="label">邮箱</label>
                     <label class="input"> <i class="icon-append fa fa-envelope"></i>
-                        <input type="email" name="email" placeholder="Email address">
+                        <input type="email" name="email" placeholder="请输入邮箱地址">
                         <b class="tooltip tooltip-bottom-right">用来登录后台管理系统</b> </label>
                 </section>
                 <section>
                     <label class="label">姓名</label>
                     <label class="input"> <i class="icon-append fa fa-user"></i>
-                        <input type="text" name="name">
+                        <input type="text" name="name" placeholder="请输入姓名">
                     </label>
                 </section>
                 <section>
                     <label class="label">密码</label>
                     <label class="input"> <i class="icon-append fa fa-lock"></i>
-                        <input type="password" name="password" placeholder="Password" id="password" maxlength="20">
+                        <input type="password" name="password" placeholder="请输入密码" id="password" maxlength="20">
                     </label>
                 </section>
                 <section>
                     <label class="label">确认密码</label>
                     <label class="input"> <i class="icon-append fa fa-lock"></i>
-                        <input type="password" name="passwordConfirm" placeholder="Confirm password" maxlength="20">
+                        <input type="password" name="passwordConfirm" placeholder="请确认密码" maxlength="20">
                     </label>
                 </section>
             </fieldset>
@@ -160,7 +183,7 @@
     // Register
     var register_dialog = $("#register-dialog").dialog({
         autoOpen : false,
-        width : 500,
+        width : 600,
         height: 550,
         resizable : false,
         diaggable:false,

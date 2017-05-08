@@ -48,13 +48,15 @@ class QuickCmsServiceProvider extends ServiceProvider {
 			__DIR__ . '/../lang' => base_path('resources/lang'),
 		]);
 
-		$system_title = System::where('key', 'title')->first();
-		$system_logo = System::where('key', 'logo')->first();
-		if (isset($system_title)) {
-		    view()->share('system_title', $system_title->value);
-        }
-        if (isset($system_logo)) {
-            view()->share('system_logo', $system_logo->value);
+		if (Schema::hasTable('systems')) {
+            $system_title = System::where('key', 'title')->first();
+            $system_logo = System::where('key', 'logo')->first();
+            if (isset($system_title)) {
+                view()->share('system_title', $system_title->value);
+            }
+            if (isset($system_logo)) {
+                view()->share('system_logo', $system_logo->value);
+            }
         }
 
 		if (Schema::hasTable('selectors')) {

@@ -22,6 +22,10 @@ class ExceptionLog extends FastModel
         ['column' => 'created_at', 'order' => 'desc'],
     ];
     protected $detail = [
+        'style' => [
+            'height' => '600px',
+            'width' => '1000px'
+        ],
         ['column' => 'id'],
         ['column' => 'message'],
         ['column' => 'code'],

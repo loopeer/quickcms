@@ -300,6 +300,14 @@
                                     if(isDisabled($(this))) {
                                         var data = table.row($(this).parents('tr')).data();
                                         $("#dialog .modal-title").html('{{ $renameItem['param']['dialog_title'] }}');
+
+                                        @if(isset($renameItem['style']['height']))
+                                        $("#dialog .modal-dialog .terms-body").css('max-height','{{ $renameItem['style']['height'] }}');
+                                        @endif
+                                         @if(isset($renameItem['style']['width']))
+                                         $("#dialog .modal-dialog .modal-content").css('width','{{ $renameItem['style']['width'] }}');
+                                        $("#dialog").css('right', '{{ (int)$renameItem['style']['width'] / 2 . 'px' }}');
+                                        @endif
                                         $(this).attr("data-toggle", "modal");
                                         $(this).attr("data-target", "#dialog");
                                         $(this).attr("data-action", "{{$renameItem['param']['url']}}" + data[0]);
@@ -426,6 +434,13 @@
                     if(isDisabled($(this))) {
                         var data = table.row($(this).parents('tr')).data();
                         $("#dialog .modal-title").html('查看详情');
+                        @if(isset($detail['style']['height']))
+                        $("#dialog .modal-dialog .terms-body").css('max-height','{{ $detail['style']['height'] }}');
+                        @endif
+                         @if(isset($detail['style']['width']))
+                         $("#dialog .modal-dialog .modal-content").css('width','{{ $detail['style']['width'] }}');
+                         $("#dialog").css('right', '{{ (int)$model->detail['style']['width'] / 2 . 'px' }}');
+                        @endif
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#dialog");
                         $(this).attr("data-action", "/admin/{{ $model->route }}/" + data[0]);
@@ -526,7 +541,16 @@
                         if(isDisabled($(this))) {
                             var data = table.row($(this).parents('tr')).data();
                             $("#dialog .modal-title").html('{{$action['dialog_title']}}');
-                            $(this).attr("data-toggle", "modal");
+
+                            @if(isset($action['style']['height']))
+                            $("#dialog .modal-dialog .terms-body").css('max-height','{{ $action['style']['height'] }}');
+                            @endif
+                             @if(isset($action['style']['width']))
+                             $("#dialog .modal-dialog .modal-content").css('width','{{ $action['style']['width'] }}');
+                             $("#dialog").css('right', '{{ (int)$action['style']['width'] / 2 . 'px' }}');
+                            @endif
+
+$(this).attr("data-toggle", "modal");
                             $(this).attr("data-target", "#dialog");
                             $(this).attr("data-action", "{{$action['url']}}" + data[0]);
                             $(this).attr("data-id", data[0]);
