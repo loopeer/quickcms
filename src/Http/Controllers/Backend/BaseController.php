@@ -197,7 +197,7 @@ class BaseController extends Controller
                     if(count($item->{$table_column[0]}) > 0) {
                         array_push($obj, $item->{$table_column[0]} instanceof Collection ? $item->{$table_column[0]}->first()->{$table_column[1]} : $item->{$table_column[0]}->{$table_column[1]});
                     } else {
-                        array_push($obj, null);
+                        array_push($obj, '无');
                     }
                 } else {
                     array_push($obj, $item->$column);
@@ -300,6 +300,13 @@ class BaseController extends Controller
 
     private function querySelector($builder, $name, $value, $operator)
     {
+        if (strstr($name, '.') !== FALSE) {
+            $table_column = explode('.', $name);
+            return $builder->whereHas($table_column[0], function ($query) use ($table_column, $value, $operator) {
+                $query->where($table_column[1], $operator, $operator == 'like' ? "%$value%" : $value);
+            });
+        }
+
         if ($operator && $operator == 'scope') {
             return $builder->$name($value);
         }

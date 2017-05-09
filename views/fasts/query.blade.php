@@ -25,7 +25,7 @@
                                         <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
                                     @endif
                                 @elseif($query['type'] == 'select')
-                                    <select class="form-control" id="{{ $query['column'] }}">
+                                    <select class="form-control" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
                                         <option value="">全部</option>
                                         @foreach(is_array($query['param']) ? $query['param'] : ${$query['param']} as $sk => $sv)
                                             <option value="{{ $sk }}">{{ $sv }}</option>
