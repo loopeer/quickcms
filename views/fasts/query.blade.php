@@ -22,8 +22,7 @@
                                         <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_from" }}">
                                         <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_to" }}">
                                     @else
-                                        <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE)
-                                        {{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
+                                        <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
                                     @endif
                                 @elseif($query['type'] == 'select')
                                     <select class="form-control" id="{{ $query['column'] }}">

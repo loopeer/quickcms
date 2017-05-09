@@ -18,15 +18,18 @@ use Loopeer\QuickCms\Models\Backend\Permission;
 use Redirect;
 use Response;
 
-class PermissionController extends BaseController {
+class PermissionController extends BaseController
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth.permission:system');
         $this->middleware('auth.permission:admin.permissions.index');
         parent::__construct();
     }
 
-    public function search() {
+    public function search()
+    {
         $select_column = ['menus.id','menus.name','menus.display_name','menus.route','parents.display_name','menus.sort','menus.icon','menus.description'];
         $show_column = ['menu_id','menu_name','menu_display_name','menu_route','parent_display_name','menu_sort','menu_icon','menu_description'];
         $tables = ['menus', 'parents'];
@@ -39,12 +42,14 @@ class PermissionController extends BaseController {
         return $ret;
     }
 
-    public function index() {
+    public function index()
+    {
         $message = Session::get('message');
         return view('backend::permissions.index', compact('message', 'permission_list', 'parent_permission_list'));
     }
 
-    public function create() {
+    public function create()
+    {
         $permission = new Permission();
         $message = Session::get('message');
         $action = route('admin.permissions.store');
@@ -52,7 +57,8 @@ class PermissionController extends BaseController {
         return view('backend::permissions.create', compact('message','action','parent_permission_list','permission'));
     }
 
-    public function store() {
+    public function store()
+    {
         $inputs = Input::all();
         $operation_permission = Input::get('operation_permission');
         $permission_id = Input::get('permission_id',null);
@@ -60,16 +66,16 @@ class PermissionController extends BaseController {
             $inputs['parent_id'] = 0;
         }
         $inputs['level'] = $inputs['parent_id'] == 0 ? 1 : 2;
-        if(is_null($permission_id)){
+        if (is_null($permission_id)) {
             array_except($inputs, array('operation_permission'));
             //创建
             $isset = Permission::where('name',$inputs['name'])->first();
-            if(is_null($isset)){
+            if (is_null($isset)) {
                 $permission = Permission::create($inputs);
-                if(isset($operation_permission) && $operation_permission == 'Y') {
+                if (isset($operation_permission) && $operation_permission == 'Y') {
                     $operation = array('create' => '新增', 'edit' => '编辑', 'delete' => '删除', 'show' => '详情', 'changeStatus' => '状态变更');
                     $permissions = [];
-                    foreach($operation as $operation_key => $operation_value) {
+                    foreach ($operation as $operation_key => $operation_value) {
                         $permissions[] = array(                                                       
                             'name' => str_replace('.index', '', $permission->name) . '.' . $operation_key, 
                             'display_name' => $operation_value,                            
@@ -80,21 +86,21 @@ class PermissionController extends BaseController {
                     }
                     DB::table('permissions')->insert($permissions);
                 }
-                $message = array('result' => true,'content' => '添加权限成功，重新登陆后即可更新左侧菜单栏');
+                $message = array('result' => true,'content' => '添加权限成功，重新登陆后即可更新菜单栏');
                 return redirect('admin/permissions')->with('message', $message);
-            }else{
+            } else {
                 $message = array('result' => false,'content' => '添加权限失败,此权限名称已存在');
                 return Redirect::back()->with('message', $message);
             }
-        }else{
+        } else {
             //编辑
             $permission = Permission::find($permission_id);
             $isset = Permission::whereNotIn('id',array($permission_id))->where('name',$inputs['name'])->first();
-            if(is_null($isset)){
+            if (is_null($isset)) {
                 $permission->update($inputs);
                 $message = array('result' => true,'content'=>'编辑权限成功');
                 return redirect('admin/permissions')->with('message', $message);
-            }else{
+            } else {
                 $message = array('result' => false,'content'=>'编辑权限失败,此权限名称已存在');
                 return Redirect::back()->with('message', $message);
             }
@@ -102,7 +108,8 @@ class PermissionController extends BaseController {
 
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $permission = Permission::find($id);
         $message = Session::get('message');
         $action = route('admin.permissions.store',array('permission_id'=>$id));
@@ -110,14 +117,15 @@ class PermissionController extends BaseController {
         return view('backend::permissions.create', compact('message','action','parent_permission_list','permission'));
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $permission = Permission::find($id);
         $menu = Permission::where('parent_id',$id)->first();
-        if(is_null($menu)){
+        if (is_null($menu)) {
             $result = true;
             $content = '删除权限成功';
             $permission->delete();
-        }else{
+        } else {
             $result = false;
             $content = '删除权限失败，不能删除已经被关联的一级权限';
         }
