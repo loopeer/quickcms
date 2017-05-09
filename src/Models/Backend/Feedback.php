@@ -4,7 +4,7 @@ namespace Loopeer\QuickCms\Models\Backend;
 
 class Feedback extends FastModel
 {
-    protected $buttons = ['create' => false, 'edit' => false, 'delete' => false, 'detail' => false];
+    protected $buttons = ['create' => false, 'edit' => false, 'delete' => true, 'detail' => false];
 
     protected $index = [
         ['column' => 'id'],
