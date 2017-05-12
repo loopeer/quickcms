@@ -17,6 +17,7 @@ use Loopeer\Lib\Sms\LuoSiMaoSms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Loopeer\QuickCms\Models\Api\System;
+use Loopeer\QuickCms\Services\Utils\QiniuCloud;
 use Loopeer\QuickCms\Services\Validators\QuickApiValidator;
 use Looopeer\Lib\Sendcloud\SendcloudService;
 
@@ -64,7 +65,6 @@ class AccountController extends BaseController {
         $account->last_ip = $request->ip();
         $account->last_time = Carbon::now();
         $account->save();
-        Auth::user()->setUser($account);
         return ApiResponse::responseSuccess($account);
     }
 
@@ -77,15 +77,11 @@ class AccountController extends BaseController {
         if (!$this->validation->passes($this->validation->loginByCaptchaRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $phone = $request->phone;
-        // 验证码输入错误
-        if(self::checkCaptcha($phone, $request->captcha)) {
+        $phone = $request->input('phone');
+        if(self::checkCaptcha($phone, $request->input('captcha'))) {
             return ApiResponse::responseFailure(null, trans('messages.captcha_error'));
         }
-        // 验证帐号
         $account = $this->model->where('phone', $phone)->first();
-        // token
-        $token = self::generateToken();
         if(is_null($account)) {
             $account = new $this->model;
             $account->phone = $phone;
@@ -93,12 +89,11 @@ class AccountController extends BaseController {
             $account->register_channel = $request->header('channel_id');
             $account->register_version = $request->header('build');
         } else {
-            // 黑名单
             if(self::isUserForbidden($account)) {
                 return ApiResponse::responseFailure(config('quickCms.code.black_account'), trans('messages.black_account'));
             }
         }
-        $account->token = $token;
+        $account->token = self::generateToken();
         $account->last_ip = $request->ip();
         $account->last_time = Carbon::now();
         $account->save();
@@ -106,13 +101,13 @@ class AccountController extends BaseController {
     }
 
     /**
-     * 微信登录方式
+     * 第三方登录方式
      * @param $request
      * @return mixed
      */
-    public function loginByWeChat(Request $request)
+    public function loginByOpen(Request $request)
     {
-        if (!$this->validation->passes($this->validation->loginByWeChatRules)) {
+        if (!$this->validation->passes($this->validation->loginByOpenRules)) {
             return ApiResponse::validation($this->validation);
         }
         $data = $request->all();
@@ -126,9 +121,14 @@ class AccountController extends BaseController {
             $data['register_platform'] = $request->header('platform');
             $data['register_channel'] = $request->header('channel_id');
             $data['register_version'] = $request->header('build');
+            if (isset($data['avatar'])) {
+                $qiniu = new QiniuCloud();
+                $key = 'image_' . date('YmdHis') . rand(1000, 4000);
+                $qiniu->fetch($key, $data['avatar']);
+                $data['avatar'] = $key;
+            }
             $account = $this->model->create($data);
         }
-        Auth::user()->setUser($account);
         return ApiResponse::responseSuccess($account);
     }
 
@@ -303,7 +303,6 @@ class AccountController extends BaseController {
         return ApiResponse::responseSuccess($account);
     }
 
-    
     /**
      * 验证码是否一致
      * @param string $phone
@@ -311,7 +310,7 @@ class AccountController extends BaseController {
      * @return bool
      */
     private function checkCaptcha($phone, $captcha) {
-        if ($this->isReviewing() && $phone == env('test_phone') && $captcha == '1234') {
+        if ($phone == config('quickApi.sms.test_phone')) {
             return false;
         }
         $captcha_service = Cache::get($phone);

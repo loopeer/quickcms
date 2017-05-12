@@ -45,6 +45,7 @@ return [
         'captcha' => '手机验证码：%s，请于30分钟内输入使用，如非本人操作请忽略本短信。【xxx】',
         'api_key' => '',
         'api_key_verify' => '',
+        'test_phone' => env('test_phone', '18712345678'),
     ],
 
     // API返回码

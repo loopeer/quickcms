@@ -52,7 +52,7 @@ class QuickApiValidator extends Validator {
         'captcha' => 'required',
     ];
 
-    public $loginByWeChatRules = [
+    public $loginByOpenRules = [
         'open_id' => 'required',
     ];
 
