@@ -104,7 +104,7 @@
                                                 @if($item['type'] == 'date')
                                                     <div class="input-group date form_date" data-date-format="yyyy-mm-dd">
                                                 @elseif($item['type'] == 'datetime')
-                                                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii">
+                                                    <div class="input-group date form_datetime" data-date-format="yyyy-mm-dd hh:ii:ss">
                                                 @else
                                                     <div class="input-group date form_time" data-date-format="hh:ii">
                                                 @endif

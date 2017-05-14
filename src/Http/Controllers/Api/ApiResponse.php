@@ -94,6 +94,17 @@ class ApiResponse extends Response {
         return Response::json($ret);
     }
 
+    public static function responseSuccessWithOffset($data, $pageSize, $totalSize) {
+        $ret = array (
+            'code' => config('quickApi.code.success'),
+            'message' => trans('messages.request_success'),
+            'page_size' => $pageSize,
+            'total_size' => $totalSize,
+            'data' => $data
+        );
+        return Response::json($ret);
+    }
+
     /**
      * Response failure
      * @param null $errorCode
