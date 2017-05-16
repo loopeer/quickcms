@@ -105,6 +105,18 @@ class ApiResponse extends Response {
         return Response::json($ret);
     }
 
+    public static function responseSuccessWithCustom($data, $custom) {
+        $ret = array_merge(
+            [
+                'code' => config('quickApi.code.success'),
+                'message' => trans('messages.request_success'),
+                'data' => $data
+            ],
+            $custom
+        );
+        return Response::json($ret);
+    }
+
     /**
      * Response failure
      * @param null $errorCode
