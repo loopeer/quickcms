@@ -10,16 +10,13 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Loopeer\QuickCms\Models\Backend\ActionLog;
 use Loopeer\QuickCms\Models\Backend\Permission;
 use Loopeer\QuickCms\Models\Backend\User;
-use Input;
-use Log;
-use Session;
-use DB;
-use Auth;
-use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -115,6 +112,6 @@ class IndexController extends BaseController
             ->orderByRaw($order_sql)
             ->paginate($length);
         $ret = self::queryPage($show_column, $users);
-        return Response::json($ret);
+        return response()->json($ret);
     }
 }

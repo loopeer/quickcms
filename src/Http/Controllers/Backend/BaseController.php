@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Session;
 use Loopeer\QuickCms\Models\Backend\System;
 use Loopeer\QuickCms\Models\Backend\Permission;
 use Loopeer\QuickCms\Models\Backend\PermissionRole;
+use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 
 /**
  * 后台Controller基类
@@ -43,6 +44,19 @@ class BaseController extends Controller
         $this->systemConfig = Cache::rememberForever('system_config', function() {
             return System::get();
         });
+
+        $system_title = System::where('key', 'title')->first();
+        $system_logo = System::where('key', 'logo')->first();
+        if (isset($system_title)) {
+            view()->share('system_title', $system_title->value);
+        }
+        if (isset($system_logo)) {
+            view()->share('system_logo', $system_logo->value);
+        }
+
+        foreach(GeneralUtil::allSelectorData() as $sk => $sv) {
+            view()->share($sk, $sv);
+        }
     }
 
     /**
