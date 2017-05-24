@@ -109,16 +109,9 @@ class BaseController extends Controller
         if ($model->redirect_column !== null) {
             $builder = $builder->where($model->redirect_column, $redirect_value);
         }
-        if(isset($model->where))
-        {
-            foreach ($model->where as $key => $value)
-            {
-                if($value == 'admin') {
-                    $builder = $builder->where($key, Auth::admin()->get()->email);
-                }else{
-                    $builder = $builder->where($key, $value);
-                }
-
+        if(isset($model->where)) {
+            foreach ($model->where as $key => $value) {
+                $builder = $value == 'admin' ? $builder->where($key, Auth::admin()->get()->email) : $builder->where($key, $value);
             }
         }
         if (count($query) > 0) {

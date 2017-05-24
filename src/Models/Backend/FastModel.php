@@ -6,6 +6,7 @@ class FastModel extends BaseModel
 {
     protected $buttons;
     protected $index;
+    protected $where;
     protected $create;
     protected $createHidden = [];
     protected $detail;
@@ -48,6 +49,8 @@ class FastModel extends BaseModel
         switch($key) {
             case 'index':
                 return $this->index;
+            case 'where':
+                return $this->where;
             case 'buttons':
                 return $this->buttons();
             case 'create':
