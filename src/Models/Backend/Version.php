@@ -32,9 +32,11 @@ class Version extends FastModel
     const CREATE_STATUS = 0;
     const PUBLISH_STATUS = 1;
 
+    protected $casts = ['url' => 'qiniu'];
+
     public function setPublishedAtAttribute()
     {
-        if (empty($this->attributes['published_at'] || $this->attributes['published_at'] == 'now')) {
+        if ($this->attributes['published_at']) {
             $this->attributes['published_at'] = Carbon::now();
         }
     }
