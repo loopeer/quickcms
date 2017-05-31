@@ -94,7 +94,9 @@ class BPushService {
      * @param $result
      */
     private function printResult($platform, $result) {
-        $logger = LogUtil::getLogger('push', 'push');
-        $logger->addInfo('platform = ' . $platform . ' result = ' . $result);
+        if (config('quickCms.push_log_switch')) {
+            $logger = LogUtil::getLogger('push', 'push');
+            $logger->addInfo('platform = ' . $platform . ' result = ' . $result);
+        }
     }
 }

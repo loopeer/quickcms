@@ -20,6 +20,7 @@ return [
     //加密字符串
     'admin_pwd_salt' => '',
     'sql_log_switch' => env('sql_log_switch', false),
+    'push_log_switch' => env('push_log_switch', false),
     'permission_switch' => env('permission_switch', false),
 
     // qiniu config
