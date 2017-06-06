@@ -113,8 +113,8 @@ class SystemsSetupTables extends Migration
             Schema::create('pushes', function (Blueprint $table) {
                 $table->bigIncrements('id')->comment('主键');
                 $table->bigInteger('account_id')->comment('用户id');
-                $table->bigInteger('app_channel_id')->comment('渠道id');
-                $table->bigInteger('app_user_id')->comment('应用id');
+                $table->string('app_channel_id', 100)->comment('渠道id');
+                $table->string('app_user_id', 100)->comment('应用id');
                 $table->string('platform', 50)->comment('平台');
                 $table->tinyInteger('status')->default(0)->comment('状态');
                 $table->timestamps();

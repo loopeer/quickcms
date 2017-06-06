@@ -3,8 +3,6 @@
 use Illuminate\Routing\ResourceRegistrar;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Loopeer\QuickCms\Models\Backend\System;
-use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 
 class QuickCmsServiceProvider extends ServiceProvider {
 

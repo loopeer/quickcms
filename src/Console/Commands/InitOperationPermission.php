@@ -22,11 +22,6 @@ class InitOperationPermission extends Command
      */
     protected $description = 'quickcms init operation permission default CURD';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();

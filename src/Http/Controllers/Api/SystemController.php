@@ -10,14 +10,13 @@
  */
 namespace Loopeer\QuickCms\Http\Controllers\Api;
 
-use Input;
+use Illuminate\Http\Request;
 use Loopeer\QuickCms\Models\Api\Feedback;
 use Loopeer\QuickCms\Models\Api\Pushes;
 use Loopeer\QuickCms\Models\Api\System;
 use Loopeer\QuickCms\Models\Backend\Document;
 use Loopeer\QuickCms\Models\Backend\Version;
 use Loopeer\QuickCms\Services\Utils\QiniuUtil;
-use Request;
 use Loopeer\QuickCms\Services\Validators\SystemValidator as SystemValidator;
 use Cache;
 
@@ -33,10 +32,10 @@ class SystemController extends BaseController {
      * 初始化参数
      * @return mixed
     */
-    public function initialize()
+    public function initialize(Request $request)
     {
         $upToken = QiniuUtil::buildUpToken();
-        $version_code = Request::header('build');
+        $version_code = $request->header('build');
         $appstore_reviewing = false;
         Cache::forget('review_system');
         Cache::forget('build_system');
@@ -80,18 +79,18 @@ class SystemController extends BaseController {
      * 反馈
      * @return mixed
      */
-    public function feedback() {
+    public function feedback(Request $request) {
         if (!$this->validation->passes($this->validation->feedbackRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $account_id = Request::header('account_id');
-        $content = Input::get('content');
-        $contact = Input::get('contact');
-        $version = Request::header('version_name');
-        $versionCode = Request::header('build');
-        $deviceId = Request::header('device_id');
-        $channelId = Request::header('channel_id', 'iOS');
-        $feedback = new Feedback;
+        $account_id = $request->header('account-id');
+        $content = $request->get('content');
+        $contact = $request->get('contact');
+        $version = $request->header('version_name');
+        $versionCode = $request->header('build');
+        $deviceId = $request->header('device_id');
+        $channelId = $request->header('channel_id', 'iOS');
+        $feedback = new Feedback();
         $feedback->account_id = $account_id;
         $feedback->content = $content;
         $feedback->version = $version . '-' . $versionCode;
