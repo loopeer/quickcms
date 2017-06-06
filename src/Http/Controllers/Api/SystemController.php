@@ -64,23 +64,15 @@ class SystemController extends BaseController {
      * @return mixed
      * @throws \Exception
      */
-    public function registerPush() {
-        $accountId = Request::header('account_id');
-        $data = array(
-            'account_id' => $accountId,
-            'app_user_id' => Input::get('app_user_id'),
-            'app_channel_id' => Input::get('app_channel_id'),
-            'platform' => Request::header('platform'),
-        );
+    public function registerPush(Request $request) {
         if (!$this->validation->passes($this->validation->registerPushRules)) {
             return ApiResponse::validation($this->validation);
         }
-        $push = Pushes::where('account_id', $accountId)->first();
-        if (isset($push)) {
-            $push->update($data);
-        } else {
-            Pushes::create($data);
-        }
+        $pushes = Pushes::firstOrNew(['account_id' => $request->header('account-id')]);
+        $pushes->app_user_id = $request->get('app_user_id');
+        $pushes->app_channel_id = $request->get('app_channel_id');
+        $pushes->platform = $request->header('platform');
+        $pushes->save();
         return ApiResponse::responseSuccess();
     }
 
