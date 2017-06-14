@@ -229,11 +229,11 @@
                                     return this.value;
                                 }).get());
                             @elseif($qv['query'] == 'between')
-                                table.columns({{ $qk }}).search([$('#' + '{{ $qv['column'] }}' + '_from').val(), $('#' + '{{ $qv['column'] }}' + '_to').val()]);
+                                table.columns({{ $qk }}).search([$('#query-form #' + '{{ $qv['column'] }}' + '_from').val(), $('#' + '{{ $qv['column'] }}' + '_to').val()]);
                             @elseif(strstr($qv['column'], '.') !== FALSE)
-                                table.columns({{ $qk }}).search($('#' + '{{ str_replace('.', '-', $qv['column']) }}').val());
+                                table.columns({{ $qk }}).search($('#query-form #' + '{{ str_replace('.', '-', $qv['column']) }}').val());
                             @else
-                                table.columns({{ $qk }}).search($('#' + '{{ $qv['column'] }}').val());
+                                table.columns({{ $qk }}).search($('#query-form #' + '{{ $qv['column'] }}').val());
                             @endif
                         @endif
                     @endforeach

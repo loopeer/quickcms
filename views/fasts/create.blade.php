@@ -75,7 +75,7 @@
                                                             $data->{explode('.', $item['column'])[0]}->first()[explode('.', $item['column'])[1]] :
                                                             $data->{explode('.', $item['column'])[0]}->{explode('.', $item['column'])[1]}) ? 'selected' : '' }}>{{ $sv }}</option>
                                                             @else
-                                                            <option value="{{ $sk }}" {{ $sk == $data->$item['column'] ? 'selected' : '' }}>{{ $sv }}</option>
+                                                            <option value="{{ $sk }}" {{ $sk == $data->{$item['column']} ? 'selected' : '' }}>{{ $sv }}</option>
                                                             @endif
                                                         @endif
                                                     @endforeach
@@ -93,12 +93,12 @@
                                                 <div class="inline-group">
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $rk => $rv)
                                                         <label class="radio">
-                                                            <input type="radio" name="{{ $item['column'] }}" value="{{ $rk }}" {{ $rk == $data->$item['column'] ? 'checked' : '' }}>
+                                                            <input type="radio" name="{{ $item['column'] }}" value="{{ $rk }}" {{ $rk == $data->{$item['column']} ? 'checked' : '' }}>
                                                             <i></i>{{ $rv }}</label>
                                                     @endforeach
                                                 </div>
                                             @elseif($item['type'] == 'tags')
-                                                <input class="form-control tagsinput" name="{{ $item['column'] }}" value="{{ $data->$item['column'] }}" data-role="tagsinput">
+                                                <input class="form-control tagsinput" name="{{ $item['column'] }}" value="{{ $data->{$item['column']} }}" data-role="tagsinput">
                                                 <div class="note">每输入一个标签后请按回车键确认</div>
                                             @elseif($item['type'] == 'date' || $item['type'] == 'datetime' || $item['type'] == 'time')
                                                 @if($item['type'] == 'date')
@@ -108,7 +108,7 @@
                                                 @else
                                                     <div class="input-group date form_time" data-date-format="hh:ii">
                                                 @endif
-                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->$item['column'] }}" readonly>
+                                                    <input class="form-control" size="16" type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" readonly>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                                 </div>
