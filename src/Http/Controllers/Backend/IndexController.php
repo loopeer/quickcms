@@ -37,7 +37,12 @@ class IndexController extends BaseController
         $last_login_log = ActionLog::where('type', ActionLog::LOGIN_TYPE)
             ->orderBy('created_at','desc')
             ->skip(1)->first();
+
         exec('cd ' . base_path() . '&& /usr/bin/php /usr/local/bin/composer -i info loopeer/quickcms', $result, $return);
+        if ($return != 0) {
+            exec('cd ' . base_path() . '&& /usr/bin/php /usr/local/bin/composer.phar -i info loopeer/quickcms', $result, $return);
+        }
+
         if ($return == 0) {
             $info = [];
             collect($result)->each(function ($item) use (&$info) {
