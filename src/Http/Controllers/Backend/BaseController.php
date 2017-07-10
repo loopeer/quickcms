@@ -106,6 +106,9 @@ class BaseController extends Controller
         }
         $query = array_column($model->index, 'query');
         $builder = $model;
+        if ($model->business_id && session('business_id')) {
+            $builder = $builder->where($model->business_id, session('business_id'));
+        }
         if ($model->redirect_column !== null) {
             $builder = $builder->where($model->redirect_column, $redirect_value);
         }

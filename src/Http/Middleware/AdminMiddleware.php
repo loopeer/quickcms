@@ -91,7 +91,7 @@ class AdminMiddleware{
                 $reflectionClass = new \ReflectionClass(config('quickCms.business_user_model_class'));
                 $business_user = $reflectionClass->newInstance();
                 $business_user = $business_user::where('admin_id', Auth::admin()->get()->id)->first();
-                $business_id = count($business_user) ? $business_user->business_id : 0;
+                $business_id = count($business_user) ? $business_user->id : 0;
             }
             Session::put('business_id', $business_id);
             foreach($menus as $key=>$menu){
