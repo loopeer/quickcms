@@ -43,19 +43,19 @@
                         </address>
                     </div>
                     <div class="pull-left" style="margin-left: 15%;">
-                        <h4 class="semi-bold">当前登陆用户信息</h4>
+                        <h4 class="semi-bold">当前登录用户信息</h4>
                         <address>
                             <br>
-                            <strong>登陆邮箱：</strong>{{ $user->email }}
+                            <strong>登录邮箱：</strong>{{ $user->email }}
                             <br>
                             <br>
                             <strong>姓名：</strong>{{ $user->name }}
                             <br>
                             <br>
-                            <strong>登陆IP：</strong>{{ Request::getClientIp() }}
+                            <strong>登录IP：</strong>{{ Request::getClientIp() }}
                             <br>
                             <br>
-                            <strong>最近登陆时间：</strong>{{ isset($last_login_log) ? $last_login_log->created_at : $user->last_login }}
+                            <strong>最近登录时间：</strong>{{ isset($last_login_log) ? $last_login_log->created_at : $user->last_login }}
                             <br>
                             <br>
                             <strong>最后更新时间：</strong>{{ $user->updated_at }}
@@ -77,7 +77,7 @@
                          data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false">
                         <header>
                             <span class="widget-icon"> <i class="fa fa-table"></i> </span>
-                            <h2>后台用户登陆日志</h2>
+                            <h2>后台用户登录日志</h2>
                         </header>
                         <div>
                             <div class="jarviswidget-editbox">
@@ -86,9 +86,9 @@
                                 <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
                                     <thead>
                                     <tr>
-                                        <th>登陆时间</th>
-                                        <th>登陆邮箱</th>
-                                        <th>登陆IP</th>
+                                        <th>登录时间</th>
+                                        <th>登录邮箱</th>
+                                        <th>登录IP</th>
                                         <th>系统</th>
                                         <th>浏览器</th>
                                     </tr>
