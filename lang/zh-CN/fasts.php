@@ -86,4 +86,18 @@ return [
         'data' => '异常详细',
         'created_at' => '异常时间'
     ],
+    'appLogs' => [
+        'id' => 'ID',
+        'account_id' => '用户id',
+        'url' => '路径',
+        'route' => '路由',
+        'build' => '版本号',
+        'version_name' => '版本名称',
+        'platform' => '平台',
+        'device_id' => '设备',
+        'channel_id' => '渠道',
+        'ip' => 'ip',
+        'content' => '内容',
+        'created_at' => '请求时间',
+    ]
 ];

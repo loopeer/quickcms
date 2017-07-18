@@ -200,6 +200,24 @@ class SystemsSetupTables extends Migration
                 $table->softDeletes();
             });
         }
+        if(! Schema::hasTable('app_logs')) {
+            Schema::create('app_logs', function (Blueprint $table) {
+                $table->bigIncrements('id')->comment('主键');
+                $table->bigInteger('account_id')->default(0)->comment('用户id');
+                $table->string('url', 200)->comment('路径');
+                $table->string('route', 50)->nullable()->comment('路由');
+                $table->string('build', 20)->nullable()->comment("版本号");
+                $table->string('version_name', 20)->nullable()->comment("版本名称");
+                $table->string('platform', 20)->nullable()->comment('平台');
+                $table->string('device_id', 150)->nullable()->comment('设备');
+                $table->string('channel_id', 50)->nullable()->comment('渠道');
+                $table->string('ip', 20)->nullable()->comment('ip');
+                $table->text('content')->nullable()->comment('内容');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
+
     }
 
     /**
@@ -221,5 +239,6 @@ class SystemsSetupTables extends Migration
         Schema::dropIfExists('adverts');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('labels');
+        Scheam::dropIfExists('app_logs');
     }
 }
