@@ -16,7 +16,7 @@ class AppLogMiddleware
             'url' => $request->fullUrl(),
             'route' => $request->route()->getName(),
             'action_name' => $request->route()->getActionName(),
-            'method' => $request->route()->getMethods(),
+            'method' => $request->method(),
             'build' => $request->header('build'),
             'version_name' => $request->header('version-name'),
             'platform' => $request->header('platform'),
