@@ -114,7 +114,22 @@ class BaseController extends Controller
         }
         if(isset($model->where)) {
             foreach ($model->where as $key => $value) {
-                $builder = $value == 'admin' ? $builder->where($key, Auth::admin()->get()->email) : $builder->where($key, $value);
+                //$builder = $value == 'admin' ? $builder->where($key, Auth::admin()->get()->email) : $builder->where($key, $value);
+                if ($value == 'admin') {
+                    $builder->where($key, Auth::admin()->get()->email);
+                } elseif (is_array($value)) {
+                    if ($value['where'] == '=') {
+                        $builder->where($key, Auth::admin()->get()->id);
+                    } else {
+                        $bind = config('quickCms.admin_account_bind');
+                        $reflectionClass = new \ReflectionClass($bind['model']);
+                        $accountModel = $reflectionClass->newInstance();
+                        $accountIds = $accountModel->whereIn($bind['column'], Auth::admin()->get()->id)->lists('id');
+                        $builder->where($key, $accountIds);
+                    }
+                } else {
+                    $builder->where($key, $value);
+                }
             }
         }
         if (count($query) > 0) {

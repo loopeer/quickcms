@@ -75,4 +75,6 @@ return [
 
     //登录失效时间，单位分钟(默认30天)
     'login_lifetime' => env('login_lifetime', 43200),
+
+    'admin_account_bind' => ['model' => '', 'column' => 'admin_id'],
 ];

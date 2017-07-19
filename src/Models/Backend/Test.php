@@ -53,6 +53,7 @@ class Test extends FastModel {
         ['column' => 'image', 'type' => 'image', 'min' => 0],
         ['column' => 'images', 'type' => 'image', 'min' => 0, 'max' => 2],
     ];
+    protected $where = ['admin_id' => ['where' => '=']];
     protected $createHidden = [
         ['column' => 'created_by', 'value' => 'admin', 'action' => 'create'],
         ['column' => 'updated_by', 'value' => 'admin', 'action' => 'edit'],
