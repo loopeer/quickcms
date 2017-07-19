@@ -19,22 +19,22 @@
                             <div class="col-md-2">
                                 @if(!isset($query['type']) || $query['type'] == 'input')
                                     @if($query['query'] == 'between')
-                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_from" }}">
-                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_to" }}">
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_from" }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_to" }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
                                     @else
-                                        <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
+                                        <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif" value="{{ isset($query['default']) ? $query['default'] : '' }}">
                                     @endif
                                 @elseif($query['type'] == 'select')
                                     <select class="form-control" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
-                                        <option value="">全部</option>
+                                        <option>全部</option>
                                         @foreach(is_array($query['param']) ? $query['param'] : ${$query['param']} as $sk => $sv)
-                                            <option value="{{ $sk }}">{{ $sv }}</option>
+                                            <option value="{{ $sk }}" {{ isset($query['default']) && $query['default'] == $sk ? 'selected' : '' }}>{{ $sv }}</option>
                                         @endforeach
                                     </select>
                                 @elseif($query['type'] == 'checkbox')
                                     @foreach(${$query['param']} as $sk => $sv)
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" class="checkbox style-0" name="{{ $query['column'] }}" value="{{ $sk }}">
+                                            <input {{ isset($query['default']) && in_array($sk, (array)$query['default']) ? 'checked' : '' }} type="checkbox" class="checkbox style-0" name="{{ $query['column'] }}" value="{{ $sk }}">
                                             <span>{{ $sv }}</span>
                                         </label>
                                     @endforeach
@@ -43,14 +43,14 @@
                                         @if($query['query'] == 'between')
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_from' }}">
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_from' }}" value="{{ isset($query['default'][0]) ? $query['default'][0] : '' }}">
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_to' }}">
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_to' }}" value="{{ isset($query['default'][1]) ? $query['default'][1] : '' }}">
                                         @else
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                   style="width: 50%;" type="text" id="{{ $query['column'] }}">
+                                                   style="width: 50%;" type="text" id="{{ $query['column'] }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
                                         @endif
                                     </div>
                                 @endif

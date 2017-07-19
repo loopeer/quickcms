@@ -169,7 +169,8 @@
                     @else
                     "url": "{{ $model->route }}/search"
                     @endif
-                }
+                },
+                "deferLoading": 0
             });
             // table end
 
@@ -238,6 +239,7 @@
                     @endforeach
                     table.draw();
                 });
+                $('#query').click();
             @endif
 
             $('.form_datetime').datetimepicker({
