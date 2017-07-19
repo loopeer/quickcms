@@ -205,7 +205,9 @@ class SystemsSetupTables extends Migration
                 $table->bigIncrements('id')->comment('主键');
                 $table->bigInteger('account_id')->default(0)->comment('用户id');
                 $table->string('url', 200)->comment('路径');
-                $table->string('route', 50)->nullable()->comment('路由');
+                $table->string('route', 50)->nullable()->comment('路由名称');
+                $table->string('action_name', 200)->nullable()->comment('业务名称');
+                $table->string('method', 20)->nullable()->comment('请求方式');
                 $table->string('build', 20)->nullable()->comment("版本号");
                 $table->string('version_name', 20)->nullable()->comment("版本名称");
                 $table->string('platform', 20)->nullable()->comment('平台');
