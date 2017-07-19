@@ -37,8 +37,8 @@ class AppLog extends FastModel
         ['column' => 'device_id'],
         ['column' => 'channel_id'],
         ['column' => 'ip'],
-        ['column' => 'content'],
         ['column' => 'created_at'],
+        ['column' => 'content'],
     ];
     protected $module = 'App日志';
 }
