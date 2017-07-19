@@ -50,7 +50,6 @@
                     <div id="left"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
         </div>
@@ -308,6 +307,7 @@
                                          $("#dialog .modal-dialog .modal-content").css('width','{{ $renameItem['style']['width'] }}');
                                         <!--$("#dialog").css('right', '{{ (int)$renameItem['style']['width'] / 2 . 'px' }}');-->
                                         @endif
+                                        $("#dialog .modal-footer").html('');
                                         $(this).attr("data-toggle", "modal");
                                         $(this).attr("data-target", "#dialog");
                                         $(this).attr("data-action", "{{$renameItem['param']['url']}}" + data[0]);
@@ -441,6 +441,7 @@
                          $("#dialog .modal-dialog .modal-content").css('width','{{ $detail['style']['width'] }}');
                          <!--$("#dialog").css('right', '{{ (int)$model->detail['style']['width'] / 2 . 'px' }}');-->
                         @endif
+                        $("#dialog .modal-footer").html('');
                         $(this).attr("data-toggle", "modal");
                         $(this).attr("data-target", "#dialog");
                         $(this).attr("data-action", "/admin/{{ $model->route }}/" + data[0]);
@@ -549,71 +550,69 @@
                              $("#dialog .modal-dialog .modal-content").css('width','{{ $action['style']['width'] }}');
                              <!--$("#dialog").css('right', '{{ (int)$action['style']['width'] / 2 . 'px' }}');-->
                             @endif
-
-$(this).attr("data-toggle", "modal");
+                            @if(empty($action['form']))
+                            $("#dialog .modal-footer").html('');
+                            @else
+                            $("#dialog .modal-footer").html(
+                                '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+                                '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>'
+                            );
+                            $('#' + '{{$action['form']['submit_id']}}').click(function(){
+                                var $form = $("#" + '{{$action['form']['form_id']}}');
+                                var page_info = table.page.info();
+                                var page = page_info.page;
+                                var data_table = $('#dt_basic').dataTable();
+                                $('#' + '{{$action['form']['submit_id']}}').text("提交");
+                                $('#dialog').modal('hide');
+                                $($form).submit(function(event) {
+                                    var form = $(this);
+                                    $.ajax({
+                                        type: form.attr('method'),
+                                        url: form.attr('action'),
+                                        data: form.serialize()
+                                    }).done(function(result) {
+                                        var html = '';
+                                        if (result == 1 || result.result == true) {
+                                            data_table.fnPageChange(page);
+                                            html = '<div class="alert alert-success fade in">'
+                                                +'<button class="close" data-dismiss="alert">×</button>'
+                                                +'<i class="fa-fw fa fa-check"></i>';
+                                            if (isObject(result)) {
+                                                html += '<strong>成功</strong>'+' '+ result.content +'。'
+                                            } else {
+                                                html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
+                                            }
+                                            html += '</div>';
+                                            $(".tips").html(html);
+                                        } else {
+                                            html = '<div class="alert alert-danger fade in">'
+                                                +'<button class="close" data-dismiss="alert">×</button>'
+                                                +'<i class="fa-fw fa fa-warning"></i>';
+                                            if (isObject(result)) {
+                                                html += '<strong>失败</strong>'+' '+ result.content +'。'
+                                            } else {
+                                                html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
+                                            }
+                                            $(".tips").html(html);
+                                            $(".tips").html(html);
+                                        }
+                                        $form[0].reset();
+                                        hideTips();
+                                    });
+                                    event.preventDefault(); // Prevent the form from submitting via the browser.
+                                });
+                                function isObject(obj){
+                                    return (typeof obj=='object')&&obj.constructor==Object;
+                                }
+                                $form.trigger('submit'); // trigger form submit
+                            });
+                            @endif
+                            $(this).attr("data-toggle", "modal");
                             $(this).attr("data-target", "#dialog");
                             $(this).attr("data-action", "{{$action['url']}}" + data[0]);
                             $(this).attr("data-id", data[0]);
                         }
                     });
-
-                    @if(!empty($action['form']))
-                    $("#dialog .modal-body").after(
-                            '<div class="modal-footer">' +
-                            '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
-                            '<button type="button" class="btn btn-primary" id="' + '{{$action['form']['submit_id']}}' +'"><i class="fa fa-check"></i>提交</button>' +
-                            '</div>'
-                    );
-                    $('#' + '{{$action['form']['submit_id']}}').click(function(){
-                        var $form = $("#" + '{{$action['form']['form_id']}}');
-                        var page_info = table.page.info();
-                        var page = page_info.page;
-                        var data_table = $('#dt_basic').dataTable();
-                        $('#' + '{{$action['form']['submit_id']}}').text("提交");
-                        $('#dialog').modal('hide');
-                        $($form).submit(function(event) {
-                            var form = $(this);
-                            $.ajax({
-                                type: form.attr('method'),
-                                url: form.attr('action'),
-                                data: form.serialize()
-                            }).done(function(result) {
-                                var html = '';
-                                if (result == 1 || result.result == true) {
-                                    data_table.fnPageChange(page);
-                                    html = '<div class="alert alert-success fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-check"></i>';
-                                    if (isObject(result)) {
-                                        html += '<strong>成功</strong>'+' '+ result.content +'。'
-                                    } else {
-                                        html += '<strong>成功</strong>'+' '+ '{{isset($action['form']['success_msg']) ? $action['form']['success_msg'] : '操作成功'}}'+'。'
-                                    }
-                                    html += '</div>';
-                                    $(".tips").html(html);
-                                } else {
-                                    html = '<div class="alert alert-danger fade in">'
-                                    +'<button class="close" data-dismiss="alert">×</button>'
-                                    +'<i class="fa-fw fa fa-warning"></i>';
-                                    if (isObject(result)) {
-                                        html += '<strong>失败</strong>'+' '+ result.content +'。'
-                                    } else {
-                                        html += '<strong>失败</strong>'+' '+ '{{isset($action['form']['failure_msg']) ? $action['form']['failure_msg'] : '操作失败'}}'+'。'
-                                    }
-                                    $(".tips").html(html);
-                                    $(".tips").html(html);
-                                }
-                                $form[0].reset();
-                                hideTips();
-                            });
-                            event.preventDefault(); // Prevent the form from submitting via the browser.
-                        });
-                        function isObject(obj){
-                            return (typeof obj=='object')&&obj.constructor==Object;
-                        }
-                        $form.trigger('submit'); // trigger form submit
-                    });
-                    @endif
                 @endif
             @endforeach
 
