@@ -26,7 +26,7 @@
                                     @endif
                                 @elseif($query['type'] == 'select')
                                     <select class="form-control" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif">
-                                        <option>全部</option>
+                                        <option value="">全部</option>
                                         @foreach(is_array($query['param']) ? $query['param'] : ${$query['param']} as $sk => $sv)
                                             <option value="{{ $sk }}" {{ isset($query['default']) && $query['default'] == $sk ? 'selected' : '' }}>{{ $sv }}</option>
                                         @endforeach
