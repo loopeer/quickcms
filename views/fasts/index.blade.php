@@ -170,7 +170,15 @@
                     "url": "{{ $model->route }}/search"
                     @endif
                 },
-                "deferLoading": 0
+                "searchCols": [
+                    @foreach($model->index as $item)
+                        @if(isset($item['default']))
+                        { "search": "{{ is_array($item['default']) ? implode(',', $item['default']) : $item['default'] }}" },
+                        @else
+                        null,
+                        @endif
+                    @endforeach
+                ]
             });
             // table end
 
@@ -239,7 +247,6 @@
                     @endforeach
                     table.draw();
                 });
-                $('#query').click();
             @endif
 
             $('.form_datetime').datetimepicker({
