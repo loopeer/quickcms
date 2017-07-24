@@ -378,6 +378,16 @@ class AccountController extends BaseController {
         return ApiResponse::responseSuccessWithPagination($myList);
     }
 
+    public function myListByOffset($type, Request $request)
+    {
+        $offset = $request->input('offset', 0);
+        $size = $request->input('page_size', 30);
+        $account = Auth::user()->get();
+        $totalSize = $account->{str_plural($type)}()->count();
+        $myList = $account->{str_plural($type)}()->latest()->skip($offset)->take($size)->get();
+        return ApiResponse::responseSuccessWithOffset($myList, $offset, $totalSize);
+    }
+
     /**
      * 用户xx业务记录
      * @param $type
