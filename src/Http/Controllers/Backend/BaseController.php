@@ -117,6 +117,8 @@ class BaseController extends Controller
                 //$builder = $value == 'admin' ? $builder->where($key, Auth::admin()->get()->email) : $builder->where($key, $value);
                 if ($value == 'admin') {
                     $builder = $builder->where($key, Auth::admin()->get()->email);
+                } elseif ($value == 'admin_id') {
+                    $builder = $builder->where($key, Auth::admin()->get()->id);
                 } elseif (is_array($value)) {
                     if ($value['where'] == '=') {
                         $builder = $builder->where($key, Auth::admin()->get()->id);
@@ -124,8 +126,8 @@ class BaseController extends Controller
                         $bind = config('quickCms.admin_account_bind');
                         $reflectionClass = new \ReflectionClass($bind['model']);
                         $accountModel = $reflectionClass->newInstance();
-                        $accountIds = $accountModel->whereIn($bind['column'], Auth::admin()->get()->id)->lists('id');
-                        $builder = $builder->where($key, $accountIds);
+                        $accountIds = $accountModel->where($bind['column'], Auth::admin()->get()->id)->lists('id');
+                        $builder = $builder->whereIn($key, $accountIds);
                     }
                 } else {
                     $builder = $builder->where($key, $value);
