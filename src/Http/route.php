@@ -63,6 +63,9 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace
     Route::resource('actionLogs', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\ActionLog::class]);
     Route::resource('exceptionLogs', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\ExceptionLog::class]);
     Route::resource('appLogs', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\AppLog::class]);
+    Route::get('appLogsStatistics', 'AppLogController@index');
+    Route::get('appLogsStatistics/monthCharts', 'AppLogController@getMonthChartsData');
+    Route::get('appLogsStatistics/dayCharts', 'AppLogController@getDayChartsData');
     Route::resource('tests', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\Test::class]);
 
     Route::get('users/profile', 'UserController@getProfile');
