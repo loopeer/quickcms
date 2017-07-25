@@ -113,6 +113,9 @@ class FastController extends BaseController
                 case 'admin':
                     $param[$key] = Auth::admin()->get()->email;
                     break;
+                case 'admin_id':
+                    $param[$key] = Auth::admin()->get()->id;
+                    break;
                 default:
                     break;
             }

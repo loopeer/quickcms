@@ -30,7 +30,7 @@ class Role extends FastModel implements EntrustRoleInterface
                 'form' => [
                     'form_id' => 'smart-form-permissions',
                     'submit_id' => 'confirmPermission',
-                    'success_msg' => '分配权限成功，重新登陆后即可更新左侧菜单栏',
+                    'success_msg' => '分配权限成功，重新登陆后即可更新菜单栏',
                     'failure_msg' => '分配失败'
                 ],
             ],

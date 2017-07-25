@@ -57,7 +57,7 @@ class OperationPermissionController extends BaseController {
             $isset = Permission::where('name',$inputs['name'])->first();
             if(is_null($isset)){
                 Permission::create($inputs);
-                $message = array('result' => true,'content' => '添加操作权限成功，重新登陆后即可更新左侧菜单栏');
+                $message = array('result' => true,'content' => '添加操作权限成功，重新登陆后即可更新菜单栏');
                 return redirect('admin/permissions/' . $id . '/indexPermission')->with('message', $message);
             }else{
                 $message = array('result' => false,'content' => '添加操作权限失败,此权限名称已存在');
