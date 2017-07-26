@@ -90,7 +90,7 @@ return [
         'id' => 'ID',
         'account_id' => '用户id',
         'url' => '路径',
-        'route' => '路由',
+        'route_name' => '路由',
         'build' => '版本号',
         'version_name' => '版本名称',
         'platform' => '平台',

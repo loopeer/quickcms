@@ -16,21 +16,20 @@ class AppLog extends FastModel
     protected $index = [
         ['column' => 'id'],
         ['column' => 'account_id', 'query' => '='],
-        ['column' => 'url'],
-        ['column' => 'route', 'query' => '='],
+        ['column' => 'route_name', 'query' => 'like'],
         ['column' => 'build', 'query' => '='],
-        ['column' => 'version_name', 'query' => '='],
+        ['column' => 'version_name'],
         ['column' => 'platform', 'query' => '='],
         ['column' => 'device_id'],
         ['column' => 'channel_id', 'query' => '='],
         ['column' => 'ip'],
-        ['column' => 'created_at', 'order' => 'desc'],
+        ['column' => 'created_at', 'type' => 'date', 'query' => 'between', 'order' => 'desc'],
     ];
     protected $detail = [
         ['column' => 'id'],
         ['column' => 'account_id'],
         ['column' => 'url'],
-        ['column' => 'route'],
+        ['column' => 'route_name'],
         ['column' => 'build'],
         ['column' => 'version_name'],
         ['column' => 'platform'],
@@ -41,4 +40,10 @@ class AppLog extends FastModel
         ['column' => 'content'],
     ];
     protected $module = 'App日志';
+
+    public function getRouteNameAttribute()
+    {
+        $routeName = $this->attributes['route_name'];
+        return $routeName . '['. config('quickCms.appLog_route_name.' . $routeName) . ']';
+    }
 }

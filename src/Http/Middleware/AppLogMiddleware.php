@@ -14,7 +14,7 @@ class AppLogMiddleware
         AppLog::create(array(
             'account_id' => $request->header('account-id'),
             'url' => $request->fullUrl(),
-            'route' => $request->route()->getName(),
+            'route_name' => $request->route()->getName(),
             'action_name' => $request->route()->getActionName(),
             'method' => $request->method(),
             'build' => $request->header('build'),
