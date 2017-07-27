@@ -9,7 +9,11 @@
                             @if(isset($detail['param']))
                                 {{ is_array($data->{$value[0]}->{$value[1]}) ? implode(',', ${$detail['param']}[$data->{$value[0]}->{$value[1]}]) : ${$detail['param']}[$data->{$value[0]}->{$value[1]}] }}
                             @else
-                                {{ is_array($data->{$value[0]}->{$value[1]}) ? implode(',', $data->{$value[0]}->{$value[1]}) : $data->{$value[0]}->{$value[1]} }}
+                                @if(!isset($data->{$value[0]}->{$value[1]}) || empty($data->{$value[0]}->{$value[1]}))
+                                    无
+                                @else
+                                    {{ is_array($data->{$value[0]}->{$value[1]}) ? implode(',', $data->{$value[0]}->{$value[1]}) : $data->{$value[0]}->{$value[1]} }}
+                                @endif
                             @endif
                         @elseif($detail['type'] == 'html')
                             {!! $data->{$value[0]}->{$value[1]} !!}
