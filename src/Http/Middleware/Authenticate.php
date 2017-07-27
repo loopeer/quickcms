@@ -46,10 +46,8 @@ class Authenticate
             "token" => "required"
         ]);
         if ($validator->passes()) {
-            $accountModel = Auth::user()->getProvider()->createModel();
-            $account = $accountModel->whereId($accountId)->whereToken($token)->where('status', static::NORMAL_STATUS)->first();
-            if (!is_null($account)) {
-                Auth::user()->setUser($account);
+            $account = Auth::user()->get();
+            if (isset($account) && $account->status == static::NORMAL_STATUS) {
                 return $next($request);
             }
         }
