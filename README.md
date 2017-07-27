@@ -49,6 +49,10 @@ Maatwebsite\Excel\ExcelServiceProvider::class,
 'auth.admin' =>  \Loopeer\QuickCms\Http\Middleware\AdminMiddleware::class,
 'auth.login' =>  \Loopeer\QuickCms\Http\Middleware\AdminAuthenticate::class,
 'auth.permission' => \Loopeer\QuickCms\Http\Middleware\PermissionMiddleware::class,
+'api.validate' => \Loopeer\QuickCms\Http\Middleware\ApiValidate::class,
+'app.log' => \Loopeer\QuickCms\Http\Middleware\AppLogMiddleware::class,
+'api.login' => \Loopeer\QuickCms\Http\Middleware\ApiLogin::class,
+'auth' => \Loopeer\QuickCms\Http\Middleware\Authenticate::class,
 ```
 
 # Document
