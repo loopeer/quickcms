@@ -374,7 +374,7 @@ class AccountController extends BaseController {
     {
         $pageSize = $this->setCurrentPage();
         $account = Auth::user()->get();
-        $myList = $account->{str_plural($type)}()->latest()->paginate($pageSize);
+        $myList = $account->{str_plural($type)}()->latest()->simplePaginate($pageSize);
         return ApiResponse::responseSuccessWithSimplePagination($myList);
     }
 
