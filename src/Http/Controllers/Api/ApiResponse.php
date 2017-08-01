@@ -94,10 +94,24 @@ class ApiResponse extends Response {
         return Response::json($ret);
     }
 
-    public static function responseSuccessWithOffset($data, $pageSize, $totalSize) {
+    public static function responseSuccessWithSimplePagination($pagination)
+    {
+        $ret = array(
+            'code' => config('quickApi.code.success'),
+            'message' => trans('messages.request_success'),
+            'page' => $pagination->currentPage(),
+            'page_size' => $pagination->perPage(),
+            'has_more' => $pagination->hasMorePages(),
+            'data' => $pagination->items()
+        );
+        return Response::json($ret);
+    }
+
+    public static function responseSuccessWithOffset($data, $offset, $totalSize, $pageSize = 30) {
         $ret = array (
             'code' => config('quickApi.code.success'),
             'message' => trans('messages.request_success'),
+            'offset' => $offset,
             'page_size' => $pageSize,
             'total_size' => $totalSize,
             'data' => $data

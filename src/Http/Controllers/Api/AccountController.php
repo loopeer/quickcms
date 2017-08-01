@@ -375,17 +375,17 @@ class AccountController extends BaseController {
         $pageSize = $this->setCurrentPage();
         $account = Auth::user()->get();
         $myList = $account->{str_plural($type)}()->latest()->paginate($pageSize);
-        return ApiResponse::responseSuccessWithPagination($myList);
+        return ApiResponse::responseSuccessWithSimplePagination($myList);
     }
 
     public function myListByOffset($type, Request $request)
     {
         $offset = $request->input('offset', 0);
-        $size = $request->input('page_size', 30);
+        $pageSize = $request->input('page_size', 30);
         $account = Auth::user()->get();
         $totalSize = $account->{str_plural($type)}()->count();
-        $myList = $account->{str_plural($type)}()->latest()->skip($offset)->take($size)->get();
-        return ApiResponse::responseSuccessWithOffset($myList, $offset, $totalSize);
+        $myList = $account->{str_plural($type)}()->latest()->skip($offset)->take($pageSize)->get();
+        return ApiResponse::responseSuccessWithOffset($myList, $offset, $totalSize, $pageSize);
     }
 
     /**
