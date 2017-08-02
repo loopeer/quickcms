@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Mail;
 use Loopeer\Lib\Sms\LuoSiMaoSms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Loopeer\QuickCms\Models\Api\System;
 use Loopeer\QuickCms\Services\Utils\QiniuCloud;
 use Loopeer\QuickCms\Services\Validators\QuickApiValidator;
 use Looopeer\Lib\Sendcloud\SendcloudService;
@@ -399,24 +398,6 @@ class AccountController extends BaseController {
         $account = Auth::user()->get();
         $myList = $account->{str_plural($type)}()->latest()->get();
         return ApiResponse::responseSuccess($myList);
-    }
-
-    /**
-     * 是否正在审核 （iOS平台使用）
-     *
-     * @return bool
-     */
-    private function isReviewing() {
-        $version_code = \Request::header('build');
-        $appstore_reviewing = false;
-        $review_system = System::where('key', 'app_review')->first();
-        $build_system = System::where('key', 'build')->first();
-        if (count($review_system) > 0 && $review_system->value == 1) {
-            if (count($build_system) > 0 && $build_system->value == $version_code) {
-                $appstore_reviewing = true;
-            }
-        }
-        return $appstore_reviewing;
     }
 }
 
