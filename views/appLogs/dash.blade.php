@@ -186,7 +186,7 @@
             margin: 13px 14px;
         }
         .wrapper-body {
-            float: left;
+            text-align: center;
         }
         .wrapper-body h4 {
             font-size: 20px;
@@ -213,36 +213,24 @@
     </div>
     <div class="dash-block">
         <div class="dash-block-wrapper">
-                <div class="wrapper-img">
-                    <img src="/web/backend/dash-account.png">
-                </div>
-                <div class="wrapper-body">
-                    <p>全平台调用API次数（总计）</p>
-                    <h4>{{ $totalCount }}</h4>
-                </div>
+            <div class="wrapper-body">
+                <p>全平台调用API次数（总计）</p>
+                <h4>{{ $totalCount }}</h4>
+            </div>
         </div>
         <div class="dash-block-wrapper">
-            <div class="wrapper-img">
-                <img src="/web/backend/dash-order.png">
-            </div>
             <div class="wrapper-body">
                 <p>API请求耗时（平均）</p>
                 <h4>{{ $avgConsumeTime }}</h4>
             </div>
         </div>
         <div class="dash-block-wrapper">
-            <div class="wrapper-img">
-                <img src="/web/backend/dash-amount.png">
-            </div>
             <div class="wrapper-body">
                 <p>登录用户调用API次数（总计）</p>
                 <h4>{{ $loginCount }}</h4>
             </div>
         </div>
         <div class="dash-block-wrapper">
-            <div class="wrapper-img">
-                <img src="/web/backend/dash-income.png">
-            </div>
             <div class="wrapper-body">
                 <p>未登录用户调用API次数（总计）</p>
                 <h4>{{ $noLoginCount }}</h4>

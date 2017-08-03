@@ -43,7 +43,7 @@ class AppLogController extends BaseController {
         $noLoginCount = $totalCount - $loginCount;
 
         $totalData = [
-            ['名称', '全平台调用API', 'android调用API', 'ios调用API', '用户设备'],
+            ['名称', '全平台调用API', 'Android调用API', 'iOS调用API', '用户设备'],
             ['总量', $totalCount, $androidTotalCount, $iosTotalCount, $deviceTotalCount,],
             ['日量', $dayCount, $androidDayCount, $iosDayCount, $deviceDayCount,],
         ];
