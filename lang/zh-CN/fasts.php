@@ -98,6 +98,7 @@ return [
         'channel_id' => '渠道',
         'ip' => 'ip',
         'content' => '内容',
+        'consume_time' => '耗时',
         'created_at' => '请求时间',
     ]
 ];

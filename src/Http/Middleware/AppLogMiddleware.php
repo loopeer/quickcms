@@ -10,6 +10,7 @@ class AppLogMiddleware
 
     public function handle($request, Closure $next)
     {
+        $beforeTime = time();
         $response = $next($request);
         AppLog::create(array(
             'account_id' => $request->header('account-id'),
@@ -24,6 +25,7 @@ class AppLogMiddleware
             'channel_id' => $request->header('channel-id'),
             'ip' => $request->ip(),
             'content' => json_encode($request->all()),
+            'consume_time' => time() - $beforeTime,
         ));
         return $response;
     }

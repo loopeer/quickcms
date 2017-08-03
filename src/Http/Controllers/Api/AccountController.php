@@ -233,7 +233,7 @@ class AccountController extends BaseController {
         $phone = $request->phone;
         $email = $request->email;
         if (config('quickApi.captcha_switch')) {
-            $captcha = $this->isReviewing() && $phone == env('test_phone') ? '1234' : rand(1000, 9999);
+            $captcha = $phone == env('test_phone') ? '1234' : rand(1000, 9999);
             // 发送短信至用户
             if (isset($phone)) {
                 $message = sprintf(config('quickApi.sms.captcha'), $captcha);

@@ -23,6 +23,7 @@ class AppLog extends FastModel
         ['column' => 'device_id'],
         ['column' => 'channel_id', 'query' => '='],
         ['column' => 'ip'],
+        ['column' => 'consume_time'],
         ['column' => 'created_at', 'type' => 'date', 'query' => 'between', 'order' => 'desc'],
     ];
     protected $detail = [
@@ -36,6 +37,7 @@ class AppLog extends FastModel
         ['column' => 'device_id'],
         ['column' => 'channel_id'],
         ['column' => 'ip'],
+        ['column' => 'consume_time'],
         ['column' => 'created_at'],
         ['column' => 'content'],
     ];

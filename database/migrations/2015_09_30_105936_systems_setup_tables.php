@@ -214,6 +214,7 @@ class SystemsSetupTables extends Migration
                 $table->string('device_id', 150)->nullable()->comment('设备');
                 $table->string('channel_id', 50)->nullable()->comment('渠道');
                 $table->string('ip', 20)->nullable()->comment('ip');
+                $table->integer('consume_time')->nullable()->comment('耗时');
                 $table->text('content')->nullable()->comment('内容');
                 $table->timestamps();
                 $table->softDeletes();

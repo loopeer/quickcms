@@ -12,16 +12,45 @@ namespace Loopeer\QuickCms\Http\Controllers\Backend;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Loopeer\QuickCms\Http\Controllers\Api\ApiResponse;
 use Loopeer\QuickCms\Models\Backend\AppLog;
 
 class AppLogController extends BaseController {
 
-    public function index()
+    public function analysis()
     {
         $years = ['2017', '2018'];
-        return view('backend::appLogs.dash', compact('years'));
+        return view('backend::appLogs.analysis', compact('years'));
+    }
+
+    public function dash()
+    {
+        $day = Carbon::now()->toDateString();
+
+        $androidTotalCount = AppLog::where('platform', 'android')->count();
+        $iosTotalCount = AppLog::where('platform', 'ios')->count();
+        $androidDayCount = AppLog::where('platform', 'android')->whereDate('created_at', '=', $day)->count();
+        $iosDayCount = AppLog::where('platform', 'ios')->whereDate('created_at', '=', $day)->count();
+        $totalCount = $androidTotalCount + $iosTotalCount;
+        $dayCount = $androidDayCount + $iosDayCount;
+        $deviceTotalCount = AppLog::select('device_id')->distinct()->count();
+        $deviceDayCount = AppLog::select('device_id')->distinct()->whereDate('created_at', '=', $day)->count();
+
+        $avgConsumeTime = AppLog::avg('consume_time');
+        $loginCount = AppLog::whereNotNull('account_id')->count();
+        $noLoginCount = $totalCount - $loginCount;
+
+        $totalData = [
+            ['名称', '全平台调用API', 'android调用API', 'ios调用API', '用户设备'],
+            ['总量', $totalCount, $androidTotalCount, $iosTotalCount, $deviceTotalCount,],
+            ['日量', $dayCount, $androidDayCount, $iosDayCount, $deviceDayCount,],
+        ];
+        $data = [
+            ['title' => '总数据概览', 'description' => '您可以通过以下统计最快速了解APP运行数据变更信息', 'row' => $totalData],
+        ];
+        return view('backend::appLogs.dash', compact('data', 'totalCount', 'avgConsumeTime', 'loginCount', 'noLoginCount'));
     }
 
     public function getMonthChartsData(Request $request)

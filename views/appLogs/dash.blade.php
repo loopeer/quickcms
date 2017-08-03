@@ -1,202 +1,272 @@
 @extends('backend::layouts.master')
-@section('content')
-    <style type="text/css">
-        #content #widget-grid h2 {font-family:'黑体';}
-        #content #widget-grid ul,#content h3{ margin:0; padding:0; font-family:'黑体'; font-size:14px;}
-        #content #widget-grid ul h3{ color:black; height:12px; padding-top:8px;}
-        #content #widget-grid ul{width:100%; padding:10px 0; background:#EDEDED;margin-bottom: 18px;border: 8px solid #00c26c}
-        #content #widget-grid span{ color:#4C463A; font-size:24px; height:43px; line-height:63px; text-align:center; font-weight:bold; display:inline-block;}
-        #content #widget-grid li{list-style:none; float:left; width:{{ 100 / (isset($columns) ? $columns : 4)  }}%; height:62px; border-right:1px  dotted #00c26c; text-align:center;}
+@section('style')
+    <style>
+        #dash {
+            background-color: #fafafa;
+            padding: 40px;
+        }
+        .dash-table {
+            position: relative;
+            background-color: #ffffff;
+            box-shadow: 0 1px 6px 0 rgba(185, 185, 185, 0.5);
+            height: 365px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            border-color: #fe7961;
+        }
+        table {
+            width: 100%;
+            font-size: 16px;
+            letter-spacing: 2.4px;
+            color: #686868;
+        }
+        .dash-table td {
+            border: 1px solid #EEEEEE;
+            padding: 29px 0;
+            text-align: center;
+        }
+        .dash-table:after {
+            position: absolute;
+            top: 0;
+            right: 40px;
+            content: '';
+            border-color: #fe7961;
+            border-style: solid;
+            border-left-width: 12px;
+            border-right-width: 12px;
+            border-top-width: 30px;
+            border-bottom: 8px solid transparent;
+        }
+        .dash-table-title {
+            position: relative;
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 3.9px;
+            color: #303030;
+            padding: 32px;
+            height: 122px;
+        }
+        .dash-table-title:before {
+            position: absolute;
+            left: 0;
+            width: 8px;
+            height: 32px;
+            content: '';
+        }
+        .dash-table:nth-of-type(4):after {
+            border-color: #fe7961;
+            border-bottom-color: transparent;
+        }
+        .dash-table:nth-of-type(6):after {
+            border-color: #3ee2b0;
+            border-bottom-color: transparent;
+        }
+        .dash-table:nth-of-type(8):after {
+            border-color: #ffbb3b;
+            border-bottom-color: transparent;
+        }
+        .dash-table:nth-of-type(10):after {
+            border-color: #60a7ff;
+            border-bottom-color: transparent;
+        }
+        .dash-table:nth-of-type(12):after {
+            border-color: #f576c5;
+            border-bottom-color: transparent;
+        }
+        .dash-table:nth-of-type(4) .dash-table-title:before {
+            background-color: #fe7961;
+        }
+        .dash-table:nth-of-type(6) .dash-table-title:before {
+            background-color: #3ee2b0;
+        }
+        .dash-table:nth-of-type(8) .dash-table-title:before {
+            background-color: #ffbb3b;
+        }
+        .dash-table:nth-of-type(10) .dash-table-title:before {
+            background-color: #60a7ff;
+        }
+        .dash-table:nth-of-type(12) .dash-table-title:before {
+            background-color: #f576c5;
+        }
+
+        .dash-table:nth-of-type(4) tr:nth-of-type(2) td:not(:first-child),
+        .dash-table:nth-of-type(6) tr:nth-of-type(2) td:not(:first-child),
+        .dash-table:nth-of-type(8) tr:nth-of-type(2) td:not(:first-child),
+        .dash-table:nth-of-type(10) tr:nth-of-type(2) td:not(:first-child),
+        .dash-table:nth-of-type(12) tr:nth-of-type(2) td:not(:first-child) {
+            color: #303030;
+            font-weight: 500;
+        }
+
+        .dash-table:nth-of-type(4) tr:nth-of-type(3) td:not(:first-child) {
+            color: #fe7961;
+            font-weight: 500;
+        }
+        .dash-table:nth-of-type(6) tr:nth-of-type(3) td:not(:first-child){
+            color: #3ee2b0;
+            font-weight: 500;
+        }
+        .dash-table:nth-of-type(8) tr:nth-of-type(3) td:not(:first-child) {
+            color: #ffbb3b;
+            font-weight: 500;
+        }
+        .dash-table:nth-of-type(10) tr:nth-of-type(3) td:not(:first-child){
+            color: #60a7ff;
+            font-weight: 500;
+        }
+        .dash-table:nth-of-type(12) tr:nth-of-type(3) td:not(:first-child) {
+            color: #f576c5;
+            font-weight: 500;
+        }
+        h4 {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: #303030;
+        }
+        .description {
+            font-size: 18px;
+            line-height: 1.67;
+            letter-spacing: 3px;
+            color: #686868;
+        }
+        .dash-header {
+            border-bottom: 2px solid #eeeeee;
+        }
+        .dash-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: #686866;
+        }
+        .dash-block {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .dash-block-wrapper {
+            border-radius: 8px;
+            background-color: #60a7ff;
+            width: 252px;
+            height: 92px;
+            padding: 20px;
+        }
+        .dash-block-content {
+            margin: 20px;
+        }
+        .wrapper-img {
+            float: left;
+            background-color: #509af5;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            margin-right: 18px;
+        }
+        .dash-block-wrapper:nth-of-type(2) {
+            background-color: #ffbc3b;
+        }
+        .dash-block-wrapper:nth-of-type(3) {
+            background-color: #2ae390;
+        }
+        .dash-block-wrapper:nth-of-type(4) {
+            background-color: #fe7961;
+        }
+        .dash-block-wrapper:nth-of-type(2) .wrapper-img {
+            background-color: #f2ac28;
+        }
+        .dash-block-wrapper:nth-of-type(3) .wrapper-img {
+            background-color: #23d686;
+        }
+        .dash-block-wrapper:nth-of-type(4) .wrapper-img {
+            background-color: #f86a51;
+        }
+        .wrapper-img img {
+            margin: 13px 14px;
+        }
+        .wrapper-body {
+            float: left;
+        }
+        .wrapper-body h4 {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 3.3px;
+            color: #ffffff;
+        }
+        .wrapper-body p {
+            font-size: 14px;
+            letter-spacing: 2.1px;
+            color: #f1f1f1;
+            margin: 0;
+        }
     </style>
-
-    <div id="content">
-        <section id="widget-grid" class="">
-            <div class="row">
-                <article class="col-sm-12">
-                    <ul style="width:100%; overflow: hidden; padding:10px 0; background:#EDEDED;margin-bottom: 18px;border: 8px solid #00c26c">
-                        {{--@foreach($data as $item)--}}
-                        {{--<li>--}}
-                        {{--<h3>{{ $item['label'] }}</h3>--}}
-                        {{--<span>{{ $item['count'] }}</span>--}}
-                        {{--</li>--}}
-                        {{--@endforeach--}}
-                    </ul>
-                </article>
+@endsection
+@section('content')
+<div id="dash">
+    <div class="dash-header">
+        <h4>您好！管理员</h4>
+        <div class="dash-time">
+            <div class="description">您可以通过以下总览信息最快速了解APP运行数据变更信息</div>
+            <div>{{ date('Y-m-d') }}</div>
+        </div>
+    </div>
+    <div class="dash-block">
+        <div class="dash-block-wrapper">
+                <div class="wrapper-img">
+                    <img src="/web/backend/dash-account.png">
+                </div>
+                <div class="wrapper-body">
+                    <p>全平台调用API次数（总计）</p>
+                    <h4>{{ $totalCount }}</h4>
+                </div>
+        </div>
+        <div class="dash-block-wrapper">
+            <div class="wrapper-img">
+                <img src="/web/backend/dash-order.png">
             </div>
-        </section>
-
-        <div class="jarviswidget jarviswidget-sortable" id="charts-content" data-widget-colorbutton="false"
-             data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false"
-             data-widget-fullscreenbutton="false" data-widget-custombutton="false" role="widget" style="position: relative; opacity: 1; left: 0px; top: 0px;">
-            <header role="heading">
-                <h2><strong>统计图</strong></h2>
-                <ul class="nav nav-tabs pull-right in" id="myTab">
-                    <li class="active">
-                        <a data-toggle="tab" href="#day-charts"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">日</span></a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" href="#month-charts"><i class="fa fa-calendar"></i> <span class="hidden-mobile hidden-tablet">月</span></a>
-                    </li>
-                </ul>
-            </header>
-            <div role="content">
-                <div class="jarviswidget-editbox">
-                </div>
-                <div class="widget-body">
-                    <div id="myTabContent" class="tab-content">
-                        <div class="col col-3">
-                            选择年份:
-                            <label class="select">
-                                <select name="year" id="year">
-                                    @foreach($years as $year)
-                                        <option value="{{ $year }}" @if($year == \Carbon\Carbon::now()->year) selected @endif>{{ $year }}</option>
-                                    @endforeach
-                                </select> <i></i> </label>
-                        </div>
-                        <div class="col col-3">
-                            选择月份:
-                            <label class="select">
-                                <select name="month" id="month">
-                                    @for($i=1; $i<=12; $i++)
-                                        <option value="{{$i}}" @if(\Carbon\Carbon::now()->month == $i) selected @endif>{{ $i }}月</option>
-                                    @endfor
-                                </select> <i></i> </label>
-                        </div>
-                        <div class="tab-pane fade active in padding-10 no-padding-bottom" id="day-charts"></div>
-                        <div class="tab-pane fade" id="month-charts">
-                        </div>
-                    </div>
-                </div>
+            <div class="wrapper-body">
+                <p>API请求耗时（平均）</p>
+                <h4>{{ $avgConsumeTime }}</h4>
             </div>
         </div>
+        <div class="dash-block-wrapper">
+            <div class="wrapper-img">
+                <img src="/web/backend/dash-amount.png">
+            </div>
+            <div class="wrapper-body">
+                <p>登录用户调用API次数（总计）</p>
+                <h4>{{ $loginCount }}</h4>
+            </div>
+        </div>
+        <div class="dash-block-wrapper">
+            <div class="wrapper-img">
+                <img src="/web/backend/dash-income.png">
+            </div>
+            <div class="wrapper-body">
+                <p>未登录用户调用API次数（总计）</p>
+                <h4>{{ $noLoginCount }}</h4>
+            </div>
+        </div>
+    </div>
 
-        @endsection
-
-        @section('script')
-            <script src="{{ asset('loopeer/quickcms/js/highcharts/highcharts.js') }}"></script>
-            <script src="{{ asset('loopeer/quickcms/js/highcharts/exporting.js') }}"></script>
-            <script>
-                var year = $('#year').val();
-                var month = $('#month').val();
-
-                requestData(year, month);
-
-                function requestData(year, month) {
-                    $.get('/admin/appLogStatistics/monthCharts', {
-                        year: year
-                    }, function(result) {
-                        if (result.code == 0) {
-                            month_charts.series[0].setData(result.data.total_data);
-                            month_charts.series[1].setData(result.data.android_data);
-                            month_charts.series[2].setData(result.data.ios_data);
-                        }
-                    });
-
-                    $.get('/admin/appLogStatistics/dayCharts', {
-                        year: year,
-                        month: month
-                    }, function(result) {
-                        if (result.code == 0) {
-                            day_charts.series[0].setData(result.data.total_data);
-                            day_charts.series[1].setData(result.data.android_data);
-                            day_charts.series[2].setData(result.data.ios_data);
-                        }
-                    });
-                }
-
-                $('#year').change(function () {
-                    year = $('#year').val();
-                    month = $('#month').val();
-                    month_charts.setTitle( {text: year + '年年度统计图' });// 更新标题的文字
-                    day_charts.setTitle( {text: year + '年' + month + '月统计图' });// 更新标题的文字
-                    requestData(year, month);
-                });
-
-                $('#month').change(function () {
-                    year = $('#year').val();
-                    month = $('#month').val();
-                    month_charts.setTitle( {text: year + '年年度统计图' });// 更新标题的文字
-                    day_charts.setTitle( {text: year + '年' + month + '月统计图' });// 更新标题的文字
-                    requestData(year, month);
-                });
-
-                $('#month-charts').highcharts({
-                    title: {
-                        text: year + '年年度统计图',
-                        x: -20
-                    },
-                    xAxis: {
-                        title: {
-                            text: '月份'
-                        },
-                        categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-                    },
-                    yAxis: {
-                        title: {
-                            text: '数量'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle',
-                        borderWidth: 0
-                    },
-                    series: [{
-                        name: '总请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }, {
-                        name: 'android请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }, {
-                        name: 'iOS请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }]
-                });
-                $('#day-charts').highcharts({
-                    title: {
-                        text: year + '年' + month + '月统计图',
-                        x: -20
-                    },
-                    xAxis: {
-                        title: {
-                            text: '日期'
-                        },
-                        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
-                    },
-                    yAxis: {
-                        title: {
-                            text: '数量'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle',
-                        borderWidth: 0
-                    },
-                    series: [{
-                        name: '总请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }, {
-                        name: 'android请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }, {
-                        name: 'iOS请求次数',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                    }]
-                });
-                var month_charts = $('#month-charts').highcharts();
-                var day_charts = $('#day-charts').highcharts();
-            </script>
+    @foreach($data as $table)
+    <div class="dash-header">
+        <h4>{{ $table['title'] }}</h4>
+        <div class="description">{{ $table['description'] }}</div>
+    </div>
+    <div class="dash-table">
+        <div class="dash-table-title">{{ $table['title'] }}</div>
+        <table>
+            @foreach($table['row'] as $item)
+            <tr>
+                @foreach($item as $value)
+                <td>{{ is_numeric($value) ? number_format($value) : $value ?: 0 }}</td>
+                @endforeach
+            </tr>
+            @endforeach
+        </table>
+    </div>
+    @endforeach
+</div>
 @endsection
