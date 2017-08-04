@@ -35,8 +35,8 @@ class AppLogController extends BaseController {
         $iosDayCount = AppLog::where('platform', 'ios')->whereDate('created_at', '=', $day)->count();
         $totalCount = $androidTotalCount + $iosTotalCount;
         $dayCount = $androidDayCount + $iosDayCount;
-        $deviceTotalCount = AppLog::select('device_id')->distinct()->count();
-        $deviceDayCount = AppLog::select('device_id')->distinct()->whereDate('created_at', '=', $day)->count();
+        $deviceTotalCount = count(AppLog::groupBy('device_id')->lists('id'));
+        $deviceDayCount = count(AppLog::groupBy('device_id')->whereDate('created_at', '=', $day)->lists('id'));
 
         $avgConsumeTime = AppLog::avg('consume_time');
         $loginCount = AppLog::whereNotNull('account_id')->count();
