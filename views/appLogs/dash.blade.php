@@ -214,25 +214,25 @@
     <div class="dash-block">
         <div class="dash-block-wrapper">
             <div class="wrapper-body">
-                <p>全平台调用API次数（总计）</p>
+                <p>全平台调用API(总次数)</p>
                 <h4>{{ $totalCount }}</h4>
             </div>
         </div>
         <div class="dash-block-wrapper">
             <div class="wrapper-body">
-                <p>API请求耗时（平均）</p>
+                <p>API请求耗时(平均/毫秒)</p>
                 <h4>{{ $avgConsumeTime }}</h4>
             </div>
         </div>
         <div class="dash-block-wrapper">
             <div class="wrapper-body">
-                <p>登录用户调用API次数（总计）</p>
+                <p>登录用户调用API(总次数)</p>
                 <h4>{{ $loginCount }}</h4>
             </div>
         </div>
         <div class="dash-block-wrapper">
             <div class="wrapper-body">
-                <p>未登录用户调用API次数（总计）</p>
+                <p>未登录用户调用API(总次数)</p>
                 <h4>{{ $noLoginCount }}</h4>
             </div>
         </div>
