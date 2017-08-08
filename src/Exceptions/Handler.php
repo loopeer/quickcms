@@ -35,6 +35,21 @@ class Handler extends ExceptionHandler
             'line' => $e->getLine(),
             'data' => $e,
         ));
+        $payload = ['text' => 'app_name: ' . env('DB_DATABASE') . ' ------ app_env: ' . env('APP_ENV')
+            . ' ------- error_code: ' . $e->getCode() . ' -------- error_line: ' . $e->getLine(),
+            'channel' => 'Server-Log-Report',
+            'attachments' => [['title' => $e->getMessage(), 'text' => $e->getTraceAsString(), 'color' => '#ffa500']]];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, config('quickApi.log_report_hook'));
+        curl_setopt($ch, CURLOPT_ENCODING , "UTF-8");
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ['payload' => json_encode($payload)]);
+        curl_exec($ch);
+        curl_close($ch);
 
         return parent::report($e);
     }

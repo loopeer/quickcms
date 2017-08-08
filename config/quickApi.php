@@ -67,4 +67,5 @@ return [
 
     'custom_data' => [],
 
+    'log_report_hook' => 'https://hook.bearychat.com/=bwAwq/incoming/69df6f97549003cdc0b3f4352da0c848',
 ];
