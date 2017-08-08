@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Loopeer\QuickCms\Models\Backend\ExceptionLog;
 use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -16,6 +17,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        \Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class,
     ];
 
     /**
