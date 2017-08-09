@@ -29,7 +29,7 @@ class BearyChatHandler extends AbstractProcessingHandler {
     protected function write(array $record)
     {
         $postData = [
-            'text' => $record['datetime']->format('Y-m-d H:i:s') . '-' . env('DB_DATABASE') . '-' . $record["level"] . '-' . $record["level_name"],
+            'text' => $record['datetime']->format('Y-m-d H:i:s') . '-' . env('DB_DATABASE')  . '-' . env('APP_ENV') . '-' . $record["level"] . '-' . $record["level_name"],
             'channel' => 'Server-Log-Report',
             'attachments' => [
                 [

@@ -3,10 +3,12 @@
 namespace Loopeer\QuickCms\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Loopeer\QuickCms\Models\Backend\ExceptionLog;
 use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
@@ -18,8 +20,9 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class,
+        HttpException::class,
+        NotFoundHttpException::class,
+        ModelNotFoundException::class,
     ];
 
     /**
