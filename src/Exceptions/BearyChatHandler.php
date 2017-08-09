@@ -41,7 +41,7 @@ class BearyChatHandler extends AbstractProcessingHandler {
         ];
         $postString = json_encode($postData);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, config('quickApi.log_report_hook'));
+        curl_setopt($ch, CURLOPT_URL, config('quickApi.log_report_hook', 'https://hook.bearychat.com/=bwAwq/incoming/69df6f97549003cdc0b3f4352da0c848'));
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
