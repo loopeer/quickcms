@@ -5,6 +5,7 @@ namespace Loopeer\QuickCms\Exceptions;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Log;
 use Loopeer\QuickCms\Models\Backend\ExceptionLog;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -23,6 +24,7 @@ class Handler extends ExceptionHandler
         HttpException::class,
         NotFoundHttpException::class,
         ModelNotFoundException::class,
+        TokenMismatchException::clsss,
     ];
 
     /**
