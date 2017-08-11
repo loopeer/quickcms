@@ -535,14 +535,19 @@
 
                 @if($action['type'] == 'redirect')
                 $('#dt_basic tbody').on('click', 'a[name=' + '{{isset($action['btn_name']) ? $action['btn_name'] : $action['name']}}' + ']', function () {
-                     @if(isset($action['redirect_column']))
+                    var url = '{{$action['url']}}';
+                    @if(isset($action['redirect_column']))
                     var redirect_key = '{{ array_search($action['redirect_column'],  array_column($model->index, 'column')) }}';
                     var data = table.row($(this).parents('tr')).data();
                     var redirect_value = data[parseInt(redirect_key)];
-                    @else
-                    var redirect_value = '';
+                    var replace = '{'+'{{$action['redirect_column']}}'+'}';
+                    if (url.indexOf(replace) !== -1) {
+                        url = url.replace(replace, redirect_value);
+                    } else {
+                        url += '/' + redirect_value;
+                    }
                     @endif
-                    window.location.href = '{{$action['url']}}' + '/' + redirect_value;
+                    window.location.href = url;
                 });
                 @endif
 
