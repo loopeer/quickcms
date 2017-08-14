@@ -35,7 +35,11 @@
                             <div class="detail-html">{!! $data->{$detail['column']} !!}</div>
                         @elseif($detail['type'] == 'image')
                             @foreach(is_array($data->{$detail['column']}) ? $data->{$detail['column']} : [$data->{$detail['column']}] as $image)
-                                <img width="200" height="200" src="{{ $image }}">
+                                @if($image)
+                                    <img width="200" height="200" src="{{ $image }}">
+                                @else
+                                    无
+                                @endif
                             @endforeach
                         @endif
                     @endif
