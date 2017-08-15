@@ -12,7 +12,6 @@ use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -24,7 +23,7 @@ class Handler extends ExceptionHandler
         HttpException::class,
         NotFoundHttpException::class,
         ModelNotFoundException::class,
-        TokenMismatchException::clsss,
+        TokenMismatchException::class,
     ];
 
     /**
@@ -44,8 +43,10 @@ class Handler extends ExceptionHandler
             'line' => $e->getLine(),
             'data' => $e,
         ));
-        $monolog = Log::getMonolog();
-        $monolog->pushHandler(new BearyChatHandler());
+        if (env('APP_ENV') != 'local') {
+            $monolog = Log::getMonolog();
+            $monolog->pushHandler(new BearyChatHandler());
+        }
 
         return parent::report($e);
     }
