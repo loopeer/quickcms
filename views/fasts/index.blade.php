@@ -182,7 +182,7 @@
             });
             // table end
 
-            var str = window.location.href;
+            var str = window.location.pathname;
             var arr = str.split("/");
             var num = arr[arr.length - 1];
             var route ="{{ $model->route }}";
