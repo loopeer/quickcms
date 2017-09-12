@@ -350,6 +350,14 @@ class BaseController extends Controller
         if ($operator && $operator == 'between') {
             $values = explode(',', $value);
             if ($values[0] != null || $values[1] != null) {
+
+                if (strstr($name, '.') !== FALSE) {
+                    $table_column = explode('.', $name);
+                    return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values, $operator) {
+                        $query->whereRaw("date($table_column[1]) between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
+                    });
+                }
+
                 return $builder->whereRaw("date($name) between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
             }
         }

@@ -43,10 +43,10 @@
                                         @if($query['query'] == 'between')
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_from' }}" value="{{ isset($query['default'][0]) ? $query['default'][0] : '' }}">
+                                                   style="width: 50%;" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) . '_from' }}@else{{ $query['column'] . '_from' }}@endif" value="{{ isset($query['default'][0]) ? $query['default'][0] : '' }}">
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
-                                                   style="width: 50%;" type="text" id="{{ $query['column'] . '_to' }}" value="{{ isset($query['default'][1]) ? $query['default'][1] : '' }}">
+                                                   style="width: 50%;" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) . '_to' }}@else{{ $query['column'] . '_to' }}@endif" value="{{ isset($query['default'][1]) ? $query['default'][1] : '' }}">
                                         @else
                                             <input class="form-control {{ $query['type'] == 'date' ? 'form_date' : 'form_datetime' }}"
                                                    data-date-format="{{ $query['type'] == 'date' ? 'yyyy-mm-dd' : 'yyyy-mm-dd hh:ii' }}"
