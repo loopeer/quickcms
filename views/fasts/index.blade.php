@@ -499,19 +499,19 @@
                                                 @endforeach
                                             },
                                             url: '{{ $action['url'] }}' + '/' + data[0],
-                                            success: function(result) {
-                                                if (result) {
+                                            success: function(res) {
+                                                if (res.result) {
                                                     data_table.fnPageChange(page);
                                                     $(".tips").html('<div class="alert alert-success fade in">'
                                                         + '<button class="close" data-dismiss="alert">×</button>'
                                                         + '<i class="fa-fw fa fa-check"></i>'
-                                                        + '<strong>操作成功</strong></div>');
+                                                        + '<strong>' + (res.content || '操作成功') + '</strong></div>');
 
                                                 } else {
                                                     $(".tips").html('<div class="alert alert-danger fade in">'
                                                         + '<button class="close" data-dismiss="alert">×</button>'
                                                         + '<i class="fa-fw fa fa-warning"></i>'
-                                                        + '<strong>操作失败</strong></div>');
+                                                        + '<strong>' + (res.content || '操作失败') + '</strong></div>');
                                                 }
                                             },
                                             error: function() {
