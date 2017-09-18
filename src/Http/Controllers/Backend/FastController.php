@@ -120,7 +120,12 @@ class FastController extends BaseController
                     break;
             }
         }
-        return response()->json($model::find($id)->update($param));
+        if($model::find($id)->update($param)){
+            $res =  ['result' => true];
+        }else{
+            $res =  ['result' => false];
+        }
+        return $res;
     }
 
     public function destroy(Model $model, $id)
