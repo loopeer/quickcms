@@ -106,7 +106,11 @@ class GeneralUtil {
                 foreach ($sqlData as $k => $data) {
                     $data = (array)$data;
                     $keys = array_keys($data);
-                    $sqlResult['' . $data[$keys[0]]] = $data[$keys[1]];
+                    if(count($data) == 1){
+                        $sqlResult['' . $data[$keys[0]]] = $data[$keys[0]];
+                    }else{
+                        $sqlResult['' . $data[$keys[0]]] = $data[$keys[1]];
+                    }
                 }
                 $result[$selector->enum_key] = $sqlResult;
             } else {
