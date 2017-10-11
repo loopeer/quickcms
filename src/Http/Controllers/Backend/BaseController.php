@@ -319,7 +319,7 @@ class BaseController extends Controller
         {
             $values = explode(',', $value);
             if ($values[0] != null && $values[1] != null) {
-                if($name == 'amount'){
+                if($name == 'amount' || $name == 'wallet'){
                     $values[0] = $values[0] * 100;
                     $values[1] = $values[1] * 100;
                 }
