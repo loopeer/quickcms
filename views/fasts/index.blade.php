@@ -117,7 +117,7 @@
                     @endforeach
                 ],
                 "lengthMenu": [10, 25, 50, 100],
-                "pageLength": 25,
+                "pageLength": {{ isset($pageLength) ? $pageLength : 25 }},
                 "columnDefs": [
                     @foreach($model->index as $widthKey => $widthItem)
                         @if(isset($widthItem['width']))

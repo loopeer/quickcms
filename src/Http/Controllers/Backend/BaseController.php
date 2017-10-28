@@ -122,6 +122,8 @@ class BaseController extends Controller
                 } elseif (is_array($value)) {
                     if (!isset($value['where'])) {
                         $builder = $builder->whereIn($key, $value);
+                    } else if($value['where'] == 'or'){
+                        $builder = $builder->whereIn($key, $value['data']);
                     } else {
                         if ($value['where'] == '=') {
                             $builder = $builder->where($key, Auth::admin()->get()->id);
