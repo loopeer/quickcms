@@ -19,8 +19,8 @@
                             <div class="col-md-2">
                                 @if(!isset($query['type']) || $query['type'] == 'input')
                                     @if($query['query'] == 'between')
-                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_from" }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
-                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ $query['column']."_to" }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ str_replace('.', '-', $query['column']) . '_from' }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
+                                        <input type="text" class="form-control" style="width:50%;float:left" id="{{ str_replace('.', '-', $query['column']) . '_to' }}" value="{{ isset($query['default']) ? $query['default'] : '' }}">
                                     @else
                                         <input class="form-control" type="text" id="@if(strstr($query['column'], '.') !== FALSE){{ str_replace('.', '-', $query['column']) }}@else{{ $query['column'] }}@endif" value="{{ isset($query['default']) ? $query['default'] : '' }}">
                                     @endif

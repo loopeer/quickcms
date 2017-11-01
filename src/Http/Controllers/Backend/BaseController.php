@@ -296,7 +296,7 @@ class BaseController extends Controller
         $type = isset($item['type']) ? $item['type'] : 'input';
         switch ($type) {
             case 'input':
-                $builder = self::queryInput($builder, $item['column'], $value, $item['query']);
+                $builder = self::queryInput($builder, $item['column'], $value, $item['query'], isset($item['format']) ? $item['format'] : '');
                 break;
             case 'select':
                 $builder = self::querySelector($builder, $item['column'], $value, $item['query']);
@@ -313,10 +313,23 @@ class BaseController extends Controller
         return $builder;
     }
 
-    private function queryInput($builder, $name, $value, $operator)
+    private function queryInput($builder, $name, $value, $operator, $format)
     {
         if (strstr($name, '.') !== FALSE) {
             $table_column = explode('.', $name);
+            if($operator == 'between'){
+
+                $values = explode(',', $value);
+                if ($values[0] != null && $values[1] != null) {
+                    if($format == 'amount'){
+                        $values[0] = $values[0] * 100;
+                        $values[1] = $values[1] * 100;
+                    }
+                    return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values) {
+                        $query->whereRaw("$table_column[1] between '" . ($values[0]) . "' and '" . ($values[1]) . "'");
+                    });
+                }
+            }
             return $builder->whereHas($table_column[0], function ($query) use ($table_column, $value, $operator) {
                 $query->where($table_column[1], $operator, $operator == 'like' ? "%$value%" : $value);
             });
