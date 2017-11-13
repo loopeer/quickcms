@@ -26,7 +26,9 @@
                         @if(!isset($detail['type']))
                             <span class="form-control">
                     @if(isset($detail['param']))
-                                    {{ is_array($data->{$detail['column']}) ? implode(',', ${$detail['param']}[$data->{$detail['column']}]) : ${$detail['param']}[$data->{$detail['column']}] }}
+                                    @if(isset($data->{$detail['column']}) && $data->{$detail['column']})
+                                        {{ is_array($data->{$detail['column']}) ? implode(',', ${$detail['param']}[$data->{$detail['column']}]) : ${$detail['param']}[$data->{$detail['column']}] }}
+                                    @endif
                                 @else
                                     {{ is_array($data->{$detail['column']}) ? implode(',', $data->{$detail['column']}) : $data->{$detail['column']} }}
                                 @endif
