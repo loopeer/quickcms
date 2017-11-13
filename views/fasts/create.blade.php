@@ -65,7 +65,7 @@
                                                 </label>
                                             @elseif($item['type'] == 'select')
                                                 <label class="select">
-                                                    <select name="{{ $item['column'] }}">
+                                                    <select name="{{ $item['column'] }}"  {{ isset($data->id) && isset($item['disabled']) ? $item['disabled'] : '' }}>
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $sk => $sv)
                                                         @if($sk == old($item['column']))
                                                             <option value="{{ $sk }}" selected>{{ $sv }}</option>

@@ -299,7 +299,7 @@ class BaseController extends Controller
                 $builder = self::queryInput($builder, $item['column'], $value, $item['query'], isset($item['format']) ? $item['format'] : '');
                 break;
             case 'select':
-                $builder = self::querySelector($builder, $item['column'], $value, $item['query']);
+                $builder = self::querySelector($builder, $item['column'], $value, $item['query'], isset($item['expend']) ? $item['expend'] : '');
                 break;
             case 'checkbox':
                 $builder = self::queryCheckbox($builder, $item['column'], $value);
@@ -348,7 +348,7 @@ class BaseController extends Controller
         return $builder->where($name, $operator, $operator == 'like' ? "%$value%" : $value);
     }
 
-    private function querySelector($builder, $name, $value, $operator)
+    private function querySelector($builder, $name, $value, $operator, $expend)
     {
         if (strstr($name, '.') !== FALSE) {
             $table_column = explode('.', $name);
@@ -359,6 +359,10 @@ class BaseController extends Controller
 
         if ($operator && $operator == 'scope') {
             return $builder->$name($value);
+        }
+        if($expend)
+        {
+            return $builder->whereNotNull($expend[$value]);
         }
         return $builder->where($name, $value);
     }
