@@ -307,6 +307,9 @@ class BaseController extends Controller
             case 'date':
                 $builder = self::queryDate($builder, $item['column'], $value, $item['query']);
                 break;
+            case 'datetime':
+                $builder = self::queryDateTime($builder, $item['column'], $value, $item['query']);
+                break;
             default:
                 break;
         }
@@ -389,5 +392,24 @@ class BaseController extends Controller
             }
         }
         return $builder->whereRaw("date($name) = '" . $value . "'");
+    }
+
+    private function queryDateTime($builder, $name, $value, $operator)
+    {
+        if ($operator && $operator == 'between') {
+            $values = explode(',', $value);
+            if ($values[0] != null || $values[1] != null) {
+
+                if (strstr($name, '.') !== FALSE) {
+                    $table_column = explode('.', $name);
+                    return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values, $operator) {
+                        $query->whereRaw("$table_column[1] between '" . ($values[0] ?: "0000-01-01 00:00:00") . "' and '" . ($values[1] ?: "9999-01-01 00:00:00") . "'");
+                    });
+                }
+
+                return $builder->whereRaw("$name between '" . ($values[0] ?: "0000-01-01 00:00:00") . "' and '" . ($values[1] ?: "9999-01-01 00:00:00") . "'");
+            }
+        }
+        return $builder->whereRaw("$name = '" . $value . "'");
     }
 }
