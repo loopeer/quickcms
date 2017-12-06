@@ -83,6 +83,22 @@ class FastController extends BaseController
         $data = Input::all();
         $message['result'] = true;
 
+        foreach ($model->create as $item) {
+            if (isset($item['type'])) {
+                switch ($item['type']) {
+                    case 'admin_id' :
+                        $data[$item['column']] = Auth::admin()->get()->id;
+                        break;
+                    case 'admin_email' :
+                        $data[$item['column']] = Auth::admin()->get()->email;
+                        break;
+                    case 'now_time' :
+                        $data[$item['column']] = Carbon::now();
+                        break;
+                }
+            }
+        }
+
         $relationColumns = $this->filterRelationColumns($model);
         $intersection = array_intersect(array_keys($data), $relationColumns);
 
@@ -100,10 +116,10 @@ class FastController extends BaseController
                 foreach($data as $k => $v) {
                     if($k == 'password')
                     {
-                        break;
+                        continue;
                     }
                     if (in_array($k, $relationColumns)) {
-                        break;
+                        continue;
                     }
                     $saveModel->$k = $v;
                 }
