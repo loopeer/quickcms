@@ -1,6 +1,8 @@
 <?php namespace Loopeer\QuickCms;
 
 use Illuminate\Routing\ResourceRegistrar;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,6 +47,15 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->publishes([
 			__DIR__ . '/../lang' => base_path('resources/lang'),
 		]);
+
+        if (!Cache::has('app_logs_table')) {
+            $table = collect(DB::select('SHOW TABLES'))->map(function ($table) {
+                return $table->{'Tables_in_' . config('quickCms.app_logs_database')};
+            })->filter(function ($tableName) {
+                return strstr($tableName, 'app_logs') !== false;
+            })->last();
+            Cache::forever('app_logs_table', $table);
+        }
 	}
 
 	/**

@@ -81,4 +81,7 @@ return [
     'appLog_route_name' => [
 
     ],
+
+    'app_logs_database' => env('DB_DATABASE'),
+    'app_logs_max_rows' => env('app_logs_max_rows', 1000000),
 ];

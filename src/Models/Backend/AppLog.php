@@ -10,6 +10,9 @@
  */
 namespace Loopeer\QuickCms\Models\Backend;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
 class AppLog extends FastModel
 {
     protected $buttons = ['create' => false, 'edit' => false, 'detail' => true, 'delete' => false];
@@ -42,6 +45,12 @@ class AppLog extends FastModel
         ['column' => 'content'],
     ];
     protected $module = 'App日志';
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->table = Cache::get('app_logs_table', 'app_logs');
+    }
 
     public function getRouteNameAttribute()
     {
