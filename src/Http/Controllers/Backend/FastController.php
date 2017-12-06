@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Loopeer\QuickCms\Services\Utils\GeneralUtil;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class FastController extends BaseController
 {
@@ -49,13 +50,42 @@ class FastController extends BaseController
     {
         $data = new $model;
         $types = array_column($model->create, 'type');
+        $this->refactorCreateParam($model, $data);
         return view('backend::fasts.create', compact('model', 'data', 'types'));
+    }
+
+    protected function filterRelationColumns(Model $model)
+    {
+        $relationColumns = collect($model->create)->filter(function ($item) {
+            return strstr($item['column'], '.') !== FALSE;
+        })->reduce(function ($carry, $item) {
+            $carry[$item['column']] = str_replace('.', '_', $item['column']);
+            return $carry;
+        }, []);
+        return $relationColumns;
+    }
+
+    protected function refactorCreateParam(Model $model, $data)
+    {
+        $model->create = collect($model->create)->map(function ($item) use (&$data) {
+            if (strstr($item['column'], '.') !== FALSE) {
+                $oldItem = $item;
+                $item['column'] = str_replace('.', '_', $oldItem['column']);
+                $data->{$item['column']} = isset($data->{explode('.', $oldItem['column'])[0]}->{explode('.', $oldItem['column'])[1]}) ? $data->{explode('.', $oldItem['column'])[0]}->{explode('.', $oldItem['column'])[1]} : null;
+            }
+            return $item;
+        })->toArray();
+//        return $create;
     }
 
     public function store(Model $model = null)
     {
         $data = Input::all();
         $message['result'] = true;
+
+        $relationColumns = $this->filterRelationColumns($model);
+        $intersection = array_intersect(array_keys($data), $relationColumns);
+
         try {
             $columnArray = [];
             foreach($data as $k => $v) {
@@ -72,11 +102,38 @@ class FastController extends BaseController
                     {
                         break;
                     }
+                    if (in_array($k, $relationColumns)) {
+                        break;
+                    }
                     $saveModel->$k = $v;
                 }
                 $saveModel->save();
+                //存在关联数据
+                if (count($intersection) > 0) {
+                    foreach ($intersection as $item) {
+                        $value = $data[$item];
+                        $column = array_flip($relationColumns)[$item];
+                        $saveModel->{explode('.', $column)[0]}->{explode('.', $column)[1]} = $value;
+                        $saveModel->{explode('.', $column)[0]}->save();
+                    }
+                }
             } else {
-                $saveModel = $model::create($data);
+                if (count($intersection) > 0) {
+                    $relations = [];
+                    foreach ($intersection as $item) {
+                        $value = $data[$item];
+                        $column = array_flip($relationColumns)[$item];
+                        $relations[explode('.', $column)[0]][explode('.', $column)[1]] = $value;
+                        unset($data[$item]);
+                    }
+                    $saveModel = $model::create($data);
+                    //创建关联数据
+                    foreach ($relations as $key => $relation) {
+                        $saveModel->{$key}()->create($relation);
+                    }
+                } else {
+                    $saveModel = $model::create($data);
+                }
             }
 
             self::relationModelSave($columnArray, $model, $saveModel, $data);
@@ -99,6 +156,7 @@ class FastController extends BaseController
     {
         $data = $model::find($id);
         $types = array_column($model->create, 'type');
+        $this->refactorCreateParam($model, $data);
         return view('backend::fasts.create', compact('model', 'data', 'types'));
     }
 

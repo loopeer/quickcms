@@ -76,4 +76,15 @@ class FastModel extends BaseModel
                 return parent::__get($key);
         }
     }
+
+    public function __set($key, $value)
+    {
+        switch ($key) {
+            case 'create' :
+                $this->create = $value;
+                break;
+            default :
+                parent::__set($key, $value);
+        }
+    }
 }
