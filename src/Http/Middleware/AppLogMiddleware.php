@@ -31,7 +31,7 @@ class AppLogMiddleware
             'content' => json_encode($request->all()),
             'consume_time' => round(microtime(true) * 1000) - $beforeTime,
         ));
-        if ($appLog->id >= config('quickCms.app_logs_max_rows')) {
+        if ($appLog->id >= config('quickCms.app_logs_max_rows', 1000000)) {
             $this->createAppLogsTable();
         }
         return $response;

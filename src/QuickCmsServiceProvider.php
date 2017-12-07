@@ -50,9 +50,18 @@ class QuickCmsServiceProvider extends ServiceProvider {
 
         if (!Cache::has('app_logs_table')) {
             $table = collect(DB::select('SHOW TABLES'))->map(function ($table) {
-                return $table->{'Tables_in_' . config('quickCms.app_logs_database')};
+                return $table->{'Tables_in_' . config('quickCms.app_logs_database', env('DB_DATABASE'))};
             })->filter(function ($tableName) {
                 return strstr($tableName, 'app_logs') !== false;
+            })->sort(function ($a, $b) {
+                $suffixA = substr(strrchr($a, '_'), 1);
+                $suffixB = substr(strrchr($b, '_'), 1);
+                $sortA = is_numeric($suffixA) ? $suffixA : 0;
+                $sortB = is_numeric($suffixB) ? $suffixB : 0;
+                if ($sortA == $sortB) {
+                    return 0;
+                }
+                return ($sortA < $sortB) ? -1 : 1;
             })->last();
             Cache::forever('app_logs_table', $table);
         }
