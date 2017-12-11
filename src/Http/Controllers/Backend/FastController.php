@@ -75,7 +75,6 @@ class FastController extends BaseController
             }
             return $item;
         })->toArray();
-//        return $create;
     }
 
     public function store(Model $model = null)

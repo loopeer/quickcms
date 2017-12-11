@@ -50,7 +50,8 @@
                                     <fieldset>
                                     @foreach($model->create as $item)
                                         <section id="{{ str_replace('.', '_', $item['column']) }}_section">
-                                            @if(!isset($item['type']))
+                                            @if(isset($item['type']) && in_array($item['type'], ['admin_id', 'admin_email', 'now_time']))
+                                            @else
                                             <label class="label">{{ trans('fasts.' . $model->route . '.' . $item['column']) }}{{ isset($item['remark']) ? $item['remark'] : '' }}</label>
                                             @endif
                                             @if(!isset($item['type']) || $item['type'] == 'text')
