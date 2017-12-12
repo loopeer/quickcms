@@ -56,7 +56,7 @@
                                             @endif
                                             @if(!isset($item['type']) || $item['type'] == 'text')
                                                 <label class="input">
-                                                    <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}">
+                                                    <input type="text" name="{{ $item['column'] }}" value="{{ old($item['column']) ?: $data->{$item['column']} }}" @if(isset($item['disabled']) && isset($data->id))) disabled @endif>
                                                 </label>
                                             @elseif($item['type'] == 'textarea')
                                                 <label class="textarea textarea-resizable">
