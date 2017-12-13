@@ -32,7 +32,7 @@ class AppLogMiddleware
             'content' => json_encode($request->all()),
             'consume_time' => round(microtime(true) * 1000) - $beforeTime,
         ));
-        if ($appLog->id >= config('quickCms.app_logs_max_rows', 1000000)) {
+        if ($appLog->id >= config('quickCms.app_logs_max_rows', 1000000) && config('quickCms.app_logs_split', false)) {
             $this->createAppLogsTable();
         }
         return $response;
@@ -49,7 +49,7 @@ class AppLogMiddleware
 
     protected function cacheAppLogsTableName()
     {
-        if (!Cache::has('app_logs_table')) {
+        if (!Cache::has('app_logs_table') && config('quickCms.app_logs_split', false)) {
             $table = collect(DB::select('SHOW TABLES'))->map(function ($table) {
                 return $table->{'Tables_in_' . config('quickCms.app_logs_database', env('DB_DATABASE'))};
             })->filter(function ($tableName) {

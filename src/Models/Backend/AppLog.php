@@ -49,7 +49,7 @@ class AppLog extends FastModel
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->table = Cache::get('app_logs_table', 'app_logs');
+        $this->table = config('quickCms.app_logs_split', false) ? Cache::get('app_logs_table', 'app_logs') : 'app_logs';
     }
 
     public function getRouteNameAttribute()
