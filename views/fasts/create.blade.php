@@ -87,9 +87,14 @@
                                             @elseif($item['type'] == 'checkbox')
                                                 <div class="inline-group">
                                                     @foreach(is_array($item['param']) ? $item['param'] : ${$item['param']} as $cbk => $cbv)
-                                                    <label class="checkbox">
-                                                        <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}" {{ in_array($cbk, isset($item['relation']) ? $data->{$item['relation']['foreign_key']} : $data->{$item['column']}) ? 'checked' : '' }}>
-                                                        <i></i>{{ $cbv }}</label>
+                                                        <label class="checkbox">
+                                                            <input type="checkbox" name="{{ $item['column'] }}[]" value="{{ $cbk }}"
+                                                            @if(is_array(json_decode($data->{$item['column']}, true)))
+                                                                {{ in_array($cbk, isset($item['relation']) ? $data->{$item['relation']['foreign_key']} : $data->{$item['column']}) ? 'checked' : '' }}>
+                                                            @else
+                                                                {{ in_array($cbk, isset($item['relation']) ? $data->{$item['relation']['foreign_key']} : explode(',', $data->{$item['column']})) ? 'checked' : '' }}>
+                                                            @endif
+                                                            <i></i>{{ $cbv }}</label>
                                                     @endforeach
                                                 </div>
                                             @elseif($item['type'] == 'radio')

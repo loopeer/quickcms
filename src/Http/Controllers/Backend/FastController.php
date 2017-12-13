@@ -300,7 +300,8 @@ class FastController extends BaseController
                     }
                     $relationModel->insert($relationData);
                 } else if (isset($columnArray[$create['column']])) {
-                    $saveModel->$create['column'] = $columnArray[$create['column']];
+                    $saveModel->{$create['column']} = implode(',', $columnArray[$create['column']]);
+                    $saveModel->save();
                 }
             }
         }
