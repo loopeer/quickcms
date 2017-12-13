@@ -341,6 +341,13 @@
                                 tr.html(JSON.parse('{!! json_encode(is_array($renameItem["param"]) ? $renameItem["param"] : ${$renameItem["param"]}) !!}')[tr.html()]);
                             @elseif($renameItem['type'] == 'limit')
                                 tr.html(tr.html().slice(0, parseInt('{{ $renameItem['param'] }}')));
+                            @elseif($renameItem['type'] == 'json')
+                                var origialValue = value.split(',');
+                                var str = '';
+                                origialValue.forEach(function(origin){
+                                    str += JSON.parse('{!! json_encode(is_array($renameItem["param"]) ? $renameItem["param"] : ${$renameItem["param"]}) !!}')[origin]+" ";
+                                });
+                                tr.html(str);
                             @endif
                         @endif
                     @endforeach
