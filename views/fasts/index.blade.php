@@ -348,6 +348,8 @@
                                     str += JSON.parse('{!! json_encode(is_array($renameItem["param"]) ? $renameItem["param"] : ${$renameItem["param"]}) !!}')[origin]+" ";
                                 });
                                 tr.html(str);
+                            @elseif($renameItem['type'] == 'voice')
+                                 tr.html('<audio controls="controls" height="100" width="100"> <source src="'+value+'" type="audio/mp3" /> <source src="'+value+'" type="audio/ogg" /> <embed height="100" width="100" src="'+value+'" /></audio>');
                             @endif
                         @endif
                     @endforeach
