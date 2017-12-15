@@ -105,7 +105,18 @@ class BaseController extends Controller
             }
         }
         $query = array_column($model->index, 'query');
-        $builder = $model;
+
+        $relations = collect($model->create)->map(function ($create) {
+            return $create['column'];
+        })->filter(function ($column) {
+            return strstr($column, '.') !== FALSE;
+        })->map(function ($column) {
+            $relation = explode('.', $column);
+            return $relation[0];
+        })->unique()->toArray();
+
+        $builder = count($relations) > 0 ? $model->with($relations) : $model;
+
         if ($model->business_id && session('business_id')) {
             $builder = $builder->where($model->business_id, session('business_id'));
         }
@@ -220,14 +231,14 @@ class BaseController extends Controller
         $draw = Input::get('draw');
         $data = array();
 
-        foreach($paginate->items() as $item) {
+        foreach ($paginate->items() as $item) {
             $obj = array();
-            foreach($show_column as $column) {
+            foreach ($show_column as $column) {
                 if($item->$column instanceof Carbon) {
                     array_push($obj, $item->$column->format('Y-m-d H:i:s'));
-                } elseif(strstr($column, '.') !== FALSE) {
+                } elseif (strstr($column, '.') !== FALSE) {
                     $table_column = explode('.', $column);
-                    if(count($item->{$table_column[0]}) > 0) {
+                    if (count($item->{$table_column[0]}) > 0) {
                         array_push($obj, $item->{$table_column[0]} instanceof Collection ? $item->{$table_column[0]}->first()->{$table_column[1]} : $item->{$table_column[0]}->{$table_column[1]});
                     } else {
                         array_push($obj, '无');
