@@ -18,7 +18,7 @@
                             <div class="jarviswidget-editbox">
                             </div>
                             <div class="widget-body no-padding">
-                                <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
+                                <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%" style="max-width: 100% !important; table-layout:fixed;word-wrap:break-word;">
                                     <thead>
                                     <tr>
                                         @foreach($model->index as $item)
