@@ -40,6 +40,10 @@
                                             -ms-user-select: none;
                                             user-select: none;
                                         }
+
+                                        .smart-form .state-error+em{
+                                            display:inline-block;
+                                        }
                                     </style>
                                     <input type="hidden" name="id" value="{{ $data->id }}">
                                     @foreach($model->createHidden as $hidden)
@@ -341,16 +345,16 @@
 
             $('#create-form').validate({
                 // Rules for form validation
-                rules: {
-                    @foreach($model->create as $ruleItem)
-                        @if(isset($ruleItem['rules']))
-                        {{ $ruleItem['column'] }}: {
-                            @foreach($ruleItem['rules'] as $ruleKey => $ruleValue)
-                            {{ $ruleKey . ':' . $ruleValue }},
-                            @endforeach
-                        },
+                    rules: {
+                        @foreach($model->create as $ruleItem)
+                                @if(isset($ruleItem['rules']))
+                        "{{ isset($ruleItem['type']) && $ruleItem['type'] == 'checkbox' ?  $ruleItem['ruleColumn'] : $ruleItem['column'] }}" : {
+                        @foreach($ruleItem['rules'] as $ruleKey => $ruleValue)
+                        {{ $ruleKey . ':' . $ruleValue }},
+                        @endforeach
+                    },
                         @endif
-                    @endforeach
+                        @endforeach
                 },
 
                 // Do not change code below
