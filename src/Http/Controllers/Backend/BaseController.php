@@ -165,6 +165,21 @@ class BaseController extends Controller
                 }
             }
         }
+
+        $selectRaw = '';
+        foreach($columns as $column) {
+            $column_name = $column['name'];
+            foreach ($model->index as $qk => $qv) {
+                if ($column_name == $model->index[$qk]['column']) {
+                    $item = $model->index[$qk];
+                    if(strpos($column_name, '.') === false && !isset($item['append'])){
+                        $selectRaw .= '`'.$column_name."`,";
+                    };
+                }
+            }
+        }
+        $builder = $builder->select(DB::raw(rtrim($selectRaw, ',')));
+
         if (count(array_column($model->index, 'order')) > 0) {
             foreach ($orders as $order) {
                 $builder = $builder->orderBy($model->index[$order['column']]['column'], $order['dir']);
