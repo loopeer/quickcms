@@ -360,6 +360,12 @@ class BaseController extends Controller
                         $values[0] = $values[0] * 100;
                         $values[1] = $values[1] * 100;
                     }
+                    if($format == 'count')
+                    {
+                        return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values) {
+                        }, '>=', $values[0])->whereHas($table_column[0], function ($query) use ($table_column, $values) {
+                        }, '<=', $values[1]);
+                    }
                     return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values) {
                         $query->whereRaw("$table_column[1] between '" . ($values[0]) . "' and '" . ($values[1]) . "'");
                     });
