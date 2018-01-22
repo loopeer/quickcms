@@ -178,6 +178,11 @@ class BaseController extends Controller
                     };
                 }
             }
+            if(isset($model->indexAppend)){
+                foreach ($model->indexAppend as $item){
+                    $selectRaw .= '`'.$item."`,";
+                }
+            }
         }
         $builder = $builder->select(DB::raw(rtrim($selectRaw, ',')));
 
