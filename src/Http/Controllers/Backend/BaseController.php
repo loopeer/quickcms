@@ -46,6 +46,7 @@ class BaseController extends Controller
             return System::get();
         });
 
+
         $system_title = System::where('key', 'title')->first();
         $system_logo = System::where('key', 'logo')->first();
         if (isset($system_title)) {
@@ -159,7 +160,7 @@ class BaseController extends Controller
                     $name = $column['name'];
                     foreach ($model->index as $qk => $qv) {
                         if ($name == $model->index[$qk]['column']) {
-                            $builder = self::queryBuilder($builder, $model->index[$qk], $value);
+                            $builder = self::queryBuilder($builder, $model->index[$qk], $value, isset($model->table) ? $model->table : '');
                             break;
                         }
                     }
@@ -170,12 +171,26 @@ class BaseController extends Controller
         $selectRaw = '';
         foreach($columns as $column) {
             $column_name = $column['name'];
+            $table = $model->table;
             foreach ($model->index as $qk => $qv) {
                 if ($column_name == $model->index[$qk]['column']) {
                     $item = $model->index[$qk];
-                    if(strpos($column_name, '.') === false && !isset($item['append'])){
+
+                    if (isset($item['join_column'])){
+                        if(isset($item['join_table'])){
+                            switch($item['format']){
+                                case 'count':
+                                    $selectRaw .= 'count('.$item['join_table'].'.id)'.' as '.$column_name.',';
+                                    break;
+                                case 'sum':
+                                    $selectRaw .= 'sum('.$item['join_table'].'.'.$item['sum_column'].') as '.$column_name.',';
+                            }
+                        }else{
+                            $selectRaw .= $table.'.'.$column_name.' as '.$column_name.',';
+                        }
+                    } else if(strpos($column_name, '.') === false && !isset($item['append'])){
                         $selectRaw .= '`'.$column_name."`,";
-                    };
+                    }
                 }
             }
             if(isset($model->indexAppend)){
@@ -186,6 +201,30 @@ class BaseController extends Controller
         }
         $builder = $builder->select(DB::raw(rtrim($selectRaw, ',')));
 
+
+        if(isset($model->join)){
+            $join = $model->join;
+            $builder->leftJoin($join['table'], function($query) use($join){
+                foreach($join['on'] as $value){
+                    $query->on($value['column'], $value['operate'], $value['ref']);
+                }
+                if(isset($join['where'])){
+                    foreach($join['where'] as $where){
+                        $query->where($where['column'], $where['operate'], $where['ref']);
+                    }
+                }
+            });
+        }
+
+
+        if(isset($model->groupBy)){
+            $groupBy = $model->groupBy;
+            foreach ($groupBy as $value)
+            {
+                $builder->groupBy($value);
+            }
+        }
+
         if (count(array_column($model->index, 'order')) > 0) {
             foreach ($orders as $order) {
                 $builder = $builder->orderBy($model->index[$order['column']]['column'], $order['dir']);
@@ -194,7 +233,11 @@ class BaseController extends Controller
         if ($queryType == 'all') {
             return self::getAllData(array_column($model->index, 'column'), $builder->get());
         } else {
-            return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length));
+            if(isset($model->groupBy)){
+                $totalCount = count($builder->get());
+                return self::getPageDate(array_column($model->index, 'column'), $builder->simplePaginate($length), '', $totalCount, 'simple');
+            }
+            return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length), '');
         }
     }
 
@@ -248,7 +291,7 @@ class BaseController extends Controller
      * @param array $paginate query sql
      * @return array
      */
-    private function getPageDate($show_column, $paginate, $appends = []) {
+    private function getPageDate($show_column, $paginate, $appends = [], $totalCount = '', $simple = '') {
         $draw = Input::get('draw');
         $data = array();
 
@@ -272,8 +315,8 @@ class BaseController extends Controller
         }
         $ret = array(
             'draw' => $draw,
-            'recordsTotal' => $paginate->total(),
-            'recordsFiltered' => $paginate->total(),
+            'recordsTotal' => $simple ? $totalCount : $paginate->total(),
+            'recordsFiltered' => $simple ? $totalCount : $paginate->total(),
             'data' => $data,
         );
         return $ret;
@@ -323,24 +366,27 @@ class BaseController extends Controller
         return $filtered->first()['value'];
     }
 
-    private function queryBuilder($builder, $item, $value)
+    private function queryBuilder($builder, $item, $value, $table_name)
     {
         $type = isset($item['type']) ? $item['type'] : 'input';
         switch ($type) {
             case 'input':
-                $builder = self::queryInput($builder, $item['column'], $value, $item['query'], isset($item['format']) ? $item['format'] : '');
+                $builder = self::queryInput($builder, $item, $value, $table_name);
                 break;
             case 'select':
-                $builder = self::querySelector($builder, $item['column'], $value, $item['query'], isset($item['expend']) ? $item['expend'] : '');
+                $builder = self::querySelector($builder, $item, $value, $table_name);
                 break;
             case 'checkbox':
                 $builder = self::queryCheckbox($builder, $item['column'], $value);
                 break;
             case 'date':
-                $builder = self::queryDate($builder, $item['column'], $value, $item['query']);
+                $builder = self::queryDate($builder, $item, $value, $table_name);
                 break;
             case 'datetime':
                 $builder = self::queryDateTime($builder, $item['column'], $value, $item['query']);
+                break;
+            case 'having_input':
+                $builder = self::queryHavingInput($builder, $item, $value, $table_name);
                 break;
             default:
                 break;
@@ -348,23 +394,19 @@ class BaseController extends Controller
         return $builder;
     }
 
-    private function queryInput($builder, $name, $value, $operator, $format)
+    private function queryInput($builder, $item, $value, $table_name)
     {
+        $operator = $item['query'];
+        $name = $item['column'];
         if (strstr($name, '.') !== FALSE) {
-            $table_column = explode('.', $name);
+            $table_column = explode('.', $item['column']);
             if($operator == 'between'){
 
                 $values = explode(',', $value);
                 if ($values[0] != null && $values[1] != null) {
-                    if($format == 'amount'){
+                    if(isset($item['format']) && $item['format'] == 'amount'){
                         $values[0] = $values[0] * 100;
                         $values[1] = $values[1] * 100;
-                    }
-                    if($format == 'count')
-                    {
-                        return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values) {
-                        }, '>=', $values[0])->whereHas($table_column[0], function ($query) use ($table_column, $values) {
-                        }, '<=', $values[1]);
                     }
                     return $builder->whereHas($table_column[0], function ($query) use ($table_column, $values) {
                         $query->whereRaw("$table_column[1] between '" . ($values[0]) . "' and '" . ($values[1]) . "'");
@@ -375,11 +417,14 @@ class BaseController extends Controller
                 $query->where($table_column[1], $operator, $operator == 'like' ? "%$value%" : $value);
             });
         }
+        if(isset($item['join_column'])){
+            $name = $table_name.'.'.$name;
+        }
         if($operator == 'between')
         {
             $values = explode(',', $value);
             if ($values[0] != null && $values[1] != null) {
-                if($name == 'amount' || $name == 'wallet' || $format == 'amount'){
+                if(isset($item['format']) && $item['format'] == 'amount'){
                     $values[0] = $values[0] * 100;
                     $values[1] = $values[1] * 100;
                 }
@@ -389,8 +434,27 @@ class BaseController extends Controller
         return $builder->where($name, $operator, $operator == 'like' ? "%$value%" : $value);
     }
 
-    private function querySelector($builder, $name, $value, $operator, $expend)
+    private function queryHavingInput($builder, $item, $value, $table_name)
     {
+        $operator = $item['query'];
+        $name = $item['column'];
+        if($operator == 'between'){
+
+            $values = explode(',', $value);
+            if ($values[0] != null && $values[1] != null) {
+                if(isset($item['format']) && $item['format'] == 'amount'){
+                    $values[0] = $values[0] * 100;
+                    $values[1] = $values[1] * 100;
+                }
+                return $builder->havingRaw("$name >= '$values[0]' and $name <= '$values[1]'");
+            }
+        }
+    }
+
+    private function querySelector($builder, $item, $value, $table_name)
+    {
+        $operator = $item['query'];
+        $name = $item['column'];
         if (strstr($name, '.') !== FALSE) {
             $table_column = explode('.', $name);
             return $builder->whereHas($table_column[0], function ($query) use ($table_column, $value, $operator) {
@@ -401,9 +465,14 @@ class BaseController extends Controller
         if ($operator && $operator == 'scope') {
             return $builder->$name($value);
         }
-        if($expend)
+
+        if(isset($item['join_column'])){
+            $name = $table_name.'.'.$name;
+        }
+
+        if(isset($item['expend']))
         {
-            return $builder->whereNotNull($expend[$value]);
+            return $builder->whereNotNull($item['expend'][$value]);
         }
         return $builder->where($name, $value);
     }
@@ -413,8 +482,10 @@ class BaseController extends Controller
         return $builder->whereIn($name, explode(',', $value));
     }
 
-    private function queryDate($builder, $name, $value, $operator)
+    private function queryDate($builder, $item, $value, $table_name)
     {
+        $operator = $item['query'];
+        $name = $item['column'];
         if ($operator && $operator == 'between') {
             $values = explode(',', $value);
             if ($values[0] != null || $values[1] != null) {
@@ -425,7 +496,9 @@ class BaseController extends Controller
                         $query->whereRaw("date($table_column[1]) between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
                     });
                 }
-
+                if(isset($item['join_column'])){
+                    $name = $table_name.'.'.$name;
+                }
                 return $builder->whereRaw("date($name) between '" . ($values[0] ?: "0000-01-01") . "' and '" . ($values[1] ?: "9999-01-01") . "'");
             }
         }

@@ -12,6 +12,7 @@ namespace Loopeer\QuickCms\Services\Utils;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Illuminate\Support\Facades\Cache;
 use Loopeer\QuickCms\Models\Backend\Permission;
 use Loopeer\QuickCms\Models\Backend\Selector;
 use Route;
@@ -35,7 +36,7 @@ class GeneralUtil {
         try{
             $results = DB::connection('mysql_system')
                 ->select('select COLUMN_NAME,COLUMN_COMMENT FROM columns WHERE table_schema = ? AND table_name = ?',
-                [env('DB_DATABASE'), with($model)->getTable()]);
+                    [env('DB_DATABASE'), with($model)->getTable()]);
         } catch(\Exception $ex) {
             return [];
         }
@@ -99,24 +100,29 @@ class GeneralUtil {
     public static function allSelectorData()
     {
         $result = [];
-        foreach(Selector::all() as $selector) {
-            if ($selector->type == Selector::SQL) {
-                $sqlData = DB::select($selector->enum_value);
-                $sqlResult = array();
-                foreach ($sqlData as $k => $data) {
-                    $data = (array)$data;
-                    $keys = array_keys($data);
-                    if(count($data) == 1){
-                        $sqlResult['' . $data[$keys[0]]] = $data[$keys[0]];
-                    }else{
-                        $sqlResult['' . $data[$keys[0]]] = $data[$keys[1]];
+        if(Cache::get('selector_result')){
+            return Cache::get('selector_result');
+        }else{
+            foreach(Selector::all() as $selector) {
+                if ($selector->type == Selector::SQL) {
+                    $sqlData = DB::select($selector->enum_value);
+                    $sqlResult = array();
+                    foreach ($sqlData as $k => $data) {
+                        $data = (array)$data;
+                        $keys = array_keys($data);
+                        if(count($data) == 1){
+                            $sqlResult['' . $data[$keys[0]]] = $data[$keys[0]];
+                        }else{
+                            $sqlResult['' . $data[$keys[0]]] = $data[$keys[1]];
+                        }
                     }
+                    $result[$selector->enum_key] = $sqlResult;
+                } else {
+                    $result[$selector->enum_key] = json_decode($selector->enum_value, true);
                 }
-                $result[$selector->enum_key] = $sqlResult;
-            } else {
-                $result[$selector->enum_key] = json_decode($selector->enum_value, true);
             }
+            Cache::forever('selector_result', $result);
+            return $result;
         }
-        return $result;
     }
 }

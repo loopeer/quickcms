@@ -13,6 +13,7 @@ namespace Loopeer\QuickCms\Http\Controllers\Backend;
 use Session;
 use Input;
 use DB;
+use Illuminate\Support\Facades\Cache;
 use Loopeer\QuickCms\Models\Backend\Selector;
 
 class SelectorController extends BaseController {
@@ -68,6 +69,7 @@ class SelectorController extends BaseController {
         }
         if ($flag) {
             $message = array('result' => true, 'content' => '操作成功');
+            Cache::forget('selector_result');
         } else {
             $message = array('result' => true, 'content' => '操作失败');
         }
