@@ -234,7 +234,7 @@ class BaseController extends Controller
             return self::getAllData(array_column($model->index, 'column'), $builder->get());
         } else {
             if(isset($model->groupBy)){
-                $totalCount = count($builder->get());
+                $totalCount = DB::selectOne("select count(*) as count from (" .$builder->toSql().') a', $builder->getBindings())->count;
                 return self::getPageDate(array_column($model->index, 'column'), $builder->simplePaginate($length), '', $totalCount, 'simple');
             }
             return self::getPageDate(array_column($model->index, 'column'), $builder->paginate($length), '');
