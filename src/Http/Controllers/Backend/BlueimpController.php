@@ -88,7 +88,7 @@ class BlueimpController extends BaseController
             $success->url = $url;
 
             $success->photo_name='';
-            $success->$thumbnailUrl = $thumbnailUrl;
+            $success->thumbnailUrl = $thumbnailUrl;
 
             // TODO
             // Remove the file from qiniu when invoke the delete action
