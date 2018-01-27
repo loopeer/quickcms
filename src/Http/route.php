@@ -36,9 +36,10 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace
 
     // 图片上传
     Route::post('blueimp', array('as'=>'admin.blueimp.upload', 'uses'=>'BlueimpController@upload'));
+    Route::post('blueimp/voice', array('as'=>'admin.blueimp.uploadVoice', 'uses'=>'BlueimpController@uploadVoice'));
     Route::post('blueimp/upload4Local', 'BlueimpController@upload4Local');
     Route::get('blueimp/{id}', array('as'=>'admin.blueimp.delete', 'uses'=>'BlueimpController@destroy'));
-    Route::get('blueimp', array('as'=>'admin.blueimp.index', 'uses'=>'BlueimpController@getImage'));
+    Route::get('blueimp', array('as'=>'admin.blueimp.index', 'uses'=>'BlueimpController@getResource'));
 
     //文件上传
     Route::post('dropzone/upload', 'DropzoneController@upload');
