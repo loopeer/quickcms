@@ -203,17 +203,19 @@ class BaseController extends Controller
 
 
         if(isset($model->join)){
-            $join = $model->join;
-            $builder->leftJoin($join['table'], function($query) use($join){
-                foreach($join['on'] as $value){
-                    $query->on($value['column'], $value['operate'], $value['ref']);
-                }
-                if(isset($join['where'])){
-                    foreach($join['where'] as $where){
-                        $query->where($where['column'], $where['operate'], $where['ref']);
+            $joins = $model->join;
+            foreach($joins as $join){
+                $builder->leftJoin($join['table'], function($query) use($join){
+                    foreach($join['on'] as $value){
+                        $query->on($value['column'], $value['operate'], $value['ref']);
                     }
-                }
-            });
+                    if(isset($join['where'])){
+                        foreach($join['where'] as $where){
+                            $query->where($where['column'], $where['operate'], $where['ref']);
+                        }
+                    }
+                });
+            }
         }
 
 
