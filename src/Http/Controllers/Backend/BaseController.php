@@ -180,7 +180,7 @@ class BaseController extends Controller
                         if(isset($item['join_table'])){
                             switch($item['format']){
                                 case 'count':
-                                    $selectRaw .= 'count('.$item['join_table'].'.id)'.' as '.$column_name.',';
+                                    $selectRaw .= 'count(distinct('.$item['join_table'].'.id))'.' as '.$column_name.',';
                                     break;
                                 case 'sum':
                                     $selectRaw .= 'sum('.$item['join_table'].'.'.$item['sum_column'].') as '.$column_name.',';
