@@ -134,7 +134,7 @@ class BlueimpController extends BaseController
             $success->url = $url;
 
             $success->photo_name='';
-            $success->duration = json_decode(file_get_contents($url . '?avinfo'))->format->duration * 100;
+            $success->duration = json_decode(file_get_contents($url . '?avinfo'))->format->duration * 1000;
             // TODO
             // Remove the file from qiniu when invoke the delete action
 

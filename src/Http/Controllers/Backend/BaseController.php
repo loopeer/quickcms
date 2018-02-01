@@ -183,7 +183,17 @@ class BaseController extends Controller
                                     $selectRaw .= 'count(distinct('.$item['join_table'].'.id))'.' as '.$column_name.',';
                                     break;
                                 case 'sum':
-                                    $selectRaw .= 'sum('.$item['join_table'].'.'.$item['sum_column'].') as '.$column_name.',';
+                                    $selectRaw .= 'sum('.$item['join_table'].'.'.$item['operate_column'].') as '.$column_name.',';
+                                    break;
+                                case 'normal':
+                                    $selectRaw .=  $column_name.',';
+                                    break;
+                                case 'max':
+                                    $selectRaw .= 'max('.$item['join_table'].'.'.$item['operate_column'].') as '.$column_name.',';
+                                    break;
+                                case 'custom':
+                                    $selectRaw .= $item['operate_column'].' as '.$column_name.',';
+                                    break;
                             }
                         }else{
                             $selectRaw .= $table.'.'.$column_name.' as '.$column_name.',';
@@ -205,7 +215,7 @@ class BaseController extends Controller
         if(isset($model->join)){
             $joins = $model->join;
             foreach($joins as $join){
-                $builder->leftJoin($join['table'], function($query) use($join){
+                $builder->leftJoin(DB::raw($join['table']), function($query) use($join){
                     foreach($join['on'] as $value){
                         $query->on($value['column'], $value['operate'], $value['ref']);
                     }
