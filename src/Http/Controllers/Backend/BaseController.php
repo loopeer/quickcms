@@ -132,6 +132,8 @@ class BaseController extends Controller
                     $builder = $builder->where($key, Auth::admin()->get()->email);
                 } elseif ($value == 'admin_id') {
                     $builder = $builder->where($key, Auth::admin()->get()->id);
+                }elseif ($value == 'no_empty') {
+                    $builder = $builder->whereNotNull($key);
                 } elseif (is_array($value)) {
                     if (!isset($value['where'])) {
                         $builder = $builder->whereIn($key, $value);
