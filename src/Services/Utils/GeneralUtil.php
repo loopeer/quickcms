@@ -100,11 +100,8 @@ class GeneralUtil {
     public static function allSelectorData()
     {
         $result = [];
-        if(Cache::get('selector_result')){
-            return Cache::get('selector_result');
-        }else{
-            foreach(Selector::all() as $selector) {
-                if ($selector->type == Selector::SQL) {
+        foreach(Selector::all() as $selector) {
+            if ($selector->type == Selector::SQL) {
                     $sqlData = DB::select($selector->enum_value);
                     $sqlResult = array();
                     foreach ($sqlData as $k => $data) {
@@ -119,10 +116,8 @@ class GeneralUtil {
                     $result[$selector->enum_key] = $sqlResult;
                 } else {
                     $result[$selector->enum_key] = json_decode($selector->enum_value, true);
-                }
             }
-            Cache::forever('selector_result', $result);
-            return $result;
         }
+        return $result;
     }
 }
