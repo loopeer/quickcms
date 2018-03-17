@@ -85,4 +85,6 @@ return [
     'app_logs_database' => env('DB_DATABASE'),
     'app_logs_max_rows' => env('app_logs_max_rows', 1000000),
     'app_logs_split' => env('app_logs_split', false),
+
+    'notify_test_account' => [],
 ];

@@ -100,5 +100,27 @@ return [
         'content' => '内容',
         'consume_time' => '耗时',
         'created_at' => '请求时间',
-    ]
+    ],
+    'notifyTemplates' => [
+        'id' => 'ID',
+        'name' => '模板名称',
+        'page' => '路径',
+        'data' => '数据',
+        'template_id' => '微信模板ID',
+        'emphasis_keyword' => '放大关键词',
+        'created_at' => '创建时间',
+    ],
+    'notifyJobs' => [
+        'id' => 'ID',
+        'name' => '模板名称',
+        'page' => '路径',
+        'data' => '数据',
+        'template_id' => '微信模板ID',
+        'emphasis_keyword' => '放大关键词',
+        'type' => '任务类型',
+        'created_at' => '创建时间',
+        'push_count' => '推送数量',
+        'status' => '状态',
+    ],
+
 ];
