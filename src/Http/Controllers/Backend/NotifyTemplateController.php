@@ -46,10 +46,12 @@ class NotifyTemplateController extends FastController {
         } else {
             FormId::with('account')
                 ->where('created_at', '>', Carbon::now()->subWeek())
-                ->groupBy('account_id')->chunk(1000, function(Collection $formId) use ($notifyTemplate, $notifyJob, &$pushCount) {
-                    $formId->forceDelete();
-                    $pushCount++;
-                    dispatch(new NotifyTemplateJob($notifyTemplate, $notifyJob, $formId->form_id, $formId->account->mina_open_id));
+                ->groupBy('account_id')->chunk(1000, function(Collection $formIds) use ($notifyTemplate, $notifyJob) {
+                    $formIds->each(function ($formId, $key) use ($notifyTemplate, $notifyJob, &$pushCount) {
+                        $formId->forceDelete();
+                        $pushCount++;
+                        dispatch(new NotifyTemplateJob($notifyTemplate, $notifyJob, $formId->form_id, $formId->account->mina_open_id));
+                    });
                 });
         }
 
