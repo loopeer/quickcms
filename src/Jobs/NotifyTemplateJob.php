@@ -8,6 +8,7 @@
 namespace Loopeer\QuickCms\Jobs;
 
 use Loopeer\QuickCms\Exceptions\QueueException;
+use Loopeer\QuickCms\Models\Backend\NotifyJob;
 use Loopeer\QuickCms\Models\Backend\NotifyTemplate;
 use EasyWeChat\Foundation\Application;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,11 +21,13 @@ class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     protected $notifyTemplate;
+    protected $notifyJob;
     protected $formId;
     protected $openId;
 
-    public function __construct(NotifyTemplate $notifyTemplate, $formId, $openId) {
+    public function __construct(NotifyTemplate $notifyTemplate, NotifyJob $notifyJob, $formId, $openId) {
         $this->notifyTemplate = $notifyTemplate;
+        $this->notifyJob = $notifyJob;
         $this->formId = $formId;
         $this->openId = $openId;
     }
@@ -44,6 +47,7 @@ class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
         try {
             $app = new Application(config('weapp.options'));
             $app->mini_program->notice->send($templateData);
+            $this->notifyJob->increment('real_count');
         } catch (\Exception $e) {
             logger($e->getMessage());
             throw new QueueException($e->getMessage(), $e->getCode(), $e);

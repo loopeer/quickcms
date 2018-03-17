@@ -22,8 +22,8 @@ class NotifyJob extends FastModel {
         ['column' => 'page'],
         ['column' => 'emphasis_keyword'],
         ['column' => 'push_count'],
+        ['column' => 'real_count'],
         ['column' => 'type', 'type' => 'select', 'param' => 'push_type'],
-        ['column' => 'status', 'type' => 'select', 'param' => 'notify_status'],
     ];
 
     protected $buttons = ['create' => false, 'edit' => false, 'delete' => false, 'detail' => false];

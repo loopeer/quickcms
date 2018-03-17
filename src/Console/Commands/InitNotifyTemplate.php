@@ -39,7 +39,7 @@ class InitNotifyTemplate extends Command
     {
       if (!Schema::hasTable('notify_templates')) {
           Schema::create('notify_templates', function (Blueprint $table) {
-              $table->integer('id')->comment('主键');
+              $table->increments('id')->comment('主键');
               $table->string('name', 20)->comment('模板名称');
               $table->string('template_id', 50)->comment('模板id');
               $table->string('data', 1000)->comment('模板数据');

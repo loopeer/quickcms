@@ -120,6 +120,7 @@ return [
         'type' => '任务类型',
         'created_at' => '创建时间',
         'push_count' => '推送数量',
+        'real_count' => '实际数量',
         'status' => '状态',
     ],
 
