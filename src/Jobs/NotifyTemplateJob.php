@@ -45,6 +45,7 @@ class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
             $app = new Application(config('weapp.options'));
             $app->mini_program->notice->send($templateData);
         } catch (\Exception $e) {
+            logger($e->getMessage());
             throw new QueueException($e->getMessage(), $e->getCode(), $e);
         }
     }

@@ -3,6 +3,8 @@
 namespace Loopeer\QuickCms\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class InitNotifyJob extends Command
 {
@@ -44,6 +46,7 @@ class InitNotifyJob extends Command
               $table->string('page', 100)->comment('跳转路径');
               $table->string('emphasis_keyword', 20)->nullable()->comment('放大关键词');
               $table->integer('push_count')->default(0)->comment('推送数量');
+              $table->tinyInteger('type')->default(0)->comment('状态(0-测试 1-真实)');
               $table->tinyInteger('status')->default(0)->comment('状态(0-执行中 1-已完成)');
               $table->timestamps();
               $table->softDeletes();

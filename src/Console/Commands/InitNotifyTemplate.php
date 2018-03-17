@@ -3,6 +3,8 @@
 namespace Loopeer\QuickCms\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class InitNotifyTemplate extends Command
 {

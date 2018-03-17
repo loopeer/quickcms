@@ -58,6 +58,8 @@ class QuickCmsServiceProvider extends ServiceProvider {
 		$this->commands(['Loopeer\QuickCms\Console\Commands\InstallCommand']);
 		$this->commands(['Loopeer\QuickCms\Console\Commands\CreateBackendUser']);
 		$this->commands(['Loopeer\QuickCms\Console\Commands\InitOperationPermission']);
+        $this->commands(['Loopeer\QuickCms\Console\Commands\InitNotifyTemplate']);
+        $this->commands(['Loopeer\QuickCms\Console\Commands\InitNotifyJob']);
 
         $this->app->bind(ResourceRegistrar::class, Routing\ResourceRegistrar::class);
     }

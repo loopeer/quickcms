@@ -43,9 +43,15 @@ class NotifyTemplateController extends FastController {
                     dispatch(new NotifyTemplateJob($notifyTemplate, $formId->form_id, $formId->account->mina_open_id));
                 });
         }
-        NotifyJob::create(array_merge(
-            $notifyTemplate->only(['name', 'data', 'template_id', 'page', 'emphasis_keyword']),
-            ['type' => $type, 'push_count' => $pushCount]
-        ));
+        NotifyJob::create([
+            'name' => $notifyTemplate->name,
+            'data' => $notifyTemplate->data,
+            'template_id' => $notifyTemplate->template_id,
+            'page' => $notifyTemplate->page,
+            'emphasis_keyword' => $notifyTemplate->emphasis_keyword,
+            'type' => $type,
+            'push_count' => $pushCount
+        ]);
+        return ['result' => true];
     }
 }
