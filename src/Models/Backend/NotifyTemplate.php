@@ -15,7 +15,7 @@ class NotifyTemplate extends FastModel {
 
     protected $module = '通知模板';
     protected $index = [
-        ['column' => 'id'],
+        ['column' => 'id', 'order' => 'desc'],
         ['column' => 'name'],
         ['column' => 'data'],
         ['column' => 'template_id'],

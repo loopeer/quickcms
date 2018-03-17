@@ -54,7 +54,8 @@ class NotifyTemplateController extends FastController {
                     });
                 });
         }
-
+        $notifyJob->push_count = $pushCount;
+        $notifyJob->save();
         return ['result' => true];
     }
 }
