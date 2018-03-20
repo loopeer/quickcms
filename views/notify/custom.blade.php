@@ -2,7 +2,7 @@
     {!! csrf_field() !!}
     <fieldset>
         <section>
-            <label class="label">用户ID(1,2,5):</label>
+            <label class="label">推送用户ID(1,2,5):</label>
             <label class="input">
                 <input type="text" name="accountIds">
             </label>
