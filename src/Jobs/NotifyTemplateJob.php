@@ -15,6 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
+use Loopeer\QuickCms\Services\Utils\LogUtil;
 
 class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
 {
@@ -34,6 +35,8 @@ class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
 
     public function handle()
     {
+        $logger = LogUtil::getLogger('push', 'notify_push');
+
         $notifyTemplate = $this->notifyTemplate;
         $templateData = [
             'touser' => $this->openId,
@@ -49,8 +52,7 @@ class NotifyTemplateJob extends Job implements SelfHandling, ShouldQueue
             $app->mini_program->notice->send($templateData);
             $this->notifyJob->increment('real_count');
         } catch (\Exception $e) {
-            logger($e->getMessage());
-            throw new QueueException($e->getMessage(), $e->getCode(), $e);
+            $logger->addError($e->getMessage());
         }
     }
 
