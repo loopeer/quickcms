@@ -48,7 +48,7 @@ class NotifyTemplate extends FastModel {
                 'method' => 'get',
                 'dialog_title' => '自定义推送',
                 'text' => '自定义推送',
-                'url' => '/admin/notifyTemplates/customPush',
+                'url' => '/admin/notifyTemplates/customPush/',
                 'form' => [
                     'form_id' => 'custom-push-form',
                     'submit_id' => 'confirmPush',
