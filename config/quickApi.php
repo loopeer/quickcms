@@ -19,6 +19,7 @@ return [
         'category' => '',
         'label' => '',
     ],
+    'account_open_id' => 'mina_open_id',
 
     'account' => [
         // 用户注册时是否启用IM账号注册功能

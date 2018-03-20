@@ -38,8 +38,23 @@ class NotifyTemplate extends FastModel {
                 'data' => ['type' => 0],
             ],
             [
-                'type' => 'confirm', 'name' => 'real_push_btn', 'text' => '真实推送', 'url' => '/admin/notifyTemplates',
+                'type' => 'confirm', 'name' => 'real_push_btn', 'text' => '全局推送', 'url' => '/admin/notifyTemplates',
                 'data' => ['type' => 1],
+            ],
+            [
+                'type' => 'dialog',
+                'name' => 'custom_push_btn',
+                'target' => 'custom_push',
+                'method' => 'get',
+                'dialog_title' => '自定义推送',
+                'text' => '自定义推送',
+                'url' => '/admin/notifyTemplates/customPush',
+                'form' => [
+                    'form_id' => 'custom-push-form',
+                    'submit_id' => 'confirmPush',
+                    'success_msg' => '推送成功',
+                    'failure_msg' => '推送失败'
+                ],
             ],
         ]
     ];

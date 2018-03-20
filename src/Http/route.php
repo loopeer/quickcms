@@ -99,5 +99,7 @@ Route::group(array('prefix' => 'admin', 'middleware' => 'auth.admin', 'namespace
     Route::get('sendcloud/{invokeName}/review', 'SendcloudController@review');
 
     Route::resource('notifyTemplates', 'NotifyTemplateController', ['model' => \Loopeer\QuickCms\Models\Backend\NotifyTemplate::class]);
+    Route::get('notifyTemplates/customPush/{id}', 'NotifyTemplateController@customPush');
+    Route::post('notifyTemplates/customPush/{id}', 'NotifyTemplateController@storeCustomPush');
     Route::resource('notifyJobs', 'FastController', ['model' => \Loopeer\QuickCms\Models\Backend\NotifyJob::class]);
 });
