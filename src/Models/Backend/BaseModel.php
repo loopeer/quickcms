@@ -15,7 +15,7 @@ class BaseModel extends HookModel
 
         switch ($this->getCastType($key)) {
             case 'qiniu':
-                if (stripos($value, 'http') === FALSE && $value) {
+                if (stripos($value, 'http') === FALSE  &&  $value) {
                     return QiniuUtil::buildQiniuUrl($value);
                 } else {
                     return $value;
