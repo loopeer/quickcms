@@ -17,7 +17,6 @@ use Loopeer\QuickCms\Services\Utils\ClientUtil;
 
 class HookModel extends Model
 {
-    use SoftDeletes;
     protected $guarded = ['deleted_at'];
 
     public static function boot() {
